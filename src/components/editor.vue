@@ -41,9 +41,7 @@
                 </div>
             </div>
             <div class="selector-box">
-
-                <div class="tagname"></div>
-
+                <div v-if="onelementSelected" class="tagname"></div>
                 <div class="compo-border"></div>
             </div>
         </div>
@@ -53,11 +51,17 @@
 <script>
     export default {
         data() {
-            return {compo: null, borderstyle: null}
+            return {
+            compo: null, 
+            borderstyle: null,
+            onelementSelected: false
+            }
         },
         methods: {
             onmouseMove(e) {
                 if (this.compo === null) {
+                    if(e.target.className != "tagname"){
+                    this.onelementSelected = true
                     this.compo = e
                         .target
                         .getBoundingClientRect()
@@ -71,8 +75,10 @@
                     bord.style.top = this.compo.top + 'px'
                     bord.style.width = this.compo.width + 'px'
                     bord.style.height = this.compo.height + 'px'
+                }
                 } else {
                     if (this.compo != e.target) {
+                        if(e.target.className != "tagname"){
                         this.compo = e
                             .target
                             .getBoundingClientRect()
@@ -88,6 +94,7 @@
                         bord.style.top = this.compo.top + 'px'
                         bord.style.width = this.compo.width + 'px'
                         bord.style.height = this.compo.height + 'px'
+                        }
                     }
                 }
             },
