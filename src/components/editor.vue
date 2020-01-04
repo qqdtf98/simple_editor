@@ -109,109 +109,126 @@
 </script>
 
 <style lang="scss">
-    .earninga-wrapper {
-        border: 1px solid #1cc88a;
-        width: 20rem;
-        display: flex;
-        flex-direction: row;
-        padding: 0.5rem;
-        border-radius: 0.4rem;
-
-        box-shadow: 1px 0.5px 0.5px #c0c0c0;
-    }
-    .earninga {
-        color: #1cc88a;
-    }
-    #dashboard {
-        display: flex;
-        align-items: center;
-        width: 100%;
-    }
-    .earningm-wrapper {
-        border: 1px solid #d95353;
-        box-shadow: 1px 0.5px 0.5px #c0c0c0;
-        width: 20rem;
-        display: flex;
-        flex-direction: row;
-        padding: 0.5rem;
-        border-radius: 0.4rem;
-        margin-right: 1rem;
-        align-items: center;
-    }
-    .earningm {
-        color: #d95353;
-    }
-    .tasks-wrapper {
-        border: 1px solid #36b9cc;
-
-        box-shadow: 1px 0.5px 0.5px #c0c0c0;
-        width: 20rem;
-        display: flex;
-        flex-direction: row;
-        padding: 0.5rem;
-        border-radius: 0.4rem;
-        margin-right: 1rem;
-    }
-    .tasks {
-        color: #36b9cc;
-    }
-    .pending-wrapper {
-        border: 1px solid #f6c23e;
-        width: 20rem;
-        display: flex;
-        flex-direction: row;
-        padding: 0.5rem;
-        box-shadow: 1px 0.5px 0.5px #c0c0c0;
-        border-radius: 0.4rem;
-    }
-    .pending {
-        color: #f6c23e;
-    }
+ #dashboard {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  
+  .dashboard-wrapper{
     .text-wrapper {
-        display: flex;
-        flex-direction: row;
-        margin: 0.5rem;
-    }
-    .task-box {
-        display: flex;
-        flex-direction: row;
-    }
-    .component-wrapper {
-        padding: 0.5rem;
-        /* border: 1px solid black; */
-    }
-    .generate {
+      display: flex;
+      flex-direction: row;
+      margin: 0.5rem;
+
+      .generate {
         background-color: #8b8bcc;
         border-radius: 0.4rem;
+        }
     }
-    .earning-box {
+    .component-wrapper {
+      padding: 0.5rem;
+      /* border: 1px solid black; */
+
+      .earning-box {
         display: flex;
         flex-direction: row;
         margin-bottom: 1rem;
+        }
+
+        .earningm-wrapper {
+          border: 1px solid #d95353;
+          box-shadow: 1px 0.5px 0.5px #c0c0c0;
+          width: 20rem;
+          display: flex;
+          flex-direction: row;
+          padding: 0.5rem;
+          border-radius: 0.4rem;
+          margin-right: 1rem;
+          align-items: center;
+
+          .earningm {
+            color: #d95353;
+          }
+        }
+
+        .earninga-wrapper {
+          border: 1px solid #1cc88a;
+          width: 20rem;
+          display: flex;
+          flex-direction: row;
+          padding: 0.5rem;
+          border-radius: 0.4rem;
+          box-shadow: 1px 0.5px 0.5px #c0c0c0;
+
+          .earninga {
+            color: #1cc88a;
+          }
+        }
+      }
+
+      .task-box {
+        display: flex;
+        flex-direction: row;
+
+        .tasks-wrapper {
+          border: 1px solid #36b9cc;
+          box-shadow: 1px 0.5px 0.5px #c0c0c0;
+          width: 20rem;
+          display: flex;
+          flex-direction: row;
+          padding: 0.5rem;
+          border-radius: 0.4rem;
+          margin-right: 1rem;
+
+          .tasks {
+            color: #36b9cc;
+          }
+        }
+        
+        .pending-wrapper {
+          border: 1px solid #f6c23e;
+          width: 20rem;
+          display: flex;
+          flex-direction: row;
+          padding: 0.5rem;
+          box-shadow: 1px 0.5px 0.5px #c0c0c0;
+          border-radius: 0.4rem;
+
+          .pending {
+            color: #f6c23e;
+          }
+        }
+
+        .button1,
+        .button2,
+        .button3,
+        .button4 {
+          background-color: #afa7a7;
+          margin-left: 1rem;
+          border: none;
+        }
+      }
     }
-    .button1,
-    .button2,
-    .button3,
-    .button4 {
-        background-color: #afa7a7;
-        margin-left: 1rem;
-        border: none;
+  .selector-box {
+    display: flex;
+    flex-direction: column;
+
+    .tagname {
+      color: white;
+      padding: 0.2rem;
+      position: fixed;
+      z-index: 10;
+      background-color: #3e8ce4;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
     }
     .compo-border {
-        position: fixed;
-        z-index: -1;
+      position: fixed;
+      z-index: -1;
     }
-    .tagname {
-        color: white;
-        padding: 0.2rem;
-        position: fixed;
-        z-index: 10;
-        background-color: #3e8ce4;
-        border-radius: 0.4rem;
-        font-size: 0.8rem;
-    }
-    .selector-box {
-        display: flex;
-        flex-direction: column;
-    }
+    
+  }
+}
+
+    
 </style>
