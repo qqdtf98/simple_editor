@@ -1,6 +1,6 @@
 <template>
 <div id="dashboard">
-        <div @click="onmouseClick" @mousemove="onmouseMove">
+        <div class="dashboard" @click="onmouseClick" @mousemove="onmouseMove">
             <div class="dashboard-wrapper">
                 <div class="text-wrapper">
                     <div class="dashboard-text">
@@ -133,7 +133,8 @@ export default {
             e.target.style.border = "none"
         },
         onmouseClick(e) {
-            console.log(e.target)
+            // console.log(e.target)
+            this.$emit('componentSelected', e.target)
         },
         editClick(e){
             this.$emit("child")
@@ -141,7 +142,7 @@ export default {
             this.componentSoure.y=e.y
             this.componentSoure.width=e.target.getBoundingClientRect().width
             this.componentSoure.height=e.target.getBoundingClientRect().height
-            console.log(this.componentSoure)
+            // console.log(this.componentSoure)
             // eventBus.$emit("userClickEdited",this.componentSoure)
         }
     }
@@ -154,7 +155,9 @@ export default {
   align-items: center;
   width: 100%;
   
-  .dashboard-wrapper{
+  .dashboard{
+    width: 100%;
+    .dashboard-wrapper{
     .text-wrapper {
       display: flex;
       flex-direction: row;
@@ -256,5 +259,8 @@ export default {
     }
     
   }
+  }
+  
+  
 }
 </style>
