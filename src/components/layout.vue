@@ -62,7 +62,7 @@
 											<i class="caret" style="display: inline-block;"></i>
 										</span>
 										<div class="control">
-											<input type="text" name="width-option" value="" title="" placeholder="31.4375px" v-model="componentSorce.x">
+											<input type="" name="width-option" value="" title="" placeholder="31.4375px" v-model="componentSorce.x">
 											<span class="warning-badge" style="display: none;"></span>
 											<span class="addon increment-handle"></span>
 										</div>
@@ -85,7 +85,8 @@
 											</i>
 										</span>
 										<div class="control">
-											<input type="text" name="min-height-option" value="" title="" placeholder="none" v-model="componentSorce.width">
+											<input type="text" name="min-height-option
+											" value="" title="" placeholder="none" v-model="componentSorce.width">
 											<span class="warning-badge" style="display: none;">
 											</span>
 											<span class="addon increment-handle">
@@ -120,9 +121,6 @@
 					<b-button block href="#" v-b-toggle.accordion-2 variant="info">Background</b-button>
 				</b-card-header>
 				<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
-					<b-card-body>
-					<b-card-text>{{ text }}</b-card-text>
-					</b-card-body>
 				</b-collapse>
 				</b-card>
 
@@ -131,9 +129,6 @@
 					<b-button block href="#" v-b-toggle.accordion-3 variant="info">Font</b-button>
 				</b-card-header>
 				<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
-					<b-card-body>
-					<b-card-text>{{ text }}</b-card-text>
-					</b-card-body>
 				</b-collapse>
 				</b-card>
 
@@ -142,9 +137,6 @@
 					<b-button block href="#" v-b-toggle.accordion-3 variant="info">Filters</b-button>
 				</b-card-header>
 				<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
-					<b-card-body>
-					<b-card-text>{{ text }}</b-card-text>
-					</b-card-body>
 				</b-collapse>
 				</b-card>
 		</div>

@@ -40,6 +40,11 @@
                     </div>
 
                 </div>
+                <div class="img-wrapper">
+                  <img class="img1" src="../assets/logo.png" />
+                  <img class="img2" src="../assets/logo.png" />
+                  <img class="img3" src="../assets/logo.png" />
+                </div>
             </div>
             <div class="selector-box">
                 <div v-if="onelementSelected" class="tagname"></div>
@@ -155,7 +160,10 @@ export default {
   
   .dashboard{
     width: 100%;
+    border: 1px solid black;
+    max-height: 40rem;
     .dashboard-wrapper{
+      max-height: 100%;
     .text-wrapper {
       display: flex;
       flex-direction: row;
@@ -167,7 +175,6 @@ export default {
     }
     .component-wrapper {
       padding: 0.5rem;
-      /* border: 1px solid black; */
       .earning-box {
         display: flex;
         flex-direction: row;
@@ -238,6 +245,17 @@ export default {
           border: none;
         }
       }
+    
+    
+    .img-wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .img1, .img2, .img3{
+        width: 10rem;
+      }
+    }
     }
   .selector-box {
     display: flex;

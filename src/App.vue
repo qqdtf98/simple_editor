@@ -36,6 +36,7 @@ export default {
   display: flex;
   flex-direction: row;
   height: 58rem;
+  background-color: #2c3134;
 
   .left-panel{
     width:20%;
@@ -43,12 +44,11 @@ export default {
 
     .studio{
       height: 50%;
-    border: 1px solid black;
+    border: 1px solid #23282b;
     }
 
     .overview{
-      
-    border: 1px solid black;
+    border: 1px solid #23282b;
       height: 50%;
     }
   }
@@ -56,15 +56,12 @@ export default {
   .home{
     width:60%; 
     height: 100%;
-    
-    border: 1px solid black;
   }
 
   .layout {
     width: 20%;
     height: 100%;
-    
-    border: 1px solid black;
+    border: 1px solid #23282b;
   }
 
 }
