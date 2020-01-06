@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <div class="left-panel">
-    <studio class="studio"></studio>
-    <overview class="overview"></overview>
+      <studio class="studio"></studio>
+      <overview class="overview"></overview>
     </div>
     <home @componentSelected="componentSelected" class="home"></home>
-    <layout class="layout"></layout>
-    </div>
+    <layout :payload="payload" @userSelectedWidth="userSelectedWidth" class="layout"></layout>
+  </div>
 </template>
 
 <script>
@@ -18,9 +18,19 @@ import overview from './components/overview'
 export default {
   components: {home, layout, studio, overview},
   name: 'App',
+  data(){
+    return{
+      payload : '',
+    }
+  },
   methods: {
     componentSelected(payload){
+      this.payload = payload
       console.log(payload)
+    },
+    userSelectedWidth(data){
+      //console.log("정찹")
+      console.log(data)
     }
   }
 }
