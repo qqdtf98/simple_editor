@@ -21,6 +21,7 @@ export default {
   methods: {
     componentSelected(payload){
       console.log(payload)
+      console.log(payload.x)
     }
   }
 }
