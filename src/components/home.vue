@@ -122,9 +122,7 @@ export default {
                     bord.style.left = this.compo.left + 'px'
                     bord.style.top = this.compo.top + 'px'
                     bord.style.width = this.compo.width + 'px'
-                    //console.log(bord.style.width)
                     bord.style.height = this.compo.height + 'px'
-                    //console.log(bord.style.height)
                     }
                 }
             }
