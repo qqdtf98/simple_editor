@@ -1,146 +1,157 @@
 <template>
-  <v-app>
-  <div class = "layout" v-if="isEdited">
-		<div class = "content">
-			<div class="info-option">
-				<div class="margin">
-					<div class="box-row blue">
-						<span class="margin-top" title="Margin Top">{{mgTop}}</span>
-					</div>
-					<div class="box-row middle">
-						<div class="box-col blue">
-							<span class="margin-left" title="Margin Left">{{mgLeft}}</span>
-						</div>
-						<div class="box-col padding">
-							<div class="box-row green">
-								<span class="padding-top" title="Padding Top">{{pdTop}}</span>
-							</div>
-							<div class="box-row middle">
-								<div class="box-col green">
-									<span class="padding-left" title="Padding Left">{{pdLeft}}</span>
+	<div>
+		<b-nav tabs fill>
+			<b-nav-item active>Look & Feel</b-nav-item>
+			<b-nav-item >options</b-nav-item>
+			<b-nav-item >Animation </b-nav-item>
+		</b-nav>
+		<div role="tablist">
+			<b-card no-body class="mb-1">
+				<b-card-header header-tag="header" class="p-1" role="tab">
+					<b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
+				</b-card-header>
+				<b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+					<b-card-body>
+
+						<v-app>
+						<div class = "layout" >
+								<div class = "content">
+									<div class="info-option">
+										<div class="margin">
+											<div class="box-row blue">
+												<span class="margin-top" title="Margin Top">{{mgTop}}</span>
+											</div>
+											<div class="box-row middle">
+												<div class="box-col blue">
+													<span class="margin-left" title="Margin Left">{{mgLeft}}</span>
+												</div>
+												<div class="box-col padding">
+													<div class="box-row green">
+														<span class="padding-top" title="Padding Top">{{pdTop}}</span>
+													</div>
+													<div class="box-row middle">
+														<div class="box-col green">
+															<span class="padding-left" title="Padding Left">{{pdLeft}}</span>
+														</div>
+														<div class="box-col middle empty"></div>
+														<div class="box-col green">
+															<span class="padding-right" title="Padding Right">{{pdRight}}</span>
+														</div>
+													</div>
+													<div class="box-row green">
+														<span class="padding-bottom" title="Padding Bottom">{{pdBottom}}</span>
+													</div>
+												</div>
+												<div class="box-col blue">
+													<span class="margin-right" title="Margin Right">{{mgRight}}</span>
+												</div>
+											</div>
+											<div class="box-row blue">
+												<span class="margin-bottom" title="Margin Bottom">{{mgBottom}}</span>
+											</div>
+										</div>
+										<div class="dimensions">
+											<span class="size x"><i>X</i><b> {{componentSorce.x}}</b></span>
+											<span class="size y"><i>Y</i><b> {{componentSorce.y}}</b></span>
+											<span class="size width"><i>W</i><b> {{componentSorce.width}}</b></span>
+											<span class="size height"><i>H</i><b> {{componentSorce.height}}</b></span>
+										</div>
+								<div class = "option textboxoption has-addon collapsed">
+									<label class="option-content">
+										<span title="">x
+											<i class="caret" style="display: inline-block;"></i>
+										</span>
+										<div class="control">
+											<input type="text" name="width-option" value="" title="" placeholder="31.4375px" v-model="componentSorce.x">
+											<span class="warning-badge" style="display: none;"></span>
+											<span class="addon increment-handle"></span>
+										</div>
+									</label>
+									<label class="option-content">
+										<span title="">y
+											<i class="caret" style="display: inline-block;"></i>
+										</span>
+										<div class="control">
+											<input type="text" name="height-option" value="" title="" placeholder="40px" v-model="componentSorce.y">
+											<span class="warning-badge" style="display: none;"></span>
+											<span class="addon increment-handle">
+												<i></i>
+											</span>
+										</div>
+									</label>
+									<label class="option-content">
+										<span title="">Width
+											<i class="caret" style="display: none;">
+											</i>
+										</span>
+										<div class="control">
+											<input type="text" name="min-height-option" value="" title="" placeholder="none" v-model="componentSorce.width">
+											<span class="warning-badge" style="display: none;">
+											</span>
+											<span class="addon increment-handle">
+												<i></i>
+											</span>
+										</div>
+									</label>
+									<label class="option-content">
+										<span title="">Height 
+											<i class="caret" style="display: none;"></i>
+										</span><div class="control">
+											<input type="text" name="max-height-option" value="" title="" placeholder="none" v-model="componentSorce.height">
+											<span class="warning-badge" style="display: none;"></span>
+											<span class="addon increment-handle">
+												<i></i>
+											</span>
+										</div>
+									</label>
 								</div>
-								<div class="box-col middle empty"></div>
-								<div class="box-col green">
-									<span class="padding-right" title="Padding Right">{{pdRight}}</span>
+							<button @click="changeSource" large color="primary">수정완료</button>
+									</div>
 								</div>
 							</div>
-							<div class="box-row green">
-								<span class="padding-bottom" title="Padding Bottom">{{pdBottom}}</span>
-							</div>
-						</div>
-						<div class="box-col blue">
-							<span class="margin-right" title="Margin Right">{{mgRight}}</span>
-						</div>
-					</div>
-					<div class="box-row blue">
-						<span class="margin-bottom" title="Margin Bottom">{{mgBottom}}</span>
-					</div>
-				</div>
-				<div class="dimensions">
-					<span class="size x"><i>X</i><b> {{componentSorce.x}}</b></span>
-					<span class="size y"><i>Y</i><b> {{componentSorce.y}}</b></span>
-					<span class="size width"><i>W</i><b> {{componentSorce.width}}</b></span>
-					<span class="size height"><i>H</i><b> {{componentSorce.height}}</b></span>
-				</div>
-        <div class = "option textboxoption has-addon collapsed">
-			<label class="option-content">
-				<span title="">x
-					<i class="caret" style="display: inline-block;"></i>
-				</span>
-				<div class="control">
-					<input type="text" name="width-option" value="" title="" placeholder="31.4375px" v-model="componentSorce.x">
-					<span class="warning-badge" style="display: none;"></span>
-					<span class="addon increment-handle"></span>
-				</div>
-			</label>
-			<label class="option-content">
-				<span title="">y
-					<i class="caret" style="display: inline-block;"></i>
-				</span>
-				<div class="control">
-					<input type="text" name="height-option" value="" title="" placeholder="40px" v-model="componentSorce.y">
-					<span class="warning-badge" style="display: none;"></span>
-					<span class="addon increment-handle">
-						<i></i>
-					</span>
-				</div>
-			</label>
-			<label class="option-content">
-				<span title="">Width
-					<i class="caret" style="display: none;">
-					</i>
-				</span>
-				<div class="control">
-					<input type="text" name="min-height-option" value="" title="" placeholder="none" v-model="componentSorce.width">
-					<span class="warning-badge" style="display: none;">
-					</span>
-					<span class="addon increment-handle">
-						<i></i>
-					</span>
-				</div>
-			</label>
-			<label class="option-content">
-				<span title="">Height 
-					<i class="caret" style="display: none;"></i>
-				</span><div class="control">
-					<input type="text" name="max-height-option" value="" title="" placeholder="none" v-model="componentSorce.height">
-					<span class="warning-badge" style="display: none;"></span>
-					<span class="addon increment-handle">
-						<i></i>
-					</span>
-				</div>
-			</label>
-		</div>
-	<v-btn  @click="changeSource" large color="primary">수정완료</v-btn>
-			</div>
+						</v-app>
+
+					</b-card-body>
+				</b-collapse>
+				</b-card>
+
+				<b-card no-body class="mb-1">
+				<b-card-header header-tag="header" class="p-1" role="tab">
+					<b-button block href="#" v-b-toggle.accordion-2 variant="info">Background</b-button>
+				</b-card-header>
+				<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+					<b-card-body>
+					<b-card-text>{{ text }}</b-card-text>
+					</b-card-body>
+				</b-collapse>
+				</b-card>
+
+				<b-card no-body class="mb-1">
+				<b-card-header header-tag="header" class="p-1" role="tab">
+					<b-button block href="#" v-b-toggle.accordion-3 variant="info">Font</b-button>
+				</b-card-header>
+				<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+					<b-card-body>
+					<b-card-text>{{ text }}</b-card-text>
+					</b-card-body>
+				</b-collapse>
+				</b-card>
+
+				<b-card no-body class="mb-1">
+				<b-card-header header-tag="header" class="p-1" role="tab">
+					<b-button block href="#" v-b-toggle.accordion-3 variant="info">Filters</b-button>
+				</b-card-header>
+				<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+					<b-card-body>
+					<b-card-text>{{ text }}</b-card-text>
+					</b-card-body>
+				</b-collapse>
+				</b-card>
 		</div>
 	</div>
-     <v-row align="center">
-      <v-col class="text-center" cols="12" sm="4">
-        <div class="my-2">
-          <v-btn small>Normal</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn small color="primary">Primary</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn small color="error">Error</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn small disabled>Disabled </v-btn>
-        </div>
-      </v-col>
-      <v-col class="text-center" cols="12" sm="4">
-        <div class="my-2">
-          <v-btn>Normal</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn color="primary">Primary</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn color="error">Error</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn disabled>Disabled</v-btn>
-        </div>
-      </v-col>
-      <v-col class="text-center" cols="12" sm="4">
-        <div class="my-2">
-          <v-btn large>Normal</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn large color="primary">Primary</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn large color="error">Error</v-btn>
-        </div>
-        <div class="my-2">
-          <v-btn large disabled>Disabled</v-btn>
-        </div>
-      </v-col>
-    </v-row>
-  </v-app>
 </template>
+
+
 
 <script>
 // import {eventBus} from "./main"
@@ -184,3 +195,50 @@ export default {
   }
 };
 </script>
+
+<style>
+
+.blue {
+    padding: 5px;
+    background-color: #283844;
+    color: #64BFFF;
+    line-height: 1;
+}
+.info-option .box-row {
+    display: flex;
+    flex-direction: column;
+}
+.info-option {
+    font-size: 12px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    text-align: center;
+    border-bottom: 1px solid #242729;
+    box-shadow: 0 1px 0 #3B4144;
+    padding-bottom: 8px;
+    margin: 0 10px 10px;
+}
+.info-option .green {
+    padding: 5px;
+    background-color: #2D3F3A;
+    color: #57D88B;
+    line-height: 1;
+}
+.info-option .box-row {
+    display: flex;
+    flex-direction: column;
+}
+.info-option .middle {
+    display: flex;
+    flex-direction: row;
+}
+.info-option .box-col {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.info-option .empty {
+    flex-grow: 1;
+    box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
+}
+</style>
