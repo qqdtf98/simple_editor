@@ -1,27 +1,71 @@
 <template>
   <div id="app">
-    <home></home>
-    <layout></layout>
-  </div>
+    <div class="left-panel">
+    <studio class="studio"></studio>
+    <overview class="overview"></overview>
+    </div>
+    <home @componentSelected="componentSelected" class="home"></home>
+    <layout class="layout"></layout>
+    </div>
 </template>
 
 <script>
 import home from './components/home'
 import layout from './components/layout'
+import studio from './components/studio'
+import overview from './components/overview'
 
 export default {
-  components: {home, layout},
-  name: 'App'
+  components: {home, layout, studio, overview},
+  name: 'App',
+  methods: {
+    componentSelected(payload){
+      console.log(payload)
+    }
+  }
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  flex-direction: row;
+  height: 58rem;
+
+  .left-panel{
+    width:20%;
+    
+
+    .studio{
+      height: 50%;
+    border: 1px solid black;
+    }
+
+    .overview{
+      
+    border: 1px solid black;
+      height: 50%;
+    }
+  }
+  
+  .home{
+    width:60%; 
+    height: 100%;
+    
+    border: 1px solid black;
+  }
+
+  .layout {
+    width: 20%;
+    height: 100%;
+    
+    border: 1px solid black;
+  }
+
 }
 </style>
