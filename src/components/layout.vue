@@ -224,9 +224,6 @@ export default {
       borderstyle: null
     }
   },
-  created(){
-	  console.log(this.payload)
-  },
  mounted() 
  { 
  },

@@ -74,43 +74,21 @@ export default {
       elem: null
   }
   },
-  created(){
-
-  // eventBus.$on('userChangeSource',data=>{
-  //     // this.componentSoure.x=data.x
-  //     // this.componentSoure.y=data.y
-  //     this.buttonObject.width=data.width+'px'
-  //     this.buttonObject.height=data.height+'px'
-  // })
-  },
   methods: {
   onmouseMove(e) {
       if (this.compo === null) {
-          if(e.target.className != "tagname"){
-            
-          let border = document.querySelector('.compo-border')
+          if(e.target.className != "tagname" && e.target.className != 'move-icon' ){
           // border.style.zIndex = 3;
+          
           this.onelementSelected = true
           this.compo = e
               .target
               .getBoundingClientRect()
-          let tag = document.querySelector('.tagname')
-          // tag.textContent = e.target.tagName
-          // tag.style.left = this.compo.left + 'px'
-          // tag.style.top = this.compo.top + 'px'
-          // let bord = document.querySelector('.compo-border')
-          // bord.style.border = "1px solid #3e8ce4"
-          // bord.style.left = this.compo.left + 'px'
-          // bord.style.top = this.compo.top + 'px'
-          // bord.style.width = this.compo.width + 'px'
-          // bord.style.height = this.compo.height + 'px'
-          
           
       }
       } else {
           if (this.compo != e.target) {
-              if(e.target.className != "tagname"){
-              let border = document.querySelector('.compo-border')
+              if(e.target.className != "tagname" && e.target.className != 'move-icon'){
           // border.style.zIndex = 3;
               this.compo = e
                   .target
@@ -132,7 +110,6 @@ export default {
               }
           }
       }
-      border.style.zIndex = -1;
   },
   onmouseLeave(e) {
       e.target.style.border = "none"
@@ -140,16 +117,6 @@ export default {
   onmouseClick(e) {
       this.$emit('componentSelected', e)
     },
-  // editClick(e) {
-  //     this.$emit("child")
-  //     this.componentSoure.x=e.x
-  //     this.componentSoure.y=e.y
-  //     this.componentSoure.width=e.target.getBoundingClientRect().width
-  //     // this.componentSoure.height=e.target.getBoundingClientRect().height
-  //     // console.log(this.componentSoure)
-  //     // eventBus.$emit("userClickEdited",this.componentSoure)
-      
-  // },
   styleChanged(data) {
     this.target = data.payload.className
     this.style = data.style
