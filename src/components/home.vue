@@ -145,11 +145,9 @@ export default {
     this.target = data.payload.className
     this.style = data.style
     this.value = data.value
-    console.log(this.value)
     let element = document.querySelector(`.${this.target}`)
-    console.log(this.style)
-    // console.log(element)
-    // element.style.this.style= this.value
+    element.style[this.style] = this.value
+    console.log(element.style[this.style])
 
   }
   }
