@@ -46,6 +46,7 @@
 <script>
 
 export default {
+  props: ['pdata'],
   data () {
     return {
       compo: null,
@@ -63,7 +64,8 @@ export default {
           y:500,
           width:960,
           height:614
-      }
+      },
+      pdata: ''
   }
   },
   created(){
@@ -133,9 +135,13 @@ export default {
       this.componentSoure.x=e.x
       this.componentSoure.y=e.y
       this.componentSoure.width=e.target.getBoundingClientRect().width
-      this.componentSoure.height=e.target.getBoundingClientRect().height
+      // this.componentSoure.height=e.target.getBoundingClientRect().height
       // console.log(this.componentSoure)
       // eventBus.$emit("userClickEdited",this.componentSoure)
+      
+  },
+  printa() {
+    console.log(this.pdata)
   }
   }
 }
