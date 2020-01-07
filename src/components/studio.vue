@@ -3,4 +3,7 @@
 </template>
 
 <style lang="scss">
+.studio {
+    color: #fff;
+}
 </style>
