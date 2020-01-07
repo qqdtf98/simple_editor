@@ -63,7 +63,10 @@ export default {
           y:500,
           width:960,
           height:614
-      }
+      },
+      target: '',
+      style: '',
+      value: ''
   }
   },
   created(){
@@ -133,9 +136,21 @@ export default {
       this.componentSoure.x=e.x
       this.componentSoure.y=e.y
       this.componentSoure.width=e.target.getBoundingClientRect().width
-      this.componentSoure.height=e.target.getBoundingClientRect().height
+      // this.componentSoure.height=e.target.getBoundingClientRect().height
       // console.log(this.componentSoure)
       // eventBus.$emit("userClickEdited",this.componentSoure)
+      
+  },
+  styleChanged(data) {
+    this.target = data.payload.className
+    this.style = data.style
+    this.value = data.value
+    console.log(this.value)
+    let element = document.querySelector(`.${this.target}`)
+    console.log(this.style)
+    // console.log(element)
+    // element.style.this.style= this.value
+
   }
   }
 }

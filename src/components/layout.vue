@@ -204,13 +204,13 @@ export default {
 	  },
 	  selectionWidthSource:{
 		  payload:'',
-		  style:'width',
-		  value:'',
+      style:'width',
+      value:''
 	  },
 	  selectionHeightSource:{
 		  payload:'',
 		  style:'height',
-		  value:'',
+      value:''
 	  },
 
       mgTop:0,

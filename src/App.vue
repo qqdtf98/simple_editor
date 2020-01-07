@@ -4,8 +4,8 @@
       <studio class="studio"></studio>
       <overview class="overview"></overview>
     </div>
-    <home @componentSelected="componentSelected" class="home"></home>
-    <layout ref="layouts" :payload="payload" @userSelected="userSelected" class="layout"></layout>
+    <home ref="home" @componentSelected="componentSelected" class="home"></home>
+    <layout :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
   data(){
     return{
       payload : '',
+      data: ''
     }
   },
   methods: {
@@ -33,8 +34,9 @@ export default {
       this.$refs.layouts.getData(payload)
 
     },
-    userSelected(data){
-      console.log(data)
+    userSelectedWidth(data){
+      this.data = data
+      this.$refs.home.styleChanged(this.data)
     }
   }
 }
