@@ -27,7 +27,8 @@ export default {
   methods: {
     componentSelected(payload){
       this.payload = payload
-      console.log(payload)
+      //console.log(payload)
+      //console.log(payload.x)
     },
     userSelectedWidth(data){
       // console.log("정찹")
