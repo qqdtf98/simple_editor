@@ -5,7 +5,7 @@
       <overview class="overview"></overview>
     </div>
     <home ref="home" @componentSelected="componentSelected" class="home"></home>
-    <layout :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
+    <layout ref="layouts":payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
   </div>
 </template>
 
