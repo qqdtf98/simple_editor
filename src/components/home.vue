@@ -43,6 +43,7 @@
         <div class="img-wrapper">
           <img class="img1" src="../assets/logo.png" />
           <img class="img2" src="../assets/logo.png" />
+          <img class="img3" src="../assets/logo.png" />
         </div>
       </div>
       <div class="selector-box">
@@ -79,12 +80,14 @@ export default {
   onmouseMove(e) {
       if (this.compo === null) {
           if(e.target.className != "tagname"){
+            
+          let border = document.querySelector('.compo-border')
+          // border.style.zIndex = 3;
           this.onelementSelected = true
           this.compo = e
               .target
               .getBoundingClientRect()
           let tag = document.querySelector('.tagname')
-          
           // tag.textContent = e.target.tagName
           // tag.style.left = this.compo.left + 'px'
           // tag.style.top = this.compo.top + 'px'
@@ -95,11 +98,13 @@ export default {
           // bord.style.width = this.compo.width + 'px'
           // bord.style.height = this.compo.height + 'px'
           
-      
+          
       }
       } else {
           if (this.compo != e.target) {
               if(e.target.className != "tagname"){
+              let border = document.querySelector('.compo-border')
+          // border.style.zIndex = 3;
               this.compo = e
                   .target
                   .getBoundingClientRect()
@@ -120,6 +125,7 @@ export default {
               }
           }
       }
+      border.style.zIndex = -1;
   },
   onmouseLeave(e) {
       e.target.style.border = "none"
@@ -161,6 +167,7 @@ export default {
     border: 1px solid black;
     height:80%;
     max-height: 40rem;
+    overflow: scroll;
     .dashboard-wrapper{
       height: 100%;
     .text-wrapper {
@@ -171,13 +178,14 @@ export default {
       position: relative;
       .dashboard-text {
         color: #5a5c69;
-        font-size: 3rem;
+        font-size: 2.5rem;
       }
       .generate {
         background-color: #8b8bcc;
         position: absolute;
-        left: 52rem;
+        left: 49rem;
         border-radius: 0.4rem;
+        padding: 0.3rem;
         }
     }
     .component-wrapper {
@@ -190,7 +198,7 @@ export default {
         justify-content: center;
         }
         .earningm-wrapper {
-          border: 1px solid #d95353;
+          border: 2px solid #d95353;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
           width: 50%;
           display: flex;
@@ -205,6 +213,7 @@ export default {
           .earningm {
             color: #d95353;
             font-size: 0.75rem;
+            font-weight: bold;
           }
           .dol1 {
             text-align: left;
@@ -213,7 +222,7 @@ export default {
           
         }
         .earninga-wrapper {
-          border: 1px solid #1cc88a;
+          border: 2px solid #1cc88a;
           display: flex;
           flex-direction: row;
           background-color: #fff;
@@ -227,6 +236,7 @@ export default {
           .earninga {
             color: #1cc88a;
             font-size: 0.75rem;
+            font-weight: bold;
           }
           .dol2 {
             text-align: left;
@@ -242,7 +252,7 @@ export default {
           border: none;
           height: 3.8rem;
           width: 3.8rem;
-          left: 24rem;
+          left: 22.5rem;
         }
 
         .earningm-box, .earninga-box{
@@ -257,7 +267,7 @@ export default {
         align-items: center;
         justify-content: center;
         .tasks-wrapper {
-          border: 1px solid #36b9cc;
+          border: 2px solid #36b9cc;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
           height: 5rem;
           background-color: #fff;
@@ -272,6 +282,7 @@ export default {
           .tasks {
             color: #36b9cc;
             font-size: 0.75rem;
+            font-weight: bold;
           }
           .task{
             text-align: left;
@@ -280,7 +291,7 @@ export default {
         }
         
         .pending-wrapper {
-          border: 1px solid #f6c23e;
+          border: 2px solid #f6c23e;
           width: 50%;
           display: flex;
           flex-direction: row;
@@ -294,6 +305,7 @@ export default {
           .pending {
             color: #f6c23e;
             font-size: 0.75rem;
+            font-weight: bold;
           }
           .pend {
             text-align: left;
@@ -309,7 +321,7 @@ export default {
           border: none;
           height: 3.8rem;
           width: 3.8rem;
-          left: 24rem;
+          left: 22.5rem;
         }
       
       
@@ -327,7 +339,7 @@ export default {
       flex-direction: column;
       align-items: center;
 
-      .img1, .img2 {
+      .img1, .img2, .img3 {
         width: 10rem;
       }
     }
@@ -346,7 +358,8 @@ export default {
     }
     .compo-border {
       position: fixed;
-      z-index: -1;
+      z-index: 10;
+      opacity:0;
     }
     
   }
