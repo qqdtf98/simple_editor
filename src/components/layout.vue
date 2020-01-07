@@ -154,7 +154,6 @@
                   </div>
                 </div>
               </div>
-            </v-app>
           </b-card-body>
         </b-collapse>
       </b-card>
