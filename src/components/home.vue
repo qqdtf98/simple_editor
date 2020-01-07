@@ -9,30 +9,40 @@
         <div class="component-wrapper">
           <div class="earning-box">
             <div class="earningm-wrapper">
+              <div class="earningm-box">
               <span class="earningm">EARNINGS(MONTHLY)</span>
-
-              <button @click="editClick" v-bind:style="buttonObject" class="button1">a</button>
+              <span class="dol1">$40000</span>
+              </div>
+              <button class="button1"></button>
             </div>
             <div class="earninga-wrapper">
+              <div class="earninga-box">
               <span class="earninga">EARNINGS(ANNUAL)</span>
-              <button @click="editClick" v-bind:style="buttonObject" class="button2">a</button>
+              <span class="dol2">$215,000</span>
+              </div>
+              <button class="button2"></button>
             </div>
           </div>
           <div class="task-box">
             <div class="tasks-wrapper">
+              <div class="task-box">
               <span class="tasks">TASKS</span>
-              <button @click="editClick" v-bind:style="buttonObject" class="button3">a</button>
+              <span class="task">50%</span>
+              </div>
+              <button class="button3"></button>
             </div>
             <div class="pending-wrapper">
+              <div class="pending-box">
               <span class="pending">PENDING REQUESTS</span>
-              <button @click="editClick" v-bind:style="buttonObject" class="button4">a</button>
+              <span class="pend">18</span>
+              </div>
+              <button class="button4"></button>
             </div>
           </div>
         </div>
         <div class="img-wrapper">
           <img class="img1" src="../assets/logo.png" />
           <img class="img2" src="../assets/logo.png" />
-          <img class="img3" src="../assets/logo.png" />
         </div>
       </div>
       <div class="selector-box">
@@ -51,19 +61,6 @@ export default {
       compo: null,
       borderstyle: null,
       onelementSelected: false,
-      buttonObject: {
-          width:'24px',
-          height:'24px',
-          padding:'4px 4px 4px 4px',
-          margin: '4px 4px 4px 4px',
-          
-      },
-      componentSoure: {
-          x:228,
-          y:500,
-          width:960,
-          height:614
-      },
       target: '',
       style: '',
       value: ''
@@ -128,26 +125,24 @@ export default {
       e.target.style.border = "none"
   },
   onmouseClick(e) {
-      // console.log(e.target)
       this.$emit('componentSelected', e)
     },
-  editClick(e) {
-      this.$emit("child")
-      this.componentSoure.x=e.x
-      this.componentSoure.y=e.y
-      this.componentSoure.width=e.target.getBoundingClientRect().width
-      // this.componentSoure.height=e.target.getBoundingClientRect().height
-      // console.log(this.componentSoure)
-      // eventBus.$emit("userClickEdited",this.componentSoure)
+  // editClick(e) {
+  //     this.$emit("child")
+  //     this.componentSoure.x=e.x
+  //     this.componentSoure.y=e.y
+  //     this.componentSoure.width=e.target.getBoundingClientRect().width
+  //     // this.componentSoure.height=e.target.getBoundingClientRect().height
+  //     // console.log(this.componentSoure)
+  //     // eventBus.$emit("userClickEdited",this.componentSoure)
       
-  },
+  // },
   styleChanged(data) {
     this.target = data.payload.className
     this.style = data.style
     this.value = data.value
     let element = document.querySelector(`.${this.target}`)
     element.style[this.style] = this.value
-    console.log(element.style[this.style])
 
   }
   }
@@ -161,17 +156,27 @@ export default {
   width: 100%;
   
   .dashboard{
+    background-color: #f6f8fb;
     width: 100%;
     border: 1px solid black;
+    height:80%;
     max-height: 40rem;
     .dashboard-wrapper{
-      max-height: 100%;
+      height: 100%;
     .text-wrapper {
       display: flex;
       flex-direction: row;
+      align-items: center;
       margin: 0.5rem;
+      position: relative;
+      .dashboard-text {
+        color: #5a5c69;
+        font-size: 3rem;
+      }
       .generate {
         background-color: #8b8bcc;
+        position: absolute;
+        left: 52rem;
         border-radius: 0.4rem;
         }
     }
@@ -181,71 +186,139 @@ export default {
         display: flex;
         flex-direction: row;
         margin-bottom: 1rem;
+        align-items: center;
+        justify-content: center;
         }
         .earningm-wrapper {
           border: 1px solid #d95353;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          width: 20rem;
+          width: 50%;
           display: flex;
+          height: 5rem;
           flex-direction: row;
           padding: 0.5rem;
           border-radius: 0.4rem;
           margin-right: 1rem;
           align-items: center;
+          position:relative;
+          background-color: #fff;
           .earningm {
             color: #d95353;
+            font-size: 0.75rem;
           }
+          .dol1 {
+            text-align: left;
+            font-size: 1.2rem;
+          }
+          
         }
         .earninga-wrapper {
           border: 1px solid #1cc88a;
-          width: 20rem;
           display: flex;
           flex-direction: row;
+          background-color: #fff;
+          height: 5rem;
           padding: 0.5rem;
           border-radius: 0.4rem;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
+          width:50%;
+          position:relative;
+          align-items: center;
           .earninga {
             color: #1cc88a;
+            font-size: 0.75rem;
+          }
+          .dol2 {
+            text-align: left;
+            font-size: 1.2rem;
           }
         }
-      }
+        .button1, .button2 {
+          position: absolute;
+          background-color: #dddfeb;
+          background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
+          margin-left: 1rem;
+          border-radius: 0.84rem;
+          border: none;
+          height: 3.8rem;
+          width: 3.8rem;
+          left: 24rem;
+        }
+
+        .earningm-box, .earninga-box{
+            display: flex;
+            flex-direction: column;
+            margin-left: 0.5rem;
+          }
+          
       .task-box {
         display: flex;
         flex-direction: row;
+        align-items: center;
+        justify-content: center;
         .tasks-wrapper {
           border: 1px solid #36b9cc;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          width: 20rem;
+          height: 5rem;
+          background-color: #fff;
+          align-items: center;
+          width: 50%;
           display: flex;
           flex-direction: row;
           padding: 0.5rem;
           border-radius: 0.4rem;
+          position:relative;
           margin-right: 1rem;
           .tasks {
             color: #36b9cc;
+            font-size: 0.75rem;
+          }
+          .task{
+            text-align: left;
+            font-size: 1.2rem;
           }
         }
         
         .pending-wrapper {
           border: 1px solid #f6c23e;
-          width: 20rem;
+          width: 50%;
           display: flex;
           flex-direction: row;
           padding: 0.5rem;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
+          height: 5rem;
+          background-color: #fff;
+          position:relative;
+          align-items: center;
           border-radius: 0.4rem;
           .pending {
             color: #f6c23e;
+            font-size: 0.75rem;
+          }
+          .pend {
+            text-align: left;
+            font-size: 1.2rem;
           }
         }
-        .button1,
-        .button2,
-        .button3,
-        .button4 {
-          background-color: #afa7a7;
+        .button3, .button4 {
+          position: absolute;
+          background-color: #dddfeb;
+          background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
           margin-left: 1rem;
+          border-radius: 0.84rem;
           border: none;
+          height: 3.8rem;
+          width: 3.8rem;
+          left: 24rem;
         }
+      
+      
+    .pending-box, .task-box{
+            display: flex;
+            flex-direction: column;
+            margin-left: 0.5rem;
+          }
+          }
       }
     
     
@@ -254,7 +327,7 @@ export default {
       flex-direction: column;
       align-items: center;
 
-      .img1, .img2, .img3{
+      .img1, .img2 {
         width: 10rem;
       }
     }
