@@ -201,11 +201,13 @@ export default {
 	  },
 	  selectionWidthSource:{
 		  payload:'',
-		  width:'',
+      style:'width',
+      value:''
 	  },
 	  selectionHeightSource:{
 		  payload:'',
-		  height:'',
+		  style:'height',
+      value:''
 	  },
 
       mgTop:0,
@@ -221,12 +223,12 @@ export default {
     }
   },
   created(){
-	  alert("ss")
-	  console.log(this.payload)
+	  // alert("ss")
+	  // console.log(this.payload)
   },
  mounted() 
  { 
-	 console.log("Parent mounted") 
+	//  console.log("Parent mounted") 
  },
   methods:{
     changeSource(){
@@ -235,13 +237,13 @@ export default {
     //   eventBus.$emit("userChangeSource",this.componentSorce)
 	},
 	submitWidth(e){
-		this.selectionWidthSource.payload=this.payload
-		this.selectionWidthSource.width=this.componentSorce.width+'px'
+		this.selectionWidthSource.payload=this.payload.target
+		this.selectionWidthSource.value=this.componentSorce.width+'px'
 		this.$emit('userSelected', this.selectionWidthSource)
 	},
 	submitHeight(e){
-		this.selectionHeightSource.payload=this.payload
-		this.selectionHeightSource.height=this.componentSorce.height+'px'
+		this.selectionHeightSource.payload=this.payload.target
+		this.selectionHeightSource.value=this.componentSorce.height+'px'
 		this.$emit('userSelected', this.selectionHeightSource)
 	}
   }

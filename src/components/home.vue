@@ -46,7 +46,6 @@
 <script>
 
 export default {
-  props: ['pdata'],
   data () {
     return {
       compo: null,
@@ -65,7 +64,9 @@ export default {
           width:960,
           height:614
       },
-      pdata: ''
+      target: '',
+      style: '',
+      value: ''
   }
   },
   created(){
@@ -128,7 +129,7 @@ export default {
   },
   onmouseClick(e) {
       // console.log(e.target)
-      this.$emit('componentSelected', e.target)
+      this.$emit('componentSelected', e)
     },
   editClick(e) {
       this.$emit("child")
@@ -140,8 +141,16 @@ export default {
       // eventBus.$emit("userClickEdited",this.componentSoure)
       
   },
-  printa() {
-    console.log(this.pdata)
+  styleChanged(data) {
+    this.target = data.payload.className
+    this.style = data.style
+    this.value = data.value
+    console.log(this.value)
+    let element = document.querySelector(`.${this.target}`)
+    console.log(this.style)
+    // console.log(element)
+    // element.style.this.style= this.value
+
   }
   }
 }
