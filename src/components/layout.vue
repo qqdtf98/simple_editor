@@ -248,7 +248,6 @@ export default {
 	submitWidth(e){
 		this.selectionWidthSource.payload=this.payload
 		this.selectionWidthSource.value=this.componentSorce.width+'px'
-		console.log(this.selectionWidthSource)
 		this.$emit('userSelected', this.selectionWidthSource)
 	},
 	submitHeight(e){

@@ -5,7 +5,7 @@
       <overview class="overview"></overview>
     </div>
     <home ref="home" @componentSelected="componentSelected" class="home"></home>
-    <layout ref="layouts":payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
+    <layout ref="layouts" :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
   </div>
 </template>
 
@@ -27,12 +27,7 @@ export default {
   methods: {
     componentSelected(payload){
       this.payload = payload.target
-      console.log(payload.x)
-      console.log(payload.y)
-      console.log(payload.target.getBoundingClientRect().width)
-      console.log(payload.target.getBoundingClientRect().height)
       this.$refs.layouts.getData(payload)
-
     },
     userSelectedWidth(data){
       this.data = data
