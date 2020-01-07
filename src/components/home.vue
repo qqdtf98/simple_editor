@@ -50,6 +50,7 @@
         <div v-if="onelementSelected" class="tagname"></div>
         <div class="compo-border"></div>
       </div>
+      <img style="cursor:pointer" v-if="isContentMovable" src="../assets/move.svg" class="move-icon" />
     </div>
   </div>
 </template>
@@ -64,7 +65,13 @@ export default {
       onelementSelected: false,
       target: '',
       style: '',
-      value: ''
+      value: '',
+      isContentEditable: false,
+      clickedBorder: '',
+      clickedElement: null,
+      clickedBorderRadius: '',
+      isContentMovable: false,
+      elem: null
   }
   },
   created(){
@@ -362,6 +369,15 @@ export default {
       opacity:0;
     }
     
+  }
+  .move-icon{
+    z-index:10;
+    position: fixed;
+    width: 0.9rem;
+    height: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   }
   
