@@ -4,8 +4,8 @@
       <studio class="studio"></studio>
       <overview class="overview"></overview>
     </div>
-    <home ref="home" v-bind:pdata='data' @componentSelected="componentSelected" class="home"></home>
-    <layout :payload="payload" @userSelectedWidth="userSelectedWidth" class="layout"></layout>
+    <home ref="home" @componentSelected="componentSelected" class="home"></home>
+    <layout :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
   </div>
 </template>
 
@@ -31,10 +31,8 @@ export default {
       //console.log(payload.x)
     },
     userSelectedWidth(data){
-      // console.log("정찹")
-      // console.log(data)
       this.data = data
-      this.$refs.home.printa()
+      this.$refs.home.styleChanged(this.data)
     }
   }
 }
