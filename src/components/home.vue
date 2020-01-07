@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <div class="dashboard" @click="onmouseClick" @mousemove="onmouseMove">
+    <div @keyup.enter="isContentNotEditable" ref="dash" class="dashboard" :contenteditable="isContentEditable" @dblclick="onmouseDoubleClick" @click="onmouseClick" @mousemove="onmouseMove">
       <div class="dashboard-wrapper">
         <div class="text-wrapper">
           <div class="dashboard-text">Dashboard</div>
@@ -51,6 +51,10 @@
         <div class="compo-border"></div>
       </div>
       <img style="cursor:pointer" v-if="isContentMovable" src="../assets/move.svg" class="move-icon" />
+      <div v-if="isContentMovable" data-pos="top" style="cursor:ns-resize" @mousedown="mouseDownBoundary" class="boundary-line-top"></div>
+      <div v-if="isContentMovable" data-pos="left" style="cursor:ew-resize" @mousedown="mouseDownBoundary" class="boundary-line-left"></div>
+      <div v-if="isContentMovable" data-pos="right" style="cursor:ew-resize" @mousedown="mouseDownBoundary" class="boundary-line-right"></div>
+      <div v-if="isContentMovable" data-pos="bottom" style="cursor:ns-resize" @mousedown="mouseDownBoundary" class="boundary-line-bottom"></div>
     </div>
   </div>
 </template>
@@ -76,20 +80,22 @@ export default {
   },
   methods: {
   onmouseMove(e) {
+    // console.log(e.target)
+    this.onelementSelected = true
       if (this.compo === null) {
           if(e.target.className != "tagname" && e.target.className != 'move-icon' ){
-          // border.style.zIndex = 3;
+            // border.style.zIndex = 3;
           
           this.onelementSelected = true
           this.compo = e
               .target
               .getBoundingClientRect()
-          
+             
       }
       } else {
           if (this.compo != e.target) {
               if(e.target.className != "tagname" && e.target.className != 'move-icon'){
-          // border.style.zIndex = 3;
+                // border.style.zIndex = 3;
               this.compo = e
                   .target
                   .getBoundingClientRect()
@@ -102,20 +108,107 @@ export default {
                   .getBoundingClientRect()
                   .height + 'px'
               let bord = document.querySelector('.compo-border')
-              bord.style.border = "1px solid #3e8ce4"
+              bord.style.border = "2px solid #3e8ce4"
               bord.style.left = this.compo.left + 'px'
               bord.style.top = this.compo.top + 'px'
               bord.style.width = this.compo.width + 'px'
               bord.style.height = this.compo.height + 'px'
+              
               }
           }
       }
   },
-  onmouseLeave(e) {
-      e.target.style.border = "none"
-  },
+  // onmouseLeave(e) {
+  //     e.target.style.border = "none"
+  // },
   onmouseClick(e) {
       this.$emit('componentSelected', e)
+      if(this.clickedElement === null){
+        if(e.target.className != "tagname" && e.target.className != 'move-icon'){
+      this.clickedElement = e.target
+      this.clickedBorder = getComputedStyle(e.target).border
+      this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+      e.target.style.border = "2px solid #3e8ce4"
+      //border radius이상함
+
+      this.isContentMovable = true
+      
+      let left_line = document.querySelector('.boundary-line-left')
+      let right_line = document.querySelector('.boundary-line-right')
+      let top_line = document.querySelector('.boundary-line-top')
+      let bottom_line = document.querySelector('.boundary-line-bottom')
+      
+      this.elem = e.target.getBoundingClientRect()
+      top_line.style.left = this.elem.left  + 'px'
+      top_line.style.top = this.elem.top + 1 +'px'
+      top_line.style.width = this.elem.width + 'px'
+      bottom_line.style.left = this.elem.left + 'px'
+      bottom_line.style.top = this.elem.top + this.elem.height - 1 +'px'
+      bottom_line.style.width = this.elem.width + 'px'
+      left_line.style.left = this.elem.left - 1 + 'px'
+      left_line.style.top = this.elem.top +'px'
+      left_line.style.height = this.elem.width + 'px'
+      right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
+      right_line.style.top = this.elem.top +'px'
+      right_line.style.height = this.elem.width + 'px'
+      
+
+      
+      this.$nextTick(() => {
+     
+              let tag = document.querySelector('.move-icon')
+              
+              tag.style.left = this.elem.left + 'px'
+              
+              tag.style.top = this.elem.top - tag
+                  .getBoundingClientRect()
+                  .height + 'px'
+})
+        }
+      } else if (this.clickedElement != e.target) {
+        if(e.target.className != "tagname" && e.target.className != 'move-icon'){
+        this.clickedElement.style.border = this.clickedBorder
+        this.clickedElement.style.borderRadius = this.clickedborderRadius
+        this.clickedElement = e.target
+      this.clickedBorder = getComputedStyle(e.target).border
+      this.clickedborderRadius = getComputedStyle(e.target).borderRadius
+      e.target.style.border = "2px solid #3e8ce4"
+      e.target.style.borderRadius = 0
+
+      let left_line = document.querySelector('.boundary-line-left')
+      let right_line = document.querySelector('.boundary-line-right')
+      let top_line = document.querySelector('.boundary-line-top')
+      let bottom_line = document.querySelector('.boundary-line-bottom')
+      this.elem = e.target.getBoundingClientRect()
+      top_line.style.left = this.elem.left  + 'px'
+      top_line.style.top = this.elem.top + 1 +'px'
+      top_line.style.width = this.elem.width + 'px'
+      bottom_line.style.left = this.elem.left + 'px'
+      bottom_line.style.top = this.elem.top + this.elem.height - 1 +'px'
+      bottom_line.style.width = this.elem.width + 'px'
+      left_line.style.left = this.elem.left - 1 + 'px'
+      left_line.style.top = this.elem.top +'px'
+      left_line.style.height = this.elem.width + 'px'
+      right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
+      right_line.style.top = this.elem.top +'px'
+      right_line.style.height = this.elem.width + 'px'
+
+      this.isContentMovable = true
+
+      this.$nextTick(() => {
+      this.elem = e
+                  .target
+                  .getBoundingClientRect()
+              let tag = document.querySelector('.move-icon')
+              
+              tag.style.left = this.elem.left + 'px'
+              
+              tag.style.top = this.elem.top - tag
+                  .getBoundingClientRect()
+                  .height + 'px'
+      })
+      }
+      }
     },
   styleChanged(data) {
     this.target = data.payload.className
@@ -166,7 +259,9 @@ export default {
         e.preventDefault()
       this.isContentEditable = false
     },
-  }
+    mouseDownBoundary(e){
+      console.log(e.target.getAttribute('data-pos'))
+    }
   }
 }
 </script>
@@ -199,9 +294,9 @@ export default {
       .generate {
         background-color: #8b8bcc;
         position: absolute;
-        left: 49rem;
         border-radius: 0.4rem;
         padding: 0.3rem;
+        right: 10px;
         }
     }
     .component-wrapper {
@@ -268,7 +363,7 @@ export default {
           border: none;
           height: 3.8rem;
           width: 3.8rem;
-          left: 22.5rem;
+          right:10px;
         }
 
         .earningm-box, .earninga-box{
@@ -337,7 +432,7 @@ export default {
           border: none;
           height: 3.8rem;
           width: 3.8rem;
-          left: 22.5rem;
+          right: 10px;
         }
       
       
@@ -374,8 +469,7 @@ export default {
     }
     .compo-border {
       position: fixed;
-      z-index: 10;
-      opacity:0;
+      z-index: -1;
     }
     
   }
@@ -388,8 +482,20 @@ export default {
     align-items: center;
     justify-content: center;
   }
+  .boundary-line-top, .boundary-line-bottom{
+    width: 100%;
+    height: 5px;
+    position: fixed;
+    z-index: 10000;
+  }
+
+  .boundary-line-left, .boundary-line-right{
+    width: 5px;
+    height: 100%;
+    position: fixed;
+    z-index: 10000;
   }
   
-  
+  }
 }
 </style>
