@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-nav tabs fill>
-      <b-nav-item active>Look & Feel</b-nav-item>
+      <b-nav-item active>Look & Feel </b-nav-item>
       <b-nav-item>options</b-nav-item>
       <b-nav-item>Animation</b-nav-item>
     </b-nav>
@@ -12,7 +12,6 @@
         </b-card-header>
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
-            <v-app>
               <div class="layout">
                 <div class="content">
                   <div class="info-option">
@@ -70,7 +69,7 @@
                     <div class="option textboxoption has-addon collapsed">
                       <label class="option-content">
                         <span title>
-                          x
+                          Width
                           <i class="caret" style="display: inline-block;"></i>
                         </span>
                         <div class="control">
@@ -80,7 +79,8 @@
                             value
                             title
                             placeholder="31.4375px"
-                            v-model="componentSorce.x"
+							 @keyup.enter="submitWidth"
+                            v-model="componentSorce.width"
                           />
                           <span class="warning-badge" style="display: none;"></span>
                           <span class="addon increment-handle"></span>
@@ -88,7 +88,7 @@
                       </label>
                       <label class="option-content">
                         <span title>
-                          y
+                          Height
                           <i class="caret" style="display: inline-block;"></i>
                         </span>
                         <div class="control">
@@ -98,7 +98,8 @@
                             value
                             title
                             placeholder="40px"
-                            v-model="componentSorce.y"
+							@keyup.enter="submitHeight"
+                            v-model="componentSorce.height"
                           />
                           <span class="warning-badge" style="display: none;"></span>
                           <span class="addon increment-handle">
@@ -108,18 +109,18 @@
                       </label>
                       <label class="option-content">
                         <span title>
-                          Width
+                          Margin
                           <i class="caret" style="display: none;"></i>
                         </span>
                         <div class="control">
                           <input
                             type="text"
-                            name="min-height-option
-											"
+                            name="min-height-option"
                             value
                             title
                             placeholder="none"
-                            v-model="componentSorce.width"
+							@keyup.enter="submitMargin"
+                     
                           />
                           <span class="warning-badge" style="display: none;"></span>
                           <span class="addon increment-handle">
@@ -129,7 +130,7 @@
                       </label>
                       <label class="option-content">
                         <span title>
-                          Height
+                          Padding
                           <i class="caret" style="display: none;"></i>
                         </span>
                         <div class="control">
@@ -139,8 +140,8 @@
                             value
                             title
                             placeholder="none"
-                            @keyup.enter="submit"
-                            v-model="componentSorce.height"
+                            @keyup.enter="submitPadding"
+                        
                           />
                           <span class="warning-badge" style="display: none;"></span>
                           <span class="addon increment-handle">
@@ -191,18 +192,22 @@ export default {
   props:['payload'],
   data(){
     return{
-      isData:true,
+      isData:false,
       componentSorce:{
         x:228,
         y:500,
         width:960,
         height:614,
 	  },
-	  selectionSource:{
+	  selectionWidthSource:{
 		  payload:'',
-		  x:'',
-		  //x:this.componentSorce.x,
+		  width:'',
 	  },
+	  selectionHeightSource:{
+		  payload:'',
+		  height:'',
+	  },
+
       mgTop:0,
       mgBottom:0,
       mgLeft:0,
@@ -216,20 +221,28 @@ export default {
     }
   },
   created(){
-    
+	  alert("ss")
+	  console.log(this.payload)
   },
+ mounted() 
+ { 
+	 console.log("Parent mounted") 
+ },
   methods:{
     changeSource(){
 
-	  console.log(this.payload)
+	  //console.log(this.payload)
     //   eventBus.$emit("userChangeSource",this.componentSorce)
 	},
-	submit(e){
-		alert("제출")
-		console.log(this.payload)
-		this.selectionSource.payload=this.payload
-		this.selectionSource.x=this.componentSorce.x
-		this.$emit('userSelectedWidth', this.selectionSource)
+	submitWidth(e){
+		this.selectionWidthSource.payload=this.payload
+		this.selectionWidthSource.width=this.componentSorce.width+'px'
+		this.$emit('userSelected', this.selectionWidthSource)
+	},
+	submitHeight(e){
+		this.selectionHeightSource.payload=this.payload
+		this.selectionHeightSource.height=this.componentSorce.height+'px'
+		this.$emit('userSelected', this.selectionHeightSource)
 	}
   }
 };

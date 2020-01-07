@@ -5,7 +5,7 @@
       <overview class="overview"></overview>
     </div>
     <home @componentSelected="componentSelected" class="home"></home>
-    <layout :payload="payload" @userSelectedWidth="userSelectedWidth" class="layout"></layout>
+    <layout :payload="payload" @userSelected="userSelected" class="layout"></layout>
   </div>
 </template>
 
@@ -26,15 +26,11 @@ export default {
   methods: {
     componentSelected(payload){
       this.payload = payload
-      console.log(payload)
-<<<<<<< HEAD
-      console.log(payload.x)
-=======
+      //console.log(payload)
+      //console.log(payload.x)
     },
-    userSelectedWidth(data){
-      //console.log("정찹")
-      console.log(data)
->>>>>>> 21b1f738b1afe0a91b583eb98502250e3ee1db70
+    userSelected(data){
+      //console.log(data)
     }
   }
 }
