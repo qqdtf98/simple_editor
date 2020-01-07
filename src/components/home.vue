@@ -11,21 +11,21 @@
             <div class="earningm-wrapper">
               <span class="earningm">EARNINGS(MONTHLY)</span>
 
-              <button @click="editClick" v-bind:style="buttonObject" class="button1">a</button>
+              <button @click="editClick" class="button1">a</button>
             </div>
             <div class="earninga-wrapper">
               <span class="earninga">EARNINGS(ANNUAL)</span>
-              <button @click="editClick" v-bind:style="buttonObject" class="button2">a</button>
+              <button @click="editClick" class="button2">a</button>
             </div>
           </div>
           <div class="task-box">
             <div class="tasks-wrapper">
               <span class="tasks">TASKS</span>
-              <button @click="editClick" v-bind:style="buttonObject" class="button3">a</button>
+              <button @click="editClick" class="button3">a</button>
             </div>
             <div class="pending-wrapper">
               <span class="pending">PENDING REQUESTS</span>
-              <button @click="editClick" v-bind:style="buttonObject" class="button4">a</button>
+              <button @click="editClick"  class="button4">a</button>
             </div>
           </div>
         </div>
@@ -62,7 +62,9 @@ export default {
           x:228,
           y:500,
           width:960,
-          height:614
+          height:614,
+   
+
       },
       target: '',
       style: '',
@@ -70,7 +72,6 @@ export default {
   }
   },
   created(){
-
   // eventBus.$on('userChangeSource',data=>{
   //     // this.componentSoure.x=data.x
   //     // this.componentSoure.y=data.y

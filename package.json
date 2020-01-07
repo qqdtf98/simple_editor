@@ -11,11 +11,16 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@caohenghu/vue-colorpicker": "^1.2.2",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
     "js-yaml": "^3.13.1",
+    "mdbvue": "^6.2.0",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-color": "^2.7.0",
+    "vue-range-slider": "^0.6.0",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

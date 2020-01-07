@@ -27,10 +27,10 @@ export default {
   methods: {
     componentSelected(payload){
       this.payload = payload.target
-      console.log(payload.x)
-      console.log(payload.y)
-      console.log(payload.target.getBoundingClientRect().width)
-      console.log(payload.target.getBoundingClientRect().height)
+      // console.log(payload.x)
+      // console.log(payload.y)
+      // console.log(payload.target.getBoundingClientRect().width)
+      // console.log(payload.target.getBoundingClientRect().height)
       this.$refs.layouts.getData(payload)
 
     },
@@ -43,6 +43,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
