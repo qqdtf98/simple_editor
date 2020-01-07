@@ -4,7 +4,7 @@
       <studio class="studio"></studio>
       <overview class="overview"></overview>
     </div>
-    <home @componentSelected="componentSelected" class="home"></home>
+    <home ref="home" v-bind:pdata='data' @componentSelected="componentSelected" class="home"></home>
     <layout :payload="payload" @userSelectedWidth="userSelectedWidth" class="layout"></layout>
   </div>
 </template>
@@ -21,6 +21,7 @@ export default {
   data(){
     return{
       payload : '',
+      data: ''
     }
   },
   methods: {
@@ -29,8 +30,10 @@ export default {
       console.log(payload)
     },
     userSelectedWidth(data){
-      //console.log("정찹")
-      console.log(data)
+      // console.log("정찹")
+      // console.log(data)
+      this.data = data
+      this.$refs.home.printa()
     }
   }
 }

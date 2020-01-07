@@ -225,8 +225,8 @@ export default {
     //   eventBus.$emit("userChangeSource",this.componentSorce)
 	},
 	submit(e){
-		alert("제출")
-		console.log(this.payload)
+		// alert("제출")
+		// console.log(this.payload)
 		this.selectionSource.payload=this.payload
 		this.selectionSource.x=this.componentSorce.x
 		this.$emit('userSelectedWidth', this.selectionSource)
