@@ -124,6 +124,48 @@ export default {
     let element = document.querySelector(`.${this.target}`)
     element.style[this.style] = this.value
 
+  },
+  focusInput(){
+    this.isContentEditable = true
+    this.$nextTick(() => {
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        const range = new Range()
+        range.setStart(this.$refs.dash, 0)
+        range.setEnd(this.$refs.dash, 0)
+        sel.addRange(range)
+        this.placeCaretAtEnd(this.$refs.dash)
+      })
+  },
+  onmouseDoubleClick(){
+    this.focusInput()
+  },
+  placeCaretAtEnd(el) {
+    
+    console.log('asd')
+      el.focus()
+      if (
+        typeof window.getSelection !== 'undefined' &&
+        typeof document.createRange !== 'undefined'
+      ) {
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        range.collapse(false)
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        sel.addRange(range)
+      } else if (typeof document.body.createTextRange !== 'undefined') {
+        const textRange = document.body.createTextRange()
+        textRange.moveToElementText(el)
+        textRange.collapse(false)
+        textRange.select()
+      }
+    },
+    isContentNotEditable(e){
+        console.log(e)
+        e.preventDefault()
+      this.isContentEditable = false
+    },
   }
   }
 }
