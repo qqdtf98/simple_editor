@@ -126,7 +126,7 @@ export default {
   },
   onmouseClick(e) {
       // console.log(e.target)
-      this.$emit('componentSelected', e.target)
+      this.$emit('componentSelected', e)
     },
   editClick(e) {
       this.$emit("child")

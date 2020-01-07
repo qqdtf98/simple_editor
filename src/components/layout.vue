@@ -5,7 +5,10 @@
       <b-nav-item>options</b-nav-item>
       <b-nav-item>Animation</b-nav-item>
     </b-nav>
-    <div role="tablist">
+	<div v-if="isData">
+		<h3>컴포넌트를 선택해 주세요</h3>
+	</div>
+    <div v-else role="tablist">
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
@@ -192,7 +195,7 @@ export default {
   props:['payload'],
   data(){
     return{
-      isData:false,
+      isData:true,
       componentSorce:{
         x:228,
         y:500,
@@ -201,11 +204,13 @@ export default {
 	  },
 	  selectionWidthSource:{
 		  payload:'',
-		  width:'',
+		  style:'width',
+		  value:'',
 	  },
 	  selectionHeightSource:{
 		  payload:'',
-		  height:'',
+		  style:'height',
+		  value:'',
 	  },
 
       mgTop:0,
@@ -221,14 +226,21 @@ export default {
     }
   },
   created(){
-	  alert("ss")
 	  console.log(this.payload)
   },
  mounted() 
  { 
-	 console.log("Parent mounted") 
  },
   methods:{
+	getData(payload){
+		if(this.isData)
+			this.isData = false
+
+		this.componentSorce.x=payload.x
+		this.componentSorce.y=payload.y,
+		this.componentSorce.width=payload.target.getBoundingClientRect().width
+		this.componentSorce.height=payload.target.getBoundingClientRect().height
+	},
     changeSource(){
 
 	  //console.log(this.payload)
@@ -236,12 +248,13 @@ export default {
 	},
 	submitWidth(e){
 		this.selectionWidthSource.payload=this.payload
-		this.selectionWidthSource.width=this.componentSorce.width+'px'
+		this.selectionWidthSource.value=this.componentSorce.width+'px'
+		console.log(this.selectionWidthSource)
 		this.$emit('userSelected', this.selectionWidthSource)
 	},
 	submitHeight(e){
 		this.selectionHeightSource.payload=this.payload
-		this.selectionHeightSource.height=this.componentSorce.height+'px'
+		this.selectionHeightSource.value=this.componentSorce.height+'px'
 		this.$emit('userSelected', this.selectionHeightSource)
 	}
   }
