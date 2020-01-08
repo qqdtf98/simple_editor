@@ -4,8 +4,13 @@
       <studio class="studio"></studio>
       <overview class="overview"></overview>
     </div>
+    <div class="center-panel">
+    <div class="title">Editor</div>
+    <div class="editor">
     <home ref="home" @componentSelected="componentSelected" class="home"></home>
-    <layout ref="layouts":payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
+    </div>
+    </div>
+    <layout ref="layouts" :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
   </div>
 </template>
 
@@ -26,7 +31,7 @@ export default {
     }
   },
   methods: {
-    componentSelected(payload){
+    componentSelected (payload) {
       this.payload = payload.target
       // console.log(payload.x)
       // console.log(payload.y)
@@ -36,10 +41,8 @@ export default {
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       // console.log(this.homeLayoutLocation)
       this.$refs.layouts.getData(payload,this.homeLayoutLocation)
-      
-
     },
-    userSelectedWidth(data){
+    userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
     }
@@ -59,31 +62,62 @@ export default {
   flex-direction: row;
   height: 58rem;
   background-color: #2c3134;
+  align-items: center;
 
   .left-panel{
     width:20%;
-    
+    height:100%;
 
     .studio{
       height: 50%;
-    border: 1px solid #23282b;
+    border: 2px solid #23282b;
     }
 
     .overview{
-    border: 1px solid #23282b;
+    border: 2px solid #23282b;
       height: 50%;
     }
   }
-  
-  .home{
-    width:60%; 
+  .center-panel{
+    width:60%;
+    height: 80%;
+    display:flex;
+    align-items: center;
+    // justify-content: center;
+    flex-direction: column;
+    position: relative;
+    .title{
+      position: absolute;
+      text-align: center;
+      left: 0;
+      color: #fff;
+      height:4.02%;
+      background-color: #545e66;
+      padding:0.3rem;
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+      top: 0;
+    }
+  .editor{
+    width:100%;
+    position: absolute;
+    bottom:0;
+    height: 96%;
+    border: 2px solid #545e66;
+    .home{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     width: 97%;
     height: 100%;
+    }
+  }
   }
 
   .layout {
     width: 20%;
     height: 100%;
-    border: 1px solid #23282b;
+    border: 2px solid #23282b;
   }
 
 }

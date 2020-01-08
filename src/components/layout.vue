@@ -439,7 +439,6 @@
       </b-card>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -627,8 +626,9 @@ export default {
 		this.submitSorce.value=e+'%'
 		this.$emit('userSelected', this.submitSorce)
 	},
+
   }
-};
+}
 </script>
 
 <style>
@@ -674,5 +674,4 @@ export default {
     box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
 	user-select: none;
 }
-
 </style>
