@@ -1,5 +1,5 @@
 <template>
-    <div class="studio">studio.vue</div>
+    <div>overview.vue</div>
 </template>
 
 <style lang="scss">

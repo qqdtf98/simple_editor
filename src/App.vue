@@ -23,16 +23,24 @@ import overview from './components/overview'
 export default {
   components: {home, layout, studio, overview},
   name: 'App',
-  data () {
-    return {
-      payload: '',
-      data: ''
+  data(){
+    return{
+      payload : '',
+      data: '',
+      homeLayoutLocation:'',
     }
   },
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      this.$refs.layouts.getData(payload)
+      // console.log(payload.x)
+      // console.log(payload.y)
+      // console.log(payload.target.getBoundingClientRect().width)
+      // console.log(payload.target.getBoundingClientRect().height)
+      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
+      // console.log(this.homeLayoutLocation)
+      this.$refs.layouts.getData(payload,this.homeLayoutLocation)
     },
     userSelectedWidth (data) {
       this.data = data
@@ -43,6 +51,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
