@@ -15,35 +15,35 @@
 			<div class="info-option">
 				<div class="margin">
 					<div class="box-row blue">
-						<span class="margin-top" title="Margin Top">{{margin[0]}}</span>
+						<span class="margin-top" title="Margin Top">{{margin[0].value}}</span>
 					</div>
 					<div class="box-row middle">
 						<div class="box-col blue">
-							<span class="margin-left" title="Margin Left">{{margin[3]}}</span>
+							<span class="margin-left" title="Margin Left">{{margin[3].value}}</span>
 						</div>
 						<div class="box-col padding">
 							<div class="box-row green">
-								<span class="padding-top" title="Padding Top">0</span>
+								<span class="padding-top" title="Padding Top">{{padding[0]}}</span>
 							</div>
 							<div class="box-row middle">
 								<div class="box-col green">
-									<span class="padding-left" title="Padding Left">0</span>
+									<span class="padding-left" title="Padding Left">{{padding[3]}}</span>
 								</div>
 								<div class="box-col middle empty"></div>
 								<div class="box-col green">
-									<span class="padding-right" title="Padding Right">0</span>
+									<span class="padding-right" title="Padding Right">{{padding[1]}}</span>
 								</div>
 							</div>
 							<div class="box-row green">
-								<span class="padding-bottom" title="Padding Bottom">0</span>
+								<span class="padding-bottom" title="Padding Bottom">{{padding[2]}}</span>
 							</div>
 						</div>
 						<div class="box-col blue">
-							<span class="margin-right" title="Margin Right">{{margin[1]}}</span>
+							<span class="margin-right" title="Margin Right">{{margin[1].value}}</span>
 						</div>
 					</div>
 					<div class="box-row blue">
-						<span class="margin-bottom" title="Margin Bottom">{{margin[2]}}</span>
+						<span class="margin-bottom" title="Margin Bottom">{{margin[2].value}}</span>
 					</div>
 				</div>
 			<div class="dimensions">
@@ -492,7 +492,21 @@ export default {
 		fontColor:'',
 		fontSize:'',
 	  },
-	  margin : [0,0,0,0],
+	  margin : [
+		  {
+			value:0,
+		  },
+		  {
+			value:0,
+		  },
+		  {
+			value:0,
+		  },
+		  {
+			value:0,
+		  }
+	  ]
+	  ,
 	  padding:[0,0,0,0],
       
       compo: null,
@@ -590,17 +604,26 @@ export default {
 		// console.log(this.margin[0])
 		if(margin.length!==1){
 			for(var i=0;i<margin.length;i++){
-				this.margin[i] = margin[i]
-			
+				this.margin[i].value = margin[i]
+			}
+		}
+		else
+			{
+			for(var i=0;i<4;i++){
+				this.margin[i].value = margin[0]
 			}
 		}
 		var padding =getComputedStyle(payload.target).padding.replace(/px/gi,'').split(" ")
-		// console.log(margin)
-		// console.log(this.margin[0])
+		console.log(padding)
+		console.log(this.margin[0])
 		if(padding.length!==1){
 			for(var i=0;i<padding.length;i++){
 				this.padding[i] = padding[i]
-			
+			}
+		}
+		else{
+			for(var i=0;i<4;i++){
+				this.padding[i] = padding[0]
 			}
 		}
 		// console.log(margin)
@@ -802,8 +825,11 @@ export default {
 }
 .info-option .empty {
     flex-grow: 1;
+	flex-direction: column;
     box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
 	user-select: none;
+	justify-content: center;
+    flex-direction: column;
 }
 .fontActive {
 	color:blue;
