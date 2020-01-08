@@ -523,16 +523,29 @@ export default {
 		this.componentSorce.x=Math.floor(payload.x - homeLayoutLocation.x)
 		this.componentSorce.y=Math.floor(payload.y - homeLayoutLocation.y),
 
-		this.componentSorce.margin=Math.floor(payload.target.style.margin)
-		this.componentSorce.padding=Math.floor(payload.target.style.padding),
+		console.log(getComputedStyle(payload.target))
+		console.log(getComputedStyle(payload.target).filter)
+		console.log(getComputedStyle(payload.target).brightness)
+		console.log(getComputedStyle(payload.target).contrast)
+		console.log(getComputedStyle(payload.target).grayscale)
+		console.log(getComputedStyle(payload.target).hue)
+		console.log(getComputedStyle(payload.target).invert)
+		console.log(getComputedStyle(payload.target).saturate)
+		console.log(getComputedStyle(payload.target).sepia )
+		
 
 		this.componentSorce.width=Math.floor(payload.target.getBoundingClientRect().width)
 		this.componentSorce.height=Math.floor(payload.target.getBoundingClientRect().height)
+		this.componentSorce.margin=getComputedStyle(payload.target).margin
+		this.componentSorce.padding=getComputedStyle(payload.target).padding,
 
 		this.componentSorce.backgroundColor = getComputedStyle(payload.target).backgroundColor
 		this.backgroundColor.backgroundColor = getComputedStyle(payload.target).backgroundColor
 		this.fontColor.backgroundColor = getComputedStyle(payload.target).color
 		this.componentSorce.fontSize = getComputedStyle(payload.target).fontSize.replace("px","");
+
+		this.opacityValue=getComputedStyle(payload.target).opacity
+		console.log(this.opacity)
 
 	},
 	colorBackgroundpicker(){
@@ -543,9 +556,17 @@ export default {
 	},
 	updateBackgroundValue(colorData) {
     	this.backgroundColor.background = colorData.hex
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style="background"
+		this.submitSorce.value=colorData.hex
+		this.$emit('userSelected', this.submitSorce)
     },
 	updateFontValue(colorData) {
     	this.fontColor.background = colorData.hex
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style="color"
+		this.submitSorce.value=colorData.hex
+		this.$emit('userSelected', this.submitSorce)
     },
 	submitSourceWithPX(e){
 		this.submitSorce.payload=this.payload
@@ -574,56 +595,57 @@ export default {
 	},
 	submitOpacity(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Opacity'
+		this.submitSorce.style='opacity'
 		this.submitSorce.value=e
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitBlur(e){
+		console.log("dsadsa")
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Blur'
-		this.submitSorce.value=e+'px'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='blur('+e+'px)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitBrightness(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Brightness'
-		this.submitSorce.value=e+'%'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='brightness('+e+'%)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitContrast(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Contrast'
-		this.submitSorce.value=e+'%'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='contrast('+e+'%)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitGrayscale(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Grayscale'
-		this.submitSorce.value=e+'%'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='grayscale('+e+'%)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitHue(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Hue'
-		this.submitSorce.value=e+'deg'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='hue('+e+'deg)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitInvert(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Invert'
-		this.submitSorce.value=e+'%'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='invert('+e+'%)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitSaturate(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Saturate'
-		this.submitSorce.value=e+'%'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='saturate('+e+'%)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitSepia(e){
 		this.submitSorce.payload=this.payload
-		this.submitSorce.style='Sepia'
-		this.submitSorce.value=e+'%'
+		this.submitSorce.style='filter'
+		this.submitSorce.value='sepia('+e+'%)'
 		this.$emit('userSelected', this.submitSorce)
 	},
 
