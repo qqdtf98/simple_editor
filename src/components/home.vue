@@ -277,12 +277,9 @@ export default {
           })
 
           this.$nextTick(() => {
-            let tag = document.querySelector('.move-icon')
-
-            tag.style.left = this.elem.left + 'px'
-
-            tag.style.top =
-              this.elem.top - tag.getBoundingClientRect().height + 'px'
+            let move = document.querySelector('.move-icon')
+            move.style.left = this.elem.left + 'px'
+            move.style.top = this.elem.top - move.getBoundingClientRect().height + 'px'
           })
         }
       } else if (this.clickedElement !== e.target) {
@@ -431,9 +428,16 @@ export default {
           let move = document.querySelector('.move-icon')
           move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
           let moveTop = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height
-          if (moveTop > 170) {
+          let moveLeft = this.clickedElement.getBoundingClientRect().left
+          if (moveTop > 190) {
             this.isContentMovable = true
             move.style.top = moveTop + 'px'
+          } else {
+            this.isContentMovable = false
+          }
+          if (moveLeft > 300) {
+            this.isContentMovable = true
+            move.style.left = moveLeft + 'px'
           } else {
             this.isContentMovable = false
           }
@@ -668,13 +672,16 @@ export default {
       }
     }
     .move-icon {
-      z-index: 10;
+      z-index: 2;
       position: fixed;
-      width: 0.9rem;
-      height: 0.9rem;
+      width: 1.2rem;
+      height: 1.2rem;
       display: flex;
       align-items: center;
+      padding: 0.15rem;
       justify-content: center;
+      background-color: #f75c51;
+      fill:#fff;
     }
     .boundary-line-top,
     .boundary-line-bottom {
