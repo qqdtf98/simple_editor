@@ -189,6 +189,7 @@ export default {
   },
   methods: {
     onmouseMove (e) {
+      let dashboardElem = document.querySelector('.dashboard')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
@@ -217,6 +218,7 @@ export default {
             e.target.className !== 'boundary-line-bottom'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
+
             let tag = document.querySelector('.tagname')
 
             tag.textContent = e.target.tagName
@@ -230,18 +232,32 @@ export default {
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            bottomBord.style.left = this.selectedElement.left + 'px'
-            bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
-            bottomBord.style.width = this.selectedElement.width + 'px'
+            let dashWrapper = document.querySelector('.dashboard-wrapper')
+            let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
+            console.log(scrollBottomHeight)
             topBord.style.left = this.selectedElement.left + 'px'
             topBord.style.top = this.selectedElement.top + 'px'
             topBord.style.width = this.selectedElement.width + 'px'
-            leftBord.style.left = this.selectedElement.left + 'px'
-            leftBord.style.top = this.selectedElement.top + 'px'
-            leftBord.style.height = this.selectedElement.height + 'px'
-            rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
-            rightBord.style.top = this.selectedElement.top + 'px'
-            rightBord.style.height = this.selectedElement.height + 'px'
+            if (this.selectedElement.bottom > dashboardElem.getBoundingClientRect().bottom) {
+              bottomBord.style.display = 'none'
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+              rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+            } else {
+              bottomBord.style.display = ''
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+              rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+            }
           }
         }
       }
