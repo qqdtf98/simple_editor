@@ -5,18 +5,18 @@
       <b-nav-item>options</b-nav-item>
       <b-nav-item>Animation</b-nav-item>
     </b-nav>
-	<div v-if="isData" role="tablist">
+    <div v-if="isData" role="tablist">
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
         </b-card-header>
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
-			<div class="info-option">
-				<div class="margin">
-					<div class="box-row blue">
-						<span class="margin-top" title="Margin Top">0</span>
-					</div>
+            <div class="info-option">
+              <div class="margin">
+                <div class="box-row blue">
+                  <span class="margin-top" title="Margin Top">0</span>
+                  </div>
 					<div class="box-row middle">
 						<div class="box-col blue">
 							<span class="margin-left" title="Margin Left">0</span>
@@ -198,7 +198,7 @@
 			<div class="option textboxoption has-addon collapsed">
 				<label class="option-content">
 				<span title>
-					Color 
+					Color
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
 				<div class="control">
@@ -242,7 +242,7 @@
 					</span>
 				</div>
 				</label>
-			</div>	
+			</div>
 		</b-collapse>
       </b-card>
 
@@ -250,10 +250,10 @@
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-4 variant="info">Filters</b-button>
         </b-card-header>
-		
+
 		 <b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
 			<div style="float:left">
-			Opacity 
+			Opacity
 			<range-slider
 				class="slider"
 				min="0"
@@ -274,7 +274,7 @@
 			</div>
 
 			<div style="float:left">
-			Blur 
+			Blur
 			<range-slider
 				class="slider"
 				min="0"
@@ -295,7 +295,7 @@
 			</div>
 
 			<div style="float:left">
-			Brightness 
+			Brightness
 			<range-slider
 				class="slider"
 				min="0"
@@ -315,7 +315,7 @@
 			></input>
 			</div>
 			<div style="float:left">
-			Contrast 
+			Contrast
 			<range-slider
 				class="slider"
 				min="0"
@@ -335,7 +335,7 @@
 			></input>
 			</div>
 			<div style="float:left">
-			Grayscale 
+			Grayscale
 			<range-slider
 				class="slider"
 				min="0"
@@ -355,7 +355,7 @@
 			></input>
 			</div>
 			<div style="float:left">
-			Hue 
+			Hue
 			<range-slider
 				class="slider"
 				min="0"
@@ -375,7 +375,7 @@
 			></input>
 			</div>
 			<div style="float:left">
-			Invert 
+			Invert
 			<range-slider
 				class="slider"
 				min="0"
@@ -395,7 +395,7 @@
 			></input>
 			</div>
 			<div style="float:left">
-			Saturate 
+			Saturate
 			<range-slider
 				class="slider"
 				min="0"
@@ -415,7 +415,7 @@
 			></input>
 			</div>
 			<div style="float:left">
-			Sepia 
+			Sepia
 			<range-slider
 				class="slider"
 				min="0"
@@ -449,251 +449,243 @@ import { mapGetters, mapMutations } from 'vuex'
 import 'vue-range-slider/dist/vue-range-slider.css'
 
 export default {
-
   name: 'App',
-  props:['payload'],
-  data(){
-    return{
-		
-	  opacityValue: '',
-	  blurValue:'',
-	  brightnessValue:'', 
-	  contrastValue:'',
-	  grayscaleValue:'', 
-	  hueValue:'', 
-	  invertValue:'', 
-	  saturateValue:'', 
-	  sepiaValue:'', 
+  props: ['payload'],
+  data () {
+    return {
+      opacityValue: '',
+      blurValue: '',
+      brightnessValue: '',
+      contrastValue: '',
+      grayscaleValue: '',
+      hueValue: '',
+      invertValue: '',
+      saturateValue: '',
+      sepiaValue: '',
 
-      isData:false,
-	  isBackgroundPicker:false,
-	  isFontPicker:false,
+      isData: false,
+      isBackgroundPicker: false,
+      isFontPicker: false,
 
-	  backgroundColor:{
-		  backgroundColor:''
-	  },
+      backgroundColor: {
+        backgroundColor: ''
+      },
 
-	  fontColor:{
-		  backgroundColor:''
-	  },
+      fontColor: {
+        backgroundColor: ''
+      },
 
-	  submitSorce:{
-		  payload:'',
-		  style:'',
-		  value:'',
-	  },
-      componentSorce:{
-        x:228,
-        y:500,
-        width:960,
-        height:614,
-		padding:'0px',
+      submitSorce: {
+        payload: '',
+        style: '',
+        value: ''
+      },
+      componentSorce: {
+        x: 228,
+        y: 500,
+        width: 960,
+        height: 614,
+        padding: '0px',
         margin: '0px',
-		backgroundColor:'',
-		fontColor:'',
-		fontSize:'',
-	  },
+        backgroundColor: '',
+        fontColor: '',
+        fontSize: ''
+      },
 
-      mgTop:0,
-      mgBottom:0,
-      mgLeft:0,
-      mgRight:0,
-      pdTop:0,
-      pdBottom:0,
-      pdLeft:0,
-      pdRight:0,
+      mgTop: 0,
+      mgBottom: 0,
+      mgLeft: 0,
+      mgRight: 0,
+      pdTop: 0,
+      pdBottom: 0,
+      pdLeft: 0,
+      pdRight: 0,
       compo: null,
-      borderstyle: null,
+      borderstyle: null
     }
   },
   components: {
-    RangeSlider,ChromeColor: VueColor.Chrome
- 
+    RangeSlider,
+    ChromeColor: VueColor.Chrome
   },
-  created(){
-	  //console.log(this.payload)
+  created () {
+    // console.log(this.payload)
   },
- mounted() 
- { 
- },
-  methods:{
-	getData(payload,homeLayoutLocation){
-		if(!this.isData)
-			this.isData = true
-		this.componentSorce.x=Math.floor(payload.x - homeLayoutLocation.x)
-		this.componentSorce.y=Math.floor(payload.y - homeLayoutLocation.y),
+  mounted () {},
+  methods: {
+    getData (payload, homeLayoutLocation) {
+      if (!this.isData) {
+        this.isData = true
+      }
+      this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
+      this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y)
 
-		console.log(getComputedStyle(payload.target))
-		console.log(getComputedStyle(payload.target).filter)
-		console.log(getComputedStyle(payload.target).brightness)
-		console.log(getComputedStyle(payload.target).contrast)
-		console.log(getComputedStyle(payload.target).grayscale)
-		console.log(getComputedStyle(payload.target).hue)
-		console.log(getComputedStyle(payload.target).invert)
-		console.log(getComputedStyle(payload.target).saturate)
-		console.log(getComputedStyle(payload.target).sepia )
-		
+      this.componentSorce.width = Math.floor(
+        payload.target.getBoundingClientRect().width
+      )
+      this.componentSorce.height = Math.floor(
+        payload.target.getBoundingClientRect().height
+      )
+      this.componentSorce.margin = getComputedStyle(payload.target).margin
+      this.componentSorce.padding = getComputedStyle(payload.target).padding
 
-		this.componentSorce.width=Math.floor(payload.target.getBoundingClientRect().width)
-		this.componentSorce.height=Math.floor(payload.target.getBoundingClientRect().height)
-		this.componentSorce.margin=getComputedStyle(payload.target).margin
-		this.componentSorce.padding=getComputedStyle(payload.target).padding,
+      this.componentSorce.backgroundColor = getComputedStyle(
+        payload.target
+      ).backgroundColor
+      this.backgroundColor.backgroundColor = getComputedStyle(
+        payload.target
+      ).backgroundColor
+      this.fontColor.backgroundColor = getComputedStyle(payload.target).color
+      this.componentSorce.fontSize = getComputedStyle(
+        payload.target
+      ).fontSize.replace('px', '')
 
-		this.componentSorce.backgroundColor = getComputedStyle(payload.target).backgroundColor
-		this.backgroundColor.backgroundColor = getComputedStyle(payload.target).backgroundColor
-		this.fontColor.backgroundColor = getComputedStyle(payload.target).color
-		this.componentSorce.fontSize = getComputedStyle(payload.target).fontSize.replace("px","");
-
-		this.opacityValue=getComputedStyle(payload.target).opacity
-		console.log(this.opacity)
-
-	},
-	colorBackgroundpicker(){
-		this.isBackgroundPicker=true
-	},
-	colorFontpicker(){
-		this.isFontPicker=true
-	},
-	updateBackgroundValue(colorData) {
-    	this.backgroundColor.background = colorData.hex
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style="background"
-		this.submitSorce.value=colorData.hex
-		this.$emit('userSelected', this.submitSorce)
+      this.opacityValue = getComputedStyle(payload.target).opacity
+      console.log(this.opacity)
     },
-	updateFontValue(colorData) {
-    	this.fontColor.background = colorData.hex
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style="color"
-		this.submitSorce.value=colorData.hex
-		this.$emit('userSelected', this.submitSorce)
+    colorBackgroundpicker () {
+      this.isBackgroundPicker = true
     },
-	submitSourceWithPX(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style=e.target.name
-		this.submitSorce.value=e.target.value+'px'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitSourceOriginal(e){
-		//console.log(e.target)
-		if(e.target.name=='backgroundColor'){
-			this.isBackgroundPicker=false
-		}
-		if(e.target.name=='color'){
-			this.isFontPicker=false
-		}
-		this.submitSorce.payload=this.payload
-		if(typeof(e.target)!=='undefined'){
-			this.submitSorce.style=e.target.name
-			this.submitSorce.value=e.target.value
-		}
-		else{
-			//onsole.log(this.submitSorce)
-			this.submitSorce.value=e
-		}
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitOpacity(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='opacity'
-		this.submitSorce.value=e
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitBlur(e){
-		console.log("dsadsa")
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='blur('+e+'px)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitBrightness(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='brightness('+e+'%)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitContrast(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='contrast('+e+'%)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitGrayscale(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='grayscale('+e+'%)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitHue(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='hue('+e+'deg)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitInvert(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='invert('+e+'%)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitSaturate(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='saturate('+e+'%)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitSepia(e){
-		this.submitSorce.payload=this.payload
-		this.submitSorce.style='filter'
-		this.submitSorce.value='sepia('+e+'%)'
-		this.$emit('userSelected', this.submitSorce)
-	},
-
+    colorFontpicker () {
+      this.isFontPicker = true
+    },
+    updateBackgroundValue (colorData) {
+      this.backgroundColor.background = colorData.hex
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'background'
+      this.submitSorce.value = colorData.hex
+      this.$emit('userSelected', this.submitSorce)
+    },
+    updateFontValue (colorData) {
+      this.fontColor.background = colorData.hex
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'color'
+      this.submitSorce.value = colorData.hex
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitSourceWithPX (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = e.target.name
+      this.submitSorce.value = e.target.value + 'px'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitSourceOriginal (e) {
+      // console.log(e.target)
+      if (e.target.name == 'backgroundColor') {
+        this.isBackgroundPicker = false
+      }
+      if (e.target.name == 'color') {
+        this.isFontPicker = false
+      }
+      this.submitSorce.payload = this.payload
+      if (typeof e.target !== 'undefined') {
+        this.submitSorce.style = e.target.name
+        this.submitSorce.value = e.target.value
+      } else {
+        // onsole.log(this.submitSorce)
+        this.submitSorce.value = e
+      }
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitOpacity (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'opacity'
+      this.submitSorce.value = e
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitBlur (e) {
+      console.log('dsadsa')
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'blur(' + e + 'px)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitBrightness (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'brightness(' + e + '%)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitContrast (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'contrast(' + e + '%)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitGrayscale (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'grayscale(' + e + '%)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitHue (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'hue(' + e + 'deg)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitInvert (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'invert(' + e + '%)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitSaturate (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'saturate(' + e + '%)'
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitSepia (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      this.submitSorce.value = 'sepia(' + e + '%)'
+      this.$emit('userSelected', this.submitSorce)
+    }
   }
 }
 </script>
 
 <style>
-
 .blue {
-    padding: 5px;
-    background-color: #283844;
-    color: #64BFFF;
-    line-height: 1;
+  padding: 5px;
+  background-color: #283844;
+  color: #64bfff;
+  line-height: 1;
 }
 .info-option .box-row {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .info-option {
-    font-size: 12px;
-    line-height: 1.5;
-    text-transform: uppercase;
-    text-align: center;
-    border-bottom: 1px solid #242729;
-    box-shadow: 0 1px 0 #3B4144;
-    padding-bottom: 8px;
-    margin: 0 10px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 1px solid #242729;
+  box-shadow: 0 1px 0 #3b4144;
+  padding-bottom: 8px;
+  margin: 0 10px 10px;
 }
 .info-option .green {
-    padding: 5px;
-    background-color: #2D3F3A;
-    color: #57D88B;
-    line-height: 1;
+  padding: 5px;
+  background-color: #2d3f3a;
+  color: #57d88b;
+  line-height: 1;
 }
 
 .info-option .middle {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 .info-option .box-col {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 .info-option .empty {
-    flex-grow: 1;
-    box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
-	user-select: none;
+  flex-grow: 1;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.21) inset;
+  user-select: none;
 }
 </style>
