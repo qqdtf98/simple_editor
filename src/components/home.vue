@@ -56,12 +56,16 @@
         </div>
       </div>
       <div class="selector-box">
-        <div v-if="onelementSelected" class="tagname"></div>
-        <div class="compo-border"></div>
+        <div v-show="onelementSelected" class="tagname"></div>
+        <!-- <div class="compo-border"></div> -->
+        <div class="left-border"></div>
+        <div class="right-border"></div>
+        <div class="top-border"></div>
+        <div class="bottom-border"></div>
       </div>
       <img
         style="cursor:pointer"
-        v-if="isContentMovable"
+        v-show="isContentMovable"
         src="../assets/move.svg"
         class="move-icon"
       />
@@ -123,6 +127,7 @@ export default {
   },
   mounted () {
     window.addEventListener('mousemove', event => {
+      event.preventDefault()
       if (this.resizedirection === 'right') {
         if (event.pageX < this.initialposition) {
           const size =
@@ -208,19 +213,20 @@ export default {
               this.selectedElement.top -
               tag.getBoundingClientRect().height +
               'px'
-            let bord = document.querySelector('.compo-border')
-            bord.style.border = '2px solid #3e8ce4'
-            bord.style.left = this.selectedElement.left + 'px'
-            bord.style.top = this.selectedElement.top + 'px'
-            bord.style.width = this.selectedElement.width + 'px'
-            bord.style.height = this.selectedElement.height + 'px'
+            // let bord = document.querySelector('.compo-border')
+            // bord.style.border = '2px solid #3e8ce4'
+            // bord.style.left = this.selectedElement.left + 'px'
+            // bord.style.top = this.selectedElement.top + 'px'
+            // bord.style.width = this.selectedElement.width + 'px'
+            // bord.style.height = this.selectedElement.height + 'px'
+            let leftBord = document.querySelector('.left-border')
+            let rightBord = document.querySelector('.right-border')
+            let topBord = document.querySelector('.top-border')
+            let bottomBord = document.querySelector('.bottom-border')
           }
         }
       }
     },
-    // onmouseLeave(e) {
-    //     e.target.style.border = 'none'
-    // },
     onmouseClick (e) {
       if (this.clickedElement === null) {
         if (
@@ -235,7 +241,6 @@ export default {
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
           e.target.style.border = '2px dashed #3e8ce4'
           e.target.style.borderRadius = '0'
-          // border radius이상함
 
           this.isContentMovable = true
 
@@ -377,7 +382,6 @@ export default {
       }
     },
     isContentNotEditable (e) {
-      console.log(e)
       e.preventDefault()
       this.isContentEditable = false
     },
@@ -413,18 +417,26 @@ export default {
         this.$nextTick(() => {
           let tag = document.querySelector('.tagname')
           tag.style.left = this.selectedElement.left + 'px'
-          tag.style.top =
-            this.selectedElement.top -
-            tag.getBoundingClientRect().height -
-            e.target.scrollTop +
-            'px'
+          let tagTop = this.selectedElement.top - tag.getBoundingClientRect().height - e.target.scrollTop
+          if (tagTop > 170) {
+            this.onelementSelected = true
+            tag.style.top = tagTop + 'px'
+          } else {
+            this.onelementSelected = false
+          }
         })
       }
       if (this.clickedElement != null) {
         this.$nextTick(() => {
           let move = document.querySelector('.move-icon')
           move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
-          move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height - e.target.scrollTop + 'px'
+          let moveTop = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height
+          if (moveTop > 170) {
+            this.isContentMovable = true
+            move.style.top = moveTop + 'px'
+          } else {
+            this.isContentMovable = false
+          }
         })
       }
     }
@@ -639,6 +651,20 @@ export default {
       .compo-border {
         position: fixed;
         z-index: -1;
+      }
+      .left-border, .right-border, .top-border, .bottom-border{
+        height: 100%;
+        width: 5px;
+        position: fixed;
+        z-index: 10000;
+        background-color: red;
+      }
+      .top-border, .bottom-border{
+        width: 100%;
+        height: 5px;
+        position: fixed;
+        z-index: 10000;
+        background-color: red;
       }
     }
     .move-icon {
