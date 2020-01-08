@@ -23,18 +23,18 @@ import overview from './components/overview'
 export default {
   components: {home, layout, studio, overview},
   name: 'App',
-  data(){
-    return{
-      payload : '',
+  data () {
+    return {
+      payload: '',
       data: ''
     }
   },
   methods: {
-    componentSelected(payload){
+    componentSelected (payload) {
       this.payload = payload.target
       this.$refs.layouts.getData(payload)
     },
-    userSelectedWidth(data){
+    userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
     }
@@ -70,7 +70,7 @@ export default {
     }
   }
   .center-panel{
-    width:60%; 
+    width:60%;
     height: 80%;
     display:flex;
     align-items: center;

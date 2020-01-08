@@ -1,6 +1,15 @@
 <template>
   <div id="dashboard">
-    <div @keyup.enter="isContentNotEditable" ref="dash" class="dashboard" :contenteditable="isContentEditable" @dblclick="onmouseDoubleClick" @click="onmouseClick" @mousemove="onmouseMove">
+    <div
+      @keydown.enter="isContentNotEditable"
+      ref="dash"
+      class="dashboard"
+      :contenteditable="isContentEditable"
+      @dblclick="onmouseDoubleClick"
+      @click="onmouseClick"
+      @mousemove="onmouseMove"
+      @scroll="handleScroll"
+    >
       <div class="dashboard-wrapper">
         <div class="text-wrapper">
           <div class="dashboard-text">Dashboard</div>
@@ -10,15 +19,15 @@
           <div class="earning-box">
             <div class="earningm-wrapper">
               <div class="earningm-box">
-              <span class="earningm">EARNINGS(MONTHLY)</span>
-              <span class="dol1">$40000</span>
+                <span class="earningm">EARNINGS(MONTHLY)</span>
+                <span class="dol1">$40000</span>
               </div>
               <button class="button1"></button>
             </div>
             <div class="earninga-wrapper">
               <div class="earninga-box">
-              <span class="earninga">EARNINGS(ANNUAL)</span>
-              <span class="dol2">$215,000</span>
+                <span class="earninga">EARNINGS(ANNUAL)</span>
+                <span class="dol2">$215,000</span>
               </div>
               <button class="button2"></button>
             </div>
@@ -26,15 +35,15 @@
           <div class="task-box">
             <div class="tasks-wrapper">
               <div class="task-box">
-              <span class="tasks">TASKS</span>
-              <span class="task">50%</span>
+                <span class="tasks">TASKS</span>
+                <span class="task">50%</span>
               </div>
               <button class="button3"></button>
             </div>
             <div class="pending-wrapper">
               <div class="pending-box">
-              <span class="pending">PENDING REQUESTS</span>
-              <span class="pend">18</span>
+                <span class="pending">PENDING REQUESTS</span>
+                <span class="pend">18</span>
               </div>
               <button class="button4"></button>
             </div>
@@ -50,21 +59,49 @@
         <div v-if="onelementSelected" class="tagname"></div>
         <div class="compo-border"></div>
       </div>
-      <img style="cursor:pointer" v-if="isContentMovable" src="../assets/move.svg" class="move-icon" />
-      <div v-if="isContentMovable" data-pos="top" style="cursor:ns-resize" @mousedown="mouseDownBoundary" class="boundary-line-top"></div>
-      <div v-if="isContentMovable" data-pos="left" style="cursor:ew-resize" @mousedown="mouseDownBoundary" class="boundary-line-left"></div>
-      <div v-if="isContentMovable" data-pos="right" style="cursor:ew-resize" @mousedown="mouseDownBoundary" class="boundary-line-right"></div>
-      <div v-if="isContentMovable" data-pos="bottom" style="cursor:ns-resize" @mousedown="mouseDownBoundary" class="boundary-line-bottom"></div>
+      <img
+        style="cursor:pointer"
+        v-if="isContentMovable"
+        src="../assets/move.svg"
+        class="move-icon"
+      />
+      <div
+        v-if="isContentMovable"
+        data-pos="top"
+        style="cursor:ns-resize"
+        @mousedown="mouseDownBoundary"
+        class="boundary-line-top"
+      ></div>
+      <div
+        v-if="isContentMovable"
+        data-pos="left"
+        style="cursor:ew-resize"
+        @mousedown="mouseDownBoundary"
+        class="boundary-line-left"
+      ></div>
+      <div
+        v-if="isContentMovable"
+        data-pos="right"
+        style="cursor:ew-resize"
+        @mousedown="mouseDownBoundary"
+        class="boundary-line-right"
+      ></div>
+      <div
+        v-if="isContentMovable"
+        data-pos="bottom"
+        style="cursor:ns-resize"
+        @mousedown="mouseDownBoundary"
+        class="boundary-line-bottom"
+      ></div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   data () {
     return {
-      compo: null,
+      selectedElement: null,
       borderstyle: null,
       onelementSelected: false,
       target: '',
@@ -75,152 +112,238 @@ export default {
       clickedElement: null,
       clickedBorderRadius: '',
       isContentMovable: false,
-      elem: null
-  }
+      elem: null,
+      directionData: '',
+      initialposition: '',
+      resizedirection: '',
+      initialwidth: '',
+      initialheight: '',
+      initialscale: ''
+    }
+  },
+  mounted () {
+    window.addEventListener('mousemove', event => {
+      if (this.resizedirection === 'right') {
+        if (event.pageX < this.initialposition) {
+          const size =
+            (this.initialwidth - (this.initialposition - event.pageX) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageX > this.initialposition) {
+          const size =
+            (this.initialwidth + (event.pageX - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      } else if (this.resizedirection === 'left') {
+        if (event.pageX < this.initialposition) {
+          const size =
+            (this.initialwidth + (this.initialposition - event.pageX) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageX > this.initialposition) {
+          const size =
+            (this.initialwidth - (event.pageX - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      } else if (this.resizedirection === 'top') {
+        if (event.pageY < this.initialposition) {
+          const size =
+            (this.initialheight + (this.initialposition - event.pageY) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageY > this.initialposition) {
+          const size =
+            (this.initialheight - (event.pageY - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      } else if (this.resizedirection === 'bottom') {
+        if (event.pageY < this.initialposition) {
+          const size =
+            (this.initialheight - (this.initialposition - event.pageY) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageY > this.initialposition) {
+          const size =
+            (this.initialheight + (event.pageY - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      }
+    })
+    window.addEventListener('mouseup', () => {
+      this.resizedirection = null
+      this.$emit('elementresize', this.clickedElement)
+    })
   },
   methods: {
-  onmouseMove(e) {
-    // console.log(e.target)
-    this.onelementSelected = true
-      if (this.compo === null) {
-          if(e.target.className != "tagname" && e.target.className != 'move-icon' ){
-            // border.style.zIndex = 3;
-          
+    onmouseMove (e) {
+      this.onelementSelected = true
+      if (this.selectedElement === null) {
+        if (
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'move-icon'
+        ) {
+          // border.style.zIndex = 3
+
           this.onelementSelected = true
-          this.compo = e
-              .target
-              .getBoundingClientRect()
-             
-      }
-      } else {
-          if (this.compo != e.target) {
-              if(e.target.className != "tagname" && e.target.className != 'move-icon'){
-                // border.style.zIndex = 3;
-              this.compo = e
-                  .target
-                  .getBoundingClientRect()
-              let tag = document.querySelector('.tagname')
-              
-              tag.textContent = e.target.tagName
-              tag.style.left = this.compo.left + 'px'
-              
-              tag.style.top = this.compo.top - tag
-                  .getBoundingClientRect()
-                  .height + 'px'
-              let bord = document.querySelector('.compo-border')
-              bord.style.border = "2px solid #3e8ce4"
-              bord.style.left = this.compo.left + 'px'
-              bord.style.top = this.compo.top + 'px'
-              bord.style.width = this.compo.width + 'px'
-              bord.style.height = this.compo.height + 'px'
-              
-              }
-          }
-      }
-  },
-  // onmouseLeave(e) {
-  //     e.target.style.border = "none"
-  // },
-  onmouseClick(e) {
-      this.$emit('componentSelected', e)
-      if(this.clickedElement === null){
-        if(e.target.className != "tagname" && e.target.className != 'move-icon'){
-      this.clickedElement = e.target
-      this.clickedBorder = getComputedStyle(e.target).border
-      this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-      e.target.style.border = "2px solid #3e8ce4"
-      //border radius이상함
-
-      this.isContentMovable = true
-      
-      let left_line = document.querySelector('.boundary-line-left')
-      let right_line = document.querySelector('.boundary-line-right')
-      let top_line = document.querySelector('.boundary-line-top')
-      let bottom_line = document.querySelector('.boundary-line-bottom')
-      
-      this.elem = e.target.getBoundingClientRect()
-      top_line.style.left = this.elem.left  + 'px'
-      top_line.style.top = this.elem.top + 1 +'px'
-      top_line.style.width = this.elem.width + 'px'
-      bottom_line.style.left = this.elem.left + 'px'
-      bottom_line.style.top = this.elem.top + this.elem.height - 1 +'px'
-      bottom_line.style.width = this.elem.width + 'px'
-      left_line.style.left = this.elem.left - 1 + 'px'
-      left_line.style.top = this.elem.top +'px'
-      left_line.style.height = this.elem.width + 'px'
-      right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
-      right_line.style.top = this.elem.top +'px'
-      right_line.style.height = this.elem.width + 'px'
-      
-
-      
-      this.$nextTick(() => {
-     
-              let tag = document.querySelector('.move-icon')
-              
-              tag.style.left = this.elem.left + 'px'
-              
-              tag.style.top = this.elem.top - tag
-                  .getBoundingClientRect()
-                  .height + 'px'
-})
+          this.selectedElement = e.target.getBoundingClientRect()
         }
-      } else if (this.clickedElement != e.target) {
-        if(e.target.className != "tagname" && e.target.className != 'move-icon'){
-        this.clickedElement.style.border = this.clickedBorder
-        this.clickedElement.style.borderRadius = this.clickedborderRadius
-        this.clickedElement = e.target
-      this.clickedBorder = getComputedStyle(e.target).border
-      this.clickedborderRadius = getComputedStyle(e.target).borderRadius
-      e.target.style.border = "2px solid #3e8ce4"
-      e.target.style.borderRadius = 0
+      } else {
+        if (this.selectedElement !== e.target) {
+          if (
+            e.target.className !== 'tagname' &&
+            e.target.className !== 'move-icon'
+          ) {
+            // border.style.zIndex = 3
+            this.selectedElement = e.target.getBoundingClientRect()
+            let tag = document.querySelector('.tagname')
 
-      let left_line = document.querySelector('.boundary-line-left')
-      let right_line = document.querySelector('.boundary-line-right')
-      let top_line = document.querySelector('.boundary-line-top')
-      let bottom_line = document.querySelector('.boundary-line-bottom')
-      this.elem = e.target.getBoundingClientRect()
-      top_line.style.left = this.elem.left  + 'px'
-      top_line.style.top = this.elem.top + 1 +'px'
-      top_line.style.width = this.elem.width + 'px'
-      bottom_line.style.left = this.elem.left + 'px'
-      bottom_line.style.top = this.elem.top + this.elem.height - 1 +'px'
-      bottom_line.style.width = this.elem.width + 'px'
-      left_line.style.left = this.elem.left - 1 + 'px'
-      left_line.style.top = this.elem.top +'px'
-      left_line.style.height = this.elem.width + 'px'
-      right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
-      right_line.style.top = this.elem.top +'px'
-      right_line.style.height = this.elem.width + 'px'
+            tag.textContent = e.target.tagName
+            tag.style.left = this.selectedElement.left + 'px'
 
-      this.isContentMovable = true
-
-      this.$nextTick(() => {
-      this.elem = e
-                  .target
-                  .getBoundingClientRect()
-              let tag = document.querySelector('.move-icon')
-              
-              tag.style.left = this.elem.left + 'px'
-              
-              tag.style.top = this.elem.top - tag
-                  .getBoundingClientRect()
-                  .height + 'px'
-      })
-      }
+            tag.style.top =
+              this.selectedElement.top -
+              tag.getBoundingClientRect().height +
+              'px'
+            let bord = document.querySelector('.compo-border')
+            bord.style.border = '2px solid #3e8ce4'
+            bord.style.left = this.selectedElement.left + 'px'
+            bord.style.top = this.selectedElement.top + 'px'
+            bord.style.width = this.selectedElement.width + 'px'
+            bord.style.height = this.selectedElement.height + 'px'
+          }
+        }
       }
     },
-  styleChanged(data) {
-    this.target = data.payload.className
-    this.style = data.style
-    this.value = data.value
-    let element = document.querySelector(`.${this.target}`)
-    element.style[this.style] = this.value
+    // onmouseLeave(e) {
+    //     e.target.style.border = 'none'
+    // },
+    onmouseClick (e) {
+      if (this.clickedElement === null) {
+        if (
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'move-icon' &&
+          e.target.className !== 'boundary-line-left'
+        ) {
+          this.$emit('componentSelected', e)
 
-  },
-  focusInput(){
-    this.isContentEditable = true
-    this.$nextTick(() => {
+          this.clickedElement = e.target
+          this.clickedBorder = getComputedStyle(e.target).border
+          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+          e.target.style.border = '2px dashed #3e8ce4'
+          e.target.style.borderRadius = '0'
+          // border radius이상함
+
+          this.isContentMovable = true
+
+          this.$nextTick(() => {
+            // eslint-disable-next-line camelcase
+            let left_line = document.querySelector('.boundary-line-left')
+            // eslint-disable-next-line camelcase
+            let right_line = document.querySelector('.boundary-line-right')
+            // eslint-disable-next-line camelcase
+            let top_line = document.querySelector('.boundary-line-top')
+            // eslint-disable-next-line camelcase
+            let bottom_line = document.querySelector('.boundary-line-bottom')
+            this.elem = e.target.getBoundingClientRect()
+
+            this.$nextTick(() => {
+              bottom_line.style.left = this.elem.left + 'px'
+
+              bottom_line.style.top =
+                this.elem.top + this.elem.height - 1 + 'px'
+
+              bottom_line.style.width = this.elem.width + 'px'
+              top_line.style.left = this.elem.left + 'px'
+              top_line.style.top = this.elem.top + 1 + 'px'
+              top_line.style.width = this.elem.width + 'px'
+
+              left_line.style.left = this.elem.left - 1 + 'px'
+              left_line.style.top = this.elem.top + 'px'
+              left_line.style.height = this.elem.width + 'px'
+              right_line.style.left =
+                this.elem.left + this.elem.width - 1 + 'px'
+              right_line.style.top = this.elem.top + 'px'
+              right_line.style.height = this.elem.width + 'px'
+            })
+          })
+
+          this.$nextTick(() => {
+            let tag = document.querySelector('.move-icon')
+
+            tag.style.left = this.elem.left + 'px'
+
+            tag.style.top =
+              this.elem.top - tag.getBoundingClientRect().height + 'px'
+          })
+        }
+      } else if (this.clickedElement !== e.target) {
+        if (
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'move-icon' &&
+          e.target.className !== 'boundary-line-left'
+        ) {
+          this.$emit('componentSelected', e)
+
+          this.clickedElement.style.border = this.clickedBorder
+          this.clickedElement.style.borderRadius = this.clickedBorderRadius
+          this.clickedElement = e.target
+          this.clickedBorder = getComputedStyle(e.target).border
+          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+          e.target.style.border = '2px dashed #3e8ce4'
+          e.target.style.borderRadius = 0
+
+          // eslint-disable-next-line camelcase
+          let left_line = document.querySelector('.boundary-line-left')
+          // eslint-disable-next-line camelcase
+          let right_line = document.querySelector('.boundary-line-right')
+          // eslint-disable-next-line camelcase
+          let top_line = document.querySelector('.boundary-line-top')
+          // eslint-disable-next-line camelcase
+          let bottom_line = document.querySelector('.boundary-line-bottom')
+          // eslint-disable-next-line camelcase
+
+          this.elem = e.target.getBoundingClientRect()
+          top_line.style.left = this.elem.left + 'px'
+          top_line.style.top = this.elem.top + 1 + 'px'
+          top_line.style.width = this.elem.width + 'px'
+          bottom_line.style.left = this.elem.left + 'px'
+          bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
+          bottom_line.style.width = this.elem.width + 'px'
+          left_line.style.left = this.elem.left - 1 + 'px'
+          left_line.style.top = this.elem.top + 'px'
+          left_line.style.height = this.elem.width + 'px'
+          right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
+          right_line.style.top = this.elem.top + 'px'
+          right_line.style.height = this.elem.width + 'px'
+
+          this.isContentMovable = true
+
+          this.$nextTick(() => {
+            this.elem = e.target.getBoundingClientRect()
+            let tag = document.querySelector('.move-icon')
+
+            tag.style.left = this.elem.left + 'px'
+
+            tag.style.top =
+              this.elem.top - tag.getBoundingClientRect().height + 'px'
+          })
+        }
+      }
+    },
+    styleChanged (data) {
+      this.target = data.payload.className
+      this.style = data.style
+      this.value = data.value
+      let element = document.querySelector(`.${this.target}`)
+      element.style[this.style] = this.value
+    },
+    focusInput () {
+      this.isContentEditable = true
+      this.$nextTick(() => {
         const sel = window.getSelection()
         sel.removeAllRanges()
         const range = new Range()
@@ -229,13 +352,12 @@ export default {
         sel.addRange(range)
         this.placeCaretAtEnd(this.$refs.dash)
       })
-  },
-  onmouseDoubleClick(){
-    this.focusInput()
-  },
-  placeCaretAtEnd(el) {
-    
-    console.log('asd')
+    },
+    onmouseDoubleClick () {
+      this.focusInput()
+    },
+    placeCaretAtEnd (el) {
+      console.log('asd')
       el.focus()
       if (
         typeof window.getSelection !== 'undefined' &&
@@ -254,59 +376,103 @@ export default {
         textRange.select()
       }
     },
-    isContentNotEditable(e){
-        console.log(e)
-        e.preventDefault()
+    isContentNotEditable (e) {
+      console.log(e)
+      e.preventDefault()
       this.isContentEditable = false
     },
-    mouseDownBoundary(e){
-      console.log(e.target.getAttribute('data-pos'))
+    mouseDownBoundary (e) {
+      this.directionData = e.target.getAttribute('data-pos')
+      if (this.directionData === 'left') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().left
+        this.resizedirection = 'left'
+      } else if (this.directionData === 'top') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().top
+        this.resizedirection = 'top'
+      } else if (this.directionData === 'bottom') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().bottom
+        this.resizedirection = 'bottom'
+      } else if (this.directionData === 'right') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().right
+        this.resizedirection = 'right'
+      }
+
+      this.initialwidth = this.clickedElement.getBoundingClientRect().width
+      this.initialheight = this.clickedElement.getBoundingClientRect().height
+      const scale = this.clickedElement.style.transform
+      const regExp = /[+-]?\d+(?:\.\d+)?/g
+      const regExpResult = regExp.exec(scale)
+      let scaleVal = 1
+      if (regExpResult) {
+        scaleVal = Number(regExpResult[0])
+      }
+      this.initialscale = scaleVal
+    },
+    handleScroll (e) {
+      if (this.selectedElement != null) {
+        this.$nextTick(() => {
+          let tag = document.querySelector('.tagname')
+          tag.style.left = this.selectedElement.left + 'px'
+          tag.style.top =
+            this.selectedElement.top -
+            tag.getBoundingClientRect().height -
+            e.target.scrollTop +
+            'px'
+        })
+      }
+      if (this.clickedElement != null) {
+        this.$nextTick(() => {
+          let move = document.querySelector('.move-icon')
+          move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
+          move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height - e.target.scrollTop + 'px'
+        })
+      }
     }
   }
 }
 </script>
 
 <style lang="scss">
- #dashboard {
+#dashboard {
   display: flex;
   align-items: center;
   width: 100%;
-  
-  .dashboard{
+
+  .dashboard {
     background-color: #f6f8fb;
     width: 100%;
     border: 1px solid black;
-    height:80%;
+    height: 80%;
     max-height: 40rem;
     overflow: scroll;
-    .dashboard-wrapper{
+    .dashboard-wrapper {
       height: 100%;
-    .text-wrapper {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin: 0.5rem;
-      position: relative;
-      .dashboard-text {
-        color: #5a5c69;
-        font-size: 2.5rem;
-      }
-      .generate {
-        background-color: #8b8bcc;
-        position: absolute;
-        border-radius: 0.4rem;
-        padding: 0.3rem;
-        right: 10px;
-        }
-    }
-    .component-wrapper {
-      padding: 0.5rem;
-      .earning-box {
+      .text-wrapper {
         display: flex;
         flex-direction: row;
-        margin-bottom: 1rem;
         align-items: center;
-        justify-content: center;
+        margin: 0.5rem;
+        position: relative;
+        .dashboard-text {
+          color: #5a5c69;
+          font-size: 2.5rem;
+        }
+        .generate {
+          background-color: #8b8bcc;
+          position: absolute;
+          border-radius: 0.4rem;
+          padding: 0.3rem;
+          right: 10px;
+        }
+      }
+      .component-wrapper {
+        padding: 0.5rem;
+        .earning-box {
+          display: flex;
+          flex-direction: row;
+          margin-bottom: 1rem;
+          align-items: center;
+          justify-content: center;
         }
         .earningm-wrapper {
           border: 2px solid #d95353;
@@ -319,7 +485,7 @@ export default {
           border-radius: 0.4rem;
           margin-right: 1rem;
           align-items: center;
-          position:relative;
+          position: relative;
           background-color: #fff;
           .earningm {
             color: #d95353;
@@ -330,7 +496,6 @@ export default {
             text-align: left;
             font-size: 1.2rem;
           }
-          
         }
         .earninga-wrapper {
           border: 2px solid #1cc88a;
@@ -341,8 +506,8 @@ export default {
           padding: 0.5rem;
           border-radius: 0.4rem;
           box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          width:50%;
-          position:relative;
+          width: 50%;
+          position: relative;
           align-items: center;
           .earninga {
             color: #1cc88a;
@@ -354,76 +519,8 @@ export default {
             font-size: 1.2rem;
           }
         }
-        .button1, .button2 {
-          position: absolute;
-          background-color: #dddfeb;
-          background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
-          margin-left: 1rem;
-          border-radius: 0.84rem;
-          border: none;
-          height: 3.8rem;
-          width: 3.8rem;
-          right:10px;
-        }
-
-        .earningm-box, .earninga-box{
-            display: flex;
-            flex-direction: column;
-            margin-left: 0.5rem;
-          }
-          
-      .task-box {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        .tasks-wrapper {
-          border: 2px solid #36b9cc;
-          box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          height: 5rem;
-          background-color: #fff;
-          align-items: center;
-          width: 50%;
-          display: flex;
-          flex-direction: row;
-          padding: 0.5rem;
-          border-radius: 0.4rem;
-          position:relative;
-          margin-right: 1rem;
-          .tasks {
-            color: #36b9cc;
-            font-size: 0.75rem;
-            font-weight: bold;
-          }
-          .task{
-            text-align: left;
-            font-size: 1.2rem;
-          }
-        }
-        
-        .pending-wrapper {
-          border: 2px solid #f6c23e;
-          width: 50%;
-          display: flex;
-          flex-direction: row;
-          padding: 0.5rem;
-          box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          height: 5rem;
-          background-color: #fff;
-          position:relative;
-          align-items: center;
-          border-radius: 0.4rem;
-          .pending {
-            color: #f6c23e;
-            font-size: 0.75rem;
-            font-weight: bold;
-          }
-          .pend {
-            text-align: left;
-            font-size: 1.2rem;
-          }
-        }
-        .button3, .button4 {
+        .button1,
+        .button2 {
           position: absolute;
           background-color: #dddfeb;
           background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
@@ -434,68 +531,140 @@ export default {
           width: 3.8rem;
           right: 10px;
         }
-      
-      
-    .pending-box, .task-box{
+
+        .earningm-box,
+        .earninga-box {
+          display: flex;
+          flex-direction: column;
+          margin-left: 0.5rem;
+        }
+
+        .task-box {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          .tasks-wrapper {
+            border: 2px solid #36b9cc;
+            box-shadow: 1px 0.5px 0.5px #c0c0c0;
+            height: 5rem;
+            background-color: #fff;
+            align-items: center;
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            padding: 0.5rem;
+            border-radius: 0.4rem;
+            position: relative;
+            margin-right: 1rem;
+            .tasks {
+              color: #36b9cc;
+              font-size: 0.75rem;
+              font-weight: bold;
+            }
+            .task {
+              text-align: left;
+              font-size: 1.2rem;
+            }
+          }
+
+          .pending-wrapper {
+            border: 2px solid #f6c23e;
+            width: 50%;
+            display: flex;
+            flex-direction: row;
+            padding: 0.5rem;
+            box-shadow: 1px 0.5px 0.5px #c0c0c0;
+            height: 5rem;
+            background-color: #fff;
+            position: relative;
+            align-items: center;
+            border-radius: 0.4rem;
+            .pending {
+              color: #f6c23e;
+              font-size: 0.75rem;
+              font-weight: bold;
+            }
+            .pend {
+              text-align: left;
+              font-size: 1.2rem;
+            }
+          }
+          .button3,
+          .button4 {
+            position: absolute;
+            background-color: #dddfeb;
+            background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
+            margin-left: 1rem;
+            border-radius: 0.84rem;
+            border: none;
+            height: 3.8rem;
+            width: 3.8rem;
+            right: 10px;
+          }
+
+          .pending-box,
+          .task-box {
             display: flex;
             flex-direction: column;
             margin-left: 0.5rem;
           }
-          }
+        }
       }
-    
-    
-    .img-wrapper{
+
+      .img-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .img1,
+        .img2,
+        .img3 {
+          width: 10rem;
+        }
+      }
+    }
+    .selector-box {
       display: flex;
       flex-direction: column;
-      align-items: center;
-
-      .img1, .img2, .img3 {
-        width: 10rem;
+      .tagname {
+        color: white;
+        padding: 0.2rem;
+        position: fixed;
+        z-index: 10;
+        background-color: #3e8ce4;
+        border-radius: 0.4rem;
+        font-size: 0.8rem;
+      }
+      .compo-border {
+        position: fixed;
+        z-index: -1;
       }
     }
-    }
-  .selector-box {
-    display: flex;
-    flex-direction: column;
-    .tagname {
-      color: white;
-      padding: 0.2rem;
-      position: fixed;
+    .move-icon {
       z-index: 10;
-      background-color: #3e8ce4;
-      border-radius: 0.4rem;
-      font-size: 0.8rem;
-    }
-    .compo-border {
       position: fixed;
-      z-index: -1;
+      width: 0.9rem;
+      height: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    
-  }
-  .move-icon{
-    z-index:10;
-    position: fixed;
-    width: 0.9rem;
-    height: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .boundary-line-top, .boundary-line-bottom{
-    width: 100%;
-    height: 5px;
-    position: fixed;
-    z-index: 10000;
-  }
+    .boundary-line-top,
+    .boundary-line-bottom {
+      width: 100%;
+      height: 5px;
+      position: fixed;
+      z-index: 10000;
+    }
 
-  .boundary-line-left, .boundary-line-right{
-    width: 5px;
-    height: 100%;
-    position: fixed;
-    z-index: 10000;
-  }
-  
+    .boundary-line-left,
+    .boundary-line-right {
+      width: 5px;
+      height: 100%;
+      position: fixed;
+      z-index: 10000;
+    }
   }
 }
 </style>
