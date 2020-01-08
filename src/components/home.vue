@@ -78,6 +78,63 @@ export default {
       elem: null
   }
   },
+  mounted () {
+    window.addEventListener('mousemove', event => {
+      if (this.resizedirection === 'right') {
+        if (event.pageX < this.initialposition) {
+          const size =
+            (this.initialwidth - (this.initialposition - event.pageX) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageX > this.initialposition) {
+          const size =
+            (this.initialwidth + (event.pageX - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      } else if (this.resizedirection === 'left') {
+        if (event.pageX < this.initialposition) {
+          const size =
+            (this.initialwidth + (this.initialposition - event.pageX) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageX > this.initialposition) {
+          const size =
+            (this.initialwidth - (event.pageX - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).width)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      } else if (this.resizedirection === 'top') {
+        if (event.pageY < this.initialposition) {
+          const size =
+            (this.initialheight + (this.initialposition - event.pageY) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageY > this.initialposition) {
+          const size =
+            (this.initialheight - (event.pageY - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      } else if (this.resizedirection === 'bottom') {
+        if (event.pageY < this.initialposition) {
+          const size =
+            (this.initialheight - (this.initialposition - event.pageY) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        } else if (event.pageY > this.initialposition) {
+          const size =
+            (this.initialheight + (event.pageY - this.initialposition) * 2) /
+            parseInt(getComputedStyle(this.clickedElement).height)
+          this.clickedElement.style.transform = `scale(${size})`
+        }
+      }
+    })
+    window.addEventListener('mouseup', () => {
+      this.resizedirection = null
+      this.$emit('elementresize', this.clickedElement)
+    })
+  },
   methods: {
   onmouseMove(e) {
     // console.log(e.target)
@@ -259,8 +316,52 @@ export default {
         e.preventDefault()
       this.isContentEditable = false
     },
-    mouseDownBoundary(e){
-      console.log(e.target.getAttribute('data-pos'))
+    mouseDownBoundary (e) {
+      this.directionData = e.target.getAttribute('data-pos')
+      if (this.directionData === 'left') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().left
+        this.resizedirection = 'left'
+      } else if (this.directionData === 'top') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().top
+        this.resizedirection = 'top'
+      } else if (this.directionData === 'bottom') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().bottom
+        this.resizedirection = 'bottom'
+      } else if (this.directionData === 'right') {
+        this.initialposition = this.clickedElement.getBoundingClientRect().right
+        this.resizedirection = 'right'
+      }
+
+      this.initialwidth = this.clickedElement.getBoundingClientRect().width
+      this.initialheight = this.clickedElement.getBoundingClientRect().height
+      const scale = this.clickedElement.style.transform
+      const regExp = /[+-]?\d+(?:\.\d+)?/g
+      const regExpResult = regExp.exec(scale)
+      let scaleVal = 1
+      if (regExpResult) {
+        scaleVal = Number(regExpResult[0])
+      }
+      this.initialscale = scaleVal
+    },
+    handleScroll (e) {
+      if (this.selectedElement != null) {
+        this.$nextTick(() => {
+          let tag = document.querySelector('.tagname')
+          tag.style.left = this.selectedElement.left + 'px'
+          tag.style.top =
+            this.selectedElement.top -
+            tag.getBoundingClientRect().height -
+            e.target.scrollTop +
+            'px'
+        })
+      }
+      if (this.clickedElement != null) {
+        this.$nextTick(() => {
+          let move = document.querySelector('.move-icon')
+          move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
+          move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height - e.target.scrollTop + 'px'
+        })
+      }
     }
   }
 }
