@@ -176,6 +176,11 @@ export default {
           this.clickedElement.style.transform = `scale(${size})`
         }
       }
+      if (this.clickedElement !== null) {
+        let move = document.querySelector('.move-icon')
+        move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
+        move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height + 'px'
+      }
     })
     window.addEventListener('mouseup', () => {
       this.resizedirection = null
@@ -259,7 +264,7 @@ export default {
           this.clickedElement = e.target
           this.clickedBorder = getComputedStyle(e.target).border
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-          e.target.style.border = '2px dashed #3e8ce4'
+          e.target.style.border = '3px dashed #f75c51'
           e.target.style.borderRadius = '0'
 
           this.isContentMovable = true
@@ -277,20 +282,15 @@ export default {
 
             this.$nextTick(() => {
               bottom_line.style.left = this.elem.left + 'px'
-
-              bottom_line.style.top =
-                this.elem.top + this.elem.height - 1 + 'px'
-
+              bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
               bottom_line.style.width = this.elem.width + 'px'
               top_line.style.left = this.elem.left + 'px'
               top_line.style.top = this.elem.top + 1 + 'px'
               top_line.style.width = this.elem.width + 'px'
-
               left_line.style.left = this.elem.left - 1 + 'px'
               left_line.style.top = this.elem.top + 'px'
               left_line.style.height = this.elem.width + 'px'
-              right_line.style.left =
-                this.elem.left + this.elem.width - 1 + 'px'
+              right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
               right_line.style.top = this.elem.top + 'px'
               right_line.style.height = this.elem.width + 'px'
             })
@@ -320,7 +320,7 @@ export default {
           this.clickedElement = e.target
           this.clickedBorder = getComputedStyle(e.target).border
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-          e.target.style.border = '2px dashed #3e8ce4'
+          e.target.style.border = '3px dashed #f75c51'
           e.target.style.borderRadius = 0
 
           // eslint-disable-next-line camelcase
@@ -377,16 +377,16 @@ export default {
           e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
           e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
           e.target.className !== 'bottom-border') {
-      this.isContentEditable = true
-      this.$nextTick(() => {
-        const sel = window.getSelection()
-        sel.removeAllRanges()
-        const range = new Range()
-        range.setStart(this.$refs.dash, 0)
-        range.setEnd(this.$refs.dash, 0)
-        sel.addRange(range)
-        this.placeCaretAtEnd(this.$refs.dash)
-      })
+        this.isContentEditable = true
+        this.$nextTick(() => {
+          const sel = window.getSelection()
+          sel.removeAllRanges()
+          const range = new Range()
+          range.setStart(this.$refs.dash, 0)
+          range.setEnd(this.$refs.dash, 0)
+          sel.addRange(range)
+          this.placeCaretAtEnd(this.$refs.dash)
+        })
       }
     },
     onmouseDoubleClick (e) {
@@ -458,7 +458,7 @@ export default {
           let tag = document.querySelector('.tagname')
           tag.style.left = this.selectedElement.left + 'px'
           let tagTop = this.selectedElement.top - tag.getBoundingClientRect().height - e.target.scrollTop
-          if (tagTop > 170) {
+          if (tagTop > 190) {
             this.onelementSelected = true
             tag.style.top = tagTop + 'px'
           } else {
@@ -711,19 +711,20 @@ export default {
         position: fixed;
         z-index: -1;
       }
-      .left-border, .right-border, .top-border, .bottom-border{
-        height: 100%;
-        width: 5px;
-        position: fixed;
-        z-index: 10000;
-        background-color: red;
-      }
-      .top-border, .bottom-border{
+      .bottom-border, .top-border{
+
         width: 100%;
-        height: 5px;
+        height: 3px;
         position: fixed;
         z-index: 10000;
-        background-color: red;
+        background-color: #3e8ce4;
+      }
+      .right-border, .left-border{
+        height: 100%;
+        width: 3px;
+        position: fixed;
+        z-index: 10000;
+        background-color: #3e8ce4;
       }
     }
     .move-icon {
