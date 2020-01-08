@@ -5,155 +5,150 @@
       <b-nav-item>options</b-nav-item>
       <b-nav-item>Animation</b-nav-item>
     </b-nav>
-	<div role="tablist">
+	<div v-if="isData" role="tablist">
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
         </b-card-header>
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
-		  
-                  <div class="info-option">
-					
-					<div class="margin">
-						<div class="box-row blue">
-							<span class="margin-top" title="Margin Top">0</span>
+			<div class="info-option">
+				<div class="margin">
+					<div class="box-row blue">
+						<span class="margin-top" title="Margin Top">0</span>
+					</div>
+					<div class="box-row middle">
+						<div class="box-col blue">
+							<span class="margin-left" title="Margin Left">0</span>
 						</div>
-						<div class="box-row middle">
-							<div class="box-col blue">
-								<span class="margin-left" title="Margin Left">0</span>
+						<div class="box-col padding">
+							<div class="box-row green">
+								<span class="padding-top" title="Padding Top">0</span>
 							</div>
-							<div class="box-col padding">
-								<div class="box-row green">
-									<span class="padding-top" title="Padding Top">0</span>
+							<div class="box-row middle">
+								<div class="box-col green">
+									<span class="padding-left" title="Padding Left">0</span>
 								</div>
-								<div class="box-row middle">
-									<div class="box-col green">
-										<span class="padding-left" title="Padding Left">0</span>
-									</div>
-									<div class="box-col middle empty"></div>
-									<div class="box-col green">
-										<span class="padding-right" title="Padding Right">0</span>
-									</div>
-								</div>
-								<div class="box-row green">
-									<span class="padding-bottom" title="Padding Bottom">0</span>
+								<div class="box-col middle empty"></div>
+								<div class="box-col green">
+									<span class="padding-right" title="Padding Right">0</span>
 								</div>
 							</div>
-							<div class="box-col blue">
-								<span class="margin-right" title="Margin Right">0</span>
+							<div class="box-row green">
+								<span class="padding-bottom" title="Padding Bottom">0</span>
 							</div>
 						</div>
-						<div class="box-row blue">
-							<span class="margin-bottom" title="Margin Bottom">0</span>
+						<div class="box-col blue">
+							<span class="margin-right" title="Margin Right">0</span>
 						</div>
 					</div>
-                  
-
-                    <div class="dimensions">
-                      <span class="size x">
-                        <i>X</i>
-                        <b>{{componentSorce.x}}</b>
-                      </span>
-                      <span class="size y">
-                        <i>Y</i>
-                        <b>{{componentSorce.y}}</b>
-                      </span>
-                      <span class="size width">
-                        <i>W</i>
-                        <b>{{componentSorce.width}}</b>
-                      </span>
-                      <span class="size height">
-                        <i>H</i>
-                        <b>{{componentSorce.height}}</b>
-                      </span>
-                    </div>
-                    <div class="option textboxoption has-addon collapsed">
-                      <label class="option-content">
-                        <span title>
-                          Width
-                          <i class="caret" style="display: inline-block;"></i>
-                        </span>
-                        <div class="control">
-                          <input
-                            type
-                            name="width-option"
-                            value
-                            title
-                            placeholder="31.4375px"
-							 @keyup.enter="submitWidth"
-                            v-model="componentSorce.width"
-                          />
-                          <span class="warning-badge" style="display: none;"></span>
-                          <span class="addon increment-handle"></span>
-                        </div>
-                      </label>
-                      <label class="option-content">
-                        <span title>
-                          Height
-                          <i class="caret" style="display: inline-block;"></i>
-                        </span>
-                        <div class="control">
-                          <input
-                            type="text"
-                            name="height-option"
-                            value
-                            title
-                            placeholder="40px"
-							@keyup.enter="submitHeight"
-                            v-model="componentSorce.height"
-                          />
-                          <span class="warning-badge" style="display: none;"></span>
-                          <span class="addon increment-handle">
-                            <i></i>
-                          </span>
-                        </div>
-                      </label>
-                      <label class="option-content">
-                        <span title>
-                          Margin
-                          <i class="caret" style="display: none;"></i>
-                        </span>
-                        <div class="control">
-                          <input
-                            type="text"
-                            name="min-height-option"
-                            value
-                            title
-                            placeholder="0"
-							@keyup.enter="submitMargin"
-							v-model="componentSorce.margin"
-                          />
-                          <span class="warning-badge" style="display: none;"></span>
-                          <span class="addon increment-handle">
-                            <i></i>
-                          </span>
-                        </div>
-                      </label>
-                      <label class="option-content">
-                        <span title>
-                          Padding
-                          <i class="caret" style="display: none;"></i>
-                        </span>
-                        <div class="control">
-                          <input
-                            type="text"
-                            name="max-height-option"
-                            value
-                            title
-                            placeholder="0"
-                            @keyup.enter="submitPadding"
-							v-model="componentSorce.padding"
-                          />
-                          <span class="warning-badge" style="display: none;"></span>
-                          <span class="addon increment-handle">
-                            <i></i>
-                          </span>
-                        </div>
-                      </label>
-                    </div>
-                    <!-- <button @click="changeSource" large color="primary">수정완료{{payload}}'</button> -->
-                  </div>
+					<div class="box-row blue">
+						<span class="margin-bottom" title="Margin Bottom">0</span>
+					</div>
+				</div>
+			<div class="dimensions">
+				<span class="size x">
+				<i>X</i>
+				<b>{{componentSorce.x}}</b>
+				</span>
+				<span class="size y">
+				<i>Y</i>
+				<b>{{componentSorce.y}}</b>
+				</span>
+				<span class="size width">
+				<i>W</i>
+				<b>{{componentSorce.width}}</b>
+				</span>
+				<span class="size height">
+				<i>H</i>
+				<b>{{componentSorce.height}}</b>
+				</span>
+			</div>
+			<div class="option textboxoption has-addon collapsed">
+				<label class="option-content">
+				<span title>
+					Width
+					<i class="caret" style="display: inline-block;"></i>
+				</span>
+				<div class="control">
+					<input
+					type
+					name="width"
+					value
+					title
+					placeholder="31.4375px"
+					@keyup.enter="submitSourceWithPX"
+					v-model="componentSorce.width"
+					/>
+					<span class="warning-badge" style="display: none;"></span>
+					<span class="addon increment-handle"></span>
+				</div>
+				</label>
+				<label class="option-content">
+				<span title>
+					Height
+					<i class="caret" style="display: inline-block;"></i>
+				</span>
+				<div class="control">
+					<input
+					type="text"
+					name="height"
+					value
+					title
+					placeholder="40px"
+					@keyup.enter="submitSourceWithPX"
+					v-model="componentSorce.height"
+					/>
+					<span class="warning-badge" style="display: none;"></span>
+					<span class="addon increment-handle">
+					<i></i>
+					</span>
+				</div>
+				</label>
+				<label class="option-content">
+				<span title>
+					Margin
+					<i class="caret" style="display: none;"></i>
+				</span>
+				<div class="control">
+					<input
+					type="text"
+					name="margin"
+					value
+					title
+					placeholder="0"
+					@keyup.enter="submitSourceWithPX"
+					v-model="componentSorce.margin"
+					/>
+					<span class="warning-badge" style="display: none;"></span>
+					<span class="addon increment-handle">
+					<i></i>
+					</span>
+				</div>
+				</label>
+				<label class="option-content">
+				<span title>
+					Padding
+					<i class="caret" style="display: none;"></i>
+				</span>
+				<div class="control">
+					<input
+					type="text"
+					name="padding"
+					value
+					title
+					placeholder="0"
+					@keyup.enter="submitSourceWithPX"
+					v-model="componentSorce.padding"
+					/>
+					<span class="warning-badge" style="display: none;"></span>
+					<span class="addon increment-handle">
+					<i></i>
+					</span>
+				</div>
+				</label>
+			</div>
+			</div>
             </v-app>
           </b-card-body>
         </b-collapse>
@@ -171,16 +166,23 @@
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
 				<div class="control">
-					<b-button style="width:30px; height:30px":style="backgroundColor"variant=""></b-button>
+					<b-button  @click = "colorBackgroundpicker" style="width:30px; height:30px" :style="backgroundColor"variant="free"></b-button>
 					<input
 					type
-					name="width-option"
+					name="backgroundColor"
 					value
 					title
-					placeholder="31.4375px"
-						@keyup.enter="submitWidth"
-					v-model="componentSorce.backgroundColor"
+					placeholder=""
+					@keyup.enter="submitSourceOriginal"
+					v-model="backgroundColor.backgroundColor.hex"
 					/>
+					<chrome-color
+					class="chrome"
+					v-if="isBackgroundPicker"
+					:value="backgroundColor.backgroundColor"
+					v-model="backgroundColor.backgroundColor"
+					@input="updateBackgroundValue"
+					></chrome-color>
 					<span class="warning-badge" style="display: none;"></span>
 					<span class="addon increment-handle"></span>
 				</div>
@@ -196,20 +198,26 @@
 			<div class="option textboxoption has-addon collapsed">
 				<label class="option-content">
 				<span title>
-					Color
+					Color 
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
 				<div class="control">
-					<b-button style="width:30px; height:30px":style="fontColor"variant=""></b-button>
+					<b-button  @click = "colorFontpicker"  style="width:30px; height:30px":style="fontColor"variant="free"></b-button>
 					<input
 					type
-					name="width-option"
-					value
+					name="color"
 					title
-					placeholder="31.4375px"
-						@keyup.enter="submitWidth"
-					v-model="fontColor.backgroundColor"
+					placeholder=""
+					@keyup.enter="submitSourceOriginal"
+					v-model= "fontColor.background"
 					/>
+					<chrome-color
+					class="chrome"
+					v-if="isFontPicker"
+					:value="fontColor.backgroundColor"
+					v-model="fontColor.backgroundColor"
+					@input="updateFontValue"
+					></chrome-color>
 					<span class="warning-badge" style="display: none;"></span>
 					<span class="addon increment-handle"></span>
 				</div>
@@ -222,11 +230,10 @@
 				<div class="control">
 					<input
 					type="text"
-					name="height-option"
-					value
+					name="fontSize"
 					title
 					placeholder="40px"
-					@keyup.enter="submitHeight"
+					@keyup.enter="submitSourceWithPX"
 					v-model="componentSorce.fontSize"
 					/>
 					<span class="warning-badge" style="display: none;"></span>
@@ -243,166 +250,202 @@
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-4 variant="info">Filters</b-button>
         </b-card-header>
-        <b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
+		
+		 <b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
 			<div style="float:left">
-			 Opacity 
-			 <range-slider
+			Opacity 
+			<range-slider
 				class="slider"
 				min="0"
 				max="1"
 				step="0.01"
+				name="Opacity"
+				submitSorce.style="Opacity"
+				@input = "submitOpacity"
 				v-model="opacityValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				v-model="opacityValue"
 				placeholder="0"
+				name="Opacity"
+				@keyup.enter="submitOpacity"
 			></input>
 			</div>
+
 			<div style="float:left">
-			 Blur 
-			 <range-slider
+			Blur 
+			<range-slider
 				class="slider"
 				min="0"
 				max="100"
 				step="1"
+				name="Blur"
+				submitSorce.style="Blur"
+				@input = "submitBlur"
 				v-model="blurValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="0px"
+				name="Blur"
+				@keyup.enter="submitBlur"
 				v-model="blurValue"
 			></input>
 			</div>
+
 			<div style="float:left">
-			 Brightness 
-			 <range-slider
+			Brightness 
+			<range-slider
 				class="slider"
 				min="0"
 				max="100"
 				step="1"
+				name="Brightness"
+				submitSorce.style="Brightness"
+				@input = "submitBrightness"
 				v-model="brightnessValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="0%"
+				name="Brightness"
+				@keyup.enter="submitBrightness"
 				v-model="brightnessValue"
 			></input>
 			</div>
 			<div style="float:left">
-			 Contrast 
-			 <range-slider
+			Contrast 
+			<range-slider
 				class="slider"
 				min="0"
 				max="200"
 				step="1"
+				name="Contrast"
+				submitSorce.style="Contrast"
+				@input = "submitContrast"
 				v-model="contrastValue">
-  			</range-slider>
-			  
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="0%"
+				name="Contrast"
+				@keyup.enter="submitContrast"
 				v-model="contrastValue"
 			></input>
 			</div>
 			<div style="float:left">
-			 Grayscale 
-			 <range-slider
+			Grayscale 
+			<range-slider
 				class="slider"
 				min="0"
 				max="100"
 				step="1"
+				name="Grayscale"
+				submitSorce.style="Grayscale"
+				@input = "submitGrayscale"
 				v-model="grayscaleValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="0%"
+				name="Grayscale"
+				@keyup.enter="submitGrayscale"
 				v-model="grayscaleValue"
 			></input>
 			</div>
 			<div style="float:left">
-			 Hue 
-			 <range-slider
+			Hue 
+			<range-slider
 				class="slider"
 				min="0"
 				max="360"
 				step="3"
+				name="Hue"
+				submitSorce.style="Hue"
+				@input = "submitHue"
 				v-model="hueValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="0deg"
+				name="Hue"
+				@keyup.enter="submitHue"
 				v-model="hueValue"
 			></input>
 			</div>
 			<div style="float:left">
-			 Invert 
-			 <range-slider
+			Invert 
+			<range-slider
 				class="slider"
 				min="0"
 				max="100"
 				step="1"
+				name="Invert"
+				submitSorce.style="Invert"
+				@input = "submitInvert"
 				v-model="invertValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="100%"
+				name="Invert"
+				@keyup.enter="submitInvert"
 				v-model="invertValue"
 			></input>
 			</div>
 			<div style="float:left">
-			 Saturate 
-			 <range-slider
+			Saturate 
+			<range-slider
 				class="slider"
 				min="0"
 				max="200"
 				step="1"
+				name="Saturate"
+				submitSorce.style="Saturate"
+				@input = "submitSaturate"
 				v-model="saturateValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
 				placeholder="0%"
+				name="Saturate"
+				@keyup.enter="submitSaturate"
 				v-model="saturateValue"
 			></input>
 			</div>
 			<div style="float:left">
-			 Sepia 
-			 <chrome-color v-model="color"></chrome-color>
-			dsd
-			 <range-slider
+			Sepia 
+			<range-slider
 				class="slider"
 				min="0"
 				max="100"
 				step="1"
+				name="Sepia"
+				submitSorce.style="Sepia"
+				@input = "submitSepia"
 				v-model="sepiaValue">
-  			</range-slider>
+			</range-slider>
 			<input
 				style="width:50px"
-				placeholder="100%"
+				placeholder="0%"
+				name="Sepia"
+				@keyup.enter="submitSepia"
 				v-model="sepiaValue"
 			></input>
 			</div>
-			
-		</b-collapse>
+
+        </b-collapse>
       </b-card>
     </div>
-	
-
   </div>
-  
-
-
-  
- 
-
-
 
 </template>
-
 
 <script>
 import RangeSlider from 'vue-range-slider'
 import { Chrome } from 'vue-color'
+import { mapGetters, mapMutations } from 'vuex'
 // you probably need to import built-in style
 import 'vue-range-slider/dist/vue-range-slider.css'
 
@@ -413,21 +456,32 @@ export default {
   data(){
     return{
 		
-	  opacityValue: 0,
-	  blurValue:0,
-	  brightnessValue:0, 
-	  contrastValue:0,
-	  grayscaleValue:0, 
-	  hueValue:0, 
-	  invertValue:0, 
-	  saturateValue:0, 
-	  sepiaValue:0, 
-      isData:true,
+	  opacityValue: '',
+	  blurValue:'',
+	  brightnessValue:'', 
+	  contrastValue:'',
+	  grayscaleValue:'', 
+	  hueValue:'', 
+	  invertValue:'', 
+	  saturateValue:'', 
+	  sepiaValue:'', 
+
+      isData:false,
+	  isBackgroundPicker:false,
+	  isFontPicker:false,
+
 	  backgroundColor:{
-		  backgroundColor:'rgb(0,0,255)'
+		  backgroundColor:''
 	  },
+
 	  fontColor:{
-		  backgroundColor:'rgb(0,0,255)'
+		  backgroundColor:''
+	  },
+
+	  submitSorce:{
+		  payload:'',
+		  style:'',
+		  value:'',
 	  },
       componentSorce:{
         x:228,
@@ -440,26 +494,6 @@ export default {
 		fontColor:'',
 		fontSize:'',
 	  },
-	  selectionWidthSource:{
-		payload:'',
-		style:'width',
-		value:''
-	  },
-	  selectionHeightSource:{
-		payload:'',
-		style:'height',
-		value:''
-	  },
-	  selectionMarginSource:{
-		payload:'',
-		style:'margin',
-		value:''
-	  },
-	  selectionPaddingSource:{
-		payload:'',
-		style:'padding',
-		value:''
-	  },
 
       mgTop:0,
       mgBottom:0,
@@ -471,15 +505,10 @@ export default {
       pdRight:0,
       compo: null,
       borderstyle: null,
-
-	  //
-	  color: '#ff00ff'
     }
   },
   components: {
-    RangeSlider,
-
-	  ChromeColor: VueColor.Chrome
+    RangeSlider,ChromeColor: VueColor.Chrome
  
   },
   created(){
@@ -489,54 +518,115 @@ export default {
  { 
  },
   methods:{
-	getData(payload){
-		if(this.isData)
-			this.isData = false
-		console.log(payload)
-		console.log(payload.screenX-payload.x)
-		console.log(payload.screenY-payload.y)
-		// console.log(screen.availWidth)
-		// console.log(screen.availHeight)
-		// console.log(payload.target.getBoundingClientRect())
+	getData(payload,homeLayoutLocation){
+		if(!this.isData)
+			this.isData = true
+		this.componentSorce.x=Math.floor(payload.x - homeLayoutLocation.x)
+		this.componentSorce.y=Math.floor(payload.y - homeLayoutLocation.y),
 
-		this.componentSorce.x=payload.x
-		this.componentSorce.y=payload.y,
+		this.componentSorce.margin=Math.floor(payload.target.style.margin)
+		this.componentSorce.padding=Math.floor(payload.target.style.padding),
 
-		this.componentSorce.margin=payload.target.style.margin
-		this.componentSorce.padding=payload.target.style.padding,
-		this.componentSorce.width=payload.target.getBoundingClientRect().width
-		this.componentSorce.height=payload.target.getBoundingClientRect().height
+		this.componentSorce.width=Math.floor(payload.target.getBoundingClientRect().width)
+		this.componentSorce.height=Math.floor(payload.target.getBoundingClientRect().height)
+
 		this.componentSorce.backgroundColor = getComputedStyle(payload.target).backgroundColor
 		this.backgroundColor.backgroundColor = getComputedStyle(payload.target).backgroundColor
 		this.fontColor.backgroundColor = getComputedStyle(payload.target).color
-		this.componentSorce.fontSize = getComputedStyle(payload.target).fontSize
+		this.componentSorce.fontSize = getComputedStyle(payload.target).fontSize.replace("px","");
 
 	},
-    changeSource(){
-
-	  //console.log(this.payload)
-    //   eventBus.$emit("userChangeSource",this.componentSorce)
+	colorBackgroundpicker(){
+		this.isBackgroundPicker=true
 	},
-	submitWidth(e){
-		this.selectionWidthSource.payload=this.payload
-		this.selectionWidthSource.value=this.componentSorce.width+'px'
-		this.$emit('userSelected', this.selectionWidthSource)
+	colorFontpicker(){
+		this.isFontPicker=true
 	},
-	submitHeight(e){
-		this.selectionHeightSource.payload=this.payload
-		this.selectionHeightSource.value=this.componentSorce.height+'px'
-		this.$emit('userSelected', this.selectionHeightSource)
+	updateBackgroundValue(colorData) {
+    	this.backgroundColor.background = colorData.hex
+    },
+	updateFontValue(colorData) {
+    	this.fontColor.background = colorData.hex
+    },
+	submitSourceWithPX(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style=e.target.name
+		this.submitSorce.value=e.target.value+'px'
+		this.$emit('userSelected', this.submitSorce)
 	},
-	submitMargin(e){
-		this.selectionMarginSource.payload=this.payload
-		this.selectionMarginSource.value=this.componentSorce.magin+'px'
-		this.$emit('userSelected', this.selectionMarginSource)
+	submitSourceOriginal(e){
+		//console.log(e.target)
+		if(e.target.name=='backgroundColor'){
+			this.isBackgroundPicker=false
+		}
+		if(e.target.name=='color'){
+			this.isFontPicker=false
+		}
+		this.submitSorce.payload=this.payload
+		if(typeof(e.target)!=='undefined'){
+			this.submitSorce.style=e.target.name
+			this.submitSorce.value=e.target.value
+		}
+		else{
+			//onsole.log(this.submitSorce)
+			this.submitSorce.value=e
+		}
+		this.$emit('userSelected', this.submitSorce)
 	},
-	submitPadding(e){
-		this.selectionPaddingSource.payload=this.payload
-		this.selectionPaddingSource.value=this.componentSorce.padding+'px'
-		this.$emit('userSelected', this.selectionPaddingSource)
-	}
+	submitOpacity(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Opacity'
+		this.submitSorce.value=e
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitBlur(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Blur'
+		this.submitSorce.value=e+'px'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitBrightness(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Brightness'
+		this.submitSorce.value=e+'%'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitContrast(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Contrast'
+		this.submitSorce.value=e+'%'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitGrayscale(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Grayscale'
+		this.submitSorce.value=e+'%'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitHue(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Hue'
+		this.submitSorce.value=e+'deg'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitInvert(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Invert'
+		this.submitSorce.value=e+'%'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitSaturate(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Saturate'
+		this.submitSorce.value=e+'%'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitSepia(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='Sepia'
+		this.submitSorce.value=e+'%'
+		this.$emit('userSelected', this.submitSorce)
+	},
   }
 };
 </script>
@@ -583,8 +673,6 @@ export default {
     flex-grow: 1;
     box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
 	user-select: none;
-	
-
 }
 
 </style>

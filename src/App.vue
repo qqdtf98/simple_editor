@@ -21,7 +21,8 @@ export default {
   data(){
     return{
       payload : '',
-      data: ''
+      data: '',
+      homeLayoutLocation:'',
     }
   },
   methods: {
@@ -31,7 +32,11 @@ export default {
       // console.log(payload.y)
       // console.log(payload.target.getBoundingClientRect().width)
       // console.log(payload.target.getBoundingClientRect().height)
-      this.$refs.layouts.getData(payload)
+      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
+      // console.log(this.homeLayoutLocation)
+      this.$refs.layouts.getData(payload,this.homeLayoutLocation)
+      
 
     },
     userSelectedWidth(data){
