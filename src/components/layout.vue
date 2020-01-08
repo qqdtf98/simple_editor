@@ -5,9 +5,9 @@
       <b-nav-item>options</b-nav-item>
       <b-nav-item>Animation</b-nav-item>
     </b-nav>
-	<div v-if="isData">
-		<h3>컴포넌트를 선택해 주세요</h3>
-	</div>
+    <div v-if="isData">
+      <h3>컴포넌트를 선택해 주세요</h3>
+      </div>
     <div v-else role="tablist">
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" role="tab">
@@ -82,7 +82,7 @@
                             value
                             title
                             placeholder="31.4375px"
-							 @keyup.enter="submitWidth"
+                            @keyup.enter="submitWidth"
                             v-model="componentSorce.width"
                           />
                           <span class="warning-badge" style="display: none;"></span>
@@ -101,7 +101,7 @@
                             value
                             title
                             placeholder="40px"
-							@keyup.enter="submitHeight"
+                            @keyup.enter="submitHeight"
                             v-model="componentSorce.height"
                           />
                           <span class="warning-badge" style="display: none;"></span>
@@ -122,8 +122,7 @@
                             value
                             title
                             placeholder="none"
-							@keyup.enter="submitMargin"
-                     
+                            @keyup.enter="submitMargin"
                           />
                           <span class="warning-badge" style="display: none;"></span>
                           <span class="addon increment-handle">
@@ -144,7 +143,7 @@
                             title
                             placeholder="none"
                             @keyup.enter="submitPadding"
-                        
+
                           />
                           <span class="warning-badge" style="display: none;"></span>
                           <span class="addon increment-handle">
@@ -185,75 +184,69 @@
   </div>
 </template>
 
-
-
 <script>
 // import {eventBus} from "./main"
 export default {
   name: 'App',
-  props:['payload'],
-  data(){
-    return{
-      isData:true,
-      componentSorce:{
-        x:228,
-        y:500,
-        width:960,
-        height:614,
-	  },
-	  selectionWidthSource:{
-		  payload:'',
-      style:'width',
-      value:''
-	  },
-	  selectionHeightSource:{
-		  payload:'',
-		  style:'height',
-      value:''
-	  },
-
-      mgTop:0,
-      mgBottom:0,
-      mgLeft:0,
-      mgRight:0,
-      pdTop:0,
-      pdBottom:0,
-      pdLeft:0,
-      pdRight:0,
+  props: ['payload'],
+  data () {
+    return {
+      isData: true,
+      componentSorce: {
+        x: 228,
+        y: 500,
+        width: 960,
+        height: 614
+      },
+      selectionWidthSource: {
+        payload: '',
+        style: 'width',
+        value: ''
+      },
+      selectionHeightSource: {
+        payload: '',
+        style: 'height',
+        value: ''
+      },
+      mgTop: 0,
+      mgBottom: 0,
+      mgLeft: 0,
+      mgRight: 0,
+      pdTop: 0,
+      pdBottom: 0,
+      pdLeft: 0,
+      pdRight: 0,
       compo: null,
       borderstyle: null
     }
   },
- mounted() 
- { 
- },
-  methods:{
-	getData(payload){
-		if(this.isData)
-			this.isData = false
+  mounted () {
+  },
+  methods: {
+    getData (payload) {
+      if (this.isData) { this.isData = false }
 
-		this.componentSorce.x=payload.x
-		this.componentSorce.y=payload.y,
-		this.componentSorce.width=payload.target.getBoundingClientRect().width
-		this.componentSorce.height=payload.target.getBoundingClientRect().height
-	},
-    changeSource(){
-
-	  //console.log(this.payload)
+      this.componentSorce.x = payload.x
+      this.componentSorce.y = payload.y
+      this.componentSorce.width = payload.target.getBoundingClientRect().width
+      this.componentSorce.height = payload.target.getBoundingClientRect().height
+    },
+    changeSource () {
+      // console.log(this.payload)
     //   eventBus.$emit("userChangeSource",this.componentSorce)
-	},
-	submitWidth(e){
-		this.selectionWidthSource.payload=this.payload
-		this.selectionWidthSource.value=this.componentSorce.width+'px'
-		this.$emit('userSelected', this.selectionWidthSource)
-	},
-	submitHeight(e){
-		this.selectionHeightSource.payload=this.payload
-		this.selectionHeightSource.value=this.componentSorce.height+'px'
-		this.$emit('userSelected', this.selectionHeightSource)
-	}
+    },
+    submitWidth (e) {
+      this.selectionWidthSource.payload = this.payload
+      this.selectionWidthSource.value = this.componentSorce.width + 'px'
+      this.$emit('userSelected', this.selectionWidthSource)
+    },
+    submitHeight (e) {
+      this.selectionHeightSource.payload = this.payload
+      this.selectionHeightSource.value = this.componentSorce.height + 'px'
+      this.$emit('userSelected', this.selectionHeightSource)
+    }
   }
-};
+}
 </script>
 
 <style>
