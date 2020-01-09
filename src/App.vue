@@ -83,7 +83,7 @@ export default {
     height: 80%;
     display:flex;
     align-items: center;
-    // justify-content: center;
+    justify-content: center;
     flex-direction: column;
     position: relative;
     .title{
@@ -104,12 +104,17 @@ export default {
     bottom:0;
     height: 96%;
     border: 2px solid #545e66;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // overflow: hidden;
     .home{
     display: flex;
     align-items: center;
     justify-content: center;
      width: 97%;
     height: 100%;
+    overflow: hidden;
     }
   }
   }

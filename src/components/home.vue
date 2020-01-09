@@ -234,7 +234,6 @@ export default {
             let leftBord = document.querySelector('.left-border')
             let dashWrapper = document.querySelector('.dashboard-wrapper')
             let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
-            console.log(scrollBottomHeight)
             topBord.style.left = this.selectedElement.left + 'px'
             topBord.style.top = this.selectedElement.top + 'px'
             topBord.style.width = this.selectedElement.width + 'px'
@@ -257,6 +256,10 @@ export default {
               rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
               rightBord.style.top = this.selectedElement.top + 'px'
               rightBord.style.height = this.selectedElement.height + 'px'
+            }
+            if (this.selectedElement.left < dashboardElem.getBoundingClientRect().left) {
+              leftBord.style.display = 'none'
+              bottomBord.style.left = this.selectedElement.left + 'px'
             }
           }
         }
@@ -418,7 +421,6 @@ export default {
       }
     },
     placeCaretAtEnd (el) {
-      console.log('asd')
       el.focus()
       if (
         typeof window.getSelection !== 'undefined' &&
@@ -521,7 +523,7 @@ export default {
 
 <style lang="scss">
 #dashboard {
-  display: flex;
+  display: inline-block;
   align-items: center;
   width: 100%;
 
@@ -531,8 +533,10 @@ export default {
     border: 1px solid black;
     height: 80%;
     max-height: 40rem;
-    overflow: scroll;
+    overflow: auto;
+    display: inline-block;
     .dashboard-wrapper {
+      // overflow: hidden;
       height: 100%;
       .text-wrapper {
         display: flex;
@@ -732,14 +736,14 @@ export default {
         width: 100%;
         height: 3px;
         position: fixed;
-        z-index: 10000;
+        // z-index:
         background-color: #3e8ce4;
+        // overflow: auto !important;
       }
       .right-border, .left-border{
         height: 100%;
         width: 3px;
         position: fixed;
-        z-index: 10000;
         background-color: #3e8ce4;
       }
     }
@@ -754,6 +758,7 @@ export default {
       justify-content: center;
       background-color: #f75c51;
       fill:#fff;
+      overflow: auto !important;
     }
     .boundary-line-top,
     .boundary-line-bottom {
