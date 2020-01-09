@@ -27,7 +27,8 @@ export default {
     return {
       payload: '',
       data: '',
-      homeLayoutLocation: ''
+      homeLayoutLocation: '',
+      childOFchil:[],
     }
   },
   methods: {
@@ -41,11 +42,55 @@ export default {
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       // console.log(this.homeLayoutLocation)
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
+      // console.log(document.body.children)
+      // console.log(document.body.children[0].firstElementChild )
+      // console.log(document.body.children[0].children )
+      // console.log(document.body.children[0].children[1].children )
+      // console.log(document.body.children[0].children[1].firstElementChild.children )
+      // console.log(document.body.children[0].children[1].firstElementChild.firstElementChild )
+      // console.log(document.body.children[0].children[1].lastElementChild  )
+      var anchor = document.querySelector('body')
+      //console.log(Object.keys(anchor))
+      var child = document.body.children
+      console.log(child)
+      for(var i=0;i<child.length;i++){
+        //console.log(child[i])
+        if(typeof(child[i].children)!=='undefined'){
+          //console.log("전")
+          console.log(child[i].tagName)
+          console.log("")
+          //console.log(child[i].className)
+          ///console.log(child[i].id)
+          this.findChildren(child[i])
+        }
+      }
+
     },
+    findChildren(child){
+      //if(typeof(child.children)!=='undefined'){
+        var childOFchil = child.children
+        if(childOFchil.length!=0){
+        //console.log(childOFchil)
+          for(var i=0;i<childOFchil.length;i++){
+            //console.log(child[i])
+              //console.log("후")
+              console.log(childOFchil[i])
+              //this.childOFchil.push(childOFchil[i].tagName)
+              this.findChildren(childOFchil[i])
+          }
+        }
+        else{
+          //console.log(this.childOFchil)
+          //this.childOFchil = []
+          console.log("자식끝")
+        }
+    }
+    ,
     userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
-    }
+    },
+ 
   }
 }
 </script>
