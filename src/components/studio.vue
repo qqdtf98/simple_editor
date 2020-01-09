@@ -134,6 +134,34 @@
   </div>
 </template>
 
+<script>
+export default {
+  mounted () {
+    var toggler = document.getElementsByClassName('tag-list')
+    var i
+    var j
+
+    for (i = 0; i < toggler.length; i++) {
+      toggler[i].addEventListener('click', function () {
+        let nest = this.parentElement.querySelector('.nested')
+        console.log(nest.children[0].classList)
+
+        // this.parentElement.querySelector('.nested').children.classList.toggle('template')
+        this.parentElement.querySelector('.nested').classList.toggle('active')
+        this.classList.toggle('caret-down')
+        if (nest.children[0].className !== 'tag-list-box') {
+          console.log('asd')
+          for (j = 0; j < nest.children.length; j++) {
+            nest.children[j].classList.add('template')
+          }
+        }
+      })
+    }
+  },
+  methods: {}
+}
+</script>
+
 <style lang="scss">
 #studio {
   .studio-text-box {
@@ -143,8 +171,8 @@
     .studio-text {
       background-color: #41474c;
       padding: 0.2rem;
-    color: #fff;
-}
+      color: #fff;
+    }
   }
   .tag-studio {
     border: 3px solid #49b6a7;
