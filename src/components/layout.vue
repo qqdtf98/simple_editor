@@ -12,38 +12,38 @@
         </b-card-header>
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
-            <div class="info-option">
-              <div class="margin">
-                <div class="box-row blue">
-                  <span class="margin-top" title="Margin Top">0</span>
-                  </div>
+			<div class="info-option">
+				<div class="margin">
+					<div class="box-row blue">
+						<span class="margin-top" title="Margin Top">{{margin[0].value}}</span>
+					</div>
 					<div class="box-row middle">
 						<div class="box-col blue">
-							<span class="margin-left" title="Margin Left">0</span>
+							<span class="margin-left" title="Margin Left">{{margin[3].value}}</span>
 						</div>
 						<div class="box-col padding">
 							<div class="box-row green">
-								<span class="padding-top" title="Padding Top">0</span>
+								<span class="padding-top" title="Padding Top">{{padding[0]}}</span>
 							</div>
 							<div class="box-row middle">
 								<div class="box-col green">
-									<span class="padding-left" title="Padding Left">0</span>
+									<span class="padding-left" title="Padding Left">{{padding[3]}}</span>
 								</div>
 								<div class="box-col middle empty"></div>
 								<div class="box-col green">
-									<span class="padding-right" title="Padding Right">0</span>
+									<span class="padding-right" title="Padding Right">{{padding[1]}}</span>
 								</div>
 							</div>
 							<div class="box-row green">
-								<span class="padding-bottom" title="Padding Bottom">0</span>
+								<span class="padding-bottom" title="Padding Bottom">{{padding[2]}}</span>
 							</div>
 						</div>
 						<div class="box-col blue">
-							<span class="margin-right" title="Margin Right">0</span>
+							<span class="margin-right" title="Margin Right">{{margin[1].value}}</span>
 						</div>
 					</div>
 					<div class="box-row blue">
-						<span class="margin-bottom" title="Margin Bottom">0</span>
+						<span class="margin-bottom" title="Margin Bottom">{{margin[2].value}}</span>
 					</div>
 				</div>
 			<div class="dimensions">
@@ -66,7 +66,7 @@
 			</div>
 			<div class="option textboxoption has-addon collapsed">
 				<label class="option-content">
-				<span title>
+				<span :class="{fontActive:onWidth}"title>
 					Width
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
@@ -85,7 +85,7 @@
 				</div>
 				</label>
 				<label class="option-content">
-				<span title>
+				<span :class="{fontActive:onHeight}"title>
 					Height
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
@@ -106,7 +106,7 @@
 				</div>
 				</label>
 				<label class="option-content">
-				<span title>
+				<span :class="{fontActive:onMargin}"title>
 					Margin
 					<i class="caret" style="display: none;"></i>
 				</span>
@@ -127,7 +127,7 @@
 				</div>
 				</label>
 				<label class="option-content">
-				<span title>
+				<span :class="{fontActive:onPadding}"title>
 					Padding
 					<i class="caret" style="display: none;"></i>
 				</span>
@@ -161,12 +161,12 @@
         <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
 			<div class="option textboxoption has-addon collapsed">
 				<label class="option-content">
-				<span title>
+				<span :class="{fontActive:onBackgroundColor}"title>
 					BackgroundColor
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
 				<div class="control">
-					<b-button  @click = "colorBackgroundpicker" style="width:30px; height:30px" :style="backgroundColor"variant="free"></b-button>
+					<b-button  @click = "colorBackgroundpicker" @keyup.enter="submitSourceOriginal" style="width:30px; height:30px" :style="backgroundColor"variant="free"></b-button>
 					<input
 					type
 					name="backgroundColor"
@@ -197,12 +197,12 @@
         <b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
 			<div class="option textboxoption has-addon collapsed">
 				<label class="option-content">
-				<span title>
-					Color
+				<span :class="{fontActive:onColor}" title>
+					Color 
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
 				<div class="control">
-					<b-button  @click = "colorFontpicker"  style="width:30px; height:30px":style="fontColor"variant="free"></b-button>
+					<b-button  @click = "colorFontpicker" @keyup.enter="submitSourceOriginal" style="width:30px; height:30px":style="fontColor"variant="free"></b-button>
 					<input
 					type
 					name="color"
@@ -223,7 +223,7 @@
 				</div>
 				</label>
 				<label class="option-content">
-				<span title>
+				<span :class="{fontActive:onFontSize}" title>
 					Font Size
 					<i class="caret" style="display: inline-block;"></i>
 				</span>
@@ -252,8 +252,8 @@
         </b-card-header>
 
 		 <b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
-			<div style="float:left">
-			Opacity
+			<div :class="{fontActive:onOpacity}" style="float:left">
+			Opacity 
 			<range-slider
 				class="slider"
 				min="0"
@@ -273,8 +273,8 @@
 			></input>
 			</div>
 
-			<div style="float:left">
-			Blur
+			<div :class="{fontActive:onBlur}" style="float:left">
+			Blur 
 			<range-slider
 				class="slider"
 				min="0"
@@ -294,8 +294,8 @@
 			></input>
 			</div>
 
-			<div style="float:left">
-			Brightness
+			<div :class="{fontActive:onBrightness}" style="float:left">
+			Brightness 
 			<range-slider
 				class="slider"
 				min="0"
@@ -314,8 +314,8 @@
 				v-model="brightnessValue"
 			></input>
 			</div>
-			<div style="float:left">
-			Contrast
+			<div :class="{fontActive:onContrast}" style="float:left">
+			Contrast 
 			<range-slider
 				class="slider"
 				min="0"
@@ -334,8 +334,8 @@
 				v-model="contrastValue"
 			></input>
 			</div>
-			<div style="float:left">
-			Grayscale
+			<div :class="{fontActive:onGrayscale}" style="float:left">
+			Grayscale 
 			<range-slider
 				class="slider"
 				min="0"
@@ -354,8 +354,8 @@
 				v-model="grayscaleValue"
 			></input>
 			</div>
-			<div style="float:left">
-			Hue
+			<div :class="{fontActive:onHue}" style="float:left">
+			Hue 
 			<range-slider
 				class="slider"
 				min="0"
@@ -374,8 +374,8 @@
 				v-model="hueValue"
 			></input>
 			</div>
-			<div style="float:left">
-			Invert
+			<div :class="{fontActive:onInvert}" style="float:left">
+			Invert 
 			<range-slider
 				class="slider"
 				min="0"
@@ -394,12 +394,11 @@
 				v-model="invertValue"
 			></input>
 			</div>
-			<div style="float:left">
-			Saturate
+			<div :class="{fontActive:onSaturate}" style="float:left">
+			Saturate 
 			<range-slider
 				class="slider"
-				min="0"
-				max="200"
+				min="0"				max="200"
 				step="1"
 				name="Saturate"
 				submitSorce.style="Saturate"
@@ -414,8 +413,8 @@
 				v-model="saturateValue"
 			></input>
 			</div>
-			<div style="float:left">
-			Sepia
+			<div :class="{fontActive:onSepia}" style="float:left">
+			Sepia 
 			<range-slider
 				class="slider"
 				min="0"
@@ -450,18 +449,19 @@ import 'vue-range-slider/dist/vue-range-slider.css'
 
 export default {
   name: 'App',
-  props: ['payload'],
-  data () {
-    return {
-      opacityValue: '',
-      blurValue: '',
-      brightnessValue: '',
-      contrastValue: '',
-      grayscaleValue: '',
-      hueValue: '',
-      invertValue: '',
-      saturateValue: '',
-      sepiaValue: '',
+  props:['payload'],
+  data(){
+    return{
+		
+	  opacityValue: '',
+	  blurValue:'',
+	  brightnessValue:100+'%', 
+	  contrastValue:100+'%',
+	  grayscaleValue:'', 
+	  hueValue:'', 
+	  invertValue:'', 
+	  saturateValue:100+'%', 
+	  sepiaValue:'', 
 
       isData: false,
       isBackgroundPicker: false,
@@ -487,38 +487,102 @@ export default {
         height: 614,
         padding: '0px',
         margin: '0px',
-        backgroundColor: '',
-        fontColor: '',
-        fontSize: ''
-      },
-
-      mgTop: 0,
-      mgBottom: 0,
-      mgLeft: 0,
-      mgRight: 0,
-      pdTop: 0,
-      pdBottom: 0,
-      pdLeft: 0,
-      pdRight: 0,
+		backgroundColor:'',
+		fontColor:'',
+		fontSize:'',
+	  },
+	  margin : [
+		  {
+			value:0,
+		  },
+		  {
+			value:0,
+		  },
+		  {
+			value:0,
+		  },
+		  {
+			value:0,
+		  }
+	  ]
+	  ,
+	  padding:[0,0,0,0],
+      
       compo: null,
-      borderstyle: null
+      borderstyle: null,
+
+	  onWidth:false,
+	  onHeight:false,
+	  onMargin:false,
+	  onPadding:false,
+	  onBackgroundColor:false,
+	  onColor:false,
+	  onFontSize:false,
+	  onOpacity:false,
+	  onBlur:false,
+	  onBrightness:false,
+	  onContrast:false,
+	  onGrayscale:false,
+	  onHue:false,
+	  onInvert:false,
+	  onSaturate:false,
+	  onSepia:false,
+
+
+
+	  //on : true,
+	//   widthFontActive:{
+	// 	color:'blue',
+	// 	fontWeight:'bold',
+
+	//   },
     }
   },
   components: {
     RangeSlider,
     ChromeColor: VueColor.Chrome
   },
-  created () {
-    // console.log(this.payload)
+  created(){
+	  
+	  //console.log(this.payload)
   },
-  mounted () {},
-  methods: {
-    getData (payload, homeLayoutLocation) {
-      if (!this.isData) {
-        this.isData = true
-      }
-      this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
-      this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y)
+ 
+  methods:{
+	getData(payload,homeLayoutLocation){
+
+		this.onWidth=false
+		this.onHeight=false
+		this.onMargin=false
+		this.onPadding=false
+		this.onBackgroundColor=false,
+		this.onColor=false,
+		this.onFontSize=false,
+		this.onOpacity=false,
+		this.onBlur=false,
+		this.onBrightness=false,
+		this.onContrast=false,
+		this.onGrayscale=false,
+		this.onHue=false,
+		this.onInvert=false,
+		this.onSaturate=false,
+		this.onSepia=false
+
+
+		if(!this.isData)
+			this.isData = true
+		this.componentSorce.x=Math.floor(payload.x - homeLayoutLocation.x)
+		this.componentSorce.y=Math.floor(payload.y - homeLayoutLocation.y),
+
+		// console.log(getComputedStyle(payload.target))
+		// console.log(getComputedStyle(payload.target).filter)
+		// console.log(getComputedStyle(payload.target).brightness)
+		// console.log(getComputedStyle(payload.target).contrast)
+		// console.log(getComputedStyle(payload.target).grayscale)
+		// console.log(getComputedStyle(payload.target).hue)
+		// console.log(getComputedStyle(payload.target).invert)
+		// console.log(getComputedStyle(payload.target).saturate)
+		// console.log(getComputedStyle(payload.target).sepia )
+		
 
       this.componentSorce.width = Math.floor(
         payload.target.getBoundingClientRect().width
@@ -540,108 +604,192 @@ export default {
         payload.target
       ).fontSize.replace('px', '')
 
-      this.opacityValue = getComputedStyle(payload.target).opacity
-      console.log(this.opacity)
+		this.opacityValue=getComputedStyle(payload.target).opacity
+		// console.log(this.opacity)
+
+		var margin =getComputedStyle(payload.target).margin.replace(/px/gi,'').split(" ")
+		// console.log(margin)
+		// console.log(this.margin[0])
+		if(margin.length!==1){
+			for(var i=0;i<margin.length;i++){
+				this.margin[i].value = margin[i]
+			}
+		}
+		else
+			{
+			for(var i=0;i<4;i++){
+				this.margin[i].value = margin[0]
+			}
+		}
+		var padding =getComputedStyle(payload.target).padding.replace(/px/gi,'').split(" ")
+		console.log(padding)
+		console.log(this.margin[0])
+		if(padding.length!==1){
+			for(var i=0;i<padding.length;i++){
+				this.padding[i] = padding[i]
+			}
+		}
+		else{
+			for(var i=0;i<4;i++){
+				this.padding[i] = padding[0]
+			}
+		}
+		// console.log(margin)
+		// console.log(this.margin[3])
+		
+		
+
+
+
+	},
+	colorBackgroundpicker(){
+		// if(this.isBackgroundPicker==true)
+		// 	this.isBackgroundPicker=false
+		// else
+		this.isBackgroundPicker=true
+	
+		// if(this.isBackgroundPicker==true)
+		// 	this.isBackgroundPicker=false
+		// else
+		// 	this.isBackgroundPicker=true
+		// console.log("sdas")
+		
+	},
+	colorFontpicker(){
+		this.isFontPicker=true
+	},
+	updateBackgroundValue(colorData) {
+    	this.backgroundColor.background = colorData.hex
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style="background"
+		this.submitSorce.value=colorData.hex
+		this.onBackgroundColor=true
+		this.$emit('userSelected', this.submitSorce)
     },
-    colorBackgroundpicker () {
-      this.isBackgroundPicker = true
+	updateFontValue(colorData) {
+    	this.fontColor.background = colorData.hex
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style="color"
+		this.submitSorce.value=colorData.hex
+		this.onColor=true
+		this.$emit('userSelected', this.submitSorce)
     },
-    colorFontpicker () {
-      this.isFontPicker = true
-    },
-    updateBackgroundValue (colorData) {
-      this.backgroundColor.background = colorData.hex
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background'
-      this.submitSorce.value = colorData.hex
-      this.$emit('userSelected', this.submitSorce)
-    },
-    updateFontValue (colorData) {
-      this.fontColor.background = colorData.hex
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'color'
-      this.submitSorce.value = colorData.hex
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitSourceWithPX (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = e.target.name
-      this.submitSorce.value = e.target.value + 'px'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitSourceOriginal (e) {
-      // console.log(e.target)
-      if (e.target.name == 'backgroundColor') {
-        this.isBackgroundPicker = false
-      }
-      if (e.target.name == 'color') {
-        this.isFontPicker = false
-      }
-      this.submitSorce.payload = this.payload
-      if (typeof e.target !== 'undefined') {
-        this.submitSorce.style = e.target.name
-        this.submitSorce.value = e.target.value
-      } else {
-        // onsole.log(this.submitSorce)
-        this.submitSorce.value = e
-      }
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitOpacity (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'opacity'
-      this.submitSorce.value = e
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitBlur (e) {
-      console.log('dsadsa')
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'blur(' + e + 'px)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitBrightness (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'brightness(' + e + '%)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitContrast (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'contrast(' + e + '%)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitGrayscale (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'grayscale(' + e + '%)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitHue (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'hue(' + e + 'deg)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitInvert (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'invert(' + e + '%)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitSaturate (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'saturate(' + e + '%)'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    submitSepia (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      this.submitSorce.value = 'sepia(' + e + '%)'
-      this.$emit('userSelected', this.submitSorce)
-    }
+	submitSourceWithPX(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style=e.target.name
+
+		//this.submitSorce.value=e.target.value+'px'
+		//console.log(e.target.value)
+		var words = (e.target.value).replace(/px/gi,'').split(" ")
+		//console.log(words)
+		for(var i=0;i<words.length;i++){
+			//console.log(words[i])
+			//words[i].replace('',' ');
+			//console.log(words[i])
+			if(i==0)
+				this.submitSorce.value=words[i]+'px '
+			else
+				this.submitSorce.value+=words[i]+'px '
+		}
+		
+		if(e.target.name=='width')
+			this.onWidth=true
+		else if(e.target.name=='height')
+			this.onHeight=true
+		else if(e.target.name=='margin')
+			this.onMargin=true
+		else if(e.target.name=='padding')
+			this.onPadding=true
+		else if(e.target.name=='width')
+			this.onWidth=true
+		else if(e.target.name=='fontSize')
+			this.onFontSize=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitSourceOriginal(e){
+		//console.log(e.target)
+		// console.log("sd")
+		// console.log(e.target.name)
+		this.isBackgroundPicker=false
+		this.isFontPicker=false
+		
+		this.submitSorce.payload=this.payload
+		if(typeof(e.target)!=='undefined'){
+			this.submitSorce.style=e.target.name
+			this.submitSorce.value=e.target.value
+		}
+		else{
+			//onsole.log(this.submitSorce)
+			this.submitSorce.value=e
+		}
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitOpacity(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='opacity'
+		this.submitSorce.value=e
+		this.onOpacity=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitBlur(e){
+		console.log("dsadsa")
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='blur('+e+'px)'
+		this.onBlur=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitBrightness(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='brightness('+e+'%)'
+		this.onBrightness=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitContrast(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='contrast('+e+'%)'
+		this.onContrast=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitGrayscale(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='grayscale('+e+'%)'
+		this.onGrayscale=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitHue(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='hue('+e+'deg)'
+		this.onHue=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitInvert(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='invert('+e+'%)'
+		this.onInvert=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitSaturate(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='saturate('+e+'%)'
+		this.onSaturate=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitSepia(e){
+		this.submitSorce.payload=this.payload
+		this.submitSorce.style='filter'
+		this.submitSorce.value='sepia('+e+'%)'
+		this.onSepia=true
+		this.$emit('userSelected', this.submitSorce)
+	},
+
+
   }
 }
 </script>
@@ -684,8 +832,16 @@ export default {
   flex-direction: column;
 }
 .info-option .empty {
-  flex-grow: 1;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.21) inset;
-  user-select: none;
+    flex-grow: 1;
+	flex-direction: column;
+    box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
+	user-select: none;
+	justify-content: center;
+    flex-direction: column;
+
 }
+.fontActive {
+	color:blue;
+	font-Weight:bold;
+ }
 </style>
