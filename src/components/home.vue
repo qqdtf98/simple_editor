@@ -56,12 +56,15 @@
         </div>
       </div>
       <div class="selector-box">
-        <div v-if="onelementSelected" class="tagname"></div>
-        <div class="compo-border"></div>
+        <div v-show="onelementSelected" class="tagname"></div>
+        <div v-show="onelementSelected" class="right-border"></div>
+        <div v-show="onelementSelected" class="bottom-border"></div>
+        <div v-show="onelementSelected" class="top-border"></div>
+        <div v-show="onelementSelected" class="left-border"></div>
       </div>
       <img
         style="cursor:pointer"
-        v-if="isContentMovable"
+        v-show="isContentMovable"
         src="../assets/move.svg"
         class="move-icon"
       />
@@ -123,6 +126,7 @@ export default {
   },
   mounted () {
     window.addEventListener('mousemove', event => {
+      event.preventDefault()
       if (this.resizedirection === 'right') {
         if (event.pageX < this.initialposition) {
           const size =
@@ -172,6 +176,11 @@ export default {
           this.clickedElement.style.transform = `scale(${size})`
         }
       }
+      if (this.clickedElement !== null) {
+        let move = document.querySelector('.move-icon')
+        move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
+        move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height + 'px'
+      }
     })
     window.addEventListener('mouseup', () => {
       this.resizedirection = null
@@ -180,14 +189,19 @@ export default {
   },
   methods: {
     onmouseMove (e) {
+      let dashboardElem = document.querySelector('.dashboard')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon'
+          e.target.className !== 'move-icon' && e.target.className !== 'left-border' &&
+          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
+          e.target.className !== 'bottom-border' &&
+          e.target.className !== 'boundary-line-left' &&
+          e.target.className !== 'boundary-line-right' &&
+          e.target.className !== 'boundary-line-top' &&
+          e.target.className !== 'boundary-line-bottom'
         ) {
-          // border.style.zIndex = 3
-
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
         }
@@ -195,10 +209,16 @@ export default {
         if (this.selectedElement !== e.target) {
           if (
             e.target.className !== 'tagname' &&
-            e.target.className !== 'move-icon'
+            e.target.className !== 'move-icon' && e.target.className !== 'left-border' &&
+            e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
+            e.target.className !== 'bottom-border' &&
+            e.target.className !== 'boundary-line-left' &&
+            e.target.className !== 'boundary-line-right' &&
+            e.target.className !== 'boundary-line-top' &&
+            e.target.className !== 'boundary-line-bottom'
           ) {
-            // border.style.zIndex = 3
             this.selectedElement = e.target.getBoundingClientRect()
+
             let tag = document.querySelector('.tagname')
 
             tag.textContent = e.target.tagName
@@ -208,34 +228,60 @@ export default {
               this.selectedElement.top -
               tag.getBoundingClientRect().height +
               'px'
-            let bord = document.querySelector('.compo-border')
-            bord.style.border = '2px solid #3e8ce4'
-            bord.style.left = this.selectedElement.left + 'px'
-            bord.style.top = this.selectedElement.top + 'px'
-            bord.style.width = this.selectedElement.width + 'px'
-            bord.style.height = this.selectedElement.height + 'px'
+            let bottomBord = document.querySelector('.bottom-border')
+            let topBord = document.querySelector('.top-border')
+            let rightBord = document.querySelector('.right-border')
+            let leftBord = document.querySelector('.left-border')
+            let dashWrapper = document.querySelector('.dashboard-wrapper')
+            let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
+            console.log(scrollBottomHeight)
+            topBord.style.left = this.selectedElement.left + 'px'
+            topBord.style.top = this.selectedElement.top + 'px'
+            topBord.style.width = this.selectedElement.width + 'px'
+            if (this.selectedElement.bottom > dashboardElem.getBoundingClientRect().bottom) {
+              bottomBord.style.display = 'none'
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+              rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+            } else {
+              bottomBord.style.display = ''
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+              rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+            }
           }
         }
       }
     },
-    // onmouseLeave(e) {
-    //     e.target.style.border = 'none'
-    // },
     onmouseClick (e) {
       if (this.clickedElement === null) {
         if (
           e.target.className !== 'tagname' &&
           e.target.className !== 'move-icon' &&
-          e.target.className !== 'boundary-line-left'
+          e.target.className !== 'boundary-line-left' &&
+          e.target.className !== 'boundary-line-right' &&
+          e.target.className !== 'boundary-line-top' &&
+          e.target.className !== 'boundary-line-bottom' &&
+          e.target.className !== 'left-border' &&
+           e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
+            e.target.className !== 'bottom-border'
         ) {
           this.$emit('componentSelected', e)
 
           this.clickedElement = e.target
           this.clickedBorder = getComputedStyle(e.target).border
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-          e.target.style.border = '2px dashed #3e8ce4'
+          e.target.style.border = '3px dashed #f75c51'
           e.target.style.borderRadius = '0'
-          // border radius이상함
 
           this.isContentMovable = true
 
@@ -252,39 +298,36 @@ export default {
 
             this.$nextTick(() => {
               bottom_line.style.left = this.elem.left + 'px'
-
-              bottom_line.style.top =
-                this.elem.top + this.elem.height - 1 + 'px'
-
+              bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
               bottom_line.style.width = this.elem.width + 'px'
               top_line.style.left = this.elem.left + 'px'
               top_line.style.top = this.elem.top + 1 + 'px'
               top_line.style.width = this.elem.width + 'px'
-
               left_line.style.left = this.elem.left - 1 + 'px'
               left_line.style.top = this.elem.top + 'px'
               left_line.style.height = this.elem.width + 'px'
-              right_line.style.left =
-                this.elem.left + this.elem.width - 1 + 'px'
+              right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
               right_line.style.top = this.elem.top + 'px'
               right_line.style.height = this.elem.width + 'px'
             })
           })
 
           this.$nextTick(() => {
-            let tag = document.querySelector('.move-icon')
-
-            tag.style.left = this.elem.left + 'px'
-
-            tag.style.top =
-              this.elem.top - tag.getBoundingClientRect().height + 'px'
+            let move = document.querySelector('.move-icon')
+            move.style.left = this.elem.left + 'px'
+            move.style.top = this.elem.top - move.getBoundingClientRect().height + 'px'
           })
         }
       } else if (this.clickedElement !== e.target) {
         if (
           e.target.className !== 'tagname' &&
           e.target.className !== 'move-icon' &&
-          e.target.className !== 'boundary-line-left'
+          e.target.className !== 'boundary-line-left' &&
+          e.target.className !== 'boundary-line-right' &&
+          e.target.className !== 'boundary-line-top' &&
+          e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
+          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
+          e.target.className !== 'bottom-border'
         ) {
           this.$emit('componentSelected', e)
 
@@ -293,7 +336,7 @@ export default {
           this.clickedElement = e.target
           this.clickedBorder = getComputedStyle(e.target).border
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-          e.target.style.border = '2px dashed #3e8ce4'
+          e.target.style.border = '3px dashed #f75c51'
           e.target.style.borderRadius = 0
 
           // eslint-disable-next-line camelcase
@@ -341,20 +384,38 @@ export default {
       let element = document.querySelector(`.${this.target}`)
       element.style[this.style] = this.value
     },
-    focusInput () {
-      this.isContentEditable = true
-      this.$nextTick(() => {
-        const sel = window.getSelection()
-        sel.removeAllRanges()
-        const range = new Range()
-        range.setStart(this.$refs.dash, 0)
-        range.setEnd(this.$refs.dash, 0)
-        sel.addRange(range)
-        this.placeCaretAtEnd(this.$refs.dash)
-      })
+    focusInput (e) {
+      if (e.target.className !== 'tagname' &&
+          e.target.className !== 'move-icon' &&
+          e.target.className !== 'boundary-line-left' &&
+          e.target.className !== 'boundary-line-right' &&
+          e.target.className !== 'boundary-line-top' &&
+          e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
+          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
+          e.target.className !== 'bottom-border') {
+        this.isContentEditable = true
+        this.$nextTick(() => {
+          const sel = window.getSelection()
+          sel.removeAllRanges()
+          const range = new Range()
+          range.setStart(this.$refs.dash, 0)
+          range.setEnd(this.$refs.dash, 0)
+          sel.addRange(range)
+          this.placeCaretAtEnd(this.$refs.dash)
+        })
+      }
     },
-    onmouseDoubleClick () {
-      this.focusInput()
+    onmouseDoubleClick (e) {
+      if (e.target.className !== 'tagname' &&
+          e.target.className !== 'move-icon' &&
+          e.target.className !== 'boundary-line-left' &&
+          e.target.className !== 'boundary-line-right' &&
+          e.target.className !== 'boundary-line-top' &&
+          e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
+          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
+          e.target.className !== 'bottom-border') {
+        this.focusInput(e)
+      }
     },
     placeCaretAtEnd (el) {
       console.log('asd')
@@ -377,7 +438,6 @@ export default {
       }
     },
     isContentNotEditable (e) {
-      console.log(e)
       e.preventDefault()
       this.isContentEditable = false
     },
@@ -413,18 +473,45 @@ export default {
         this.$nextTick(() => {
           let tag = document.querySelector('.tagname')
           tag.style.left = this.selectedElement.left + 'px'
-          tag.style.top =
-            this.selectedElement.top -
-            tag.getBoundingClientRect().height -
-            e.target.scrollTop +
-            'px'
+          let tagTop = this.selectedElement.top - tag.getBoundingClientRect().height - e.target.scrollTop
+          if (tagTop > 190) {
+            this.onelementSelected = true
+            tag.style.top = tagTop + 'px'
+          } else {
+            this.onelementSelected = false
+          }
+          let borderTop = document.querySelector('.top-border')
+          let borderLeft = document.querySelector('.left-border')
+          let borderBottom = document.querySelector('.bottom-border')
+          let borderRight = document.querySelector('.right-border')
+          borderTop.style.left = this.selectedElement.left + 'px'
+          borderTop.style.top = this.selectedElement.top - e.target.scrollTop + 'px'
+          borderLeft.style.left = this.selectedElement.left + 'px'
+          borderLeft.style.top = this.selectedElement.top - e.target.scrollTop + 'px'
+          borderRight.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+          borderRight.style.top = this.selectedElement.top - e.target.scrollTop + 'px'
+          borderBottom.style.left = this.selectedElement.left + 'px'
+          borderBottom.style.top = this.selectedElement.top + this.selectedElement.height - e.target.scrollTop - 2 + 'px'
         })
       }
       if (this.clickedElement != null) {
         this.$nextTick(() => {
           let move = document.querySelector('.move-icon')
           move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
-          move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height - e.target.scrollTop + 'px'
+          let moveTop = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height
+          let moveLeft = this.clickedElement.getBoundingClientRect().left
+          if (moveTop > 190) {
+            this.isContentMovable = true
+            move.style.top = moveTop + 'px'
+          } else {
+            this.isContentMovable = false
+          }
+          if (moveLeft > 300) {
+            this.isContentMovable = true
+            move.style.left = moveLeft + 'px'
+          } else {
+            this.isContentMovable = false
+          }
         })
       }
     }
@@ -640,15 +727,33 @@ export default {
         position: fixed;
         z-index: -1;
       }
+      .bottom-border, .top-border{
+
+        width: 100%;
+        height: 3px;
+        position: fixed;
+        z-index: 10000;
+        background-color: #3e8ce4;
+      }
+      .right-border, .left-border{
+        height: 100%;
+        width: 3px;
+        position: fixed;
+        z-index: 10000;
+        background-color: #3e8ce4;
+      }
     }
     .move-icon {
-      z-index: 10;
+      z-index: 2;
       position: fixed;
-      width: 0.9rem;
-      height: 0.9rem;
+      width: 1.2rem;
+      height: 1.2rem;
       display: flex;
       align-items: center;
+      padding: 0.15rem;
       justify-content: center;
+      background-color: #f75c51;
+      fill:#fff;
     }
     .boundary-line-top,
     .boundary-line-bottom {

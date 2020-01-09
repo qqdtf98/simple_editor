@@ -5,7 +5,7 @@
       <b-nav-item>options</b-nav-item>
       <b-nav-item>Animation</b-nav-item>
     </b-nav>
-	<div v-if="isData" role="tablist">
+    <div v-if="isData" role="tablist">
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
@@ -242,7 +242,7 @@
 					</span>
 				</div>
 				</label>
-			</div>	
+			</div>
 		</b-collapse>
       </b-card>
 
@@ -250,7 +250,7 @@
         <b-card-header header-tag="header" class="p-1" role="tab">
           <b-button block href="#" v-b-toggle.accordion-4 variant="info">Filters</b-button>
         </b-card-header>
-		
+
 		 <b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
 			<div :class="{fontActive:onOpacity}" style="float:left">
 			Opacity 
@@ -448,7 +448,6 @@ import { mapGetters, mapMutations } from 'vuex'
 import 'vue-range-slider/dist/vue-range-slider.css'
 
 export default {
-
   name: 'App',
   props:['payload'],
   data(){
@@ -464,29 +463,29 @@ export default {
 	  saturateValue:100+'%', 
 	  sepiaValue:'', 
 
-      isData:false,
-	  isBackgroundPicker:false,
-	  isFontPicker:false,
+      isData: false,
+      isBackgroundPicker: false,
+      isFontPicker: false,
 
-	  backgroundColor:{
-		  backgroundColor:''
-	  },
+      backgroundColor: {
+        backgroundColor: ''
+      },
 
-	  fontColor:{
-		  backgroundColor:''
-	  },
+      fontColor: {
+        backgroundColor: ''
+      },
 
-	  submitSorce:{
-		  payload:'',
-		  style:'',
-		  value:'',
-	  },
-      componentSorce:{
-        x:228,
-        y:500,
-        width:960,
-        height:614,
-		padding:'0px',
+      submitSorce: {
+        payload: '',
+        style: '',
+        value: ''
+      },
+      componentSorce: {
+        x: 228,
+        y: 500,
+        width: 960,
+        height: 614,
+        padding: '0px',
         margin: '0px',
 		backgroundColor:'',
 		fontColor:'',
@@ -537,12 +536,11 @@ export default {
 	// 	fontWeight:'bold',
 
 	//   },
-
     }
   },
   components: {
-    RangeSlider,ChromeColor: VueColor.Chrome
- 
+    RangeSlider,
+    ChromeColor: VueColor.Chrome
   },
   created(){
 	  
@@ -586,15 +584,25 @@ export default {
 		// console.log(getComputedStyle(payload.target).sepia )
 		
 
-		this.componentSorce.width=Math.floor(payload.target.getBoundingClientRect().width)
-		this.componentSorce.height=Math.floor(payload.target.getBoundingClientRect().height)
-		this.componentSorce.margin=getComputedStyle(payload.target).margin
-		this.componentSorce.padding=getComputedStyle(payload.target).padding,
+      this.componentSorce.width = Math.floor(
+        payload.target.getBoundingClientRect().width
+      )
+      this.componentSorce.height = Math.floor(
+        payload.target.getBoundingClientRect().height
+      )
+      this.componentSorce.margin = getComputedStyle(payload.target).margin
+      this.componentSorce.padding = getComputedStyle(payload.target).padding
 
-		this.componentSorce.backgroundColor = getComputedStyle(payload.target).backgroundColor
-		this.backgroundColor.backgroundColor = getComputedStyle(payload.target).backgroundColor
-		this.fontColor.backgroundColor = getComputedStyle(payload.target).color
-		this.componentSorce.fontSize = getComputedStyle(payload.target).fontSize.replace("px","");
+      this.componentSorce.backgroundColor = getComputedStyle(
+        payload.target
+      ).backgroundColor
+      this.backgroundColor.backgroundColor = getComputedStyle(
+        payload.target
+      ).backgroundColor
+      this.fontColor.backgroundColor = getComputedStyle(payload.target).color
+      this.componentSorce.fontSize = getComputedStyle(
+        payload.target
+      ).fontSize.replace('px', '')
 
 		this.opacityValue=getComputedStyle(payload.target).opacity
 		// console.log(this.opacity)
@@ -781,47 +789,47 @@ export default {
 		this.$emit('userSelected', this.submitSorce)
 	},
 
+
   }
 }
 </script>
 
 <style>
-
 .blue {
-    padding: 5px;
-    background-color: #283844;
-    color: #64BFFF;
-    line-height: 1;
+  padding: 5px;
+  background-color: #283844;
+  color: #64bfff;
+  line-height: 1;
 }
 .info-option .box-row {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 .info-option {
-    font-size: 12px;
-    line-height: 1.5;
-    text-transform: uppercase;
-    text-align: center;
-    border-bottom: 1px solid #242729;
-    box-shadow: 0 1px 0 #3B4144;
-    padding-bottom: 8px;
-    margin: 0 10px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-align: center;
+  border-bottom: 1px solid #242729;
+  box-shadow: 0 1px 0 #3b4144;
+  padding-bottom: 8px;
+  margin: 0 10px 10px;
 }
 .info-option .green {
-    padding: 5px;
-    background-color: #2D3F3A;
-    color: #57D88B;
-    line-height: 1;
+  padding: 5px;
+  background-color: #2d3f3a;
+  color: #57d88b;
+  line-height: 1;
 }
 
 .info-option .middle {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 .info-option .box-col {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
 }
 .info-option .empty {
     flex-grow: 1;
@@ -830,6 +838,7 @@ export default {
 	user-select: none;
 	justify-content: center;
     flex-direction: column;
+
 }
 .fontActive {
 	color:blue;

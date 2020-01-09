@@ -23,11 +23,11 @@ import overview from './components/overview'
 export default {
   components: {home, layout, studio, overview},
   name: 'App',
-  data(){
-    return{
-      payload : '',
+  data () {
+    return {
+      payload: '',
       data: '',
-      homeLayoutLocation:'',
+      homeLayoutLocation: ''
     }
   },
   methods: {
@@ -40,7 +40,7 @@ export default {
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       // console.log(this.homeLayoutLocation)
-      this.$refs.layouts.getData(payload,this.homeLayoutLocation)
+      this.$refs.layouts.getData(payload, this.homeLayoutLocation)
     },
     userSelectedWidth (data) {
       this.data = data
