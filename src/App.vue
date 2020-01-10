@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="left-panel">
-      <studio class="studio"></studio>
+      <studio @desc-close="tagNotSelected" @tag-select="tagSelected" class="studio"></studio>
       <overview class="overview"></overview>
     </div>
     <div class="center-panel">
@@ -11,6 +11,10 @@
     </div>
     </div>
     <layout ref="layouts" :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
+    <span v-if="tagDescription" class="description-tag">
+        <span class="desc-tag-text">ccdffsdddd
+        </span>
+      </span>
   </div>
 </template>
 
@@ -27,7 +31,8 @@ export default {
     return {
       payload: '',
       data: '',
-      homeLayoutLocation: ''
+      homeLayoutLocation: '',
+      tagDescription: false
     }
   },
   methods: {
@@ -45,6 +50,18 @@ export default {
     userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
+    },
+    tagSelected (payload) {
+      let text = document.querySelector('.desc-tag-text')
+      if (payload.innerHTML === 'Image') {
+        this.tagDescription = true
+        text.innerHTML = 'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
+        console.log(text.innerHTML)
+      } else if (payload.innerHTML === 'Icon') {}
+      // console.log(payload.innerHTML)
+    },
+    tagNotSelected () {
+      this.tagDescription = false
     }
   }
 }
@@ -124,6 +141,14 @@ export default {
     height: 100%;
     border: 2px solid #23282b;
   }
+
+  .description-tag{
+      background-color: #000;
+      padding: 0.5rem;
+      .desc-tag-text{
+        color: #cecece;
+      }
+    }
 
 }
 </style>

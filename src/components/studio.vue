@@ -5,7 +5,7 @@
     </div>
     <div class="tag-studio">
       <div class="search">search</div>
-      <div class="tag-box">
+      <div @mouseover="mouseOver" class="tag-box">
         <div class="tag-list-box">
           <span class="tag-list">UI</span>
           <div class="nested">
@@ -130,12 +130,23 @@
           </div>
         </div>
       </div>
+      <div v-if="uiDescription" class="description-ui">
+        <img src="../assets/studioImage/articleClean.png" />
+        <div class="image-name">ss</div>
+        <div class="desc-ui-text">aa</div>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  data () {
+    return {
+      tagTarget: null
+    }
+  },
   mounted () {
     var toggler = document.getElementsByClassName('tag-list')
     var i
@@ -144,13 +155,11 @@ export default {
     for (i = 0; i < toggler.length; i++) {
       toggler[i].addEventListener('click', function () {
         let nest = this.parentElement.querySelector('.nested')
-        console.log(nest.children[0].classList)
 
         // this.parentElement.querySelector('.nested').children.classList.toggle('template')
         this.parentElement.querySelector('.nested').classList.toggle('active')
         this.classList.toggle('caret-down')
         if (nest.children[0].className !== 'tag-list-box') {
-          console.log('asd')
           for (j = 0; j < nest.children.length; j++) {
             nest.children[j].classList.add('template')
           }
@@ -158,7 +167,22 @@ export default {
       })
     }
   },
-  methods: {}
+  methods: {
+    mouseOver (e) {
+      if (e.target.className === 'template') {
+        this.$emit('tag-select', e.target)
+
+        // let text = document.querySelector('.desc-tag-text')
+        // if (e.target.innerHTML === 'Image') {
+        //   text.innerHTML = 'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
+        //   console.log(text.innerHTML)
+        // } else if (e.target.innerHTML === 'Icon') {}
+        // // console.log(e.target.innerHTML)
+      } else {
+        this.$emit('desc-close')
+      }
+    }
+  }
 }
 </script>
 
@@ -226,6 +250,10 @@ export default {
         .template {
           margin-left: 2rem;
           color: #e7e4e4;
+          &:hover{
+            background-color: #414649;
+          }
+
         }
         .template::before {
           content: "\2B1A";
@@ -236,6 +264,7 @@ export default {
         }
       }
     }
+
   }
 }
 </style>
