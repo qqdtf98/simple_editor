@@ -45,7 +45,7 @@
 </template>
 <script>
 export default {
-    props:['getDocument'],
+  props: ['getDocument'],
 
     data(){
         return{
@@ -173,9 +173,8 @@ export default {
               console.log("자식끝")
 
           }
-        }
+        },
     },
-
 }
 </script>
 <style lang="scss">

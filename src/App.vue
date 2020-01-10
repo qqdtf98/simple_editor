@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <div class="left-panel">
+      <studio @desc-close="tagNotSelected" @tag-select="tagSelected" class="studio"></studio>
+      <overview class="overview"></overview>
       <studio class="studio"></studio>
-      <overview ref="overview":getDocument="homeDocument" class="overview"></overview>
+      <overview ref="overview" :getDocument="homeDocument" class="overview"></overview>
     </div>
     <div class="center-panel">
     <div class="title">Editor</div>
@@ -11,6 +13,9 @@
     </div>
     </div>
     <layout ref="layouts" :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
+    <span v-if="tagDescription" class="description-tag">
+        <span class="desc-tag-text">ccdffsdddd</span>
+        </span>
   </div>
 </template>
 
@@ -28,12 +33,13 @@ export default {
       payload: '',
       data: '',
       homeLayoutLocation: '',
-      childOFchil:[],
-      homeDocument:'',
+      tagDescription: false,
+      childOFchil: [],
+      homeDocument: ''
     }
   },
-  mounted(){
-      this.homeDocument=document.getElementById('dashboard')
+  mounted () {
+    this.homeDocument = document.getElementById('dashboard')
   },
   methods: {
     componentSelected (payload) {
@@ -42,11 +48,23 @@ export default {
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
-    },  
+    },
     userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
     },
+    tagSelected (payload) {
+      let text = document.querySelector('.desc-tag-text')
+      if (payload.innerHTML === 'Image') {
+        this.tagDescription = true
+        text.innerHTML = 'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
+        console.log(text.innerHTML)
+      } else if (payload.innerHTML === 'Icon') {}
+      // console.log(payload.innerHTML)
+    },
+    tagNotSelected () {
+      this.tagDescription = false
+    }
   }
 }
 </script>
@@ -125,6 +143,14 @@ export default {
     height: 100%;
     border: 2px solid #23282b;
   }
+
+  .description-tag{
+      background-color: #000;
+      padding: 0.5rem;
+      .desc-tag-text{
+        color: #cecece;
+      }
+    }
 
 }
 </style>
