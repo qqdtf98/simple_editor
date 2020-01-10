@@ -130,11 +130,6 @@
           </div>
         </div>
       </div>
-      <div  class="description-ui">
-        <img src="../assets/studioImage/articleClean.png" />
-        <div class="image-name">ss</div>
-        <div class="desc-ui-text">aa</div>
-      </div>
     </div>
   </div>
 </template>
@@ -150,17 +145,23 @@ export default {
     var toggler = document.getElementsByClassName('tag-list')
     var i
     var j
+    var k
 
     for (i = 0; i < toggler.length; i++) {
       toggler[i].addEventListener('click', function () {
         let nest = this.parentElement.querySelector('.nested')
-
-        // this.parentElement.querySelector('.nested').children.classList.toggle('template')
+        nest.style.transition = 'all 300ms ease'
         this.parentElement.querySelector('.nested').classList.toggle('active')
         this.classList.toggle('caret-down')
         if (nest.children[0].className !== 'tag-list-box') {
           for (j = 0; j < nest.children.length; j++) {
             nest.children[j].classList.add('template')
+          }
+        } else {
+          for (k = 0; k < nest.children[0].children[1].children.length; k++) {
+            nest.children[0].children[1].children[k].classList.add('ui-tag')
+            nest.children[1].children[1].children[k].classList.add('ui-tag')
+            nest.children[2].children[1].children[k].classList.add('ui-tag')
           }
         }
       })

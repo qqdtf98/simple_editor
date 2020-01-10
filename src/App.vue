@@ -14,14 +14,14 @@
       ></overview>
     </div>
     <div class="center-panel">
-    <div class="title">Editor</div>
-    <div class="editor">
+      <div class="title">Editor</div>
+      <div class="editor">
         <home
           ref="home"
           @componentSelected="componentSelected"
           class="home"
         ></home>
-    </div>
+      </div>
     </div>
     <layout
       ref="layouts"
@@ -31,7 +31,12 @@
     ></layout>
     <span v-if="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
-        </span>
+    </span>
+    <div v-if="uiDescription" class="description-ui">
+      <img src="./assets/studioImage/ArticleClean.png" />
+      <div class="image-name">name</div>
+      <div class="desc-ui-text">text</div>
+    </div>
   </div>
 </template>
 
@@ -72,7 +77,7 @@ export default {
       this.$refs.home.styleChanged(this.data)
     },
     tagSelected (payload) {
-        this.tagDescription = true
+      this.tagDescription = true
       this.uiDescription = false
       this.$nextTick(() => {
         let text = document.querySelector('.description-tag')
@@ -93,15 +98,40 @@ export default {
       this.tagDescription = false
       this.uiDescription = false
     },
+    uiSelected (payload) {
+      this.uiDescription = true
+      this.tagDescription = false
+      this.$nextTick(() => {
+        let ui = document.querySelector('.description-ui')
+        let stu = document.querySelector('.studio')
+
+        if (payload.target.innerHTML === 'Article Clean') {
+          // ui.children[0].src = "assets"
+          ui.children[1].innerHTML = 'ffffffffffffffffffffffsdfsdfs'
+        } else if (payload.target.innerHTML === 'Article List') {
+          ui.children[1].innerHTML = 'dfaa'
+        }
+        if (payload.target.innerHTML !== 'name') {
+          let name = payload.target.innerHTML.replace(/ /gi, '')
+          ui.children[0].src = './assets/studioImage/' + name + '.png'
+
+          this.$nextTick(() => {
+            console.log(ui.children[0].src)
+          })
+        }
+
+        ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
+        ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+      })
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -112,59 +142,59 @@ export default {
   background-color: #2c3134;
   align-items: center;
 
-  .left-panel{
-    width:20%;
-    height:100%;
+  .left-panel {
+    width: 20%;
+    height: 100%;
 
-    .studio{
+    .studio {
       height: 50%;
-    border: 2px solid #23282b;
+      border: 2px solid #23282b;
     }
 
-    .overview{
-    border: 2px solid #23282b;
+    .overview {
+      border: 2px solid #23282b;
       height: 50%;
     }
   }
-  .center-panel{
-    width:60%;
+  .center-panel {
+    width: 60%;
     height: 80%;
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     position: relative;
-    .title{
+    .title {
       position: absolute;
       text-align: center;
       left: 0;
       color: #fff;
-      height:4.02%;
+      height: 4.02%;
       background-color: #545e66;
-      padding:0.3rem;
+      padding: 0.3rem;
       padding-left: 0.9rem;
       padding-right: 0.9rem;
       top: 0;
     }
-  .editor{
-    width:100%;
-    position: absolute;
-    bottom:0;
-    height: 96%;
-    border: 2px solid #545e66;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // overflow: hidden;
-    .home{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-     width: 97%;
-    height: 100%;
-    overflow: hidden;
+    .editor {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      height: 96%;
+      border: 2px solid #545e66;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // overflow: hidden;
+      .home {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 97%;
+        height: 100%;
+        overflow: hidden;
+      }
     }
-  }
   }
 
   .layout {
@@ -175,17 +205,20 @@ export default {
 
   .description-tag,
   .description-ui {
-      background-color: #000;
+    background-color: #000;
     position: fixed;
     z-index: 15;
     max-width: 30rem;
     float: left;
     left: 18%;
-      padding: 0.5rem;
+    padding: 0.5rem;
     .desc-tag-text {
-        color: #cecece;
-      }
+      color: #cecece;
     }
+  }
 
+  .description-ui{
+    max-height: 30rem;
+  }
 }
 </style>
