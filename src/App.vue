@@ -1,8 +1,13 @@
 <template>
   <div id="app">
     <div class="left-panel">
+<<<<<<< HEAD
       <studio @desc-close="tagNotSelected" @tag-select="tagSelected" class="studio"></studio>
       <overview class="overview"></overview>
+=======
+      <studio class="studio"></studio>
+      <overview ref="overview":getDocument="homeDocument" class="overview"></overview>
+>>>>>>> d0b49c89f15e4f7e99bf0946e6e1089f9b60b77d
     </div>
     <div class="center-panel">
     <div class="title">Editor</div>
@@ -32,25 +37,30 @@ export default {
       payload: '',
       data: '',
       homeLayoutLocation: '',
+<<<<<<< HEAD
       tagDescription: false
+=======
+      childOFchil:[],
+      homeDocument:'',
+>>>>>>> d0b49c89f15e4f7e99bf0946e6e1089f9b60b77d
     }
+  },
+  mounted(){
+      this.homeDocument=document.getElementById('dashboard')
   },
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      // console.log(payload.x)
-      // console.log(payload.y)
-      // console.log(payload.target.getBoundingClientRect().width)
-      // console.log(payload.target.getBoundingClientRect().height)
-      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+     log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
-      // console.log(this.homeLayoutLocation)
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
-    },
+      this.$refs.overview.printHomeDocument()
+    },  
     userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
     },
+<<<<<<< HEAD
     tagSelected (payload) {
       let text = document.querySelector('.desc-tag-text')
       if (payload.innerHTML === 'Image') {
@@ -63,6 +73,8 @@ export default {
     tagNotSelected () {
       this.tagDescription = false
     }
+=======
+>>>>>>> d0b49c89f15e4f7e99bf0946e6e1089f9b60b77d
   }
 }
 </script>

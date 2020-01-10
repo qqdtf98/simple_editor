@@ -1,4 +1,7 @@
 <template>
+<<<<<<< HEAD
+    <div>stdio.vue</div>
+=======
   <div id="studio">
     <div class="studio-text-box">
       <span class="studio-text">studio</span>
@@ -138,6 +141,7 @@
 
     </div>
   </div>
+>>>>>>> 7ddbaaa264bca2f7cfbdc908adad32244bb10991
 </template>
 
 <script>

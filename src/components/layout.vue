@@ -398,7 +398,8 @@
 			Saturate 
 			<range-slider
 				class="slider"
-				min="0"				max="200"
+				min="0"	
+				max="200"
 				step="1"
 				name="Saturate"
 				submitSorce.style="Saturate"
@@ -680,30 +681,75 @@ export default {
 
 		//this.submitSorce.value=e.target.value+'px'
 		//console.log(e.target.value)
-		var words = (e.target.value).replace(/px/gi,'').split(" ")
-		//console.log(words)
-		for(var i=0;i<words.length;i++){
-			//console.log(words[i])
-			//words[i].replace('',' ');
-			//console.log(words[i])
-			if(i==0)
-				this.submitSorce.value=words[i]+'px '
-			else
-				this.submitSorce.value+=words[i]+'px '
+		if(e.target.value!=='auto'){
+			var words = ((e.target.value).replace(/px/gi,'').split(" "))
+			//console.log(words)
+			for(var i=0;i<words.length;i++){
+				//console.log(words[i])
+				//words[i].replace('',' ');
+				//console.log(words[i])
+				if(i==0)
+					this.submitSorce.value=words[i]+'px '
+				else
+					this.submitSorce.value+=words[i]+'px '
+			}
 		}
-		
+		else{
+			this.submitSorce.value='auto'
+			console.log("갱")
+		}
 		if(e.target.name=='width')
 			this.onWidth=true
 		else if(e.target.name=='height')
 			this.onHeight=true
-		else if(e.target.name=='margin')
+		else if(e.target.name=='margin'){
 			this.onMargin=true
-		else if(e.target.name=='padding')
+
+			var margin =e.target.value.replace(/px/gi,'').split(" ")
+
+			// console.log(margin)
+			// console.log(this.margin[0])
+			if(margin.length!==1){
+				for(var i=0;i<margin.length;i++){
+					this.margin[i].value = margin[i]
+				}
+				for(var i=margin.length;i<4;i++){
+					this.margin[i].value = 0
+				}
+			}
+			else
+				{
+				for(var i=0;i<4;i++){
+					this.margin[i].value = margin[0]
+				}
+			}
+		}
+		else if(e.target.name=='padding'){
 			this.onPadding=true
+			var padding =e.target.value.replace(/px/gi,'').split(" ")
+			// console.log(margin)
+			// console.log(this.margin[0])
+			if(padding.length!==1){
+				for(var i=0;i<padding.length;i++){
+					this.padding[i] = padding[i]
+				}
+				for(var i=padding.length;i<4;i++){
+					this.padding[i] = 0
+				}
+			}
+			else
+				{
+				for(var i=0;i<4;i++){
+					this.padding[i] = padding[0]
+				}
+			}
+		}
 		else if(e.target.name=='width')
 			this.onWidth=true
 		else if(e.target.name=='fontSize')
 			this.onFontSize=true
+
+		console.log(this.submitSorce)
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitSourceOriginal(e){
@@ -712,7 +758,10 @@ export default {
 		// console.log(e.target.name)
 		this.isBackgroundPicker=false
 		this.isFontPicker=false
-		
+		if(e.target.name=='backgroundColor')
+			this.backgroundColor.backgroundColor=e.target.value
+		else if(e.target.name=='color')
+			this.fontColor.backgroundColor=e.target.value
 		this.submitSorce.payload=this.payload
 		if(typeof(e.target)!=='undefined'){
 			this.submitSorce.style=e.target.name
@@ -727,64 +776,95 @@ export default {
 	submitOpacity(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='opacity'
-		this.submitSorce.value=e
+		if(typeof(e.target)!=='undefined'){
+			this.submitSorce.value=e.target.value
+			//this.submitSorce.value=e
+		}
+		else
+			this.submitSorce.value=e
 		this.onOpacity=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitBlur(e){
-		console.log("dsadsa")
+		//console.log("dsadsa")
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='blur('+e+'px)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='blur('+e+'px)'
+		else{
+			
+			this.submitSorce.value='blur('+e.target.value.replace(/px/gi,'')+'px)'
+		}
 		this.onBlur=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitBrightness(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='brightness('+e+'%)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='brightness('+e+'%)'
+		else
+			this.submitSorce.value='brightness('+e.target.value.replace(/%/gi,'')+'%)'
 		this.onBrightness=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitContrast(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='contrast('+e+'%)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='contrast('+e+'%)'
+		else
+			this.submitSorce.value='contrast('+e.target.value.replace(/%/gi,'')+'%)'
 		this.onContrast=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitGrayscale(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='grayscale('+e+'%)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='grayscale('+e+'%)'
+		else
+			this.submitSorce.value='grayscale('+e.target.value.replace(/%/gi,'')+'%)'
 		this.onGrayscale=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitHue(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='hue('+e+'deg)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='hue('+e+'deg)'
+		else
+			this.submitSorce.value='hue('+e.target.value.replace(/deg/gi,'')+'deg)'
 		this.onHue=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitInvert(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='invert('+e+'%)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='invert('+e+'%)'
+		else
+			this.submitSorce.value='invert('+e.target.value.replace(/%/gi,'')+'%)'
 		this.onInvert=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitSaturate(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='saturate('+e+'%)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='saturate('+e+'%)'
+		else
+			this.submitSorce.value='saturate('+e.target.value.replace(/%/gi,'')+'%)'
 		this.onSaturate=true
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitSepia(e){
 		this.submitSorce.payload=this.payload
 		this.submitSorce.style='filter'
-		this.submitSorce.value='sepia('+e+'%)'
+		if(typeof(e.target)==='undefined')
+			this.submitSorce.value='sepia('+e+'%)'
+		else
+			this.submitSorce.value='sepia('+e.target.value.replace(/%/gi,'')+'%)'
 		this.onSepia=true
 		this.$emit('userSelected', this.submitSorce)
 	},
@@ -830,6 +910,7 @@ export default {
   justify-content: center;
   display: flex;
   flex-direction: column;
+  width: 80%;
 }
 .info-option .empty {
     flex-grow: 1;
@@ -838,7 +919,12 @@ export default {
 	user-select: none;
 	justify-content: center;
     flex-direction: column;
+	width: 70%;
+    margin-right: 240px;
+}
 
+.info-option .padding {
+    width:87%
 }
 .fontActive {
 	color:blue;
