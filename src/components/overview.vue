@@ -1,5 +1,43 @@
 <template>
-    <div class="over">overview.vue</div>
+    <div id="overview">
+    <div class="studio-text-box">
+      <span class="studio-text">overview</span>
+    </div>
+    <div class="tag-studio">
+      <div class="search">search</div>
+      <div class="tag-box">
+        <div class="tag-list-box">
+          <span class="tag-list">HTML</span>
+          <div class="nested">
+            <div class="tag-list-box">
+              <span class="tag-list ui">Body</span>
+              <div class="nested">
+                <div class="template">Article Clean</div>
+                <div>Article Dual Column</div>
+                <div>Article List</div>
+              </div>
+            </div>
+            <div class="tag-list-box">
+              <span class="tag-list ui">Features</span>
+              <div class="nested">
+                <div>Features Blue</div>
+                <div>Features Boxed</div>
+                <div>Features Clean</div>
+              </div>
+            </div>
+            <div class="tag-list-box">
+              <span class="tag-list ui">Footers</span>
+              <div class="nested">
+                <div>Footer Basic</div>
+                <div>Footer Clean</div>
+                <div>Footer Dark</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -68,7 +106,79 @@ export default {
 }
 </script>
 <style lang="scss">
-.over {
-    color:#fff;
+#overview {
+  .studio-text-box {
+    height: 5%;
+    justify-content: left;
+    justify-items: left;
+    .studio-text {
+      background-color: #41474c;
+      padding: 0.2rem;
+      color: #fff;
+    }
+  }
+  .tag-studio {
+    border: 3px solid #49b6a7;
+    height: 95%;
+    // display: flex;
+    // flex-direction: column;
+    overflow: auto;
+    .tag-studio::-webkit-scrollbar{
+        width: 5px;
+    }
+    .search {
+      background-color: #41474c;
+      color: #fff;
+    }
+    .tag-box {
+      // overflow:scroll;
+      align-items: left;
+      justify-content: left;
+      .tag-list-box {
+        // float: left;
+        text-align: left;
+        margin: 0.1rem;
+        .tag-list {
+          margin-left: 0.4rem;
+          color: #e7e4e4;
+          cursor: pointer;
+          user-select: none; /* Prevent text selection */
+          //   float: left;
+        }
+
+        /* Create the tag-list/arrow with a unicode, and style it */
+        .tag-list::before {
+          content: "\25B6";
+          color: #e7e4e4;
+          display: inline-block;
+          margin-right: 6px;
+        }
+
+        /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
+        .tag-list-down::before {
+          transform: rotate(90deg);
+        }
+        .nested {
+          display: none;
+        }
+
+        /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
+        .active {
+          display: block;
+        }
+        .template {
+          margin-left: 2rem;
+          color: #e7e4e4;
+        }
+        .template::before {
+          content: "\2B1A";
+          margin-right: 0.2rem;
+        }
+        .ui {
+          margin-left: 1.2rem;
+        }
+      }
+    }
+  }
 }
 </style>
