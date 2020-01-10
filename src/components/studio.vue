@@ -12,7 +12,7 @@
             <div class="tag-list-box">
               <span class="tag-list ui">Articles</span>
               <div class="nested">
-                <div class="template">Article Clean</div>
+                <div>Article Clean</div>
                 <div>Article Dual Column</div>
                 <div>Article List</div>
               </div>
@@ -224,6 +224,7 @@ export default {
           cursor: pointer;
           user-select: none; /* Prevent text selection */
           //   float: left;
+          transition: all 300ms ease;
         }
 
         /* Create the tag-list/arrow with a unicode, and style it */

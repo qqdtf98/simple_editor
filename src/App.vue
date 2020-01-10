@@ -1,18 +1,34 @@
 <template>
   <div id="app">
     <div class="left-panel">
-      <studio @desc-close="tagNotSelected" @tag-select="tagSelected" class="studio"></studio>
-      <overview class="overview"></overview>
-      <studio class="studio"></studio>
-      <overview ref="overview" :getDocument="homeDocument" class="overview"></overview>
+      <studio
+        @desc-close="tagNotSelected"
+        @ui-select="uiSelected"
+        @tag-select="tagSelected"
+        class="studio"
+      ></studio>
+      <overview
+        ref="overview"
+        :getDocument="homeDocument"
+        class="overview"
+      ></overview>
     </div>
     <div class="center-panel">
     <div class="title">Editor</div>
     <div class="editor">
-    <home ref="home" @componentSelected="componentSelected" class="home"></home>
+        <home
+          ref="home"
+          @componentSelected="componentSelected"
+          class="home"
+        ></home>
     </div>
     </div>
-    <layout ref="layouts" :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
+    <layout
+      ref="layouts"
+      :payload="payload"
+      @userSelected="userSelectedWidth"
+      class="layout"
+    ></layout>
     <span v-if="tagDescription" class="description-tag">
         <span class="desc-tag-text">ccdffsdddd</span>
         </span>
@@ -44,7 +60,9 @@ export default {
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
+      this.homeLayoutLocation = document
+        .getElementsByClassName('dashboard')[0]
+        .getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
     },
