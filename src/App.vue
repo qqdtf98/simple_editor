@@ -2,7 +2,7 @@
   <div id="app">
     <div class="left-panel">
       <studio class="studio"></studio>
-      <overview class="overview"></overview>
+      <overview ref="overview":getDocument="homeDocument" class="overview"></overview>
     </div>
     <div class="center-panel">
     <div class="title">Editor</div>
@@ -29,68 +29,24 @@ export default {
       data: '',
       homeLayoutLocation: '',
       childOFchil:[],
+      homeDocument:'',
     }
+  },
+  mounted(){
+      this.homeDocument=document.getElementById('dashboard')
   },
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      // console.log(payload.x)
-      // console.log(payload.y)
-      // console.log(payload.target.getBoundingClientRect().width)
-      // console.log(payload.target.getBoundingClientRect().height)
-      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+     log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
-      // console.log(this.homeLayoutLocation)
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
-      // console.log(document.body.children)
-      // console.log(document.body.children[0].firstElementChild )
-      // console.log(document.body.children[0].children )
-      // console.log(document.body.children[0].children[1].children )
-      // console.log(document.body.children[0].children[1].firstElementChild.children )
-      // console.log(document.body.children[0].children[1].firstElementChild.firstElementChild )
-      // console.log(document.body.children[0].children[1].lastElementChild  )
-      var anchor = document.querySelector('body')
-      //console.log(Object.keys(anchor))
-      var child = document.body.children
-      console.log(child)
-      for(var i=0;i<child.length;i++){
-        //console.log(child[i])
-        if(typeof(child[i].children)!=='undefined'){
-          //console.log("전")
-          console.log(child[i].tagName)
-          console.log("")
-          //console.log(child[i].className)
-          ///console.log(child[i].id)
-          this.findChildren(child[i])
-        }
-      }
-
-    },
-    findChildren(child){
-      //if(typeof(child.children)!=='undefined'){
-        var childOFchil = child.children
-        if(childOFchil.length!=0){
-        //console.log(childOFchil)
-          for(var i=0;i<childOFchil.length;i++){
-            //console.log(child[i])
-              //console.log("후")
-              console.log(childOFchil[i])
-              //this.childOFchil.push(childOFchil[i].tagName)
-              this.findChildren(childOFchil[i])
-          }
-        }
-        else{
-          //console.log(this.childOFchil)
-          //this.childOFchil = []
-          console.log("자식끝")
-        }
-    }
-    ,
+      this.$refs.overview.printHomeDocument()
+    },  
     userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
     },
- 
   }
 }
 </script>
