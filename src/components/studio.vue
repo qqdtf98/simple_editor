@@ -1,7 +1,4 @@
 <template>
-<<<<<<< HEAD
-    <div>stdio.vue</div>
-=======
   <div id="studio">
     <div class="studio-text-box">
       <span class="studio-text">studio</span>
@@ -133,15 +130,13 @@
           </div>
         </div>
       </div>
-      <div v-if="uiDescription" class="description-ui">
+      <div  class="description-ui">
         <img src="../assets/studioImage/articleClean.png" />
         <div class="image-name">ss</div>
         <div class="desc-ui-text">aa</div>
       </div>
-
     </div>
   </div>
->>>>>>> 7ddbaaa264bca2f7cfbdc908adad32244bb10991
 </template>
 
 <script>
@@ -208,8 +203,8 @@ export default {
     // display: flex;
     // flex-direction: column;
     overflow: auto;
-    .tag-studio::-webkit-scrollbar{
-        width: 5px;
+    .tag-studio::-webkit-scrollbar {
+      width: 5px;
     }
     .search {
       background-color: #41474c;
@@ -254,10 +249,9 @@ export default {
         .template {
           margin-left: 2rem;
           color: #e7e4e4;
-          &:hover{
+          &:hover {
             background-color: #414649;
           }
-
         }
         .template::before {
           content: "\2B1A";
@@ -268,7 +262,6 @@ export default {
         }
       }
     }
-
   }
 }
 </style>

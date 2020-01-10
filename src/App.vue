@@ -1,13 +1,10 @@
 <template>
   <div id="app">
     <div class="left-panel">
-<<<<<<< HEAD
       <studio @desc-close="tagNotSelected" @tag-select="tagSelected" class="studio"></studio>
       <overview class="overview"></overview>
-=======
       <studio class="studio"></studio>
-      <overview ref="overview":getDocument="homeDocument" class="overview"></overview>
->>>>>>> d0b49c89f15e4f7e99bf0946e6e1089f9b60b77d
+      <overview ref="overview" :getDocument="homeDocument" class="overview"></overview>
     </div>
     <div class="center-panel">
     <div class="title">Editor</div>
@@ -17,9 +14,8 @@
     </div>
     <layout ref="layouts" :payload="payload" @userSelected="userSelectedWidth" class="layout"></layout>
     <span v-if="tagDescription" class="description-tag">
-        <span class="desc-tag-text">ccdffsdddd
+        <span class="desc-tag-text">ccdffsdddd</span>
         </span>
-      </span>
   </div>
 </template>
 
@@ -37,30 +33,26 @@ export default {
       payload: '',
       data: '',
       homeLayoutLocation: '',
-<<<<<<< HEAD
-      tagDescription: false
-=======
-      childOFchil:[],
-      homeDocument:'',
->>>>>>> d0b49c89f15e4f7e99bf0946e6e1089f9b60b77d
+      tagDescription: false,
+      childOFchil: [],
+      homeDocument: ''
     }
   },
-  mounted(){
-      this.homeDocument=document.getElementById('dashboard')
+  mounted () {
+    this.homeDocument = document.getElementById('dashboard')
   },
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-     log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
-    },  
+    },
     userSelectedWidth (data) {
       this.data = data
       this.$refs.home.styleChanged(this.data)
     },
-<<<<<<< HEAD
     tagSelected (payload) {
       let text = document.querySelector('.desc-tag-text')
       if (payload.innerHTML === 'Image') {
@@ -73,8 +65,6 @@ export default {
     tagNotSelected () {
       this.tagDescription = false
     }
-=======
->>>>>>> d0b49c89f15e4f7e99bf0946e6e1089f9b60b77d
   }
 }
 </script>
