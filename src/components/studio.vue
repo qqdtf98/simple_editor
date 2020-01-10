@@ -169,14 +169,9 @@ export default {
   methods: {
     mouseOver (e) {
       if (e.target.className === 'template') {
-        this.$emit('tag-select', e.target)
-
-        // let text = document.querySelector('.desc-tag-text')
-        // if (e.target.innerHTML === 'Image') {
-        //   text.innerHTML = 'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
-        //   console.log(text.innerHTML)
-        // } else if (e.target.innerHTML === 'Icon') {}
-        // // console.log(e.target.innerHTML)
+        this.$emit('tag-select', e)
+      } else if (e.target.className === 'ui-tag template') {
+        this.$emit('ui-select', e)
       } else {
         this.$emit('desc-close')
       }

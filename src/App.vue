@@ -30,7 +30,7 @@
       class="layout"
     ></layout>
     <span v-if="tagDescription" class="description-tag">
-        <span class="desc-tag-text">ccdffsdddd</span>
+      <span class="desc-tag-text">tag</span>
         </span>
   </div>
 </template>
@@ -42,7 +42,7 @@ import studio from './components/studio'
 import overview from './components/overview'
 
 export default {
-  components: {home, layout, studio, overview},
+  components: { home, layout, studio, overview },
   name: 'App',
   data () {
     return {
@@ -51,7 +51,8 @@ export default {
       homeLayoutLocation: '',
       tagDescription: false,
       childOFchil: [],
-      homeDocument: ''
+      homeDocument: '',
+      uiDescription: false
     }
   },
   mounted () {
@@ -71,16 +72,27 @@ export default {
       this.$refs.home.styleChanged(this.data)
     },
     tagSelected (payload) {
-      let text = document.querySelector('.desc-tag-text')
-      if (payload.innerHTML === 'Image') {
         this.tagDescription = true
-        text.innerHTML = 'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
-        console.log(text.innerHTML)
-      } else if (payload.innerHTML === 'Icon') {}
-      // console.log(payload.innerHTML)
+      this.uiDescription = false
+      this.$nextTick(() => {
+        let text = document.querySelector('.description-tag')
+        let stu = document.querySelector('.studio')
+
+        if (payload.target.innerHTML === 'Image') {
+          text.innerHTML =
+            'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
+        } else if (payload.target.innerHTML === 'Icon') {
+          text.innerHTML = 'Icon'
+        }
+
+        text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
+        text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+      })
     },
     tagNotSelected () {
       this.tagDescription = false
+      this.uiDescription = false
+    },
     }
   }
 }
@@ -161,10 +173,16 @@ export default {
     border: 2px solid #23282b;
   }
 
-  .description-tag{
+  .description-tag,
+  .description-ui {
       background-color: #000;
+    position: fixed;
+    z-index: 15;
+    max-width: 30rem;
+    float: left;
+    left: 18%;
       padding: 0.5rem;
-      .desc-tag-text{
+    .desc-tag-text {
         color: #cecece;
       }
     }
