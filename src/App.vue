@@ -66,9 +66,8 @@ export default {
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      this.homeLayoutLocation = document
-        .getElementsByClassName('dashboard')[0]
-        .getBoundingClientRect()
+     console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
     },
