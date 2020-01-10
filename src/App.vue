@@ -5,6 +5,7 @@
         @desc-close="tagNotSelected"
         @ui-select="uiSelected"
         @tag-select="tagSelected"
+        @addelement="addElement"
         class="studio"
       ></studio>
       <overview
@@ -66,7 +67,7 @@ export default {
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-     console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
@@ -104,13 +105,21 @@ export default {
         let ui = document.querySelector('.description-ui')
         let stu = document.querySelector('.studio')
 
-          let name = payload.target.innerHTML.replace(/ /gi, '')
+        let name = payload.target.innerHTML.replace(/ /gi, '')
         // console.log(ui.children[0].src)
         ui.children[0].src = './static/studioImage/' + name + '.png'
         ui.children[1].innerHTML = payload.target.innerHTML
 
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+      })
+    },
+    addElement () {
+      document.addEventListener('mouseup', (e) => {
+        console.log(e.target)
+        document.removeEventListener('mouseup', () => {
+          console.log('remove')
+        })
       })
     }
   }
@@ -208,6 +217,12 @@ export default {
 
   .description-ui{
     max-height: 30rem;
+    .image-name{
+      color: #e2e2e2;
+    }
+    .desc-ui-text{
+      color: #a1a1a1;
+    }
   }
 }
 </style>
