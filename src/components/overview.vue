@@ -1,5 +1,5 @@
 <template>
-    <div class="overview">overview.vue</div>
+    <div class="over">overview.vue</div>
 </template>
 <script>
 export default {
@@ -68,7 +68,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.overview {
+.over {
     color:#fff;
 }
 </style>
