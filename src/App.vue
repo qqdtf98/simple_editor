@@ -57,7 +57,7 @@ export default {
       tagDescription: false,
       childOFchil: [],
       homeDocument: '',
-      uiDescription: false
+      uiDescription: false,
     }
   },
   mounted () {
@@ -105,11 +105,23 @@ export default {
         let ui = document.querySelector('.description-ui')
         let stu = document.querySelector('.studio')
 
-        let name = payload.target.innerHTML.replace(/ /gi, '')
-        ui.children[0].src = './static/studioImage/' + name + '.png'
-        console.log(ui.children[0].src)
-        ui.children[1].innerHTML = payload.target.innerHTML
-        // ui.childre[2].innerHTML은 db 연동해서 text불러와야함
+        if (payload.target.innerHTML === 'Article Clean') {
+          // ui.children[0].src = "assets"
+          ui.children[1].innerHTML = 'ffffffffffffffffffffffsdfsdfs'
+        } else if (payload.target.innerHTML === 'Article List') {
+          ui.children[1].innerHTML = 'dfaa'
+        }
+        if (payload.target.innerHTML !== 'name') {
+          let name = payload.target.innerHTML.replace(/ /gi, '')
+          //console.log(ui.children[0].src)
+          ui.children[0].src = "./static/studioImage/" + name + ".png"
+          //7f9188a.png
+          //console.log(ui.children[0].src)
+          this.$nextTick(() => {
+           //console.log(ui.children[0].src)
+          })
+          //console.log(ui.children[0].src)
+        }
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
       })
