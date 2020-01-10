@@ -33,7 +33,7 @@
       <span class="desc-tag-text">tag</span>
     </span>
     <div v-if="uiDescription" class="description-ui">
-      <img src="./assets/studioImage/ArticleClean.png" />
+      <img  />
       <div class="image-name">name</div>
       <div class="desc-ui-text">text</div>
     </div>
@@ -57,7 +57,7 @@ export default {
       tagDescription: false,
       childOFchil: [],
       homeDocument: '',
-      uiDescription: false
+      uiDescription: false,
     }
   },
   mounted () {
@@ -112,11 +112,14 @@ export default {
         }
         if (payload.target.innerHTML !== 'name') {
           let name = payload.target.innerHTML.replace(/ /gi, '')
-          ui.children[0].src = './assets/studioImage/' + name + '.png'
-
+          //console.log(ui.children[0].src)
+          ui.children[0].src = "./static/studioImage/" + name + ".png"
+          //7f9188a.png
+          //console.log(ui.children[0].src)
           this.$nextTick(() => {
-            console.log(ui.children[0].src)
+           //console.log(ui.children[0].src)
           })
+          //console.log(ui.children[0].src)
         }
 
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
