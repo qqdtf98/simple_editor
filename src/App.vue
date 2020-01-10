@@ -33,7 +33,7 @@
       <span class="desc-tag-text">tag</span>
     </span>
     <div v-if="uiDescription" class="description-ui">
-      <img src="./assets/studioImage/ArticleClean.png" />
+      <img  />
       <div class="image-name">name</div>
       <div class="desc-ui-text">text</div>
     </div>
@@ -66,7 +66,7 @@ export default {
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-     console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
@@ -88,6 +88,7 @@ export default {
         } else if (payload.target.innerHTML === 'Icon') {
           text.innerHTML = 'Icon'
         }
+        // text.innerHTML은 db에 저장하여 불러와야함
 
         text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
@@ -104,21 +105,11 @@ export default {
         let ui = document.querySelector('.description-ui')
         let stu = document.querySelector('.studio')
 
-        if (payload.target.innerHTML === 'Article Clean') {
-          // ui.children[0].src = "assets"
-          ui.children[1].innerHTML = 'ffffffffffffffffffffffsdfsdfs'
-        } else if (payload.target.innerHTML === 'Article List') {
-          ui.children[1].innerHTML = 'dfaa'
-        }
-        if (payload.target.innerHTML !== 'name') {
-          let name = payload.target.innerHTML.replace(/ /gi, '')
-          ui.children[0].src = './assets/studioImage/' + name + '.png'
-
-          this.$nextTick(() => {
-            console.log(ui.children[0].src)
-          })
-        }
-
+        let name = payload.target.innerHTML.replace(/ /gi, '')
+        ui.children[0].src = './static/studioImage/' + name + '.png'
+        console.log(ui.children[0].src)
+        ui.children[1].innerHTML = payload.target.innerHTML
+        // ui.childre[2].innerHTML은 db 연동해서 text불러와야함
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
       })
@@ -218,6 +209,12 @@ export default {
 
   .description-ui{
     max-height: 30rem;
+    .image-name{
+      color: #e2e2e2;
+    }
+    .desc-ui-text{
+      color: #bbbbbb;
+    }
   }
 }
 </style>
