@@ -95,6 +95,13 @@ export default {
     var h = {}
     h['articleclean'] = 'An article layout with a simple and clean design.'
     h['articledualcolumn'] = 'An article layout which consists of two columns.'
+    h['articlelist'] = 'A list of articles with thumbnails and descriptions.'
+    h['featuresblue'] = 'This is a feature grid with a beautiful blue design.'
+    h['featuresboxed'] = 'A feature grid with a subtle white on blue design.'
+    h['featuresclean'] = 'A feature grid with a clean design with lots of white space.'
+    h['footerbasic'] = 'This is a basic footer with links and social buttons.'
+    h['footerclean'] = ''
+
     h['heading'] = 'This is the HTML heading component. You can choose which HTML tag is used - from <code><h1></code> to'
     this.hasht = h
   },
@@ -137,14 +144,16 @@ export default {
       this.$nextTick(() => {
         let ui = document.querySelector('.description-ui')
         let stu = document.querySelector('.studio')
+        let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
 
         let name = payload.target.innerHTML.replace(/ /gi, '')
         ui.children[0].src = './static/studioImage/' + name + '.png'
         ui.children[1].innerHTML = payload.target.innerHTML
+        ui.children[2].innerHTML = this.hasht[innerText]
 
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
-        // let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
+
         // ui.innerHTML = this.hasht[innerText]
       })
     },
