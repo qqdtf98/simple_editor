@@ -169,7 +169,7 @@ export default {
       } else {
         // console.log(this.childOFchil)
         // this.childOFchil = []
-        console.log('자식끝')
+        // console.log('자식끝')
       }
     }
   }

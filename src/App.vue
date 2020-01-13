@@ -66,6 +66,7 @@ export default {
     this.homeDocument = document.getElementById('dashboard')
     document.addEventListener('mouseup', (e) => {
       if (this.addTag) {
+        console.log(e.target)
         this.addTag = false
       }
     })
@@ -89,12 +90,13 @@ export default {
         let text = document.querySelector('.description-tag')
         let stu = document.querySelector('.studio')
 
-        if (payload.target.innerHTML === 'Image') {
-          text.innerHTML =
-            'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
-        } else if (payload.target.innerHTML === 'Icon') {
-          text.innerHTML = 'Icon'
-        }
+        // if (payload.target.innerHTML === 'Image') {
+        //   text.innerHTML =
+        //     'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
+        // } else if (payload.target.innerHTML === 'Icon') {
+        //   text.innerHTML = 'Icon'
+        // }
+
         // text.innerHTML은 db에 저장하여 불러와야함
 
         text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
@@ -135,7 +137,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  // color: #2c3e50;
   display: flex;
   flex-direction: row;
   height: 58rem;
