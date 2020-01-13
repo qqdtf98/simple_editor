@@ -203,6 +203,9 @@ export default {
         // console.log(e.target.id)
         // console.log(this.dom[e.target.id])
         // console.log(this.numberinDom[2])
+        // console.log(this.dom[e.target.id])
+        // console.log(e.target.id)
+        // console.log(this.dom)
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }
