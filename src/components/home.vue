@@ -126,7 +126,8 @@ export default {
       initialwidth: '',
       initialheight: '',
       initialscale: '',
-      isContentRemovable: false
+      isContentRemovable: false,
+      add: false
     }
   },
   mounted () {
@@ -545,12 +546,15 @@ export default {
       }
     },
     removeContent () {
-      console.log(this.clickedElement)
-      console.log(this.clickedElement.parentNode)
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
-    addContent () {
-      // studio에서 끌어와서 추가
+    addContent (tag, position) {
+      let addTag = document.querySelector('#add')
+      // console.log(tag)
+      // tag가 추가할 element. 자식이 된다.
+      // console.log(position)
+      // position이 추가할 위치에 있는 element. 부모가 된다.
+      position.appendChild(addTag)
     },
     selectOverview (payload) {
       // console.log(payload)
@@ -873,6 +877,9 @@ export default {
       width: 5rem;
       height: 3rem;
       background-color: yellow;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       .add-1{
         background-color: red;
       }

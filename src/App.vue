@@ -62,22 +62,40 @@ export default {
       homeDocument: '',
       uiDescription: false,
       dom: '',
-      addTag: false
+      addTag: false,
+      selectedTag: null
     }
   },
   mounted () {
     this.homeDocument = document.getElementById('dashboard')
     document.addEventListener('mouseup', (e) => {
+      let tar = e.target
       if (this.addTag) {
-        console.log(e.target)
-        this.addTag = false
+        // console.log(e.taret)
+        // console.log(tar.parentElement.id)
+        // console.log(tar.parentElement)
+        let i
+        for (i = 0; i < 100; i++) {
+          if (tar.id === 'dashboard') {
+            // console.log(tar.className)
+            // console.log('find')
+            this.addTag = false
+            this.$refs.home.addContent(this.selectedTag, e.target)
+            break
+          } else if (tar.id === 'app') {
+            break
+          } else {
+            // console.log(tar)
+            tar = tar.parentElement
+          }
+        }
       }
     })
   },
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       this.$refs.overview.printHomeDocument()
@@ -126,8 +144,10 @@ export default {
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
       })
     },
-    addElement () {
+    addElement (e) {
       this.addTag = true
+      // console.log(e.target)
+      this.selectedTag = e.target
     },
     selectDomElemented (domElement) {
       this.dom = domElement
