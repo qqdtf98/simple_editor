@@ -97,6 +97,9 @@
         @mousedown="mouseDownBoundary"
         class="boundary-line-bottom"
       ></div>
+      <div id="add">
+        <div class="add-1">aaaaa</div>
+      </div>
     </div>
   </div>
 </template>
@@ -546,7 +549,55 @@ export default {
       console.log(this.clickedElement.parentNode)
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
+    addContent () {
+      // studio에서 끌어와서 추가
+    },
+    selectOverview (payload) {
+      // console.log(payload)
+      let dashboardElem = document.querySelector('.dashboard')
+      this.selectedElement = payload.getBoundingClientRect()
+
+      let tag = document.querySelector('.tagname')
+      // console.log(payload.className)
+
+      tag.textContent = payload.tagName
+      tag.style.left = this.selectedElement.left + 'px'
+
+      tag.style.top =
+              this.selectedElement.top -
+              tag.getBoundingClientRect().height +
+              'px'
+      let bottomBord = document.querySelector('.bottom-border')
+      let topBord = document.querySelector('.top-border')
+      let rightBord = document.querySelector('.right-border')
+      let leftBord = document.querySelector('.left-border')
+      let dashWrapper = document.querySelector('.dashboard-wrapper')
+      let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
+      topBord.style.left = this.selectedElement.left + 'px'
+      topBord.style.top = this.selectedElement.top + 'px'
+      topBord.style.width = this.selectedElement.width + 'px'
+      if (this.selectedElement.bottom > dashboardElem.getBoundingClientRect().bottom) {
+        bottomBord.style.display = 'none'
+        leftBord.style.left = this.selectedElement.left + 'px'
+        leftBord.style.top = this.selectedElement.top + 'px'
+        leftBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+        rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.top = this.selectedElement.top + 'px'
+        rightBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+      } else {
+        bottomBord.style.display = ''
+        bottomBord.style.left = this.selectedElement.left + 'px'
+        bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+        bottomBord.style.width = this.selectedElement.width + 'px'
+        leftBord.style.left = this.selectedElement.left + 'px'
+        leftBord.style.top = this.selectedElement.top + 'px'
+        leftBord.style.height = this.selectedElement.height + 'px'
+        rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.top = this.selectedElement.top + 'px'
+        rightBord.style.height = this.selectedElement.height + 'px'
+      }
     }
+
   }
 }
 </script>
@@ -817,6 +868,14 @@ export default {
       height: 100%;
       position: fixed;
       z-index: 10000;
+    }
+    #add{
+      width: 5rem;
+      height: 3rem;
+      background-color: yellow;
+      .add-1{
+        background-color: red;
+      }
     }
   }
 }
