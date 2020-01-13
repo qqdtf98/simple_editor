@@ -64,7 +64,8 @@ export default {
       dom: '',
       addTag: false,
       selectedTag: null,
-      hasht: null
+      hasht: null,
+      isPustHtml: true
     }
   },
   mounted () {
@@ -100,9 +101,10 @@ export default {
     h['featuresboxed'] = 'A feature grid with a subtle white on blue design.'
     h['featuresclean'] = 'A feature grid with a clean design with lots of white space.'
     h['footerbasic'] = 'This is a basic footer with links and social buttons.'
-    h['footerclean'] = ''
+    h['footerclean'] = 'A complete footer design with link categories, social icons and a copyright line.'
+    h['footerdark'] = 'A dark footer design with link categories, social icons and a copyright line.'
 
-    h['heading'] = 'This is the HTML heading component. You can choose which HTML tag is used - from <code><h1></code> to'
+    h['heading'] = 'This is the HTML heading component. You can choose which HTML tag is used - from &lth1&gt to'
     this.hasht = h
   },
   methods: {
@@ -111,9 +113,9 @@ export default {
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
-      if(this.isPustHtml){
+      if (this.isPustHtml) {
         this.$refs.overview.printHomeDocument()
-        this.isPustHtml=false
+        this.isPustHtml = false
       }
       this.$refs.overview.domSelection(payload.target)
     },
@@ -168,7 +170,6 @@ export default {
       this.$refs.home.selectOverview(this.dom)
     }
   }
-
 
 }
 </script>

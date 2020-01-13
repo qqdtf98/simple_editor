@@ -46,7 +46,7 @@ export default {
 
   methods: {
     printHomeDocument () {
-      //console.log(this.getDocument)
+      // console.log(this.getDocument)
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
       // console.log(document.body.children[0].children )
@@ -76,7 +76,7 @@ export default {
           obj.appendChild(newDIV)
 
           // console.log(this.friendNum)
-          
+
           var obj = document.getElementById(this.childNum)
           var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
@@ -108,8 +108,8 @@ export default {
 
           obj = document.getElementById(this.childNum)
 
-          //console.log(obj)
-          this.findChildren(child[i],obj)
+          // console.log(obj)
+          this.findChildren(child[i], obj)
           // console.log(payload.target)
           // this.domSelection(payload.target)
         }
@@ -171,13 +171,13 @@ export default {
             var obj = document.getElementById(this.childNum)
             var newDIV = document.createElement('input')
             // newDIV.innerHTML = child[i].tagName;
-            newDIV.setAttribute("class","checkbox");
-            newDIV.setAttribute("type","checkbox");
-            newDIV.setAttribute("style","");
-            newDIV.setAttribute("id",this.friendNum);
+            newDIV.setAttribute('class', 'checkbox')
+            newDIV.setAttribute('type', 'checkbox')
+            newDIV.setAttribute('style', '')
+            newDIV.setAttribute('id', this.friendNum)
 
-            //newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV);
+            // newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV)
 
             // newDIV.style.backgroundColor="yellow";
             obj.appendChild(newDIV)
@@ -202,30 +202,28 @@ export default {
         }
       }
     },
-    domSelection(payload){
+    domSelection (payload) {
       // console.log(this.dom.length)
       // console.log(payload)
-      for(var i=0;i<this.dom.length;i++){
-          if(payload==this.dom[i]){
-            // console.log(i)
-            
-            var obj = document.querySelector(`label[for="${i}"]`)
-            console.log(obj)
-            console.log(payload)
-            // payload.style["color"] = "blue";
-            obj.style["backgroundColor"] = "blue";
-            // console.log(getComputedStyle(payload).color)
-            // console.log(this.dom[i])
-            obj.scrollIntoView()
-            
-            console.log(obj.parent)
-            console.log("찾았다")
+      for (var i = 0; i < this.dom.length; i++) {
+        if (payload === this.dom[i]) {
+          // console.log(i)
 
-          }
-          else{
-            var obj = document.querySelector(`label[for="${i}"]`)
-            obj.style["backgroundColor"] = "";
-          }
+          var obj = document.querySelector(`label[for="${i}"]`)
+          console.log(obj)
+          console.log(payload)
+          // payload.style["color"] = "blue";
+          obj.style['backgroundColor'] = 'blue'
+          // console.log(getComputedStyle(payload).color)
+          // console.log(this.dom[i])
+          obj.scrollIntoView()
+
+          console.log(obj.parent)
+          console.log('찾았다')
+        } else {
+          var obj = document.querySelector(`label[for="${i}"]`)
+          obj.style['backgroundColor'] = ''
+        }
       }
     },
     onmouseMove (e) {
