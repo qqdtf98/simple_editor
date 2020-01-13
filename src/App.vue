@@ -63,7 +63,8 @@ export default {
       uiDescription: false,
       dom: '',
       addTag: false,
-      selectedTag: null
+      selectedTag: null,
+      hasht: null
     }
   },
   mounted () {
@@ -74,8 +75,8 @@ export default {
         // console.log(e.taret)
         // console.log(tar.parentElement.id)
         // console.log(tar.parentElement)
-        let i
-        for (i = 0; i < 100; i++) {
+        // let i
+        while (1) {
           if (tar.id === 'dashboard') {
             // console.log(tar.className)
             // console.log('find')
@@ -91,6 +92,11 @@ export default {
         }
       }
     })
+    var h = {}
+    h['articleclean'] = 'An article layout with a simple and clean design.'
+    h['articledualcolumn'] = 'An article layout which consists of two columns.'
+    h['heading'] = 'This is the HTML heading component. You can choose which HTML tag is used - from <code><h1></code> to'
+    this.hasht = h
   },
   methods: {
     componentSelected (payload) {
@@ -114,15 +120,8 @@ export default {
       this.$nextTick(() => {
         let text = document.querySelector('.description-tag')
         let stu = document.querySelector('.studio')
-
-        // if (payload.target.innerHTML === 'Image') {
-        //   text.innerHTML =
-        //     'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
-        // } else if (payload.target.innerHTML === 'Icon') {
-        //   text.innerHTML = 'Icon'
-        // }
-
-        // text.innerHTML은 db에 저장하여 불러와야함
+        let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
+        text.innerHTML = this.hasht[innerText]
 
         text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
@@ -140,12 +139,13 @@ export default {
         let stu = document.querySelector('.studio')
 
         let name = payload.target.innerHTML.replace(/ /gi, '')
-        // console.log(ui.children[0].src)
         ui.children[0].src = './static/studioImage/' + name + '.png'
         ui.children[1].innerHTML = payload.target.innerHTML
 
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+        // let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
+        // ui.innerHTML = this.hasht[innerText]
       })
     },
     addElement (e) {
@@ -172,6 +172,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   // color: #2c3e50;
+  color: #fff;
   display: flex;
   flex-direction: row;
   height: 58rem;

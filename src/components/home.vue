@@ -559,6 +559,8 @@ export default {
     selectOverview (payload) {
       // console.log(payload)
       let dashboardElem = document.querySelector('.dashboard')
+      console.log(payload)
+      // console.log(payload.getBoundingClientRect())
       this.selectedElement = payload.getBoundingClientRect()
 
       let tag = document.querySelector('.tagname')
