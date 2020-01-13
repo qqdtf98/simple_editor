@@ -104,7 +104,11 @@ export default {
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
-      this.$refs.overview.printHomeDocument()
+      if(this.isPustHtml){
+        this.$refs.overview.printHomeDocument()
+        this.isPustHtml=false
+      }
+      this.$refs.overview.domSelection(payload.target)
     },
     userSelectedWidth (data) {
       this.data = data
@@ -155,6 +159,8 @@ export default {
       this.$refs.home.selectOverview(this.dom)
     }
   }
+
+
 }
 </script>
 

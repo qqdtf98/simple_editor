@@ -1,6 +1,6 @@
 <template>
-  <div class="dashboard">
-    <ul class="tree" @mousemove="onmouseMove">
+  <div class="container">
+    <ul class="col" @mousemove="onmouseMove">
       <li>
         <input class="checkbox" type="checkbox" id="root" />
         <label for="root">HTML</label>
@@ -46,7 +46,7 @@ export default {
 
   methods: {
     printHomeDocument () {
-      // console.log(this.getDocument)
+      //console.log(this.getDocument)
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
       // console.log(document.body.children[0].children )
@@ -75,8 +75,8 @@ export default {
           // newDIV.style.backgroundColor="yellow";
           obj.appendChild(newDIV)
 
-          console.log(this.friendNum)
-
+          // console.log(this.friendNum)
+          
           var obj = document.getElementById(this.childNum)
           var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
@@ -108,8 +108,10 @@ export default {
 
           obj = document.getElementById(this.childNum)
 
-          // console.log(obj)
-          this.findChildren(child[i], obj)
+          //console.log(obj)
+          this.findChildren(child[i],obj)
+          // console.log(payload.target)
+          // this.domSelection(payload.target)
         }
       }
     },
@@ -169,9 +171,13 @@ export default {
             var obj = document.getElementById(this.childNum)
             var newDIV = document.createElement('input')
             // newDIV.innerHTML = child[i].tagName;
-            newDIV.setAttribute('class', 'checkbox')
-            newDIV.setAttribute('type', 'checkbox')
-            newDIV.setAttribute('id', this.friendNum)
+            newDIV.setAttribute("class","checkbox");
+            newDIV.setAttribute("type","checkbox");
+            newDIV.setAttribute("style","");
+            newDIV.setAttribute("id",this.friendNum);
+
+            //newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV);
 
             // newDIV.style.backgroundColor="yellow";
             obj.appendChild(newDIV)
@@ -196,6 +202,32 @@ export default {
         }
       }
     },
+    domSelection(payload){
+      // console.log(this.dom.length)
+      // console.log(payload)
+      for(var i=0;i<this.dom.length;i++){
+          if(payload==this.dom[i]){
+            // console.log(i)
+            
+            var obj = document.querySelector(`label[for="${i}"]`)
+            console.log(obj)
+            console.log(payload)
+            // payload.style["color"] = "blue";
+            obj.style["backgroundColor"] = "blue";
+            // console.log(getComputedStyle(payload).color)
+            // console.log(this.dom[i])
+            obj.scrollIntoView()
+            
+            console.log(obj.parent)
+            console.log("찾았다")
+
+          }
+          else{
+            var obj = document.querySelector(`label[for="${i}"]`)
+            obj.style["backgroundColor"] = "";
+          }
+      }
+    },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {
         // console.log(e.target)
@@ -212,30 +244,41 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.dashboard {
-  overflow: auto;
-  padding-right:200px;
 
+<style lang="scss">
+.container {
+  overflow: auto;
+  justify-content: left;
+  justify-items: left;
+  padding: 0.2rem;
 }
-.tree label:before{
-  content:"열:"
+li{
+  // float:left;
 }
-.tree, .tree ul{
+.col{
+  padding: 0.4rem;
+}
+.col label:before{
+  content:'\f107';
+  font-family:FontAwesome;
+  // font-family: "fontello";
+}
+.col, .col ul{
   color:#e7e4e4;
   list-style:none;
 
 }
-.tree .checkbox{
+.col .checkbox{
   display: none;
 
 }
-.tree .checkbox:checked~ul{
+.col .checkbox:checked~ul{
   display: none;
   color:red;
 }
-.tree .checkbox:checked+label:before{
-  content:"닫:"
+.col .checkbox:checked+label:before{
+  content:'\f105';
+  font-family: FontAwesome;
 }
 // #overview {
 //   .studio-text-box {
