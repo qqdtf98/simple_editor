@@ -59,7 +59,7 @@ export default {
 
   methods: {
     printHomeDocument () {
-      console.log(this.getDocument)
+      // console.log(this.getDocument)
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
       // console.log(document.body.children[0].children )
@@ -71,7 +71,7 @@ export default {
       // console.log(Object.keys(anchor))
       // console.log(document.getElementById('dashboard'))
 
-      console.log()
+      // console.log()
       var child = this.getDocument.children
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
@@ -87,8 +87,8 @@ export default {
 
           obj.appendChild(newDIV)
 
-          console.log(child[i].tagName)
-          console.log('')
+          // console.log(child[i].tagName)
+          // console.log('')
           // console.log(child[i].className)
           /// console.log(child[i].id)
           //   const Hello = {
@@ -140,8 +140,8 @@ export default {
           // console.log(childOFchil)
           for (var i = 0; i < childOFchil.length; i++) {
             // 자기 동료에 넣기
-            console.log(childOFchil[i].tagName)
-            console.log('')
+            // console.log(childOFchil[i].tagName)
+            // console.log('')
             // this.childOFchil.push(childOFchil[i].tagName)
             // const Hello = {
             //     props: ['text'],
