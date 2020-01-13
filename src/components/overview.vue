@@ -46,7 +46,7 @@ export default {
 
   methods: {
     printHomeDocument () {
-      console.log(this.getDocument)
+      // console.log(this.getDocument)
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
       // console.log(document.body.children[0].children )
@@ -58,7 +58,6 @@ export default {
       // console.log(Object.keys(anchor))
       // console.log(document.getElementById('dashboard'))
 
-      //console.log()
       var child = this.getDocument.children
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
@@ -116,7 +115,6 @@ export default {
 
           //console.log(obj)
           this.findChildren(child[i],obj)
-
         }
       }
     },
