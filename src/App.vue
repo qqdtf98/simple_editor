@@ -62,6 +62,7 @@ export default {
       homeDocument: '',
       uiDescription: false,
       dom:'',
+      isPustHtml:true
     }
   },
   mounted () {
@@ -70,10 +71,14 @@ export default {
   methods: {
     componentSelected (payload) {
       this.payload = payload.target
-      console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
+      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
-      this.$refs.overview.printHomeDocument()
+      if(this.isPustHtml){
+        this.$refs.overview.printHomeDocument()
+        this.isPustHtml=false
+      }
+      this.$refs.overview.domSelection(payload.target)
     },
     userSelectedWidth (data) {
       this.data = data
@@ -119,9 +124,9 @@ export default {
     },
     addElement () {
       document.addEventListener('mouseup', (e) => {
-        console.log(e.target)
+        //console.log(e.target)
         document.removeEventListener('mouseup', () => {
-          console.log('remove')
+          //console.log('remove')
         })
       })
     },
@@ -130,6 +135,8 @@ export default {
       // console.log(this.dom)
     },
   }
+
+
 }
 </script>
 
