@@ -717,7 +717,6 @@ export default {
         }
       } else if (e.target.name == 'width') { this.onWidth = true } else if (e.target.name == 'fontSize') { this.onFontSize = true }
 
-      //   console.log(this.submitSorce)
       this.$emit('userSelected', this.submitSorce)
     },
     submitSourceOriginal (e) {
