@@ -33,9 +33,9 @@ export default {
   data () {
     return {
       tags: [],
-      dom : [],
+      dom: [],
       childNum: 10000,
-      friendNum : 0,
+      friendNum: 0
 
     }
   },
@@ -46,7 +46,11 @@ export default {
 
   methods: {
     printHomeDocument () {
+<<<<<<< HEAD
       //console.log(this.getDocument)
+=======
+      // console.log(this.getDocument)
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
       // console.log(document.body.children[0].children )
@@ -58,7 +62,6 @@ export default {
       // console.log(Object.keys(anchor))
       // console.log(document.getElementById('dashboard'))
 
-      //console.log()
       var child = this.getDocument.children
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
@@ -66,119 +69,123 @@ export default {
         if (typeof (child[i].children) !== 'undefined') {
           // console.log("전")
           // var idOjb = "aa"
-          
-          //자식
-          var obj = document.getElementById('bodySource')
-          var newDIV = document.createElement("li")
-                // newDIV.innerHTML = child[i].tagName;
-          newDIV.setAttribute("id",this.childNum);
-          
-          //newDIV.style.backgroundColor="yellow";
-          obj.appendChild(newDIV);
-          
 
+          // 자식
+          var obj = document.getElementById('bodySource')
+          var newDIV = document.createElement('li')
+          // newDIV.innerHTML = child[i].tagName;
+          newDIV.setAttribute('id', this.childNum)
+
+          // newDIV.style.backgroundColor="yellow";
+          obj.appendChild(newDIV)
+
+<<<<<<< HEAD
           // console.log(this.friendNum)
           
+=======
+          console.log(this.friendNum)
+
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
           var obj = document.getElementById(this.childNum)
-          var newDIV = document.createElement("input")
+          var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
-          newDIV.setAttribute("class","checkbox");
-          newDIV.setAttribute("type","checkbox");
+          newDIV.setAttribute('class', 'checkbox')
+          newDIV.setAttribute('type', 'checkbox')
           // var nodeId = "node4"
-          newDIV.setAttribute("id",this.friendNum);
-          //newDIV.style.backgroundColor="yellow";
-          obj.appendChild(newDIV);
+          newDIV.setAttribute('id', this.friendNum)
+          // newDIV.style.backgroundColor="yellow";
+          obj.appendChild(newDIV)
 
-          
-
-          var newDIV = document.createElement("label")
-          newDIV.setAttribute("for",this.friendNum);
-          newDIV.setAttribute("id",this.friendNum);
-          newDIV.innerHTML = child[i].tagName;
-          obj.appendChild(newDIV);
+          var newDIV = document.createElement('label')
+          newDIV.setAttribute('for', this.friendNum)
+          newDIV.setAttribute('id', this.friendNum)
+          newDIV.innerHTML = child[i].tagName
+          obj.appendChild(newDIV)
 
           // console.log(child[i])
           // console.log("여기입니다")
           this.dom.push(child[i])
-          
-          this.childNum+=1
-          
 
-          var newDIV = document.createElement("ul")
+          this.childNum += 1
+
+          var newDIV = document.createElement('ul')
           // newDIV.innerHTML = child[i].tagName;
-          newDIV.setAttribute("id",this.childNum);
-          obj.appendChild(newDIV);
+          newDIV.setAttribute('id', this.childNum)
+          obj.appendChild(newDIV)
 
-          //console.log(child[i].tagName)
-
+          // console.log(child[i].tagName)
 
           obj = document.getElementById(this.childNum)
 
+<<<<<<< HEAD
           //console.log(obj)
           this.findChildren(child[i],obj)
           // console.log(payload.target)
           // this.domSelection(payload.target)
+=======
+          // console.log(obj)
+          this.findChildren(child[i], obj)
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
         }
       }
     },
-    findChildren(child,obj){
-        // Vue.component('simple-counter', {
-        //     template: '<span class="tag-list">sssss</span>',
-        //     // 데이터는 기술적으로 함수이므로 Vue는 따지지 않지만
-        //     // 각 컴포넌트 인스턴스에 대해 같은 객체 참조를 반환합니다.
-        //     data: function () {
-        //         return data
-        //     }
-        // })
-        // Vue.component('Hello',{
-        //             props: ['text'],
-        //             template: `<span class="tag-list">{{text}}</span>`,
-                    
-        //         })
-        // const Hello = {
-        //     props: ['text'],
-        //     template:  `<span class="tag-list">{{text}} </div></span>
-        //                 <div id="mount"> `,
-        // };
-        // //alert("1")
-        // const HelloCtor = Vue.extend(Hello);
-        // const vm = new HelloCtor({
-        // propsData: {
-        //     text: childOFchil[i].tagName
-        // }
-        // }).$mount('#mount');
-        
-        if (typeof (child.children) !== 'undefined') {
+    findChildren (child, obj) {
+      // Vue.component('simple-counter', {
+      //     template: '<span class="tag-list">sssss</span>',
+      //     // 데이터는 기술적으로 함수이므로 Vue는 따지지 않지만
+      //     // 각 컴포넌트 인스턴스에 대해 같은 객체 참조를 반환합니다.
+      //     data: function () {
+      //         return data
+      //     }
+      // })
+      // Vue.component('Hello',{
+      //             props: ['text'],
+      //             template: `<span class="tag-list">{{text}}</span>`,
+
+      //         })
+      // const Hello = {
+      //     props: ['text'],
+      //     template:  `<span class="tag-list">{{text}} </div></span>
+      //                 <div id="mount"> `,
+      // };
+      // //alert("1")
+      // const HelloCtor = Vue.extend(Hello);
+      // const vm = new HelloCtor({
+      // propsData: {
+      //     text: childOFchil[i].tagName
+      // }
+      // }).$mount('#mount');
+
+      if (typeof (child.children) !== 'undefined') {
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
           // console.log(childOFchil)
           for (var i = 0; i < childOFchil.length; i++) {
             // 자기 동료에 넣기
-            //console.log(childOFchil[i])
+            // console.log(childOFchil[i])
             this.dom.push(childOFchil[i])
-            
-            //console.log('')
-            //this.childOFchil.push(childOFchil[i].tagName)
 
+            // console.log('')
+            // this.childOFchil.push(childOFchil[i].tagName)
 
-            //console.log("1번째")
-            //console.log(obj)
-            this.childNum+=1
-            var newDIV = document.createElement("li")
+            // console.log("1번째")
+            // console.log(obj)
+            this.childNum += 1
+            var newDIV = document.createElement('li')
             // newDIV.innerHTML = child[i].tagName;
             // idOjb+="a"
-            newDIV.setAttribute("id",this.childNum);
-            //newDIV.style.backgroundColor="yellow";
-            //obj.appendChild(newDIV);
-            obj.appendChild(newDIV);
-            
+            newDIV.setAttribute('id', this.childNum)
+            // newDIV.style.backgroundColor="yellow";
+            // obj.appendChild(newDIV);
+            obj.appendChild(newDIV)
 
-            this.friendNum+=1
+            this.friendNum += 1
 
             // var obbj = document.getElementById(idOjb)
             var obj = document.getElementById(this.childNum)
-            var newDIV = document.createElement("input")
+            var newDIV = document.createElement('input')
             // newDIV.innerHTML = child[i].tagName;
+<<<<<<< HEAD
             newDIV.setAttribute("class","checkbox");
             newDIV.setAttribute("type","checkbox");
             newDIV.setAttribute("style","");
@@ -186,24 +193,31 @@ export default {
 
             //newDIV.style.backgroundColor="yellow";
             obj.appendChild(newDIV);
+=======
+            newDIV.setAttribute('class', 'checkbox')
+            newDIV.setAttribute('type', 'checkbox')
+            newDIV.setAttribute('id', this.friendNum)
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
 
-            var newDIV = document.createElement("label")
-            newDIV.setAttribute("for",this.friendNum);
-            newDIV.setAttribute("id",this.friendNum);
-            newDIV.innerHTML = childOFchil[i].tagName;
-            //newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV);
+            // newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV)
 
+            var newDIV = document.createElement('label')
+            newDIV.setAttribute('for', this.friendNum)
+            newDIV.setAttribute('id', this.friendNum)
+            newDIV.innerHTML = childOFchil[i].tagName
+            // newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV)
 
-            this.childNum+=1
-            var newDIV = document.createElement("ul")
+            this.childNum += 1
+            var newDIV = document.createElement('ul')
             // newDIV.innerHTML = child[i].tagName;
-            newDIV.setAttribute("id",this.childNum);
-            //newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV);
+            newDIV.setAttribute('id', this.childNum)
+            // newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV)
 
             obj = document.getElementById(this.childNum)
-            this.findChildren(childOFchil[i],obj)
+            this.findChildren(childOFchil[i], obj)
           }
         }
       }
@@ -235,22 +249,23 @@ export default {
       }
     },
     onmouseMove (e) {
-      if(e.target.tagName=='LABEL'){
+      if (e.target.tagName === 'LABEL') {
         // console.log(e.target)
         // console.log(e.target.tagName)
         // console.log(e.target.id)
         // console.log(this.dom[e.target.id])
         // console.log(this.numberinDom[2])
-        this.$emit('selectDomElemnet', this.dom[e.target.id])
+        this.$emit('selectDomElement', this.dom[e.target.id])
       }
-    },
-  } 
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 .container {
   overflow: auto;
+<<<<<<< HEAD
   justify-content: left;
   justify-items: left;
   padding: 0.2rem;
@@ -260,6 +275,10 @@ li{
 }
 .col{
   padding: 0.4rem;
+=======
+  padding-right:200px;
+
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
 }
 .col label:before{
   content:'\f107';

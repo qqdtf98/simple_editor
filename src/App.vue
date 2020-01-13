@@ -10,7 +10,7 @@
       ></studio>
       <overview
         ref="overview"
-        @selectDomElemnet="selectDomElemneted"
+        @selectDomElement="selectDomElemented"
         :getDocument="homeDocument"
         class="overview"
       ></overview>
@@ -50,7 +50,7 @@ import overview from './components/overview'
 
 export default {
   components: { home, layout, studio, overview },
-  props:["selectDomElemnet"],
+  props: ['selectDomElement'],
   name: 'App',
   data () {
     return {
@@ -61,12 +61,41 @@ export default {
       childOFchil: [],
       homeDocument: '',
       uiDescription: false,
+<<<<<<< HEAD
       dom:'',
       isPustHtml:true
+=======
+      dom: '',
+      addTag: false,
+      selectedTag: null
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
     }
   },
   mounted () {
     this.homeDocument = document.getElementById('dashboard')
+    document.addEventListener('mouseup', (e) => {
+      let tar = e.target
+      if (this.addTag) {
+        // console.log(e.taret)
+        // console.log(tar.parentElement.id)
+        // console.log(tar.parentElement)
+        let i
+        for (i = 0; i < 100; i++) {
+          if (tar.id === 'dashboard') {
+            // console.log(tar.className)
+            // console.log('find')
+            this.addTag = false
+            this.$refs.home.addContent(this.selectedTag, e.target)
+            break
+          } else if (tar.id === 'app') {
+            break
+          } else {
+            // console.log(tar)
+            tar = tar.parentElement
+          }
+        }
+      }
+    })
   },
   methods: {
     componentSelected (payload) {
@@ -91,12 +120,14 @@ export default {
         let text = document.querySelector('.description-tag')
         let stu = document.querySelector('.studio')
 
-        if (payload.target.innerHTML === 'Image') {
-          text.innerHTML =
-            'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
-        } else if (payload.target.innerHTML === 'Icon') {
-          text.innerHTML = 'Icon'
-        }
+        // if (payload.target.innerHTML === 'Image') {
+        //   text.innerHTML =
+        //     'This is the <image> HTML element.asdffffffffffffffffffffffffffffffffsdfsdfs'
+        // } else if (payload.target.innerHTML === 'Icon') {
+        //   text.innerHTML = 'Icon'
+        // }
+
+        // text.innerHTML은 db에 저장하여 불러와야함
 
         text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
@@ -122,6 +153,7 @@ export default {
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
       })
     },
+<<<<<<< HEAD
     addElement () {
       document.addEventListener('mouseup', (e) => {
         //console.log(e.target)
@@ -129,11 +161,18 @@ export default {
           //console.log('remove')
         })
       })
+=======
+    addElement (e) {
+      this.addTag = true
+      // console.log(e.target)
+      this.selectedTag = e.target
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
     },
-    selectDomElemneted(domElemnet){
-      this.dom=domElemnet
+    selectDomElemented (domElement) {
+      this.dom = domElement
       // console.log(this.dom)
-    },
+      this.$refs.home.selectOverview(this.dom)
+    }
   }
 
 
@@ -147,7 +186,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  // color: #2c3e50;
   display: flex;
   flex-direction: row;
   height: 58rem;

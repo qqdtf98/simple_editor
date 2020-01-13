@@ -68,6 +68,7 @@
         src="../assets/move.svg"
         class="move-icon"
       />
+      <img @click="removeContent" style="cursor:pointer" v-show="isContentRemovable" src="../assets/delete.svg" class="delete-icon">
       <div
         v-if="isContentMovable"
         data-pos="top"
@@ -96,6 +97,9 @@
         @mousedown="mouseDownBoundary"
         class="boundary-line-bottom"
       ></div>
+      <div id="add">
+        <div class="add-1">aaaaa</div>
+      </div>
     </div>
   </div>
 </template>
@@ -121,7 +125,9 @@ export default {
       resizedirection: '',
       initialwidth: '',
       initialheight: '',
-      initialscale: ''
+      initialscale: '',
+      isContentRemovable: false,
+      add: false
     }
   },
   mounted () {
@@ -180,6 +186,9 @@ export default {
         let move = document.querySelector('.move-icon')
         move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
         move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height + 'px'
+        let deleteIcon = document.querySelector('.delete-icon')
+        deleteIcon.style.left = this.clickedElement.getBoundingClientRect().left + parseInt(getComputedStyle(move).width) + 'px'
+        deleteIcon.style.top = this.clickedElement.getBoundingClientRect().top - deleteIcon.getBoundingClientRect().height + 'px'
       }
     })
     window.addEventListener('mouseup', () => {
@@ -194,7 +203,9 @@ export default {
       if (this.selectedElement === null) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' && e.target.className !== 'left-border' &&
+          e.target.className !== 'move-icon' &&
+          e.target.className !== 'delete-icon' &&
+          e.target.className !== 'left-border' &&
           e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
           e.target.className !== 'bottom-border' &&
           e.target.className !== 'boundary-line-left' &&
@@ -208,7 +219,7 @@ export default {
       } else {
         if (this.selectedElement !== e.target) {
           if (
-            e.target.className !== 'tagname' &&
+            e.target.className !== 'tagname' && e.target.className !== 'delete-icon' &&
             e.target.className !== 'move-icon' && e.target.className !== 'left-border' &&
             e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
             e.target.className !== 'bottom-border' &&
@@ -269,7 +280,7 @@ export default {
       if (this.clickedElement === null) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' &&
+          e.target.className !== 'move-icon' && e.target.className !== 'delete-icon' &&
           e.target.className !== 'boundary-line-left' &&
           e.target.className !== 'boundary-line-right' &&
           e.target.className !== 'boundary-line-top' &&
@@ -287,6 +298,7 @@ export default {
           e.target.style.borderRadius = '0'
 
           this.isContentMovable = true
+          this.isContentRemovable = true
 
           this.$nextTick(() => {
             // eslint-disable-next-line camelcase
@@ -319,12 +331,15 @@ export default {
             let move = document.querySelector('.move-icon')
             move.style.left = this.elem.left + 'px'
             move.style.top = this.elem.top - move.getBoundingClientRect().height + 'px'
+            let deleteIcon = document.querySelector('.delete-icon')
+            deleteIcon.style.left = this.elem.left + 'px'
+            deleteIcon.style.top = this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
           })
         }
       } else if (this.clickedElement !== e.target) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' &&
+          e.target.className !== 'move-icon' && e.target.className !== 'delete-icon' &&
           e.target.className !== 'boundary-line-left' &&
           e.target.className !== 'boundary-line-right' &&
           e.target.className !== 'boundary-line-top' &&
@@ -367,6 +382,7 @@ export default {
           right_line.style.height = this.elem.width + 'px'
 
           this.isContentMovable = true
+          this.isContnetRemovable = true
 
           this.$nextTick(() => {
             this.elem = e.target.getBoundingClientRect()
@@ -376,6 +392,12 @@ export default {
 
             tag.style.top =
               this.elem.top - tag.getBoundingClientRect().height + 'px'
+            let deleteIcon = document.querySelector('.delete-icon')
+
+            deleteIcon.style.left = this.elem.left + parseInt(getComputedStyle(tag).width) + 'px'
+
+            deleteIcon.style.top =
+              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
           })
         }
       }
@@ -390,6 +412,7 @@ export default {
     focusInput (e) {
       if (e.target.className !== 'tagname' &&
           e.target.className !== 'move-icon' &&
+          e.target.className !== 'delete-icon' &&
           e.target.className !== 'boundary-line-left' &&
           e.target.className !== 'boundary-line-right' &&
           e.target.className !== 'boundary-line-top' &&
@@ -411,6 +434,7 @@ export default {
     onmouseDoubleClick (e) {
       if (e.target.className !== 'tagname' &&
           e.target.className !== 'move-icon' &&
+          e.target.className !== 'delete-icon' &&
           e.target.className !== 'boundary-line-left' &&
           e.target.className !== 'boundary-line-right' &&
           e.target.className !== 'boundary-line-top' &&
@@ -504,19 +528,80 @@ export default {
           let moveLeft = this.clickedElement.getBoundingClientRect().left
           if (moveTop > 190) {
             this.isContentMovable = true
+            this.isContentRemovable = true
             move.style.top = moveTop + 'px'
           } else {
             this.isContentMovable = false
+            this.isContentRemovable = false
           }
           if (moveLeft > 300) {
             this.isContentMovable = true
+            this.isContentRemovable = true
             move.style.left = moveLeft + 'px'
           } else {
             this.isContentMovable = false
+            this.isContentRemovable = false
           }
         })
       }
+    },
+    removeContent () {
+      this.clickedElement.parentNode.removeChild(this.clickedElement)
+    },
+    addContent (tag, position) {
+      let addTag = document.querySelector('#add')
+      // console.log(tag)
+      // tag가 추가할 element. 자식이 된다.
+      // console.log(position)
+      // position이 추가할 위치에 있는 element. 부모가 된다.
+      position.appendChild(addTag)
+    },
+    selectOverview (payload) {
+      // console.log(payload)
+      let dashboardElem = document.querySelector('.dashboard')
+      this.selectedElement = payload.getBoundingClientRect()
+
+      let tag = document.querySelector('.tagname')
+      // console.log(payload.className)
+
+      tag.textContent = payload.tagName
+      tag.style.left = this.selectedElement.left + 'px'
+
+      tag.style.top =
+              this.selectedElement.top -
+              tag.getBoundingClientRect().height +
+              'px'
+      let bottomBord = document.querySelector('.bottom-border')
+      let topBord = document.querySelector('.top-border')
+      let rightBord = document.querySelector('.right-border')
+      let leftBord = document.querySelector('.left-border')
+      let dashWrapper = document.querySelector('.dashboard-wrapper')
+      let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
+      topBord.style.left = this.selectedElement.left + 'px'
+      topBord.style.top = this.selectedElement.top + 'px'
+      topBord.style.width = this.selectedElement.width + 'px'
+      if (this.selectedElement.bottom > dashboardElem.getBoundingClientRect().bottom) {
+        bottomBord.style.display = 'none'
+        leftBord.style.left = this.selectedElement.left + 'px'
+        leftBord.style.top = this.selectedElement.top + 'px'
+        leftBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+        rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.top = this.selectedElement.top + 'px'
+        rightBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+      } else {
+        bottomBord.style.display = ''
+        bottomBord.style.left = this.selectedElement.left + 'px'
+        bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+        bottomBord.style.width = this.selectedElement.width + 'px'
+        leftBord.style.left = this.selectedElement.left + 'px'
+        leftBord.style.top = this.selectedElement.top + 'px'
+        leftBord.style.height = this.selectedElement.height + 'px'
+        rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.top = this.selectedElement.top + 'px'
+        rightBord.style.height = this.selectedElement.height + 'px'
+      }
     }
+
   }
 }
 </script>
@@ -760,6 +845,19 @@ export default {
       fill:#fff;
       overflow: auto !important;
     }
+    .delete-icon{
+      z-index: 2;
+      position: fixed;
+      width: 1.2rem;
+      height: 1.2rem;
+      display: flex;
+      align-items: center;
+      padding: 0.2rem;
+      justify-content: center;
+      background-color: #f75c51;
+      fill:#fff;
+      overflow: auto !important;
+    }
     .boundary-line-top,
     .boundary-line-bottom {
       width: 100%;
@@ -774,6 +872,17 @@ export default {
       height: 100%;
       position: fixed;
       z-index: 10000;
+    }
+    #add{
+      width: 5rem;
+      height: 3rem;
+      background-color: yellow;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .add-1{
+        background-color: red;
+      }
     }
   }
 }

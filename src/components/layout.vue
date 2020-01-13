@@ -615,8 +615,13 @@ export default {
         }
       }
       var padding = getComputedStyle(payload.target).padding.replace(/px/gi, '').split(' ')
+<<<<<<< HEAD
       //console.log(padding)
       //console.log(this.margin[0])
+=======
+      //   console.log(padding)
+      //   console.log(this.margin[0])
+>>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
       if (padding.length !== 1) {
         for (var i = 0; i < padding.length; i++) {
           this.padding[i] = padding[i]
@@ -677,7 +682,7 @@ export default {
         }
       } else {
         this.submitSorce.value = 'auto'
-        console.log('갱')
+        // console.log('갱')
       }
       if (e.target.name == 'width') { this.onWidth = true } else if (e.target.name == 'height') { this.onHeight = true } else if (e.target.name == 'margin') {
         this.onMargin = true
@@ -717,7 +722,6 @@ export default {
         }
       } else if (e.target.name == 'width') { this.onWidth = true } else if (e.target.name == 'fontSize') { this.onFontSize = true }
 
-      //console.log(this.submitSorce)
       this.$emit('userSelected', this.submitSorce)
     },
     submitSourceOriginal (e) {
