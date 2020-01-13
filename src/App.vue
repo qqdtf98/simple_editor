@@ -58,11 +58,17 @@ export default {
       tagDescription: false,
       childOFchil: [],
       homeDocument: '',
-      uiDescription: false
+      uiDescription: false,
+      addTag: false
     }
   },
   mounted () {
     this.homeDocument = document.getElementById('dashboard')
+    document.addEventListener('mouseup', (e) => {
+      if (this.addTag) {
+        this.addTag = false
+      }
+    })
   },
   methods: {
     componentSelected (payload) {
@@ -89,6 +95,7 @@ export default {
         } else if (payload.target.innerHTML === 'Icon') {
           text.innerHTML = 'Icon'
         }
+        // text.innerHTML은 db에 저장하여 불러와야함
 
         text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
@@ -115,12 +122,7 @@ export default {
       })
     },
     addElement () {
-      document.addEventListener('mouseup', (e) => {
-        console.log(e.target)
-        document.removeEventListener('mouseup', () => {
-          console.log('remove')
-        })
-      })
+      this.addTag = true
     }
   }
 }
