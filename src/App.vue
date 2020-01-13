@@ -10,7 +10,7 @@
       ></studio>
       <overview
         ref="overview"
-        @selectDomElemnet="selectDomElemneted"
+        @selectDomElement="selectDomElemented"
         :getDocument="homeDocument"
         class="overview"
       ></overview>
@@ -50,7 +50,7 @@ import overview from './components/overview'
 
 export default {
   components: { home, layout, studio, overview },
-  props:["selectDomElemnet"],
+  props: ['selectDomElement'],
   name: 'App',
   data () {
     return {
@@ -61,7 +61,7 @@ export default {
       childOFchil: [],
       homeDocument: '',
       uiDescription: false,
-      dom:'',
+      dom: '',
       addTag: false
     }
   },
@@ -128,10 +128,11 @@ export default {
     },
     addElement () {
       this.addTag = true
-      },
-    selectDomElemneted(domElemnet){
-      this.dom=domElemnet
+    },
+    selectDomElemented (domElement) {
+      this.dom = domElement
       // console.log(this.dom)
+      this.$refs.home.selectOverview(this.dom)
     }
   }
 }
