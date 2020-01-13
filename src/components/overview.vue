@@ -46,11 +46,7 @@ export default {
 
   methods: {
     printHomeDocument () {
-<<<<<<< HEAD
       //console.log(this.getDocument)
-=======
-      // console.log(this.getDocument)
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
       // console.log(document.body.children[0].children )
@@ -79,13 +75,8 @@ export default {
           // newDIV.style.backgroundColor="yellow";
           obj.appendChild(newDIV)
 
-<<<<<<< HEAD
           // console.log(this.friendNum)
           
-=======
-          console.log(this.friendNum)
-
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
           var obj = document.getElementById(this.childNum)
           var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
@@ -117,15 +108,10 @@ export default {
 
           obj = document.getElementById(this.childNum)
 
-<<<<<<< HEAD
           //console.log(obj)
           this.findChildren(child[i],obj)
           // console.log(payload.target)
           // this.domSelection(payload.target)
-=======
-          // console.log(obj)
-          this.findChildren(child[i], obj)
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
         }
       }
     },
@@ -185,7 +171,6 @@ export default {
             var obj = document.getElementById(this.childNum)
             var newDIV = document.createElement('input')
             // newDIV.innerHTML = child[i].tagName;
-<<<<<<< HEAD
             newDIV.setAttribute("class","checkbox");
             newDIV.setAttribute("type","checkbox");
             newDIV.setAttribute("style","");
@@ -193,11 +178,6 @@ export default {
 
             //newDIV.style.backgroundColor="yellow";
             obj.appendChild(newDIV);
-=======
-            newDIV.setAttribute('class', 'checkbox')
-            newDIV.setAttribute('type', 'checkbox')
-            newDIV.setAttribute('id', this.friendNum)
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
 
             // newDIV.style.backgroundColor="yellow";
             obj.appendChild(newDIV)
@@ -265,7 +245,6 @@ export default {
 <style lang="scss">
 .container {
   overflow: auto;
-<<<<<<< HEAD
   justify-content: left;
   justify-items: left;
   padding: 0.2rem;
@@ -275,10 +254,6 @@ li{
 }
 .col{
   padding: 0.4rem;
-=======
-  padding-right:200px;
-
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
 }
 .col label:before{
   content:'\f107';

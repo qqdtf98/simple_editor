@@ -61,14 +61,9 @@ export default {
       childOFchil: [],
       homeDocument: '',
       uiDescription: false,
-<<<<<<< HEAD
-      dom:'',
-      isPustHtml:true
-=======
       dom: '',
       addTag: false,
       selectedTag: null
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
     }
   },
   mounted () {
@@ -153,20 +148,10 @@ export default {
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
       })
     },
-<<<<<<< HEAD
-    addElement () {
-      document.addEventListener('mouseup', (e) => {
-        //console.log(e.target)
-        document.removeEventListener('mouseup', () => {
-          //console.log('remove')
-        })
-      })
-=======
     addElement (e) {
       this.addTag = true
       // console.log(e.target)
       this.selectedTag = e.target
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
     },
     selectDomElemented (domElement) {
       this.dom = domElement

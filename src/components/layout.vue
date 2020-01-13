@@ -615,13 +615,8 @@ export default {
         }
       }
       var padding = getComputedStyle(payload.target).padding.replace(/px/gi, '').split(' ')
-<<<<<<< HEAD
-      //console.log(padding)
-      //console.log(this.margin[0])
-=======
       //   console.log(padding)
       //   console.log(this.margin[0])
->>>>>>> 804fae7641b06a9a76b07e5e66b21f016300da1f
       if (padding.length !== 1) {
         for (var i = 0; i < padding.length; i++) {
           this.padding[i] = padding[i]
