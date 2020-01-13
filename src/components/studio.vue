@@ -5,7 +5,12 @@
     </div>
     <div class="tag-studio">
       <div class="search">
-        <input @onkeyup="onSearchElement" class="search-input" type="text" placeholder="Search components" />
+        <input
+          @input="onSearchElement"
+          class="search-input"
+          type="text"
+          placeholder="Search components"
+        />
         <img class="search-icon" src="../assets/search.svg" />
       </div>
       <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
@@ -182,13 +187,52 @@ export default {
       }
     },
     addElement (e) {
-      if (e.target.className === 'template' || e.target.className === 'ui-tag template') {
-        console.log(e.target)
+      if (
+        e.target.className === 'template' ||
+        e.target.className === 'ui-tag template'
+      ) {
+        // console.log(e.target)
         this.$emit('addelement', e)
       }
     },
-    onSearchElement () {
-      // 검색기능
+    onSearchElement (e) {
+      // console.log('aa')
+      let name = document.querySelectorAll('.nested')
+      // let box = document.querySelectorAll('.tag-list')
+      // let na = document.querySelectorAll('.ui-tag template')
+      let i
+      let j
+      // for (i = 0; i < box.length; i++) {
+      //   box[i].style.display = 'none'
+      // }
+      // for (i = 0; i < name.length; i++) {
+      //   for (j = 0; j < name[i].children.length; j++) {
+      //     name[i].children[j].style.display = 'none'
+      //   }
+      // }
+
+      // 검색에 해당하는 항목만 골라지나 display가 안된다
+
+      for (i = 0; i < name.length; i++) {
+        if (name[i].children[0].className !== 'tag-list-box') {
+          if (name[i].children[0].className === 'template') {
+            break
+          }
+          for (j = 0; j < name[i].children.length; j++) {
+            if (
+              name[i].children[j].innerHTML
+                .toUpperCase()
+                .indexOf(e.target.value.toUpperCase()) === -1
+            ) {
+              name[i].children[j].style.display = 'none'
+            } else {
+              console.log(name[i].children[j].innerHTML)
+              name[i].children[j].style.display = 'block'
+              this.$nextTick()
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -223,17 +267,18 @@ export default {
       align-items: center;
       position: relative;
       height: 2rem;
-      .search-input{
+      .search-input {
         background: none;
         font-size: 0.8rem;
         height: 1.3rem;
+        width: 85%;
         position: absolute;
         left: 10px;
         border: none;
         color: #e6e4e4;
       }
-      .search-icon{
-        width: 1rem;
+      .search-icon {
+        width: 5.5%;
         position: absolute;
         right: 8px;
       }
