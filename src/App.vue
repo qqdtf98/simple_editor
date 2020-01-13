@@ -5,6 +5,7 @@
         @desc-close="tagNotSelected"
         @ui-select="uiSelected"
         @tag-select="tagSelected"
+        @addelement="addElement"
         class="studio"
       ></studio>
       <overview
@@ -58,10 +59,16 @@ export default {
       childOFchil: [],
       homeDocument: '',
       uiDescription: false,
+      addTag: false
     }
   },
   mounted () {
     this.homeDocument = document.getElementById('dashboard')
+    document.addEventListener('mouseup', (e) => {
+      if (this.addTag) {
+        this.addTag = false
+      }
+    })
   },
   methods: {
     componentSelected (payload) {
@@ -105,26 +112,17 @@ export default {
         let ui = document.querySelector('.description-ui')
         let stu = document.querySelector('.studio')
 
-        if (payload.target.innerHTML === 'Article Clean') {
-          // ui.children[0].src = "assets"
-          ui.children[1].innerHTML = 'ffffffffffffffffffffffsdfsdfs'
-        } else if (payload.target.innerHTML === 'Article List') {
-          ui.children[1].innerHTML = 'dfaa'
-        }
-        if (payload.target.innerHTML !== 'name') {
-          let name = payload.target.innerHTML.replace(/ /gi, '')
-          //console.log(ui.children[0].src)
-          ui.children[0].src = "./static/studioImage/" + name + ".png"
-          //7f9188a.png
-          //console.log(ui.children[0].src)
-          this.$nextTick(() => {
-           //console.log(ui.children[0].src)
-          })
-          //console.log(ui.children[0].src)
-        }
+        let name = payload.target.innerHTML.replace(/ /gi, '')
+        // console.log(ui.children[0].src)
+        ui.children[0].src = './static/studioImage/' + name + '.png'
+        ui.children[1].innerHTML = payload.target.innerHTML
+
         ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
         ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
       })
+    },
+    addElement () {
+      this.addTag = true
     }
   }
 }
@@ -225,7 +223,7 @@ export default {
       color: #e2e2e2;
     }
     .desc-ui-text{
-      color: #bbbbbb;
+      color: #a1a1a1;
     }
   }
 }

@@ -4,8 +4,11 @@
       <span class="studio-text">studio</span>
     </div>
     <div class="tag-studio">
-      <div class="search">search</div>
-      <div @mouseover="mouseOver" class="tag-box">
+      <div class="search">
+        <input @onkeyup="onSearchElement" class="search-input" type="text" placeholder="Search components" />
+        <img class="search-icon" src="../assets/search.svg" />
+      </div>
+      <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
         <div class="tag-list-box">
           <span class="tag-list">UI</span>
           <div class="nested">
@@ -155,6 +158,7 @@ export default {
         this.classList.toggle('caret-down')
         if (nest.children[0].className !== 'tag-list-box') {
           for (j = 0; j < nest.children.length; j++) {
+            // wa
             nest.children[j].classList.add('template')
           }
         } else {
@@ -176,6 +180,15 @@ export default {
       } else {
         this.$emit('desc-close')
       }
+    },
+    addElement (e) {
+      if (e.target.className === 'template' || e.target.className === 'ui-tag template') {
+        console.log(e.target)
+        this.$emit('addelement', e)
+      }
+    },
+    onSearchElement () {
+      // 검색기능
     }
   }
 }
@@ -194,10 +207,10 @@ export default {
     }
   }
   .tag-studio {
-    border: 3px solid #49b6a7;
     height: 95%;
     // display: flex;
     // flex-direction: column;
+    padding: 0.4rem;
     overflow: auto;
     .tag-studio::-webkit-scrollbar {
       width: 5px;
@@ -205,6 +218,25 @@ export default {
     .search {
       background-color: #41474c;
       color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      height: 2rem;
+      .search-input{
+        background: none;
+        font-size: 0.8rem;
+        height: 1.3rem;
+        position: absolute;
+        left: 10px;
+        border: none;
+        color: #e6e4e4;
+      }
+      .search-icon{
+        width: 1rem;
+        position: absolute;
+        right: 8px;
+      }
     }
     .tag-box {
       // overflow:scroll;
@@ -248,6 +280,7 @@ export default {
           color: #e7e4e4;
           &:hover {
             background-color: #414649;
+            cursor: default;
           }
         }
         .template::before {
