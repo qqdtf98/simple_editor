@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <ul class="tree">
+  <div class="dashboard">
+    <ul class="tree" @mousemove="onmouseMove">
       <li>
         <input class="checkbox" type="checkbox" id="root" />
         <label for="root">HTML</label>
@@ -25,65 +25,6 @@
       </li>
     </ul>
   </div>
-  <!-- <div id="overview">
-    <div class="studio-text-box">
-      <span class="studio-text">overview</span>
-    </div>
-    <div class="tag-studio">
-      <div class="search">search</div>
-      <div class="tag-box">
-        <div class="tag-list-box">
-          <span class="tag-list">HTML</span>
-
-          <div class="nested">
-            <div class="tag-list-box">
-              <span class="tag-list ui" id="bodySource">Body</span>
-              <div class="nested">
-                <div>Article Clean</div>
-                <div>Article Dual Column</div>
-                <div>Article List</div>
-              </div>
-            </div>
-
-            <div class="tag-list-box">
-              <span class="tag-list ui">Features</span>
-              <div class="nested">
-                <div>Features Blue</div>
-                <div>Features Boxed</div>
-                <div>Features Clean</div>
-              </div>
-            </div>
-
-            <div class="tag-list-box">
-              <span class="tag-list ui">Footers</span>
-              <div class="nested">
-                <div>Footer Basic</div>
-                <div>Footer Clean</div>
-                <div>Footer Dark</div>
-              </div>
-            </div>
-
-            <div class="tag-list-box">
-              <span class="tag-list ui">Footers</span>
-              <div class="nested">
-                <div>Footer Basic</div>
-                <div>Footer Clean</div>
-                <div>Footer Dark</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <div id="mount">ssss</div>
-        </div>
-      </div>
-    </div>
-<<<<<<< HEAD
-
-  </div>
-=======
-  </div>-->
->>>>>>> 6da33bb462af1662e62b3a0a65fb504164a480e4
 </template>
 <script>
 export default {
@@ -91,7 +32,11 @@ export default {
 
   data () {
     return {
-      tags: []
+      tags: [],
+      dom : [],
+      childNum: 10000,
+      friendNum : 0,
+
     }
   },
 
@@ -113,239 +58,180 @@ export default {
       // console.log(Object.keys(anchor))
       // console.log(document.getElementById('dashboard'))
 
-      console.log()
+      //console.log()
       var child = this.getDocument.children
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
         // console.log(child[i])
         if (typeof (child[i].children) !== 'undefined') {
           // console.log("전")
-
+          // var idOjb = "aa"
+          
+          //자식
           var obj = document.getElementById('bodySource')
-          var newDIV = document.createElement('span')
-          newDIV.innerHTML = child[i].tagName
-          newDIV.setAttribute('class', 'tag-list ui')
-          // newDIV.style.backgroundColor="yellow";
+          var newDIV = document.createElement("li")
+                // newDIV.innerHTML = child[i].tagName;
+          newDIV.setAttribute("id",this.childNum);
+          
+          //newDIV.style.backgroundColor="yellow";
+          obj.appendChild(newDIV);
+          
 
-          obj.appendChild(newDIV)
+          console.log(this.friendNum)
+          
+          var obj = document.getElementById(this.childNum)
+          var newDIV = document.createElement("input")
+          // newDIV.innerHTML = child[i].tagName;
+          newDIV.setAttribute("class","checkbox");
+          newDIV.setAttribute("type","checkbox");
+          // var nodeId = "node4"
+          newDIV.setAttribute("id",this.friendNum);
+          //newDIV.style.backgroundColor="yellow";
+          obj.appendChild(newDIV);
 
-          console.log(child[i].tagName)
-          console.log('')
-          // console.log(child[i].className)
-          /// console.log(child[i].id)
-          //   const Hello = {
-          //           props: ['text'],
-          //           template:  ` <span class="tag-list"><div id="mount"> {{text}} </div></span>`,
-          //       };
-          //       //alert("1")
-          //       const HelloCtor = Vue.extend(Hello);
-          //       const vm = new HelloCtor({
-          //       propsData: {
-          //           text: child[i]
+          
 
-          //       }
-          //       }).$mount('#mount');
-          this.findChildren(child[i], obj)
+          var newDIV = document.createElement("label")
+          newDIV.setAttribute("for",this.friendNum);
+          newDIV.setAttribute("id",this.friendNum);
+          newDIV.innerHTML = child[i].tagName;
+          obj.appendChild(newDIV);
+
+          // console.log(child[i])
+          // console.log("여기입니다")
+          this.dom.push(child[i])
+          
+          this.childNum+=1
+          
+
+          var newDIV = document.createElement("ul")
+          // newDIV.innerHTML = child[i].tagName;
+          newDIV.setAttribute("id",this.childNum);
+          obj.appendChild(newDIV);
+
+          //console.log(child[i].tagName)
+
+
+          obj = document.getElementById(this.childNum)
+
+          //console.log(obj)
+          this.findChildren(child[i],obj)
+
         }
       }
     },
-    findChildren (child, obj) {
-      // Vue.component('simple-counter', {
-      //     template: '<span class="tag-list">sssss</span>',
-      //     // 데이터는 기술적으로 함수이므로 Vue는 따지지 않지만
-      //     // 각 컴포넌트 인스턴스에 대해 같은 객체 참조를 반환합니다.
-      //     data: function () {
-      //         return data
-      //     }
-      // })
-      // Vue.component('Hello',{
-      //             props: ['text'],
-      //             template: `<span class="tag-list">{{text}}</span>`,
-
-<<<<<<< HEAD
-      //         })
-      // const Hello = {
-      //             props: ['text'],
-      //             template: ' <span class="tag-list">{{text}}<div id="mount"> </div></span>',
-      //         };
-      // //alert("1")
-      // const HelloCtor = Vue.extend(Hello);
-      // const vm = new HelloCtor({
-      // propsData: {
-      //     text: child.tagName
-
-      // }
-      // }).$mount('#mount');
-      // 넣기
-      if (typeof (child.children) !== 'undefined') {
+    findChildren(child,obj){
+        // Vue.component('simple-counter', {
+        //     template: '<span class="tag-list">sssss</span>',
+        //     // 데이터는 기술적으로 함수이므로 Vue는 따지지 않지만
+        //     // 각 컴포넌트 인스턴스에 대해 같은 객체 참조를 반환합니다.
+        //     data: function () {
+        //         return data
+        //     }
+        // })
+        // Vue.component('Hello',{
+        //             props: ['text'],
+        //             template: `<span class="tag-list">{{text}}</span>`,
+                    
+        //         })
+        // const Hello = {
+        //     props: ['text'],
+        //     template:  `<span class="tag-list">{{text}} </div></span>
+        //                 <div id="mount"> `,
+        // };
+        // //alert("1")
+        // const HelloCtor = Vue.extend(Hello);
+        // const vm = new HelloCtor({
+        // propsData: {
+        //     text: childOFchil[i].tagName
+        // }
+        // }).$mount('#mount');
+        
+        if (typeof (child.children) !== 'undefined') {
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
           // console.log(childOFchil)
           for (var i = 0; i < childOFchil.length; i++) {
             // 자기 동료에 넣기
-            console.log(childOFchil[i].tagName)
-            console.log('')
-            // this.childOFchil.push(childOFchil[i].tagName)
-=======
-            console.log()
-            var child = this.getDocument.children
-            //console.log(child)
-            for(var i=0;i<child.length;i++){
-              //console.log(child[i])
-              if(typeof(child[i].children)!=='undefined'){
-                //console.log("전")
-                var idOjb = "aa"
-
-                var obj = document.getElementById("bodySource")
-                var newDIV = document.createElement("li")
-                // newDIV.innerHTML = child[i].tagName;
-                newDIV.setAttribute("id",idOjb);
-                //newDIV.style.backgroundColor="yellow";
-                obj.appendChild(newDIV);
+            //console.log(childOFchil[i])
+            this.dom.push(childOFchil[i])
+            
+            //console.log('')
+            //this.childOFchil.push(childOFchil[i].tagName)
 
 
-                var obj = document.getElementById(idOjb)
-                var newDIV = document.createElement("input")
-                // newDIV.innerHTML = child[i].tagName;
-                newDIV.setAttribute("class","checkbox");
-                newDIV.setAttribute("type","checkbox");
-                var nodeId = "node4"
-                newDIV.setAttribute("id",nodeId);
-                //newDIV.style.backgroundColor="yellow";
-                obj.appendChild(newDIV);
+            //console.log("1번째")
+            //console.log(obj)
+            this.childNum+=1
+            var newDIV = document.createElement("li")
+            // newDIV.innerHTML = child[i].tagName;
+            // idOjb+="a"
+            newDIV.setAttribute("id",this.childNum);
+            //newDIV.style.backgroundColor="yellow";
+            //obj.appendChild(newDIV);
+            obj.appendChild(newDIV);
+            
+
+            this.friendNum+=1
+
+            // var obbj = document.getElementById(idOjb)
+            var obj = document.getElementById(this.childNum)
+            var newDIV = document.createElement("input")
+            // newDIV.innerHTML = child[i].tagName;
+            newDIV.setAttribute("class","checkbox");
+            newDIV.setAttribute("type","checkbox");
+            newDIV.setAttribute("id",this.friendNum);
+
+            //newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV);
+
+            var newDIV = document.createElement("label")
+            newDIV.setAttribute("for",this.friendNum);
+            newDIV.setAttribute("id",this.friendNum);
+            newDIV.innerHTML = childOFchil[i].tagName;
+            //newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV);
 
 
-                var newDIV = document.createElement("label")
-                newDIV.setAttribute("for",nodeId);
-                newDIV.innerHTML = child[i].tagName;
-                //newDIV.style.backgroundColor="yellow";
-                obj.appendChild(newDIV);
+            this.childNum+=1
+            var newDIV = document.createElement("ul")
+            // newDIV.innerHTML = child[i].tagName;
+            newDIV.setAttribute("id",this.childNum);
+            //newDIV.style.backgroundColor="yellow";
+            obj.appendChild(newDIV);
 
-                var newDIV = document.createElement("ul")
-                // newDIV.innerHTML = child[i].tagName;
-                idOjb +="a"
-                newDIV.setAttribute("id",idOjb);
-                //newDIV.style.backgroundColor="yellow";
-                obj.appendChild(newDIV);
-
-                console.log(child[i].tagName)
-                console.log("")
-                //console.log(child[i].className)
-                ///console.log(child[i].id)
-              //   const Hello = {
-              //           props: ['text'],
-              //           template:  ` <span class="tag-list"><div id="mount"> {{text}} </div></span>`,
-              //       };
-              //       //alert("1")
-              //       const HelloCtor = Vue.extend(Hello);
-              //       const vm = new HelloCtor({
-              //       propsData: {
-              //           text: child[i]
-                        
-              //       }
-              //       }).$mount('#mount');
-              obj = document.getElementById(idOjb)
-              console.log(obj)
-              this.findChildren(child[i],obj,idOjb,nodeId)
-              }
-            }
-        },
-        findChildren(child,obj,idOjb,nodeId){
-            // Vue.component('simple-counter', {
-            //     template: '<span class="tag-list">sssss</span>',
-            //     // 데이터는 기술적으로 함수이므로 Vue는 따지지 않지만
-            //     // 각 컴포넌트 인스턴스에 대해 같은 객체 참조를 반환합니다.
-            //     data: function () {
-            //         return data
-            //     }
-            // })
-            // Vue.component('Hello',{
-            //             props: ['text'],
-            //             template: `<span class="tag-list">{{text}}</span>`,
-                        
-            //         })
->>>>>>> 6da33bb462af1662e62b3a0a65fb504164a480e4
-            // const Hello = {
-            //     props: ['text'],
-            //     template:  `<span class="tag-list">{{text}} </div></span>
-            //                 <div id="mount"> `,
-            // };
-            // //alert("1")
-            // const HelloCtor = Vue.extend(Hello);
-            // const vm = new HelloCtor({
-            // propsData: {
-            //     text: childOFchil[i].tagName
-            // }
-            // }).$mount('#mount');
-
-<<<<<<< HEAD
-            // newDIV.style.backgroundColor="yellow";
-
-            var newDIV = document.createElement('div')
-            newDIV.innerHTML = childOFchil[i].tagName
-            newDIV.setAttribute('class', 'tag-list ui')
-            obj.appendChild(newDIV)
-=======
-                    console.log("1번째")
-                    console.log(obj)
-                    var newDIV = document.createElement("li")
-                    // newDIV.innerHTML = child[i].tagName;
-                    idOjb+="a"
-                    newDIV.setAttribute("id",idOjb);
-                    //newDIV.style.backgroundColor="yellow";
-                    obj.appendChild(newDIV);
-                    
-
-                    var obbj = document.getElementById(idOjb)
-                    var newDIV = document.createElement("input")
-                    // newDIV.innerHTML = child[i].tagName;
-                    newDIV.setAttribute("class","checkbox");
-                    newDIV.setAttribute("type","checkbox");
-                    var nodeId = nodeId + obbj 
-                    newDIV.setAttribute("id",nodeId);
-                    //newDIV.style.backgroundColor="yellow";
-                    obj.appendChild(newDIV);
-
-
-                    var newDIV = document.createElement("label")
-                    newDIV.setAttribute("for",nodeId);
-                    newDIV.innerHTML = childOFchil[i].tagName;
-                    //newDIV.style.backgroundColor="yellow";
-                    obj.appendChild(newDIV);
-
-                    var newDIV = document.createElement("ul")
-                    // newDIV.innerHTML = child[i].tagName;
-                    idOjb +="a"
-                    newDIV.setAttribute("id",idOjb);
-                    //newDIV.style.backgroundColor="yellow";
-                    obj.appendChild(newDIV);
-
-                    obj = document.getElementById(idOjb)
-                    this.findChildren(childOFchil[i],obj,idOjb,nodeId)
-                }
-            }
-          }
-          else{
-          //console.log(this.childOFchil)
-          //this.childOFchil = []
-              console.log("자식끝")
->>>>>>> 6da33bb462af1662e62b3a0a65fb504164a480e4
-
-            this.findChildren(childOFchil[i], obj)
+            obj = document.getElementById(this.childNum)
+            this.findChildren(childOFchil[i],obj)
           }
         }
-      } else {
-        // console.log(this.childOFchil)
-        // this.childOFchil = []
-        console.log('자식끝')
       }
-    }
-  }
+    },
+    onmouseMove (e) {
+      if(e.target.tagName=='LABEL'){
+        // console.log(e.target)
+        // console.log(e.target.tagName)
+        // console.log(e.target.id)
+        // console.log(this.dom[e.target.id])
+        // console.log(this.numberinDom[2])
+        this.$emit('selectDomElemnet', this.dom[e.target.id])
+      }
+    },
+  } 
 }
 </script>
 <style lang="scss">
-.tree{
+.dashboard {
+  overflow: auto;
+  padding-right:200px;
+  
+}
+.tree label:before{
+  content:"열:"
+}
+.tree, .tree ul{
   color:#e7e4e4;
+  list-style:none;
+
 }
 .tree .checkbox{
   display: none;
@@ -354,6 +240,9 @@ export default {
 .tree .checkbox:checked~ul{
   display: none;
   color:red;
+}
+.tree .checkbox:checked+label:before{
+  content:"닫:"
 }
 // #overview {
 //   .studio-text-box {

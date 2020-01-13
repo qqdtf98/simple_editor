@@ -10,6 +10,7 @@
       ></studio>
       <overview
         ref="overview"
+        @selectDomElemnet="selectDomElemneted"
         :getDocument="homeDocument"
         class="overview"
       ></overview>
@@ -49,6 +50,7 @@ import overview from './components/overview'
 
 export default {
   components: { home, layout, studio, overview },
+  props:["selectDomElemnet"],
   name: 'App',
   data () {
     return {
@@ -58,7 +60,8 @@ export default {
       tagDescription: false,
       childOFchil: [],
       homeDocument: '',
-      uiDescription: false
+      uiDescription: false,
+      dom:'',
     }
   },
   mounted () {
@@ -121,7 +124,11 @@ export default {
           console.log('remove')
         })
       })
-    }
+    },
+    selectDomElemneted(domElemnet){
+      this.dom=domElemnet
+      // console.log(this.dom)
+    },
   }
 }
 </script>
