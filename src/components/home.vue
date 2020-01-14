@@ -234,20 +234,13 @@ export default {
             }
           }
         }
-      }
     },
     onmouseClick (e) {
       if (this.clickedElement === null) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' && e.target.className !== 'delete-icon' &&
-          e.target.className !== 'boundary-line-left' &&
-          e.target.className !== 'boundary-line-right' &&
-          e.target.className !== 'boundary-line-top' &&
-          e.target.className !== 'boundary-line-bottom' &&
-          e.target.className !== 'left-border' &&
-           e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
-            e.target.className !== 'bottom-border'
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
           this.$emit('componentSelected', e)
 
@@ -273,7 +266,8 @@ export default {
 
             this.$nextTick(() => {
               bottom_line.style.left = this.elem.left + 'px'
-              bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
+              bottom_line.style.top =
+                this.elem.top + this.elem.height - 1 + 'px'
               bottom_line.style.width = this.elem.width + 'px'
               top_line.style.left = this.elem.left + 'px'
               top_line.style.top = this.elem.top + 1 + 'px'
@@ -281,7 +275,8 @@ export default {
               left_line.style.left = this.elem.left - 1 + 'px'
               left_line.style.top = this.elem.top + 'px'
               left_line.style.height = this.elem.width + 'px'
-              right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
+              right_line.style.left =
+                this.elem.left + this.elem.width - 1 + 'px'
               right_line.style.top = this.elem.top + 'px'
               right_line.style.height = this.elem.width + 'px'
             })
@@ -290,10 +285,12 @@ export default {
           this.$nextTick(() => {
             let move = document.querySelector('.move-icon')
             move.style.left = this.elem.left + 'px'
-            move.style.top = this.elem.top - move.getBoundingClientRect().height + 'px'
+            move.style.top =
+              this.elem.top - move.getBoundingClientRect().height + 'px'
             let deleteIcon = document.querySelector('.delete-icon')
             deleteIcon.style.left = this.elem.left + 'px'
-            deleteIcon.style.top = this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+            deleteIcon.style.top =
+              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
           })
         }
       } else if (this.clickedElement !== e.target) {
@@ -351,7 +348,8 @@ export default {
               this.elem.top - tag.getBoundingClientRect().height + 'px'
             let deleteIcon = document.querySelector('.delete-icon')
 
-            deleteIcon.style.left = this.elem.left + parseInt(getComputedStyle(tag).width) + 'px'
+            deleteIcon.style.left =
+              this.elem.left + parseInt(getComputedStyle(tag).width) + 'px'
 
             deleteIcon.style.top =
               this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
