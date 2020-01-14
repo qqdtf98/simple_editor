@@ -211,34 +211,26 @@ export default {
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            let dashWrapper = document.querySelector('.dashboard-wrapper')
-            let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
+            let dashWrapper = document.querySelector('.navi')
+            let scrollBottomHeight =
+              dashboardElem.getBoundingClientRect().height -
+              dashWrapper.getBoundingClientRect().height
             topBord.style.left = this.selectedElement.left + 'px'
             topBord.style.top = this.selectedElement.top + 'px'
             topBord.style.width = this.selectedElement.width + 'px'
-            if (this.selectedElement.bottom > dashboardElem.getBoundingClientRect().bottom) {
-              bottomBord.style.display = 'none'
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 'px'
-              leftBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
-              rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
-              rightBord.style.top = this.selectedElement.top + 'px'
-              rightBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
-            } else {
-              bottomBord.style.display = ''
-              bottomBord.style.left = this.selectedElement.left + 'px'
-              bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
-              bottomBord.style.width = this.selectedElement.width + 'px'
+
+            // bottomBord.style.display = 'none'?
               leftBord.style.left = this.selectedElement.left + 'px'
               leftBord.style.top = this.selectedElement.top + 'px'
               leftBord.style.height = this.selectedElement.height + 'px'
-              rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+            rightBord.style.left =
+              this.selectedElement.left + this.selectedElement.width - 2 + 'px'
               rightBord.style.top = this.selectedElement.top + 'px'
               rightBord.style.height = this.selectedElement.height + 'px'
-            }
-            if (this.selectedElement.left < dashboardElem.getBoundingClientRect().left) {
-              leftBord.style.display = 'none'
               bottomBord.style.left = this.selectedElement.left + 'px'
+            bottomBord.style.top =
+              this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+            bottomBord.style.width = this.selectedElement.width + 'px'
             }
           }
         }
