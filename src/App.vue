@@ -103,8 +103,11 @@ export default {
     h['footerbasic'] = 'This is a basic footer with links and social buttons.'
     h['footerclean'] = 'A complete footer design with link categories, social icons and a copyright line.'
     h['footerdark'] = 'A dark footer design with link categories, social icons and a copyright line.'
+    h['heading'] = 'This is the HTML heading component. You can choose which HTML tag is used - from &lth1&gt to &lth6&gt.'
+    h['paragraph'] = "This is the standard &ltp&gt  HTML element. Use it for writing body text. It is enhanced by Bootstrap's rich styling classes, available in the Options panel."
+    h['alert'] = 'Use this component to show a message to users of your web app. Usually it is displayed near the top of your page. It can have an optional dismiss button and you can choose one of several color themes.'
+    h['image'] = 'This is the &ltimage&gt  HTML element. You can control its size, source, style and responsiveness from the Options panel.'
 
-    h['heading'] = 'This is the HTML heading component. You can choose which HTML tag is used - from &lth1&gt to'
     this.hasht = h
   },
   methods: {
@@ -181,8 +184,8 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  // color: #2c3e50;
-  color: #fff;
+  color: #2c3e50;
+  // color: #fff;
   display: flex;
   flex-direction: row;
   height: 58rem;
@@ -259,9 +262,7 @@ export default {
     float: left;
     left: 18%;
     padding: 0.5rem;
-    .desc-tag-text {
-      color: #cecece;
-    }
+    color: #cecece;
   }
 
   .description-ui{
