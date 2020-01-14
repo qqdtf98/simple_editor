@@ -154,11 +154,21 @@ export default {
       }
       if (this.clickedElement !== null) {
         let move = document.querySelector('.move-icon')
-        move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
-        move.style.top = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height + 'px'
+        move.style.left =
+          this.clickedElement.getBoundingClientRect().left + 'px'
+        move.style.top =
+          this.clickedElement.getBoundingClientRect().top -
+          move.getBoundingClientRect().height +
+          'px'
         let deleteIcon = document.querySelector('.delete-icon')
-        deleteIcon.style.left = this.clickedElement.getBoundingClientRect().left + parseInt(getComputedStyle(move).width) + 'px'
-        deleteIcon.style.top = this.clickedElement.getBoundingClientRect().top - deleteIcon.getBoundingClientRect().height + 'px'
+        deleteIcon.style.left =
+          this.clickedElement.getBoundingClientRect().left +
+          parseInt(getComputedStyle(move).width) +
+          'px'
+        deleteIcon.style.top =
+          this.clickedElement.getBoundingClientRect().top -
+          deleteIcon.getBoundingClientRect().height +
+          'px'
       }
     })
     window.addEventListener('mouseup', () => {
@@ -168,20 +178,13 @@ export default {
   },
   methods: {
     onmouseMove (e) {
-      let dashboardElem = document.querySelector('.dashboard')
+      let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' &&
-          e.target.className !== 'delete-icon' &&
-          e.target.className !== 'left-border' &&
-          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
-          e.target.className !== 'bottom-border' &&
-          e.target.className !== 'boundary-line-left' &&
-          e.target.className !== 'boundary-line-right' &&
-          e.target.className !== 'boundary-line-top' &&
-          e.target.className !== 'boundary-line-bottom'
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
@@ -189,14 +192,9 @@ export default {
       } else {
         if (this.selectedElement !== e.target) {
           if (
-            e.target.className !== 'tagname' && e.target.className !== 'delete-icon' &&
-            e.target.className !== 'move-icon' && e.target.className !== 'left-border' &&
-            e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
-            e.target.className !== 'bottom-border' &&
-            e.target.className !== 'boundary-line-left' &&
-            e.target.className !== 'boundary-line-right' &&
-            e.target.className !== 'boundary-line-top' &&
-            e.target.className !== 'boundary-line-bottom'
+            e.target.className !== 'tagname' &&
+            e.target.className !== 'home' &&
+            e.target.className !== 'editor-component'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
 
@@ -309,15 +307,12 @@ export default {
       } else if (this.clickedElement !== e.target) {
         if (
           e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' && e.target.className !== 'delete-icon' &&
-          e.target.className !== 'boundary-line-left' &&
-          e.target.className !== 'boundary-line-right' &&
-          e.target.className !== 'boundary-line-top' &&
-          e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
-          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
-          e.target.className !== 'bottom-border'
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
           this.$emit('componentSelected', e)
+          this.isContentMovable = true
+          this.isContentRemovable = true
 
           this.clickedElement.style.border = this.clickedBorder
           this.clickedElement.style.borderRadius = this.clickedBorderRadius
@@ -370,6 +365,14 @@ export default {
               this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
           })
         }
+      } else {
+        if (
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
+        ) {
+          this.$emit('componentSelected', e)
+      }
       }
     },
     styleChanged (data) {
@@ -380,15 +383,11 @@ export default {
       element.style[this.style] = this.value
     },
     focusInput (e) {
-      if (e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' &&
-          e.target.className !== 'delete-icon' &&
-          e.target.className !== 'boundary-line-left' &&
-          e.target.className !== 'boundary-line-right' &&
-          e.target.className !== 'boundary-line-top' &&
-          e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
-          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
-          e.target.className !== 'bottom-border') {
+      if (
+        e.target.className !== 'tagname' &&
+        e.target.className !== 'home' &&
+        e.target.className !== 'editor-component'
+      ) {
         this.isContentEditable = true
         this.$nextTick(() => {
           const sel = window.getSelection()
@@ -402,15 +401,11 @@ export default {
       }
     },
     onmouseDoubleClick (e) {
-      if (e.target.className !== 'tagname' &&
-          e.target.className !== 'move-icon' &&
-          e.target.className !== 'delete-icon' &&
-          e.target.className !== 'boundary-line-left' &&
-          e.target.className !== 'boundary-line-right' &&
-          e.target.className !== 'boundary-line-top' &&
-          e.target.className !== 'boundary-line-bottom' && e.target.className !== 'left-border' &&
-          e.target.className !== 'right-border' && e.target.className !== 'top-border' &&
-          e.target.className !== 'bottom-border') {
+      if (
+        e.target.className !== 'tagname' &&
+        e.target.className !== 'home' &&
+        e.target.className !== 'editor-component'
+      ) {
         this.focusInput(e)
       }
     },
@@ -528,7 +523,7 @@ export default {
     },
     selectOverview (payload) {
       // console.log(payload)
-      let dashboardElem = document.querySelector('.dashboard')
+      let dashboardElem = document.querySelector('.editor')
       console.log(payload)
       // console.log(payload.getBoundingClientRect())
       this.selectedElement = payload.getBoundingClientRect()
@@ -540,40 +535,55 @@ export default {
       tag.style.left = this.selectedElement.left + 'px'
 
       tag.style.top =
-              this.selectedElement.top -
-              tag.getBoundingClientRect().height +
-              'px'
+        this.selectedElement.top - tag.getBoundingClientRect().height + 'px'
       let bottomBord = document.querySelector('.bottom-border')
       let topBord = document.querySelector('.top-border')
       let rightBord = document.querySelector('.right-border')
       let leftBord = document.querySelector('.left-border')
       let dashWrapper = document.querySelector('.dashboard-wrapper')
-      let scrollBottomHeight = dashboardElem.getBoundingClientRect().height - dashWrapper.getBoundingClientRect().height
+      let scrollBottomHeight =
+        dashboardElem.getBoundingClientRect().height -
+        dashWrapper.getBoundingClientRect().height
       topBord.style.left = this.selectedElement.left + 'px'
       topBord.style.top = this.selectedElement.top + 'px'
       topBord.style.width = this.selectedElement.width + 'px'
-      if (this.selectedElement.bottom > dashboardElem.getBoundingClientRect().bottom) {
+      if (
+        this.selectedElement.bottom >
+        dashboardElem.getBoundingClientRect().bottom
+      ) {
         bottomBord.style.display = 'none'
         leftBord.style.left = this.selectedElement.left + 'px'
         leftBord.style.top = this.selectedElement.top + 'px'
-        leftBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
-        rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        leftBord.style.height =
+          this.selectedElement.height -
+          (this.selectedElement.bottom -
+            dashboardElem.getBoundingClientRect().bottom) -
+          scrollBottomHeight +
+          'px'
+        rightBord.style.left =
+          this.selectedElement.left + this.selectedElement.width - 2 + 'px'
         rightBord.style.top = this.selectedElement.top + 'px'
-        rightBord.style.height = this.selectedElement.height - (this.selectedElement.bottom - dashboardElem.getBoundingClientRect().bottom) - scrollBottomHeight + 'px'
+        rightBord.style.height =
+          this.selectedElement.height -
+          (this.selectedElement.bottom -
+            dashboardElem.getBoundingClientRect().bottom) -
+          scrollBottomHeight +
+          'px'
       } else {
         bottomBord.style.display = ''
         bottomBord.style.left = this.selectedElement.left + 'px'
-        bottomBord.style.top = this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+        bottomBord.style.top =
+          this.selectedElement.top + this.selectedElement.height - 2 + 'px'
         bottomBord.style.width = this.selectedElement.width + 'px'
         leftBord.style.left = this.selectedElement.left + 'px'
         leftBord.style.top = this.selectedElement.top + 'px'
         leftBord.style.height = this.selectedElement.height + 'px'
-        rightBord.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.left =
+          this.selectedElement.left + this.selectedElement.width - 2 + 'px'
         rightBord.style.top = this.selectedElement.top + 'px'
         rightBord.style.height = this.selectedElement.height + 'px'
       }
     }
-
   }
 }
 </script>
@@ -583,195 +593,17 @@ export default {
   display: inline-block;
   align-items: center;
   width: 100%;
-
-  .dashboard {
-    background-color: #f6f8fb;
+  .editor-box {
     width: 100%;
-    border: 1px solid black;
     height: 80%;
-    max-height: 40rem;
-    overflow: auto;
-    display: inline-block;
-    .dashboard-wrapper {
-      // overflow: hidden;
+    .editor-component {
+      width: 100%;
       height: 100%;
-      .text-wrapper {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin: 0.5rem;
-        position: relative;
-        .dashboard-text {
-          color: #5a5c69;
-          font-size: 2.5rem;
-        }
-        .generate {
-          background-color: #8b8bcc;
-          position: absolute;
-          border-radius: 0.4rem;
-          padding: 0.3rem;
-          right: 10px;
-        }
-      }
-      .component-wrapper {
-        padding: 0.5rem;
-        .earning-box {
-          display: flex;
-          flex-direction: row;
-          margin-bottom: 1rem;
-          align-items: center;
-          justify-content: center;
-        }
-        .earningm-wrapper {
-          border: 2px solid #d95353;
-          box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          width: 50%;
-          display: flex;
-          height: 5rem;
-          flex-direction: row;
-          padding: 0.5rem;
-          border-radius: 0.4rem;
-          margin-right: 1rem;
-          align-items: center;
-          position: relative;
-          background-color: #fff;
-          .earningm {
-            color: #d95353;
-            font-size: 0.75rem;
-            font-weight: bold;
+      border: 2px solid #fff;
+    overflow: auto;
           }
-          .dol1 {
-            text-align: left;
-            font-size: 1.2rem;
-          }
-        }
-        .earninga-wrapper {
-          border: 2px solid #1cc88a;
-          display: flex;
-          flex-direction: row;
-          background-color: #fff;
-          height: 5rem;
-          padding: 0.5rem;
-          border-radius: 0.4rem;
-          box-shadow: 1px 0.5px 0.5px #c0c0c0;
-          width: 50%;
-          position: relative;
-          align-items: center;
-          .earninga {
-            color: #1cc88a;
-            font-size: 0.75rem;
-            font-weight: bold;
-          }
-          .dol2 {
-            text-align: left;
-            font-size: 1.2rem;
-          }
-        }
-        .button1,
-        .button2 {
-          position: absolute;
-          background-color: #dddfeb;
-          background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
-          margin-left: 1rem;
-          border-radius: 0.84rem;
-          border: none;
-          height: 3.8rem;
-          width: 3.8rem;
-          right: 10px;
         }
 
-        .earningm-box,
-        .earninga-box {
-          display: flex;
-          flex-direction: column;
-          margin-left: 0.5rem;
-        }
-
-        .task-box {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: center;
-          .tasks-wrapper {
-            border: 2px solid #36b9cc;
-            box-shadow: 1px 0.5px 0.5px #c0c0c0;
-            height: 5rem;
-            background-color: #fff;
-            align-items: center;
-            width: 50%;
-            display: flex;
-            flex-direction: row;
-            padding: 0.5rem;
-            border-radius: 0.4rem;
-            position: relative;
-            margin-right: 1rem;
-            .tasks {
-              color: #36b9cc;
-              font-size: 0.75rem;
-              font-weight: bold;
-            }
-            .task {
-              text-align: left;
-              font-size: 1.2rem;
-            }
-          }
-
-          .pending-wrapper {
-            border: 2px solid #f6c23e;
-            width: 50%;
-            display: flex;
-            flex-direction: row;
-            padding: 0.5rem;
-            box-shadow: 1px 0.5px 0.5px #c0c0c0;
-            height: 5rem;
-            background-color: #fff;
-            position: relative;
-            align-items: center;
-            border-radius: 0.4rem;
-            .pending {
-              color: #f6c23e;
-              font-size: 0.75rem;
-              font-weight: bold;
-            }
-            .pend {
-              text-align: left;
-              font-size: 1.2rem;
-            }
-          }
-          .button3,
-          .button4 {
-            position: absolute;
-            background-color: #dddfeb;
-            background-image: linear-gradient(to bottom, #dddfeb, #cfd2e2);
-            margin-left: 1rem;
-            border-radius: 0.84rem;
-            border: none;
-            height: 3.8rem;
-            width: 3.8rem;
-            right: 10px;
-          }
-
-          .pending-box,
-          .task-box {
-            display: flex;
-            flex-direction: column;
-            margin-left: 0.5rem;
-          }
-        }
-      }
-
-      .img-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .img1,
-        .img2,
-        .img3 {
-          width: 10rem;
-        }
-      }
-    }
     .selector-box {
       display: flex;
       flex-direction: column;
@@ -788,8 +620,8 @@ export default {
         position: fixed;
         z-index: -1;
       }
-      .bottom-border, .top-border{
-
+    .bottom-border,
+    .top-border {
         width: 100%;
         height: 3px;
         position: fixed;
@@ -797,7 +629,8 @@ export default {
         background-color: #3e8ce4;
         // overflow: auto !important;
       }
-      .right-border, .left-border{
+    .right-border,
+    .left-border {
         height: 100%;
         width: 3px;
         position: fixed;
@@ -814,10 +647,10 @@ export default {
       padding: 0.15rem;
       justify-content: center;
       background-color: #f75c51;
-      fill:#fff;
+    fill: #fff;
       overflow: auto !important;
     }
-    .delete-icon{
+  .delete-icon {
       z-index: 2;
       position: fixed;
       width: 1.2rem;
@@ -827,7 +660,7 @@ export default {
       padding: 0.2rem;
       justify-content: center;
       background-color: #f75c51;
-      fill:#fff;
+    fill: #fff;
       overflow: auto !important;
     }
     .boundary-line-top,
@@ -845,17 +678,16 @@ export default {
       position: fixed;
       z-index: 10000;
     }
-    #add{
+  #add {
       width: 5rem;
       height: 3rem;
       background-color: yellow;
       display: flex;
       justify-content: center;
       align-items: center;
-      .add-1{
+    .add-1 {
         background-color: red;
       }
     }
   }
-}
 </style>
