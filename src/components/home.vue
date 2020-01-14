@@ -1,34 +1,34 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
-    <div
-      @keydown.enter="isContentNotEditable"
-      ref="dash"
+      <div
+        @keydown.enter="isContentNotEditable"
+        ref="dash"
         class="editor-component"
-      :contenteditable="isContentEditable"
-      @dblclick="onmouseDoubleClick"
-      @click="onmouseClick"
-      @mousemove="onmouseMove"
-      @scroll="handleScroll"
-    >
+        :contenteditable="isContentEditable"
+        @dblclick="onmouseDoubleClick"
+        @click="onmouseClick"
+        @mousemove="onmouseMove"
+        @scroll="handleScroll"
+      >
         <Navi class="navi" />
         <Dashboard />
-        </div>
-              </div>
-
-      <div class="selector-box">
-        <div v-show="onelementSelected" class="tagname"></div>
-        <div v-show="onelementSelected" class="right-border"></div>
-        <div v-show="onelementSelected" class="bottom-border"></div>
-        <div v-show="onelementSelected" class="top-border"></div>
-        <div v-show="onelementSelected" class="left-border"></div>
       </div>
-      <img
-        style="cursor:pointer"
-        v-show="isContentMovable"
-        src="../assets/move.svg"
-        class="move-icon"
-      />
+    </div>
+
+    <div class="selector-box">
+      <div v-show="onelementSelected" class="tagname"></div>
+      <div v-show="onelementSelected" class="right-border"></div>
+      <div v-show="onelementSelected" class="bottom-border"></div>
+      <div v-show="onelementSelected" class="top-border"></div>
+      <div v-show="onelementSelected" class="left-border"></div>
+    </div>
+    <img
+      style="cursor:pointer"
+      v-show="isContentMovable"
+      src="../assets/move.svg"
+      class="move-icon"
+    />
     <img
       @click="removeContent"
       style="cursor:pointer"
@@ -36,39 +36,39 @@
       src="../assets/delete.svg"
       class="delete-icon"
     />
-      <div
-        v-if="isContentMovable"
-        data-pos="top"
-        style="cursor:ns-resize"
-        @mousedown="mouseDownBoundary"
-        class="boundary-line-top"
-      ></div>
-      <div
-        v-if="isContentMovable"
-        data-pos="left"
-        style="cursor:ew-resize"
-        @mousedown="mouseDownBoundary"
-        class="boundary-line-left"
-      ></div>
-      <div
-        v-if="isContentMovable"
-        data-pos="right"
-        style="cursor:ew-resize"
-        @mousedown="mouseDownBoundary"
-        class="boundary-line-right"
-      ></div>
-      <div
-        v-if="isContentMovable"
-        data-pos="bottom"
-        style="cursor:ns-resize"
-        @mousedown="mouseDownBoundary"
-        class="boundary-line-bottom"
-      ></div>
+    <div
+      v-if="isContentMovable"
+      data-pos="top"
+      style="cursor:ns-resize"
+      @mousedown="mouseDownBoundary"
+      class="boundary-line-top"
+    ></div>
+    <div
+      v-if="isContentMovable"
+      data-pos="left"
+      style="cursor:ew-resize"
+      @mousedown="mouseDownBoundary"
+      class="boundary-line-left"
+    ></div>
+    <div
+      v-if="isContentMovable"
+      data-pos="right"
+      style="cursor:ew-resize"
+      @mousedown="mouseDownBoundary"
+      class="boundary-line-right"
+    ></div>
+    <div
+      v-if="isContentMovable"
+      data-pos="bottom"
+      style="cursor:ns-resize"
+      @mousedown="mouseDownBoundary"
+      class="boundary-line-bottom"
+    ></div>
     <!-- <div id="add">
-        <div class="add-1">aaaaa</div>
+      <div class="add-1">aaaaa</div>
     </!-->
     -->
-      </div>
+  </div>
 </template>
 
 <script>
@@ -220,20 +220,20 @@ export default {
             topBord.style.width = this.selectedElement.width + 'px'
 
             // bottomBord.style.display = 'none'?
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 'px'
-              leftBord.style.height = this.selectedElement.height + 'px'
+            leftBord.style.left = this.selectedElement.left + 'px'
+            leftBord.style.top = this.selectedElement.top + 'px'
+            leftBord.style.height = this.selectedElement.height + 'px'
             rightBord.style.left =
               this.selectedElement.left + this.selectedElement.width - 2 + 'px'
-              rightBord.style.top = this.selectedElement.top + 'px'
-              rightBord.style.height = this.selectedElement.height + 'px'
-              bottomBord.style.left = this.selectedElement.left + 'px'
+            rightBord.style.top = this.selectedElement.top + 'px'
+            rightBord.style.height = this.selectedElement.height + 'px'
+            bottomBord.style.left = this.selectedElement.left + 'px'
             bottomBord.style.top =
               this.selectedElement.top + this.selectedElement.height - 2 + 'px'
             bottomBord.style.width = this.selectedElement.width + 'px'
-            }
           }
         }
+      }
     },
     onmouseClick (e) {
       if (this.clickedElement === null) {
@@ -362,7 +362,7 @@ export default {
           e.target.className !== 'editor-component'
         ) {
           this.$emit('componentSelected', e)
-      }
+        }
       }
     },
     styleChanged (data) {
@@ -451,51 +451,45 @@ export default {
     },
     handleScroll (e) {
       if (this.selectedElement != null) {
-        this.$nextTick(() => {
-          let tag = document.querySelector('.tagname')
-          tag.style.left = this.selectedElement.left + 'px'
-          let tagTop = this.selectedElement.top - tag.getBoundingClientRect().height - e.target.scrollTop
-          if (tagTop > 190) {
-            this.onelementSelected = true
-            tag.style.top = tagTop + 'px'
-          } else {
-            this.onelementSelected = false
-          }
-          let borderTop = document.querySelector('.top-border')
-          let borderLeft = document.querySelector('.left-border')
-          let borderBottom = document.querySelector('.bottom-border')
-          let borderRight = document.querySelector('.right-border')
-          borderTop.style.left = this.selectedElement.left + 'px'
-          borderTop.style.top = this.selectedElement.top - e.target.scrollTop + 'px'
-          borderLeft.style.left = this.selectedElement.left + 'px'
-          borderLeft.style.top = this.selectedElement.top - e.target.scrollTop + 'px'
-          borderRight.style.left = this.selectedElement.left + this.selectedElement.width - 2 + 'px'
-          borderRight.style.top = this.selectedElement.top - e.target.scrollTop + 'px'
-          borderBottom.style.left = this.selectedElement.left + 'px'
-          borderBottom.style.top = this.selectedElement.top + this.selectedElement.height - e.target.scrollTop - 2 + 'px'
-        })
+        this.onelementSelected = false
       }
       if (this.clickedElement != null) {
         this.$nextTick(() => {
           let move = document.querySelector('.move-icon')
-          move.style.left = this.clickedElement.getBoundingClientRect().left + 'px'
-          let moveTop = this.clickedElement.getBoundingClientRect().top - move.getBoundingClientRect().height
+          let moveHeight = getComputedStyle(move).height
+          // console.log(this.clickedElement.getBoundingClientRect().top)
+          // console.log(moveHeight)
+          let deleteIcon = document.querySelector('.delete-icon')
+          move.style.left =
+            this.clickedElement.getBoundingClientRect().left + 'px'
+          let moveTop =
+            this.clickedElement.getBoundingClientRect().top -
+            parseInt(moveHeight)
           let moveLeft = this.clickedElement.getBoundingClientRect().left
-          if (moveTop > 190) {
+          let moveBottom = this.clickedElement.getBoundingClientRect().bottom
+          let moveRight = this.clickedElement.getBoundingClientRect().right
+          if ((moveTop < 200 && moveBottom < 800) || (moveTop > 200 && moveBottom > 810)) {
+            this.$nextTick(() => {
+              this.isContentMovable = false
+              this.isContentRemovable = false
+            })
+          } else {
             this.isContentMovable = true
             this.isContentRemovable = true
             move.style.top = moveTop + 'px'
-          } else {
-            this.isContentMovable = false
-            this.isContentRemovable = false
+            deleteIcon.style.top = moveTop + 'px'
           }
           if (moveLeft > 300) {
             this.isContentMovable = true
             this.isContentRemovable = true
             move.style.left = moveLeft + 'px'
+            deleteIcon.style.left =
+              moveLeft + parseInt(getComputedStyle(move).width) + 'px'
           } else {
-            this.isContentMovable = false
-            this.isContentRemovable = false
+            this.$nextTick(() => {
+              this.isContentMovable = false
+              this.isContentRemovable = false
+            })
           }
         })
       }
@@ -590,94 +584,94 @@ export default {
       width: 100%;
       height: 100%;
       border: 2px solid #fff;
-    overflow: auto;
-          }
-        }
-
-    .selector-box {
-      display: flex;
-      flex-direction: column;
-      .tagname {
-        color: white;
-        padding: 0.2rem;
-        position: fixed;
-        z-index: 10;
-        background-color: #3e8ce4;
-        border-radius: 0.4rem;
-        font-size: 0.8rem;
-      }
-      .compo-border {
-        position: fixed;
-        z-index: -1;
-      }
-    .bottom-border,
-    .top-border {
-        width: 100%;
-        height: 3px;
-        position: fixed;
-        // z-index:
-        background-color: #3e8ce4;
-        // overflow: auto !important;
-      }
-    .right-border,
-    .left-border {
-        height: 100%;
-        width: 3px;
-        position: fixed;
-        background-color: #3e8ce4;
-      }
-    }
-    .move-icon {
-      z-index: 2;
-      position: fixed;
-      width: 1.2rem;
-      height: 1.2rem;
-      display: flex;
-      align-items: center;
-      padding: 0.15rem;
-      justify-content: center;
-      background-color: #f75c51;
-    fill: #fff;
-      overflow: auto !important;
-    }
-  .delete-icon {
-      z-index: 2;
-      position: fixed;
-      width: 1.2rem;
-      height: 1.2rem;
-      display: flex;
-      align-items: center;
-      padding: 0.2rem;
-      justify-content: center;
-      background-color: #f75c51;
-    fill: #fff;
-      overflow: auto !important;
-    }
-    .boundary-line-top,
-    .boundary-line-bottom {
-      width: 100%;
-      height: 5px;
-      position: fixed;
-      z-index: 10000;
-    }
-
-    .boundary-line-left,
-    .boundary-line-right {
-      width: 5px;
-      height: 100%;
-      position: fixed;
-      z-index: 10000;
-    }
-  #add {
-      width: 5rem;
-      height: 3rem;
-      background-color: yellow;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    .add-1 {
-        background-color: red;
-      }
+      overflow: auto;
     }
   }
+
+  .selector-box {
+    display: flex;
+    flex-direction: column;
+    .tagname {
+      color: white;
+      padding: 0.2rem;
+      position: fixed;
+      z-index: 10;
+      background-color: #3e8ce4;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
+    }
+    .compo-border {
+      position: fixed;
+      z-index: -1;
+    }
+    .bottom-border,
+    .top-border {
+      width: 100%;
+      height: 3px;
+      position: fixed;
+      // z-index:
+      background-color: #3e8ce4;
+      // overflow: auto !important;
+    }
+    .right-border,
+    .left-border {
+      height: 100%;
+      width: 3px;
+      position: fixed;
+      background-color: #3e8ce4;
+    }
+  }
+  .move-icon {
+    z-index: 2;
+    position: fixed;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    padding: 0.15rem;
+    justify-content: center;
+    background-color: #f75c51;
+    fill: #fff;
+    overflow: auto !important;
+  }
+  .delete-icon {
+    z-index: 2;
+    position: fixed;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    padding: 0.2rem;
+    justify-content: center;
+    background-color: #f75c51;
+    fill: #fff;
+    overflow: auto !important;
+  }
+  .boundary-line-top,
+  .boundary-line-bottom {
+    width: 100%;
+    height: 5px;
+    position: fixed;
+    z-index: 10000;
+  }
+
+  .boundary-line-left,
+  .boundary-line-right {
+    width: 5px;
+    height: 100%;
+    position: fixed;
+    z-index: 10000;
+  }
+  #add {
+    width: 5rem;
+    height: 3rem;
+    background-color: yellow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .add-1 {
+      background-color: red;
+    }
+  }
+}
 </style>
