@@ -196,43 +196,63 @@ export default {
       }
     },
     onSearchElement (e) {
-      // console.log('aa')
+      let tagBox = document.querySelector('.tag-box')
+      let list = document.querySelectorAll('.tag-list')
       let name = document.querySelectorAll('.nested')
-      // let box = document.querySelectorAll('.tag-list')
-      // let na = document.querySelectorAll('.ui-tag template')
+
       let i
       let j
-      // for (i = 0; i < box.length; i++) {
-      //   box[i].style.display = 'none'
-      // }
-      // for (i = 0; i < name.length; i++) {
-      //   for (j = 0; j < name[i].children.length; j++) {
-      //     name[i].children[j].style.display = 'none'
-      //   }
-      // }
-
-      // 검색에 해당하는 항목만 골라지나 display가 안된다
-
+      for (i = 0; i < list.length; i++) {
+        list[i].style.display = 'none'
+      }
       for (i = 0; i < name.length; i++) {
-        if (name[i].children[0].className !== 'tag-list-box') {
-          if (name[i].children[0].className === 'template') {
-            break
+        for (j = 0; j < name[i].children.length; j++) {
+          name[i].children[j].style.display = 'none'
+        }
+      }
+
+      let filterList = document.getElementsByClassName('filter')
+      let leng = filterList.length
+      for (i = 0; i < leng; i++) {
+        let filter = filterList[filterList.length - 1]
+        tagBox.removeChild(filter)
+      }
+      this.$nextTick(() => {
+        if (e.target.value === '') {
+          let i
+          let j
+          for (i = 0; i < list.length; i++) {
+            list[i].style.display = 'block'
           }
-          for (j = 0; j < name[i].children.length; j++) {
-            if (
-              name[i].children[j].innerHTML
-                .toUpperCase()
-                .indexOf(e.target.value.toUpperCase()) === -1
-            ) {
-              name[i].children[j].style.display = 'none'
-            } else {
-              console.log(name[i].children[j].innerHTML)
+          for (i = 0; i < name.length; i++) {
+            for (j = 0; j < name[i].children.length; j++) {
               name[i].children[j].style.display = 'block'
-              this.$nextTick()
+            }
+          }
+        } else {
+          for (i = 0; i < name.length; i++) {
+            if (name[i].children[0].className !== 'tag-list-box') {
+              if (name[i].children[0].className === 'template') {
+                break
+              }
+              for (j = 0; j < name[i].children.length; j++) {
+                if (
+                  name[i].children[j].innerHTML
+                    .toUpperCase()
+                    .indexOf(e.target.value.toUpperCase()) === -1
+                ) {
+                } else {
+                  var divTag = document.createElement('div')
+                  var node = document.createTextNode(name[i].children[j].innerHTML)
+                  divTag.appendChild(node)
+                  tagBox.appendChild(divTag)
+                  divTag.classList.add('filter')
+                }
+              }
             }
           }
         }
-      }
+      })
     }
   }
 }
@@ -335,6 +355,12 @@ export default {
         .ui {
           margin-left: 1.2rem;
         }
+      }
+      .filter{
+        color:white;
+        text-align: left;
+        margin-left: 1rem;
+
       }
     }
   }
