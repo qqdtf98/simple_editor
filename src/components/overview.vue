@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <ul class="col" @mousemove="onmouseMove">
+    <ul class="acol" @mousemove="onmouseMove">
       <li>
         <input class="checkbox" type="checkbox" id="root" />
         <label for="root">HTML</label>
@@ -8,7 +8,7 @@
           <li>
             <input class="checkbox" type="checkbox" id="node3" />
             <label for="node3">Body</label>
-            <ul id="bodySource">
+            <ul id="bodySource" @click="clickLabelEvent">
               <!-- <li id="aa">
                 <input class="checkbox" type="checkbox" id="node4" />
                 <label for="node4">DIV</label>
@@ -226,6 +226,9 @@ export default {
         }
       }
     },
+    clickLabelEvent(e){
+      cosole.log(e.target)
+    },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {
         // console.log(e.target)
@@ -249,32 +252,33 @@ export default {
   justify-content: left;
   justify-items: left;
   padding: 0.2rem;
+  text-align:left;
 }
 li{
   // float:left;
 }
-.col{
+.acol{
   padding: 0.4rem;
 }
-.col label:before{
+.acol label:before{
   content:'\f107';
   font-family:FontAwesome;
   // font-family: "fontello";
 }
-.col, .col ul{
+.acol, .acol ul{
   color:#e7e4e4;
   list-style:none;
 
 }
-.col .checkbox{
+.acol .checkbox{
   display: none;
 
 }
-.col .checkbox:checked~ul{
+.acol .checkbox:checked~ul{
   display: none;
   color:red;
 }
-.col .checkbox:checked+label:before{
+.acol .checkbox:checked+label:before{
   content:'\f105';
   font-family: FontAwesome;
 }
