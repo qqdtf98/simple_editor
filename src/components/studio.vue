@@ -232,9 +232,9 @@ export default {
         } else {
           for (i = 0; i < name.length; i++) {
             if (name[i].children[0].className !== 'tag-list-box') {
-              if (name[i].children[0].className === 'template') {
-                break
-              }
+              // if (name[i].children[0].className === 'template') {
+              //   break
+              // }
               for (j = 0; j < name[i].children.length; j++) {
                 if (
                   name[i].children[j].innerHTML
