@@ -1,6 +1,7 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
+
       <div
         @keydown.enter="isContentNotEditable"
         ref="dash"
@@ -11,10 +12,14 @@
         @mousemove="onmouseMove"
         @scroll="handleScroll"
       >
+        <!-- <HtmlLoader /> -->
         <Navi class="navi" />
         <Dashboard />
       </div>
+
     </div>
+    <div class="top-bar"></div>
+    <div class="bottom-bar"></div>
 
     <div class="selector-box">
       <div v-show="onelementSelected" class="tagname"></div>
@@ -165,9 +170,9 @@ export default {
         if (this.mouseElem === null) {
           if (
             event.target.className === 'left-border' ||
-          event.target.className === 'right-border' ||
-          event.target.className === 'top-border' ||
-          event.target.className === 'bottom-border'
+            event.target.className === 'right-border' ||
+            event.target.className === 'top-border' ||
+            event.target.className === 'bottom-border'
           ) {
             borderElem = document.querySelector('.' + event.target.className)
             borderElem.style.backgroundColor = '#0fdc28'
@@ -179,9 +184,9 @@ export default {
             this.mouseElem.style.backgroundColor = '#3e8ce4'
             if (
               event.target.className === 'left-border' ||
-          event.target.className === 'right-border' ||
-          event.target.className === 'top-border' ||
-          event.target.className === 'bottom-border'
+              event.target.className === 'right-border' ||
+              event.target.className === 'top-border' ||
+              event.target.className === 'bottom-border'
             ) {
               borderElem = document.querySelector('.' + event.target.className)
               borderElem.style.backgroundColor = '#0fdc28'
@@ -210,7 +215,7 @@ export default {
           'px'
       }
     })
-    window.addEventListener('mouseup', (e) => {
+    window.addEventListener('mouseup', e => {
       if (this.isContentResizable) {
         this.isContentResizable = false
       }
@@ -218,19 +223,26 @@ export default {
 
       if (this.mouseElem !== null && this.isContentMovable) {
         this.mouseElem.style.backgroundColor = '#3e8ce4'
-        let addComponent = document.querySelector('.' + this.clickedElement.className)
+        console.log(this.clickedElement.className)
+        let addComponent = document.querySelector(
+          '.' + this.clickedElement.className
+        )
         // console.log(tag)
         // tag가 추가할 element. 자식이 된다.
         // console.log(position)
         // position이 추가할 위치에 있는 element. 부모가 된다.
         // this.movePosition.parentElement
         this.movePosition.appendChild(addComponent)
-        if (e.target.className === 'left-border' ||
+        if (
+          e.target.className === 'left-border' ||
           e.target.className === 'right-border' ||
           e.target.className === 'top-border' ||
-          e.target.className === 'bottom-border') {
+          e.target.className === 'bottom-border'
+        ) {
           let pos = e.target.className.split('-')[0]
-          let addComponent = document.querySelector('.' + this.clickedElement.className)
+          let addComponent = document.querySelector(
+            '.' + this.clickedElement.className
+          )
           this.movePosition.parentElement.appendChild(addComponent)
         }
       }
@@ -664,13 +676,29 @@ export default {
     width: 100%;
     height: 80%;
     // overflow: hidden;
+
     .editor-component {
       width: 100%;
       height: 100%;
       border: 2px solid #fff;
       overflow: auto;
     }
+
   }
+  .top-bar {
+      height: 5px;
+      width: 57%;
+      background-color: #c200a8;
+      position: fixed;
+      top: 0;
+    }
+      .bottom-bar {
+      color: #fff;
+      height: 5px;
+      width: 57%;
+      background-color: #c200a8;
+      position: fixed;
+    }
 
   .selector-box {
     display: flex;

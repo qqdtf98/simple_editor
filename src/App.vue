@@ -15,7 +15,7 @@
         class="overview"
       ></overview>
     </div>
-    
+
     <div class="center-panel">
       <div class="title">Editor</div>
 
@@ -52,7 +52,7 @@ import studio from './components/studio'
 import overview from './components/overview'
 
 export default {
-  components: { htmlLoader,home, layout, studio, overview },
+  components: { htmlLoader, home, layout, studio, overview },
   props: ['selectDomElement'],
   name: 'App',
   data () {
