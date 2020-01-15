@@ -222,12 +222,12 @@ export default {
           console.log('찾았다')
         } else {
           var obj = document.querySelector(`label[for="${i}"]`)
-          obj.style['backgroundColor'] = ''
+          // obj.style['backgroundColor'] = ''
         }
       }
     },
-    clickLabelEvent(e){
-      cosole.log(e.target)
+    clickLabelEvent (e) {
+      // cnsole.log(e.target)
     },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {
