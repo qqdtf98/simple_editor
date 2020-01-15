@@ -12,13 +12,9 @@
         @mousemove="onmouseMove"
         @scroll="handleScroll"
       >
-<<<<<<< HEAD
-        <Navi />
-=======
-        <!-- <HtmlLoader /> -->
-        <Navi class="navi" />
->>>>>>> 971b2443083be84b6ed4ea861a635221b8739cfa
-        <Dashboard />
+        <HtmlLoader class="navi" />
+        <!--<Navi class="navi" />
+         <Dashboard /> -->
       </div>
 
     </div>
@@ -77,7 +73,7 @@
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
     </!-->
-    -->
+
   </div>
 </template>
 
@@ -678,14 +674,20 @@ export default {
   .editor-box {
     width: 100%;
     height: 80%;
-    // overflow: hidden;
+    // display:table
+    overflow: scroll;
+
 
     .editor-component {
-      width: 100%;
-      height: 100%;
-      border: 2px solid #fff;
-      overflow: auto;
+     
     }
+
+  }
+  .navi{
+    width:100%;
+    height:80%;
+    //  overflow: auto;
+    overflow:"scroll";
 
   }
   .top-bar {

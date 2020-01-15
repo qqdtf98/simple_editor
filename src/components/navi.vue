@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="profile-container">
-      <div class="profile-wrapper">\
+      <div class="profile-wrapper">
         <div class="img">
         </div>
         <div class="contents-wrapper">
