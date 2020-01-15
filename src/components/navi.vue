@@ -1,10 +1,10 @@
 <template>
   <div class="profile">
     <div class="profile-container">
-      <div class="profile-wrapper">
-        <div class="img flex-items" style="color:yellow">
+      <div class="profile-wrapper">\
+        <div class="img">
         </div>
-        <div class="contents-wrapper flex-items">
+        <div class="contents-wrapper">
           <div class="name-wrapper">
             <div class="name">
               이름

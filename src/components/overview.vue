@@ -219,17 +219,16 @@ export default {
           // console.log(i)
 
           var obj = document.querySelector(`label[for="${i}"]`)
-          console.log(obj)
-          console.log(payload)
-          
+          // console.log(obj)
+          // console.log(payload)
           // payload.style["color"] = "blue";
           
           // obj.style['backgroundColor'] = 'blue'
           // console.log(getComputedStyle(payload).color)
           // console.log(this.dom[i])
           obj.scrollIntoView()
+          // console.log(obj.parent)
 
-          console.log(obj.parent)
           // console.log('찾았다')
         } else {
           var obj = document.querySelector(`label[for="${i}"]`)
