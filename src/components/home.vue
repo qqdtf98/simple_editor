@@ -305,9 +305,9 @@ export default {
           this.clickedBorder = getComputedStyle(e.target).border
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
           e.target.style.border = '3px dashed #f75c51'
-          e.target.style.borderRadius = '0'
+          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
 
-          this.isContentMovable = true
+          this.isContentClicked = true
           this.isContentRemovable = true
 
           this.$nextTick(() => {
@@ -357,7 +357,7 @@ export default {
           e.target.className !== 'editor-component'
         ) {
           this.$emit('componentSelected', e)
-          this.isContentMovable = true
+          this.isContentClicked = true
           this.isContentRemovable = true
 
           this.clickedElement.style.border = this.clickedBorder
@@ -366,7 +366,7 @@ export default {
           this.clickedBorder = getComputedStyle(e.target).border
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
           e.target.style.border = '3px dashed #f75c51'
-          e.target.style.borderRadius = 0
+          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
 
           // eslint-disable-next-line camelcase
           let left_line = document.querySelector('.boundary-line-left')
@@ -392,7 +392,7 @@ export default {
           right_line.style.top = this.elem.top + 'px'
           right_line.style.height = this.elem.width + 'px'
 
-          this.isContentMovable = true
+          this.isContentClicked = true
           this.isContnetRemovable = true
 
           this.$nextTick(() => {
