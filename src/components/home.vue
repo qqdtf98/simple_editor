@@ -11,8 +11,8 @@
         @mousemove="onmouseMove"
         @scroll="handleScroll"
       >
-        <htmlLoader class="navi" />
-
+        <Navi class="navi" />
+        <Dashboard />
       </div>
     </div>
 
@@ -74,9 +74,9 @@
 <script>
 import Dashboard from './dashboard.vue'
 import Navi from './navi.vue'
-import htmlLoader from './htmlLoader.vue'
+import HtmlLoader from './htmlLoader.vue'
 export default {
-  components: { Dashboard, htmlLoader },
+  components: { Dashboard, Navi, HtmlLoader },
   data () {
     return {
       selectedElement: null,
