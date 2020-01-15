@@ -108,10 +108,31 @@ export default {
       isContentResizable: false,
       isContentMovable: false,
       mouseElem: null,
-      movePosition: null
+      movePosition: null,
+      borderTop: '',
+      borderBottom: '',
+      borderLeft: '',
+      borderRight: ''
     }
   },
   mounted () {
+    let a = document.querySelector('.editor-component')
+    // let b = document.getElementsByClassName('editor-component')
+    this.borderTop = a.getBoundingClientRect().top
+    this.borderBottom = a.getBoundingClientRect().height + a.getBoundingClientRect().top
+    this.borderLeft = a.getBoundingClientRect().left
+    this.borderRight = a.getBoundingClientRect().left + a.getBoundingClientRect().width
+    document.addEventListener('mouseover', e => {
+      if (this.isContentMovable) {
+        if (event.target.className === 'top-bar' || event.target.className === 'bottom-bar') {
+          // border는 element move시에만 생기도록 해야함
+          // border에 닿았을 때 scroll 위치 받아와서 위치 이동시켜야한다.
+          // left,right border 생성해야함
+
+          // console.log(b.scrollY)
+        }
+      }
+    })
     window.addEventListener('mousemove', event => {
       event.preventDefault()
       if (this.isContentResizable) {
@@ -180,7 +201,6 @@ export default {
           }
         } else {
           if (this.mouseElem !== event.target) {
-            // console.log(this.mouseElem)
             this.mouseElem.style.backgroundColor = '#3e8ce4'
             if (
               event.target.className === 'left-border' ||
@@ -223,7 +243,6 @@ export default {
 
       if (this.mouseElem !== null && this.isContentMovable) {
         this.mouseElem.style.backgroundColor = '#3e8ce4'
-        console.log(this.clickedElement.className)
         let addComponent = document.querySelector(
           '.' + this.clickedElement.className
         )
@@ -239,7 +258,7 @@ export default {
           e.target.className === 'top-border' ||
           e.target.className === 'bottom-border'
         ) {
-          let pos = e.target.className.split('-')[0]
+          // let pos = e.target.className.split('-')[0]
           let addComponent = document.querySelector(
             '.' + this.clickedElement.className
           )
@@ -249,8 +268,6 @@ export default {
       this.isContentMovable = false
 
       this.$emit('elementresize', this.clickedElement)
-
-      // console.log(this.mouse)
     })
   },
   methods: {
@@ -541,8 +558,6 @@ export default {
         this.$nextTick(() => {
           let move = document.querySelector('.move-icon')
           let moveHeight = getComputedStyle(move).height
-          // console.log(this.clickedElement.getBoundingClientRect().top)
-          // console.log(moveHeight)
           let deleteIcon = document.querySelector('.delete-icon')
           move.style.left =
             this.clickedElement.getBoundingClientRect().left + 'px'
@@ -593,14 +608,10 @@ export default {
       position.appendChild(addTag)
     },
     selectOverview (payload) {
-      // console.log(payload)
       let dashboardElem = document.querySelector('.editor')
-      console.log(payload)
-      // console.log(payload.getBoundingClientRect())
       this.selectedElement = payload.getBoundingClientRect()
 
       let tag = document.querySelector('.tagname')
-      // console.log(payload.className)
 
       tag.textContent = payload.tagName
       tag.style.left = this.selectedElement.left + 'px'
@@ -656,12 +667,12 @@ export default {
       }
     },
     moveElement (e) {
-      // console.log(e)
       this.clickedElement.style.filter = 'blur(0.8px)'
       this.isContentMovable = true
-      // document.addEventListener('mouseover', () => {
-      //   console.log('aa')
-      // })
+      let bordTop = document.querySelector('.top-bar')
+      let bordBottom = document.querySelector('.bottom-bar')
+      bordTop.style.top = this.borderTop + 20 + 'px'
+      bordBottom.style.top = this.borderBottom - 50 + 'px'
     }
   }
 }
@@ -686,18 +697,19 @@ export default {
 
   }
   .top-bar {
-      height: 5px;
-      width: 57%;
+      height: 15px;
+      width: 55%;
       background-color: #c200a8;
       position: fixed;
       top: 0;
     }
       .bottom-bar {
       color: #fff;
-      height: 5px;
-      width: 57%;
+      height: 15px;
+      width: 55%;
       background-color: #c200a8;
       position: fixed;
+      bottom: 0;
     }
 
   .selector-box {
