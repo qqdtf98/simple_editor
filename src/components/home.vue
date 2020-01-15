@@ -75,8 +75,9 @@
 <script>
 import Dashboard from './dashboard.vue'
 import Navi from './navi.vue'
+import HtmlLoader from './htmlLoader.vue'
 export default {
-  components: { Dashboard, Navi },
+  components: { Dashboard, Navi, HtmlLoader },
   data () {
     return {
       selectedElement: null,

@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="profile-container">
-      <div class="profile-wrapper">
+      <div class="profile-wrapper">\
         <div class="img">
         </div>
         <div class="contents-wrapper">
@@ -77,6 +77,7 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: contain;
+
       }
     }
 
