@@ -194,11 +194,17 @@ export default {
       ) {
         // console.log(e.target)
         this.$emit('addelement', e)
-        this.addComponetUserPick=
+        var docFrag = document.createDocumentFragment();
+        docFrag.appendChild(document.createElement('div'))
+
+        docFrag.querySelector('div').innerHTML=
         `<button class="2"
         type="button"
         style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
         onclick="alert('눌렀습니다.')">도움말</button>`
+
+        this.addComponetUserPick=docFrag.firstChild
+        
         //////////////통신///////////////////////
 
 

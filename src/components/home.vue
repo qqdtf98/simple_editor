@@ -1,7 +1,6 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
-
       <div
         @keydown.enter="isContentNotEditable"
         ref="dash"
@@ -16,9 +15,8 @@
       >
         <HtmlLoader class="navi" />
         <!--<Navi class="navi" />
-         <Dashboard /> -->
+        <Dashboard />-->
       </div>
-
     </div>
     <div class="top-bar"></div>
     <div class="bottom-bar"></div>
@@ -75,7 +73,6 @@
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
     </!-->
-
   </div>
 </template>
 
@@ -265,17 +262,19 @@ export default {
 
     },
     mousedown(e){
-      this.addComponentTag=e.target
+      // this.addComponentTag=e.target
     },
     mouseup(e){
-      console.log(this.addComponentTag)
-      console.log(e.target)
-      if(this.addComponentTag!=e.target)
-        e.target.appendChild(this.addComponentTag)
-      console.log(this.addComponentTag)
+      // console.log(this.addComponentTag)
+      // console.log(e.target)
+      // if(this.addComponentTag!=e.target)
+      //   e.target.appendChild(this.addComponentTag)
+      // console.log(this.addComponentTag)
+      // console.log(this.addComponentTag)
       
     },
     onmouseMove (e) {
+      console.log(this.addComponentTag)
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
