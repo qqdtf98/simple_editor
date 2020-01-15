@@ -214,25 +214,26 @@ export default {
         this.isContentResizable = false
       }
       this.resizedirection = null
-      this.isContentMovable = false
-      if (this.mouseElem !== null) {
+
+      if (this.mouseElem !== null && this.isContentMovable) {
         this.mouseElem.style.backgroundColor = '#3e8ce4'
-        let addTag = document.querySelector('.' + this.clickedElement.className)
+        let addComponent = document.querySelector('.' + this.clickedElement.className)
         // console.log(tag)
         // tag가 추가할 element. 자식이 된다.
         // console.log(position)
         // position이 추가할 위치에 있는 element. 부모가 된다.
         // this.movePosition.parentElement
-        this.movePosition.appendChild(addTag)
+        this.movePosition.appendChild(addComponent)
         if (e.target.className === 'left-border' ||
           e.target.className === 'right-border' ||
           e.target.className === 'top-border' ||
           e.target.className === 'bottom-border') {
           let pos = e.target.className.split('-')[0]
-          let addTag = document.querySelector('.' + this.clickedElement.className)
-          this.movePosition.parentElement.appendChild(addTag)
+          let addComponent = document.querySelector('.' + this.clickedElement.className)
+          this.movePosition.parentElement.appendChild(addComponent)
         }
       }
+      this.isContentMovable = false
 
       this.$emit('elementresize', this.clickedElement)
 
