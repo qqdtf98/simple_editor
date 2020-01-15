@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <ul class="acol" @mousemove="onmouseMove">
+    <ul class="acol" >
       <li>
         <input class="checkbox" type="checkbox" id="root" />
         <label for="root">HTML</label>
@@ -8,7 +8,7 @@
           <li>
             <input class="checkbox" type="checkbox" id="node3" />
             <label for="node3">Body</label>
-            <ul id="bodySource" @click="clickLabelEvent">
+            <ul id="bodySource" @mousemove="onmouseMove" @click="clickLabelEvent">
               <!-- <li id="aa">
                 <input class="checkbox" type="checkbox" id="node4" />
                 <label for="node4">DIV</label>
@@ -35,7 +35,8 @@ export default {
       tags: [],
       dom: [],
       childNum: 10000,
-      friendNum: 0
+      friendNum: 0,
+      isActiveLabel:[],
 
     }
   },
@@ -96,6 +97,7 @@ export default {
           // console.log(child[i])
           // console.log("여기입니다")
           this.dom.push(child[i])
+          this.isActiveLabel.push(true)
 
           this.childNum += 1
 
@@ -150,7 +152,7 @@ export default {
             // 자기 동료에 넣기
             // console.log(childOFchil[i])
             this.dom.push(childOFchil[i])
-
+            this.isActiveLabel.push(true)
             // console.log('')
             // this.childOFchil.push(childOFchil[i].tagName)
 
@@ -205,6 +207,13 @@ export default {
     domSelection (payload) {
       // console.log(this.dom.length)
       // console.log(payload)
+      console.log(this.dom.length)
+      for (var i = 0; i < this.dom.length; i++) {
+        if(this.isActiveLabel[i]){
+          this.isActiveLabel[i] = false
+          $(`label[for="${i}"]`).trigger("click")
+        }
+      }
       for (var i = 0; i < this.dom.length; i++) {
         if (payload === this.dom[i]) {
           // console.log(i)
@@ -212,22 +221,29 @@ export default {
           var obj = document.querySelector(`label[for="${i}"]`)
           console.log(obj)
           console.log(payload)
+          
           // payload.style["color"] = "blue";
-          obj.style['backgroundColor'] = 'blue'
+          
+          // obj.style['backgroundColor'] = 'blue'
           // console.log(getComputedStyle(payload).color)
           // console.log(this.dom[i])
           obj.scrollIntoView()
 
           console.log(obj.parent)
-          console.log('찾았다')
+          // console.log('찾았다')
         } else {
           var obj = document.querySelector(`label[for="${i}"]`)
-          obj.style['backgroundColor'] = ''
+          // obj.style['backgroundColor'] = ''
         }
       }
     },
     clickLabelEvent(e){
-      cosole.log(e.target)
+      if(e.target.tagName=='LABEL'){
+        console.log(e.target.id)
+        if(this.isActiveLabel[e.target.id])
+          this.isActiveLabel[e.target.id]=false
+        this.isActiveLabel[e.target.id]=true
+      }
     },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {

@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="profile-container">
       <div class="profile-wrapper">
-        <div class="img flex-items">
+        <div class="img flex-items" style="color:yellow">
         </div>
         <div class="contents-wrapper flex-items">
           <div class="name-wrapper">
@@ -77,6 +77,7 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: contain;
+
       }
     }
 

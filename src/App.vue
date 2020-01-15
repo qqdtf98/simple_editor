@@ -15,8 +15,10 @@
         class="overview"
       ></overview>
     </div>
+    
     <div class="center-panel">
       <div class="title">Editor</div>
+
       <div class="editor">
         <home
           ref="home"
@@ -43,13 +45,14 @@
 </template>
 
 <script>
+import htmlLoader from './components/htmlLoader'
 import home from './components/home'
 import layout from './components/layout'
 import studio from './components/studio'
 import overview from './components/overview'
 
 export default {
-  components: { home, layout, studio, overview },
+  components: { htmlLoader,home, layout, studio, overview },
   props: ['selectDomElement'],
   name: 'App',
   data () {
@@ -114,7 +117,8 @@ export default {
     componentSelected (payload) {
       this.payload = payload.target
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
-      this.homeLayoutLocation = document.getElementsByClassName('dashboard')[0].getBoundingClientRect()
+      console.log(document.getElementById('dashboard'))
+      this.homeLayoutLocation = document.getElementById('dashboard').getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
         this.$refs.overview.printHomeDocument()
