@@ -152,6 +152,38 @@ export default {
           this.clickedElement.style.transform = `scale(${size})`
         }
       }
+      }
+      if (this.isContentMovable) {
+        let borderElem
+        if (this.mouseElem === null) {
+          if (
+            event.target.className === 'left-border' ||
+          event.target.className === 'right-border' ||
+          event.target.className === 'top-border' ||
+          event.target.className === 'bottom-border'
+          ) {
+            borderElem = document.querySelector('.' + event.target.className)
+            borderElem.style.backgroundColor = '#0fdc28'
+            this.mouseElem = borderElem
+          }
+        } else {
+          if (this.mouseElem !== event.target) {
+            // console.log(this.mouseElem)
+            this.mouseElem.style.backgroundColor = '#3e8ce4'
+            if (
+              event.target.className === 'left-border' ||
+          event.target.className === 'right-border' ||
+          event.target.className === 'top-border' ||
+          event.target.className === 'bottom-border'
+            ) {
+              borderElem = document.querySelector('.' + event.target.className)
+              borderElem.style.backgroundColor = '#0fdc28'
+              this.mouseElem = borderElem
+            }
+          }
+        }
+      }
+
       if (this.clickedElement !== null) {
         let move = document.querySelector('.move-icon')
         move.style.left =
@@ -171,9 +203,34 @@ export default {
           'px'
       }
     })
-    window.addEventListener('mouseup', () => {
+    window.addEventListener('mouseup', (e) => {
+      if (this.isContentResizable) {
+        this.isContentResizable = false
+      }
       this.resizedirection = null
+      this.isContentMovable = false
+      if (this.mouseElem !== null) {
+        this.mouseElem.style.backgroundColor = '#3e8ce4'
+        let addTag = document.querySelector('.' + this.clickedElement.className)
+        // console.log(tag)
+        // tag가 추가할 element. 자식이 된다.
+        // console.log(position)
+        // position이 추가할 위치에 있는 element. 부모가 된다.
+        // this.movePosition.parentElement
+        this.movePosition.appendChild(addTag)
+        if (e.target.className === 'left-border' ||
+          e.target.className === 'right-border' ||
+          e.target.className === 'top-border' ||
+          e.target.className === 'bottom-border') {
+          let pos = e.target.className.split('-')[0]
+          let addTag = document.querySelector('.' + this.clickedElement.className)
+          this.movePosition.parentElement.appendChild(addTag)
+        }
+      }
+
       this.$emit('elementresize', this.clickedElement)
+
+      // console.log(this.mouse)
     })
   },
   methods: {
@@ -567,6 +624,14 @@ export default {
         rightBord.style.top = this.selectedElement.top + 'px'
         rightBord.style.height = this.selectedElement.height + 'px'
       }
+    },
+    moveElement (e) {
+      // console.log(e)
+      this.clickedElement.style.filter = 'blur(0.8px)'
+      this.isContentMovable = true
+      // document.addEventListener('mouseover', () => {
+      //   console.log('aa')
+      // })
     }
   }
 }
