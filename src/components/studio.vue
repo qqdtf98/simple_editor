@@ -146,7 +146,8 @@
 export default {
   data () {
     return {
-      tagTarget: null
+      tagTarget: null,
+      addComponetUserPick:null,
     }
   },
   mounted () {
@@ -193,6 +194,17 @@ export default {
       ) {
         // console.log(e.target)
         this.$emit('addelement', e)
+        this.addComponetUserPick=
+        `<button class="2"
+        type="button"
+        style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
+        onclick="alert('눌렀습니다.')">도움말</button>`
+        //////////////통신///////////////////////
+
+
+
+        //////////////통신///////////////////////
+        this.$emit('userSelectedTagComponent', this.addComponetUserPick)
       }
     },
     onSearchElement (e) {

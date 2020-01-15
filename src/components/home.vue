@@ -10,6 +10,8 @@
         @dblclick="onmouseDoubleClick"
         @click="onmouseClick"
         @mousemove="onmouseMove"
+        @mouseup="mouseup"
+        @mousedown="mousedown"
         @scroll="handleScroll"
       >
         <HtmlLoader class="navi" />
@@ -108,7 +110,8 @@ export default {
       isContentResizable: false,
       isContentMovable: false,
       mouseElem: null,
-      movePosition: null
+      movePosition: null,
+      addComponentTag:null,
     }
   },
   mounted () {
@@ -227,11 +230,15 @@ export default {
         let addComponent = document.querySelector(
           '.' + this.clickedElement.className
         )
-        // console.log(tag)
+
+
+        console.log(e)
         // tag가 추가할 element. 자식이 된다.
         // console.log(position)
         // position이 추가할 위치에 있는 element. 부모가 된다.
         // this.movePosition.parentElement
+
+
         this.movePosition.appendChild(addComponent)
         if (
           e.target.className === 'left-border' ||
@@ -254,6 +261,20 @@ export default {
     })
   },
   methods: {
+    addComponentTagStudio(){
+
+    },
+    mousedown(e){
+      this.addComponentTag=e.target
+    },
+    mouseup(e){
+      console.log(this.addComponentTag)
+      console.log(e.target)
+      if(this.addComponentTag!=e.target)
+        e.target.appendChild(this.addComponentTag)
+      console.log(this.addComponentTag)
+      
+    },
     onmouseMove (e) {
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
@@ -584,6 +605,8 @@ export default {
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
     addContent (tag, position) {
+      console.log(tag)
+      console.log(position)
       let addTag = document.querySelector('#add')
       // console.log(tag)
       // tag가 추가할 element. 자식이 된다.

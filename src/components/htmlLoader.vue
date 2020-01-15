@@ -12,14 +12,14 @@ export default {
   data() {
       return {
         yuri:"s",
-        html: 
-        `<html>
-        <body>
-        <div class="jeongbin">
-        <h1 class="seongmin">dsads</h1>
+        html: `
+        <div class="1">
+        <button class="2"
+        type="button"
+        style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
+        onclick="alert('눌렀습니다.')">도움말</button>
+        <img class="3" src='./static/studioImage/FooterBasic.png' width="300" height="300">
         </div>
-        </body>
-        </html>
         `,
       }
   },
