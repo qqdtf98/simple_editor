@@ -11,7 +11,7 @@
         @mousemove="onmouseMove"
         @scroll="handleScroll"
       >
-        <Navi class="navi" />
+        <Navi />
         <Dashboard />
       </div>
     </div>
@@ -219,7 +219,6 @@ export default {
             topBord.style.left = this.selectedElement.left + 'px'
             topBord.style.top = this.selectedElement.top + 'px'
             topBord.style.width = this.selectedElement.width + 'px'
-
             // bottomBord.style.display = 'none'?
             leftBord.style.left = this.selectedElement.left + 'px'
             leftBord.style.top = this.selectedElement.top + 'px'
