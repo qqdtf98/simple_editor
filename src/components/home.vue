@@ -24,8 +24,9 @@
       <div v-show="onelementSelected" class="left-border"></div>
     </div>
     <img
+      @mousedown="moveElement"
       style="cursor:pointer"
-      v-show="isContentMovable"
+      v-show="isContentClicked"
       src="../assets/move.svg"
       class="move-icon"
     />
@@ -37,28 +38,28 @@
       class="delete-icon"
     />
     <div
-      v-if="isContentMovable"
+      v-if="isContentClicked"
       data-pos="top"
       style="cursor:ns-resize"
       @mousedown="mouseDownBoundary"
       class="boundary-line-top"
     ></div>
     <div
-      v-if="isContentMovable"
+      v-if="isContentClicked"
       data-pos="left"
       style="cursor:ew-resize"
       @mousedown="mouseDownBoundary"
       class="boundary-line-left"
     ></div>
     <div
-      v-if="isContentMovable"
+      v-if="isContentClicked"
       data-pos="right"
       style="cursor:ew-resize"
       @mousedown="mouseDownBoundary"
       class="boundary-line-right"
     ></div>
     <div
-      v-if="isContentMovable"
+      v-if="isContentClicked"
       data-pos="bottom"
       style="cursor:ns-resize"
       @mousedown="mouseDownBoundary"
@@ -88,7 +89,7 @@ export default {
       clickedBorder: '',
       clickedElement: null,
       clickedBorderRadius: '',
-      isContentMovable: false,
+      isContentClicked: false,
       elem: null,
       directionData: '',
       initialposition: '',
@@ -97,61 +98,66 @@ export default {
       initialheight: '',
       initialscale: '',
       isContentRemovable: false,
-      add: false
+      add: false,
+      isContentResizable: false,
+      isContentMovable: false,
+      mouseElem: null,
+      movePosition: null
     }
   },
   mounted () {
     window.addEventListener('mousemove', event => {
       event.preventDefault()
-      if (this.resizedirection === 'right') {
-        if (event.pageX < this.initialposition) {
-          const size =
-            (this.initialwidth - (this.initialposition - event.pageX) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).width)
-          this.clickedElement.style.transform = `scale(${size})`
-        } else if (event.pageX > this.initialposition) {
-          const size =
-            (this.initialwidth + (event.pageX - this.initialposition) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).width)
-          this.clickedElement.style.transform = `scale(${size})`
+      if (this.isContentResizable) {
+        if (this.resizedirection === 'right') {
+          if (event.pageX < this.initialposition) {
+            const size =
+              (this.initialwidth - (this.initialposition - event.pageX) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+          } else if (event.pageX > this.initialposition) {
+            const size =
+              (this.initialwidth + (event.pageX - this.initialposition) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+          }
+        } else if (this.resizedirection === 'left') {
+          if (event.pageX < this.initialposition) {
+            const size =
+              (this.initialwidth + (this.initialposition - event.pageX) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+          } else if (event.pageX > this.initialposition) {
+            const size =
+              (this.initialwidth - (event.pageX - this.initialposition) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+          }
+        } else if (this.resizedirection === 'top') {
+          if (event.pageY < this.initialposition) {
+            const size =
+              (this.initialheight + (this.initialposition - event.pageY) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+          } else if (event.pageY > this.initialposition) {
+            const size =
+              (this.initialheight - (event.pageY - this.initialposition) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+          }
+        } else if (this.resizedirection === 'bottom') {
+          if (event.pageY < this.initialposition) {
+            const size =
+              (this.initialheight - (this.initialposition - event.pageY) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+          } else if (event.pageY > this.initialposition) {
+            const size =
+              (this.initialheight + (event.pageY - this.initialposition) * 2) /
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+          }
         }
-      } else if (this.resizedirection === 'left') {
-        if (event.pageX < this.initialposition) {
-          const size =
-            (this.initialwidth + (this.initialposition - event.pageX) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).width)
-          this.clickedElement.style.transform = `scale(${size})`
-        } else if (event.pageX > this.initialposition) {
-          const size =
-            (this.initialwidth - (event.pageX - this.initialposition) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).width)
-          this.clickedElement.style.transform = `scale(${size})`
-        }
-      } else if (this.resizedirection === 'top') {
-        if (event.pageY < this.initialposition) {
-          const size =
-            (this.initialheight + (this.initialposition - event.pageY) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).height)
-          this.clickedElement.style.transform = `scale(${size})`
-        } else if (event.pageY > this.initialposition) {
-          const size =
-            (this.initialheight - (event.pageY - this.initialposition) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).height)
-          this.clickedElement.style.transform = `scale(${size})`
-        }
-      } else if (this.resizedirection === 'bottom') {
-        if (event.pageY < this.initialposition) {
-          const size =
-            (this.initialheight - (this.initialposition - event.pageY) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).height)
-          this.clickedElement.style.transform = `scale(${size})`
-        } else if (event.pageY > this.initialposition) {
-          const size =
-            (this.initialheight + (event.pageY - this.initialposition) * 2) /
-            parseInt(getComputedStyle(this.clickedElement).height)
-          this.clickedElement.style.transform = `scale(${size})`
-        }
-      }
       }
       if (this.isContentMovable) {
         let borderElem
@@ -235,7 +241,7 @@ export default {
   },
   methods: {
     onmouseMove (e) {
-      let dashboardElem = document.querySelector('.editor')
+      // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
@@ -245,6 +251,7 @@ export default {
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
+          this.movePosition = e.target
         }
       } else {
         if (this.selectedElement !== e.target) {
@@ -254,6 +261,7 @@ export default {
             e.target.className !== 'editor-component'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
+            this.movePosition = e.target
 
             let tag = document.querySelector('.tagname')
 
@@ -268,10 +276,10 @@ export default {
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            let dashWrapper = document.querySelector('.navi')
-            let scrollBottomHeight =
-              dashboardElem.getBoundingClientRect().height -
-              dashWrapper.getBoundingClientRect().height
+            // let dashWrapper = document.querySelector('.navi')
+            // let scrollBottomHeight =
+            //   dashboardElem.getBoundingClientRect().height -
+            //   dashWrapper.getBoundingClientRect().height
             topBord.style.left = this.selectedElement.left + 'px'
             topBord.style.top = this.selectedElement.top + 'px'
             topBord.style.width = this.selectedElement.width + 'px'
@@ -480,31 +488,36 @@ export default {
       this.isContentEditable = false
     },
     mouseDownBoundary (e) {
-      this.directionData = e.target.getAttribute('data-pos')
-      if (this.directionData === 'left') {
-        this.initialposition = this.clickedElement.getBoundingClientRect().left
-        this.resizedirection = 'left'
-      } else if (this.directionData === 'top') {
-        this.initialposition = this.clickedElement.getBoundingClientRect().top
-        this.resizedirection = 'top'
-      } else if (this.directionData === 'bottom') {
-        this.initialposition = this.clickedElement.getBoundingClientRect().bottom
-        this.resizedirection = 'bottom'
-      } else if (this.directionData === 'right') {
-        this.initialposition = this.clickedElement.getBoundingClientRect().right
-        this.resizedirection = 'right'
-      }
+      this.$nextTick(() => {
+        if (!this.isContentMovable) {
+          this.isContentResizable = true
+          this.directionData = e.target.getAttribute('data-pos')
+          if (this.directionData === 'left') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().left
+            this.resizedirection = 'left'
+          } else if (this.directionData === 'top') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().top
+            this.resizedirection = 'top'
+          } else if (this.directionData === 'bottom') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().bottom
+            this.resizedirection = 'bottom'
+          } else if (this.directionData === 'right') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().right
+            this.resizedirection = 'right'
+          }
 
-      this.initialwidth = this.clickedElement.getBoundingClientRect().width
-      this.initialheight = this.clickedElement.getBoundingClientRect().height
-      const scale = this.clickedElement.style.transform
-      const regExp = /[+-]?\d+(?:\.\d+)?/g
-      const regExpResult = regExp.exec(scale)
-      let scaleVal = 1
-      if (regExpResult) {
-        scaleVal = Number(regExpResult[0])
-      }
-      this.initialscale = scaleVal
+          this.initialwidth = this.clickedElement.getBoundingClientRect().width
+          this.initialheight = this.clickedElement.getBoundingClientRect().height
+          const scale = this.clickedElement.style.transform
+          const regExp = /[+-]?\d+(?:\.\d+)?/g
+          const regExpResult = regExp.exec(scale)
+          let scaleVal = 1
+          if (regExpResult) {
+            scaleVal = Number(regExpResult[0])
+          }
+          this.initialscale = scaleVal
+        }
+      })
     },
     handleScroll (e) {
       if (this.selectedElement != null) {
@@ -524,27 +537,30 @@ export default {
             parseInt(moveHeight)
           let moveLeft = this.clickedElement.getBoundingClientRect().left
           let moveBottom = this.clickedElement.getBoundingClientRect().bottom
-          let moveRight = this.clickedElement.getBoundingClientRect().right
-          if ((moveTop < 200 && moveBottom < 800) || (moveTop > 200 && moveBottom > 810)) {
+          // let moveRight = this.clickedElement.getBoundingClientRect().right
+          if (
+            (moveTop < 200 && moveBottom < 800) ||
+            (moveTop > 200 && moveBottom > 810)
+          ) {
             this.$nextTick(() => {
-              this.isContentMovable = false
+              this.isContentClicked = false
               this.isContentRemovable = false
             })
           } else {
-            this.isContentMovable = true
+            this.isContentClicked = true
             this.isContentRemovable = true
             move.style.top = moveTop + 'px'
             deleteIcon.style.top = moveTop + 'px'
           }
           if (moveLeft > 300) {
-            this.isContentMovable = true
+            this.isContentClicked = true
             this.isContentRemovable = true
             move.style.left = moveLeft + 'px'
             deleteIcon.style.left =
               moveLeft + parseInt(getComputedStyle(move).width) + 'px'
           } else {
             this.$nextTick(() => {
-              this.isContentMovable = false
+              this.isContentClicked = false
               this.isContentRemovable = false
             })
           }
@@ -645,6 +661,7 @@ export default {
   .editor-box {
     width: 100%;
     height: 80%;
+    // overflow: hidden;
     .editor-component {
       width: 100%;
       height: 100%;
@@ -672,7 +689,7 @@ export default {
     .bottom-border,
     .top-border {
       width: 100%;
-      height: 3px;
+      height: 4px;
       position: fixed;
       // z-index:
       background-color: #3e8ce4;
@@ -681,7 +698,7 @@ export default {
     .right-border,
     .left-border {
       height: 100%;
-      width: 3px;
+      width: 4px;
       position: fixed;
       background-color: #3e8ce4;
     }
