@@ -36,6 +36,13 @@
       class="move-icon"
     />
     <img
+    @click="copyElement"
+      style="cursor:pointer"
+      v-show="isContentCopied"
+      src="../assets/copy.svg"
+      class="copy-icon"
+    />
+    <img
       @click="removeContent"
       style="cursor:pointer"
       v-show="isContentRemovable"
@@ -233,12 +240,15 @@ export default {
         let deleteIcon = document.querySelector('.delete-icon')
         deleteIcon.style.left =
           this.clickedElement.getBoundingClientRect().left +
-          parseInt(getComputedStyle(move).width) +
+          parseInt(getComputedStyle(move).width) * 2 +
           'px'
         deleteIcon.style.top =
           this.clickedElement.getBoundingClientRect().top -
           deleteIcon.getBoundingClientRect().height +
           'px'
+        let copyIcon = document.querySelector('.copy-icon')
+        copyIcon.style.left = this.clickedElement.getBoundingClientRect().left + parseInt(getComputedStyle(move).width) + 'px'
+        copyIcon.style.top = this.clickedElement.getBoundingClientRect().top - deleteIcon.getBoundingClientRect().height + 'px'
       }
     })
     window.addEventListener('mouseup', e => {
@@ -260,8 +270,7 @@ export default {
         // position이 추가할 위치에 있는 element. 부모가 된다.
         // this.movePosition.parentElement
 
-
-        this.movePosition.appendChild(addComponent)
+        this.movePosition.target.appendChild(addComponent)
         if (
           e.target.className === 'left-border' ||
           e.target.className === 'right-border' ||
@@ -272,7 +281,7 @@ export default {
           let addComponent = document.querySelector(
             '.' + this.clickedElement.className
           )
-          this.movePosition.parentElement.appendChild(addComponent)
+          this.movePosition.target.parentElement.appendChild(addComponent)
         }
       }
       this.isContentMovable = false
@@ -373,6 +382,7 @@ export default {
 
           this.isContentClicked = true
           this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.$nextTick(() => {
             // eslint-disable-next-line camelcase
@@ -409,9 +419,12 @@ export default {
             move.style.top =
               this.elem.top - move.getBoundingClientRect().height + 'px'
             let deleteIcon = document.querySelector('.delete-icon')
-            deleteIcon.style.left = this.elem.left + 'px'
+            deleteIcon.style.left = this.elem.left + move.getBoundingClientRect().width * 2 + 'px'
             deleteIcon.style.top =
               this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+            let copyIcon = document.querySelector('.copy-icon')
+            copyIcon.style.left = this.elem.left + move.getBoundingClientRect().width + 'px'
+            copyIcon.style.left = this.elem.top - copyIcon.getBoundingClientRect().height + 'px'
           })
         }
       } else if (this.clickedElement !== e.target) {
@@ -423,6 +436,7 @@ export default {
           this.$emit('componentSelected', e)
           this.isContentClicked = true
           this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.clickedElement.style.border = this.clickedBorder
           this.clickedElement.style.borderRadius = this.clickedBorderRadius
@@ -457,23 +471,25 @@ export default {
           right_line.style.height = this.elem.width + 'px'
 
           this.isContentClicked = true
-          this.isContnetRemovable = true
+          this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.$nextTick(() => {
             this.elem = e.target.getBoundingClientRect()
-            let tag = document.querySelector('.move-icon')
+            let moveIcon = document.querySelector('.move-icon')
+            moveIcon.style.left = this.elem.left + 'px'
+            moveIcon.style.top =
+              this.elem.top - moveIcon.getBoundingClientRect().height + 'px'
 
-            tag.style.left = this.elem.left + 'px'
-
-            tag.style.top =
-              this.elem.top - tag.getBoundingClientRect().height + 'px'
             let deleteIcon = document.querySelector('.delete-icon')
-
             deleteIcon.style.left =
-              this.elem.left + parseInt(getComputedStyle(tag).width) + 'px'
-
+              this.elem.left + parseInt(getComputedStyle(moveIcon).width) * 2 + 'px'
             deleteIcon.style.top =
               this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+
+            let copyIcon = document.querySelector('.copy-icon')
+            copyIcon.style.left = this.elem.left + parseInt(getComputedStyle(moveIcon).widht) + 'px'
+            copyIcon.style.top = this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
           })
         }
       } else {
@@ -797,6 +813,18 @@ export default {
     background-color: #f75c51;
     fill: #fff;
     overflow: auto !important;
+  }
+  .copy-icon{
+    z-index: 2;
+    position: fixed;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    padding: 0.15rem;
+     justify-content: center;
+    background-color: #f75c51;
+    fill: #fff;
   }
   .delete-icon {
     z-index: 2;
