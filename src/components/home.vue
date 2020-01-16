@@ -756,11 +756,19 @@ export default {
       //     classValue += '.' + data.payload.classList[i] + ' '
       //   }
       // }
-      console.log(getComputedStyle(elem).right)
 
-      // this.$nextTick(() => {
+      this.$nextTick(() => {
       this.clickedElement.parentElement.appendChild(copyElem)
-      // })
+        if (getComputedStyle(elem).position === 'absolute') {
+          this.$nextTick(() => {
+            // console.log(parseInt(getComputedStyle(elem).))
+            console.log(parseInt(getComputedStyle(elem).left))
+            console.log(parseInt(getComputedStyle(elem).right))
+            copyElem.style.left = parseInt(getComputedStyle(elem).left) + parseInt(getComputedStyle(elem).width) + 'px'
+            // console.log(getComputedStyle(copyElem).right)
+          })
+        }
+      })
     }
   }
 }
