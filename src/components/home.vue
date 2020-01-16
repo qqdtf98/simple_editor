@@ -18,8 +18,8 @@
         <Dashboard />
       </div>
     </div>
-    <div class="top-bar"></div>
-    <div class="bottom-bar"></div>
+    <!-- <div v-if="isContentMovable" class="top-bar"></div>
+    <div v-if="isContentMovable" class="bottom-bar"></div> -->
 
     <div class="selector-box">
       <div v-show="onelementSelected" class="tagname"></div>
@@ -263,8 +263,8 @@ export default {
           '.' + this.clickedElement.className
         )
 
+        // console.log(e)
 
-        console.log(e)
         // tag가 추가할 element. 자식이 된다.
         // console.log(position)
         // position이 추가할 위치에 있는 element. 부모가 된다.
@@ -290,23 +290,24 @@ export default {
     })
   },
   methods: {
-    addComponentTagStudio(){
+    addComponentTagStudio () {
 
     },
-    mousedown(e){
+    mousedown (e) {
       // this.addComponentTag=e.target
     },
-    mouseup(e){
+    mouseup (e) {
       // console.log(this.addComponentTag)
       // console.log(e.target)
       // if(this.addComponentTag!=e.target)
       //   e.target.appendChild(this.addComponentTag)
       // console.log(this.addComponentTag)
       // console.log(this.addComponentTag)
-      
+
     },
     onmouseMove (e) {
-      console.log(this.addComponentTag)
+      // console.log(this.addComponentTag)
+
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
@@ -317,7 +318,7 @@ export default {
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
-          this.movePosition = e.target
+          this.movePosition = e
         }
       } else {
         if (this.selectedElement !== e.target) {
@@ -327,7 +328,7 @@ export default {
             e.target.className !== 'editor-component'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
-            this.movePosition = e.target
+            this.movePosition = e
 
             let tag = document.querySelector('.tagname')
 
