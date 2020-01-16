@@ -731,9 +731,25 @@ export default {
       this.onmouseMove(this.movePosition)
     },
     copyElement () {
-      console.log(this.clickedElement)
-      this.clickedElement.parentElement.appendChild(this.clickedElement)
-      console.log('aa')
+      let elem = document.querySelector('.' + this.clickedElement.className)
+      let copyElem = elem.cloneNode(true)
+
+      let randomClass = elem.parentElement.classList.value.replace(/ /gi, '') + elem.classList.value.replace(/ /gi, '') + this.classIndex
+      copyElem.classList.add(randomClass)
+      this.classIndex++
+
+      // for (i = 0; i < data.payload.classList.length; i++) {
+      //   if (i === data.payload.classList.length - 1) {
+      //     classValue += '.' + data.payload.classList[i]
+      //   } else {
+      //     classValue += '.' + data.payload.classList[i] + ' '
+      //   }
+      // }
+      console.log(getComputedStyle(elem).right)
+
+      // this.$nextTick(() => {
+      this.clickedElement.parentElement.appendChild(copyElem)
+      // })
     }
   }
 }
