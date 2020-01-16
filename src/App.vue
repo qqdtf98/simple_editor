@@ -69,10 +69,14 @@ export default {
       addTag: false,
       selectedTag: null,
       hasht: null,
-      isPustHtml: true
+      isPustHtml: true,
+      mouseOverTarget: null
     }
   },
   mounted () {
+    $(window).resize(() => {
+      this.$refs.home.windowResized()
+    })
     this.homeDocument = document.getElementById('dashboard')
     document.addEventListener('mouseup', (e) => {
       let tar = e.target

@@ -719,10 +719,20 @@ export default {
     moveElement (e) {
       this.clickedElement.style.filter = 'blur(0.8px)'
       this.isContentMovable = true
-      let bordTop = document.querySelector('.top-bar')
-      let bordBottom = document.querySelector('.bottom-bar')
-      bordTop.style.top = this.borderTop + 20 + 'px'
-      bordBottom.style.top = this.borderBottom - 50 + 'px'
+      // let bordTop = document.querySelector('.top-bar')
+      // let bordBottom = document.querySelector('.bottom-bar')
+      // this.$nextTick(() => {
+      //   bordTop.style.top = this.borderTop + 20 + 'px'
+      //   bordBottom.style.top = this.borderBottom - 50 + 'px'
+      // })
+    },
+    windowResized () {
+      this.onmouseMove(this.movePosition)
+    },
+    copyElement () {
+      console.log(this.clickedElement)
+      this.clickedElement.parentElement.appendChild(this.clickedElement)
+      console.log('aa')
     }
   }
 }
