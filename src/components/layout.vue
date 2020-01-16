@@ -517,149 +517,41 @@
 		<div v-if="isData" role="tablist">
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
-			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
+			<div>
+					<div class="addon">
+						<div class="breadcrumbs-option"><a>HTML</a><a>Body</a><a>Container</a><a>Header</a>
+						<a class="active">
+						Image</a>
+						</div>
+					</div>
+				</div>
+			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Text Option</b-button>
 			</b-card-header>
 			<b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
-			<b-card-body>
-				<div class="info-option">
-					<div class="margin">
-						<div class="box-row blue">
-							<span class="margin-top" title="Margin Top">{{margin[0].value}}</span>
-						</div>
-						<div class="box-row middle">
-							<div class="box-col blue">
-								<span class="margin-left" title="Margin Left">{{margin[3].value}}</span>
-							</div>
-							<div class="box-col padding">
-								<div class="box-row green">
-									<span class="padding-top" title="Padding Top">{{padding[0]}}</span>
-								</div>
-								<div class="box-row middle">
-									<div class="box-col green">
-										<span class="padding-left" title="Padding Left">{{padding[3]}}</span>
-									</div>
-									<div class="box-col middle empty"></div>
-									<div class="box-col green">
-										<span class="padding-right" title="Padding Right">{{padding[1]}}</span>
-									</div>
-								</div>
-								<div class="box-row green">
-									<span class="padding-bottom" title="Padding Bottom">{{padding[2]}}</span>
-								</div>
-							</div>
-							<div class="box-col blue">
-								<span class="margin-right" title="Margin Right">{{margin[1].value}}</span>
-							</div>
-						</div>
-						<div class="box-row blue">
-							<span class="margin-bottom" title="Margin Bottom">{{margin[2].value}}</span>
-						</div>
+				<div>
+					<div>
+						<span>Alignment</span>
 					</div>
-				<div class="dimensions">
-					<span class="size x">
-					<i>X</i>
-					<b>{{componentSorce.x}}</b>
-					</span>
-					<span class="size y">
-					<i>Y</i>
-					<b>{{componentSorce.y}}</b>
-					</span>
-					<span class="size width">
-					<i>W</i>
-					<b>{{componentSorce.width}}</b>
-					</span>
-					<span class="size height">
-					<i>H</i>
-					<b>{{componentSorce.height}}</b>
-					</span>
+					<div>
+						<button type="button" class="btn btn-default" aria-label="Left Align">
+							<i class="fas fa-align-left"></i>
+						</button>
+						<button type="button" class="btn btn-default" aria-label="Left Align">
+							<i class="fas fa-align-right"></i>
+						</button>
+						<button type="button" class="btn btn-default" aria-label="Left Align">
+							<i class="fas fa-align-right"></i>
+						</button>
+						<button type="button" class="btn btn-default" aria-label="Left Align">
+							<i class="fas fa-align-right"></i>
+						</button>
+						<button type="button" class="btn btn-default" aria-label="Left Align">
+							<i class="fas fa-align-right"></i>
+						</button>
+						
+
+					</div>
 				</div>
-				<div class="option textboxoption has-addon collapsed">
-					<label class="option-content">
-					<span :class="{fontActive:onWidth}"title>
-						Width
-						<i class="caret" style="display: inline-block;"></i>
-					</span>
-					<div class="control">
-						<input
-						type
-						name="width"
-						value
-						title
-						placeholder="31.4375px"
-						@keyup.enter="submitSourceWithPX"
-						v-model="componentSorce.width"
-						/>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle"></span>
-					</div>
-					</label>
-					<label class="option-content">
-					<span :class="{fontActive:onHeight}"title>
-						Height
-						<i class="caret" style="display: inline-block;"></i>
-					</span>
-					<div class="control">
-						<input
-						type="text"
-						name="height"
-						value
-						title
-						placeholder="40px"
-						@keyup.enter="submitSourceWithPX"
-						v-model="componentSorce.height"
-						/>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle">
-						<i></i>
-						</span>
-					</div>
-					</label>
-					<label class="option-content">
-					<span :class="{fontActive:onMargin}"title>
-						Margin
-						<i class="caret" style="display: none;"></i>
-					</span>
-					<div class="control">
-						<input
-						type="text"
-						name="margin"
-						value
-						title
-						placeholder="0"
-						@keyup.enter="submitSourceWithPX"
-						v-model="componentSorce.margin"
-						/>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle">
-						<i></i>
-						</span>
-					</div>
-					</label>
-					<label class="option-content">
-					<span :class="{fontActive:onPadding}"title>
-						Padding
-						<i class="caret" style="display: none;"></i>
-					</span>
-					<div class="control">
-						<input
-						type="text"
-						name="padding"
-						value
-						title
-						placeholder="0"
-						@keyup.enter="submitSourceWithPX"
-						v-model="componentSorce.padding"
-						/>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle">
-						<i></i>
-						</span>
-					</div>
-					</label>
-				</div>
-				</div>
-				</v-app>
-			</b-card-body>
 			</b-collapse>
 		</b-card>
 
@@ -701,7 +593,7 @@
 		</b-card>
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
-			<b-button block href="#" v-b-toggle.accordion-3 variant="info">Font</b-button>
+			<b-button block href="#" v-b-toggle.accordion-3 variant="info">Heading Options</b-button>
 			</b-card-header>
 			<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
 				<div class="option textboxoption has-addon collapsed">
