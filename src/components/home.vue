@@ -120,7 +120,8 @@ export default {
       borderBottom: '',
       borderLeft: '',
       borderRight: '',
-      isContentCopied: false
+      isContentCopied: false,
+      classIndex: 0
     }
   },
   mounted () {
@@ -133,8 +134,6 @@ export default {
     this.borderBottom = a.getBoundingClientRect().height + a.getBoundingClientRect().top
     this.borderLeft = a.getBoundingClientRect().left
     this.borderRight = a.getBoundingClientRect().left + a.getBoundingClientRect().width
-    console.log(this.borderTop)
-    console.log(this.borderLeft)
     document.addEventListener('mouseover', e => {
       if (this.isContentMovable) {
         if (event.target.className === 'top-bar' || event.target.className === 'bottom-bar') {
@@ -262,6 +261,7 @@ export default {
         let addComponent = document.querySelector(
           '.' + this.clickedElement.className
         )
+        this.clickedElement.style.filter = 'blur(0)'
 
         // console.log(e)
 
@@ -504,10 +504,22 @@ export default {
       }
     },
     styleChanged (data) {
-      this.target = data.payload.className
+      this.target = data.payload.classList
+      var classValue = ''
+      let i
+      console.log(data.payload.classList.length)
+      for (i = 0; i < data.payload.classList.length; i++) {
+        if (i === data.payload.classList.length - 1) {
+          classValue += '.' + data.payload.classList[i]
+        } else {
+          classValue += '.' + data.payload.classList[i] + ' '
+        }
+      }
+      console.log(classValue)
       this.style = data.style
       this.value = data.value
-      let element = document.querySelector(`.${this.target}`)
+      let element = document.getElementsByClassName(this.target)[0]
+      console.log(element)
       element.style[this.style] = this.value
     },
     focusInput (e) {
