@@ -1,7 +1,6 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
-
       <div
         @keydown.enter="isContentNotEditable"
         ref="dash"
@@ -10,13 +9,14 @@
         @dblclick="onmouseDoubleClick"
         @click="onmouseClick"
         @mousemove="onmouseMove"
+        @mouseup="mouseup"
+        @mousedown="mousedown"
         @scroll="handleScroll"
       >
-        <!-- <HtmlLoader /> -->
-        <Navi class="navi" />
-        <Dashboard />
+        <HtmlLoader class="navi" />
+        <!--<Navi class="navi" />
+        <Dashboard />-->
       </div>
-
     </div>
     <div class="top-bar"></div>
     <div class="bottom-bar"></div>
@@ -73,7 +73,6 @@
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
     </!-->
-    -->
   </div>
 </template>
 
@@ -109,6 +108,7 @@ export default {
       isContentMovable: false,
       mouseElem: null,
       movePosition: null,
+      addComponentTag:null,
       borderTop: '',
       borderBottom: '',
       borderLeft: '',
@@ -246,11 +246,15 @@ export default {
         let addComponent = document.querySelector(
           '.' + this.clickedElement.className
         )
-        // console.log(tag)
+
+
+        console.log(e)
         // tag가 추가할 element. 자식이 된다.
         // console.log(position)
         // position이 추가할 위치에 있는 element. 부모가 된다.
         // this.movePosition.parentElement
+
+
         this.movePosition.appendChild(addComponent)
         if (
           e.target.className === 'left-border' ||
@@ -271,7 +275,23 @@ export default {
     })
   },
   methods: {
+    addComponentTagStudio(){
+
+    },
+    mousedown(e){
+      // this.addComponentTag=e.target
+    },
+    mouseup(e){
+      // console.log(this.addComponentTag)
+      // console.log(e.target)
+      // if(this.addComponentTag!=e.target)
+      //   e.target.appendChild(this.addComponentTag)
+      // console.log(this.addComponentTag)
+      // console.log(this.addComponentTag)
+      
+    },
     onmouseMove (e) {
+      console.log(this.addComponentTag)
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
@@ -314,7 +334,6 @@ export default {
             topBord.style.left = this.selectedElement.left + 'px'
             topBord.style.top = this.selectedElement.top + 'px'
             topBord.style.width = this.selectedElement.width + 'px'
-
             // bottomBord.style.display = 'none'?
             leftBord.style.left = this.selectedElement.left + 'px'
             leftBord.style.top = this.selectedElement.top + 'px'
@@ -600,6 +619,8 @@ export default {
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
     addContent (tag, position) {
+      console.log(tag)
+      console.log(position)
       let addTag = document.querySelector('#add')
       // console.log(tag)
       // tag가 추가할 element. 자식이 된다.
@@ -686,14 +707,20 @@ export default {
   .editor-box {
     width: 100%;
     height: 80%;
-    // overflow: hidden;
+    // display:table
+    overflow: scroll;
+
 
     .editor-component {
-      width: 100%;
-      height: 100%;
-      border: 2px solid #fff;
-      overflow: auto;
+     
     }
+
+  }
+  .navi{
+    width:100%;
+    height:80%;
+    //  overflow: auto;
+    overflow:"scroll";
 
   }
   .top-bar {

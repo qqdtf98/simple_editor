@@ -210,8 +210,8 @@ export default {
       // console.log(this.dom.length)
       for (var i = 0; i < this.dom.length; i++) {
         if (this.isActiveLabel[i]) {
-          this.isActiveLabel[i] = false
-          $(`label[for="${i}"]`).trigger('click')
+            this.isActiveLabel[i] = false
+            $(`label[for="${i}"]`).trigger('click')
         }
       }
       for (var i = 0; i < this.dom.length; i++) {
@@ -225,7 +225,27 @@ export default {
 
           // obj.style['backgroundColor'] = 'blue'
           // console.log(getComputedStyle(payload).color)
-          // console.log(this.dom[i])
+          // console.log(obj.parentElement.querySelector(`label`))
+          // console.log(newObj.parentElement.querySelector(`label`).id)
+          while(1){
+            var newObj = obj
+            if(newObj.parentElement.querySelector(`label`).id!="0"){
+              if(newObj.parentElement.querySelector(`label`).id!=obj.parentElement.querySelector(`label`).id){
+                obj = newObj.parentElement
+                console.log(newObj.parentElement.querySelector(`label`).id)
+              }
+              else{
+                obj = newObj.parentElement
+              }
+              
+            }
+            else{
+              console.log("끝")
+              break;
+            }
+          }
+          console.log(obj)
+          console.log(obj.parentElement.parentElement.querySelector(`label`))
           obj.scrollIntoView()
           // console.log(obj.parent)
 
@@ -237,11 +257,15 @@ export default {
       }
     },
     clickLabelEvent (e) {
-      if (e.target.tagName == 'LABEL') {
-        // console.log(e.target.id)
-        if (this.isActiveLabel[e.target.id]) { this.isActiveLabel[e.target.id] = false }
-        this.isActiveLabel[e.target.id] = true
-      }
+      // if (e.target.tagName == 'LABEL') {
+      //   // console.log(e.target.id)
+      //   if (this.isActiveLabel[e.target.id]) { 
+      //     this.isActiveLabel[e.target.id] = false 
+      //   }
+      //   else{
+      //     this.isActiveLabel[e.target.id] = true
+      //   }
+      // }
     },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {

@@ -6,6 +6,7 @@
         @ui-select="uiSelected"
         @tag-select="tagSelected"
         @addelement="addElement"
+        @userSelectedTagComponent = "userSelectedTagComponent"
         class="studio"
       ></studio>
       <overview
@@ -128,10 +129,14 @@ export default {
     this.hasht = h
   },
   methods: {
+    userSelectedTagComponent(tagComponent){
+      this.$refs.home.addComponentTag = tagComponent
+
+    },
     componentSelected (payload) {
       this.payload = payload.target
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
-      console.log(document.getElementById('dashboard'))
+      // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document.getElementById('dashboard').getBoundingClientRect()
       this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
