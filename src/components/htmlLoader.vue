@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div>
-            <p v-html="html"></p>
+            <p id="newLoaderHtml" v-html="html"></p>
         </div>
     </div>
 </template>
@@ -17,8 +17,14 @@ export default {
         <button class="2"
         type="button"
         style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
-        onclick="alert('눌렀습니다.')">도움말</button>
+        onclick="alert('눌렀습니다.')">도움말
+        <div> dfdsfdsfds 
+        <div> dfdsfdsfds </div>
+        <div> dfdsfdsfds </div>
+        </div>
+        </button>
         <img class="3" src='./static/studioImage/FooterBasic.png' width="300" height="300">
+        <div> dfdsfdsfds </div>
         </div>
         `
     }

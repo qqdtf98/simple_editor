@@ -307,7 +307,10 @@ export default {
     },
     onmouseMove (e) {
       // console.log(this.addComponentTag)
+<<<<<<< HEAD
+=======
 
+>>>>>>> 70a9069ced71f9b6c911cad1071fe525910a5f1e
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
@@ -661,8 +664,8 @@ export default {
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
     addContent (tag, position) {
-      console.log(tag)
-      console.log(position)
+      // console.log(tag)
+      // console.log(position)
       let addTag = document.querySelector('#add')
       // console.log(tag)
       // tag가 추가할 element. 자식이 된다.
@@ -672,6 +675,11 @@ export default {
     },
     selectOverview (payload) {
       let dashboardElem = document.querySelector('.editor')
+<<<<<<< HEAD
+      // console.log(payload)
+      // console.log(payload.getBoundingClientRect())
+=======
+>>>>>>> 70a9069ced71f9b6c911cad1071fe525910a5f1e
       this.selectedElement = payload.getBoundingClientRect()
 
       let tag = document.querySelector('.tagname')
