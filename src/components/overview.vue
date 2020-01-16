@@ -9,16 +9,28 @@
             <input class="checkbox" type="checkbox" id="node3" />
             <label for="node3">Body</label>
             <ul id="bodySource" @mousemove="onmouseMove" @click="clickLabelEvent">
-              <!-- <li id="aa">
+              
+              <!--
+
+              <li id="aa">
                 <input class="checkbox" type="checkbox" id="node4" />
                 <label for="node4">DIV</label>
-                <ul id="aaa"></ul>
+                <ul id="aaa">
+                  <li id="aa">
+                    <input class="checkbox" type="checkbox" id="node4" />
+                    <label for="node4">DIV</label>
+                    <ul id="aaa"></ul>
+                  </li>
+                </ul>
               </li>
+
               <li id="aaa">
                 <input class="checkbox" type="checkbox" id="node5" />
                 <label for="node5">DIVV</label>
                 <ul id="aaaa"></ul>
-              </li>-->
+              </li>
+
+              -->
             </ul>
           </li>
         </ul>
@@ -36,7 +48,8 @@ export default {
       dom: [],
       childNum: 10000,
       friendNum: 0,
-      isActiveLabel: []
+      isActiveLabel: [],
+      myParent:[]
 
     }
   },
@@ -59,7 +72,16 @@ export default {
       // console.log(Object.keys(anchor))
       // console.log(document.getElementById('dashboard'))
 
-      var child = this.getDocument.children
+      // var child = this.getDocument.children
+
+      //새로 들어온 것
+
+
+
+      
+      var child = document.getElementById('newLoaderHtml').children
+      console.log(child)
+      console.log(child.length)
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
         // console.log(child[i])
@@ -69,6 +91,7 @@ export default {
 
           // 자식
           var obj = document.getElementById('bodySource')
+
           var newDIV = document.createElement('li')
           // newDIV.innerHTML = child[i].tagName;
           newDIV.setAttribute('id', this.childNum)
@@ -79,6 +102,8 @@ export default {
           // console.log(this.friendNum)
 
           var obj = document.getElementById(this.childNum)
+
+
           var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
           newDIV.setAttribute('class', 'checkbox')
@@ -108,16 +133,26 @@ export default {
 
           // console.log(child[i].tagName)
 
-          obj = document.getElementById(this.childNum)
-
+          var newParentObj = document.getElementById(this.childNum)
           // console.log(obj)
-          this.findChildren(child[i], obj)
+         console.log(newParentObj)
+
+          this.myParent.push(-1)
+          this.findChildren(child[i], newParentObj,0)
+
           // console.log(payload.target)
           // this.domSelection(payload.target)
+
+
+         
+
         }
-      }
+      } 
     },
-    findChildren (child, obj) {
+    findChildren (child, obj,myParent) {
+      // console.log("몇번")
+      // console.log(child)
+      // console.log(obj)
       // Vue.component('simple-counter', {
       //     template: '<span class="tag-list">sssss</span>',
       //     // 데이터는 기술적으로 함수이므로 Vue는 따지지 않지만
@@ -170,7 +205,7 @@ export default {
             this.friendNum += 1
 
             // var obbj = document.getElementById(idOjb)
-            var obj = document.getElementById(this.childNum)
+            var newParentObj = document.getElementById(this.childNum)
             var newDIV = document.createElement('input')
             // newDIV.innerHTML = child[i].tagName;
             newDIV.setAttribute('class', 'checkbox')
@@ -179,28 +214,30 @@ export default {
             newDIV.setAttribute('id', this.friendNum)
 
             // newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV)
+            newParentObj.appendChild(newDIV)
 
-            // newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV)
 
             var newDIV = document.createElement('label')
             newDIV.setAttribute('for', this.friendNum)
             newDIV.setAttribute('id', this.friendNum)
             newDIV.innerHTML = childOFchil[i].tagName
             // newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV)
+            newParentObj.appendChild(newDIV)
 
             this.childNum += 1
+
             var newDIV = document.createElement('ul')
             // newDIV.innerHTML = child[i].tagName;
             newDIV.setAttribute('id', this.childNum)
             // newDIV.style.backgroundColor="yellow";
-            obj.appendChild(newDIV)
-
-            obj = document.getElementById(this.childNum)
-            this.findChildren(childOFchil[i], obj)
+            newParentObj.appendChild(newDIV)
+            this.myParent.push(myParent)
+            
+            var newOriginalParentObj = document.getElementById(this.childNum)
+            this.findChildren(childOFchil[i], newOriginalParentObj,this.friendNum)
           }
+          
+           
         }
       }
     },
@@ -214,12 +251,45 @@ export default {
             $(`label[for="${i}"]`).trigger('click')
         }
       }
+      // console.log(this.dom.length)
+
+      // for (var i = 0; i < this.myParent.length; i++) {
+      //   console.log(i+"번째")
+      //   console.log(this.myParent[i])
+      // }
+    
       for (var i = 0; i < this.dom.length; i++) {
         if (payload === this.dom[i]) {
           // console.log(i)
+          var a = i
+          while(true){
+            
+            if(this.myParent[a]!='-1'){
+              console.log("메롱")
+              console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
+       
+              this.isActiveLabel[this.myParent[a]] = true
+              $(document.querySelector(`label[for="${this.myParent[a]}"]`)).trigger('click')
+       
+              a = this.myParent[a]
+            }
+            else{
+              break;
+            }
+          }
+          document.querySelector(`label[for="${i}"]`).scrollIntoView()
+          document.querySelector(`label[for="${i}"]`).style["backgroundColor"] = "blue";
+          console.log(this.myParent[i])
+          // console.log(document.querySelector(`label[for="${i}"]`))
+          // console.log(document.querySelector(`label[for="${i}"]`).parentElement)
+          // console.log(document.querySelector(`label[for="${i}"]`).parentElement.parentElement)
 
+          // while(true){
+
+          // }
+          /*
           var obj = document.querySelector(`label[for="${i}"]`)
-          // console.log(obj)
+          console.log(obj)
           // console.log(payload)
           // payload.style["color"] = "blue";
 
@@ -229,6 +299,8 @@ export default {
           // console.log(newObj.parentElement.querySelector(`label`).id)
           while(1){
             var newObj = obj
+            console.log(newObj)
+            console.log(newObj.parentElement.querySelector(`label`))
             if(newObj.parentElement.querySelector(`label`).id!="0"){
               if(newObj.parentElement.querySelector(`label`).id!=obj.parentElement.querySelector(`label`).id){
                 obj = newObj.parentElement
@@ -244,28 +316,29 @@ export default {
               break;
             }
           }
-          console.log(obj)
-          console.log(obj.parentElement.parentElement.querySelector(`label`))
+          // console.log(obj)
+          // console.log(obj.parentElement.parentElement.querySelector(`label`))
           obj.scrollIntoView()
           // console.log(obj.parent)
 
+          */
           // console.log('찾았다')
         } else {
           var obj = document.querySelector(`label[for="${i}"]`)
-          // obj.style['backgroundColor'] = ''
+          obj.style['backgroundColor'] = ''
         }
       }
     },
     clickLabelEvent (e) {
-      // if (e.target.tagName == 'LABEL') {
-      //   // console.log(e.target.id)
-      //   if (this.isActiveLabel[e.target.id]) { 
-      //     this.isActiveLabel[e.target.id] = false 
-      //   }
-      //   else{
-      //     this.isActiveLabel[e.target.id] = true
-      //   }
-      // }
+      if (e.target.tagName == 'LABEL') {
+        // console.log(e.target.id)
+        if (this.isActiveLabel[e.target.id]) { 
+          this.isActiveLabel[e.target.id] = false 
+        }
+        else{
+          this.isActiveLabel[e.target.id] = true
+        }
+      }
     },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {
@@ -277,6 +350,7 @@ export default {
         // console.log(this.dom[e.target.id])
         // console.log(e.target.id)
         // console.log(this.dom)
+        
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }
