@@ -9,10 +9,10 @@
 <script>
 export default {
   name: 'App',
-  data() {
-      return {
-        yuri:"s",
-        html: `
+  data () {
+    return {
+      yuri: 's',
+      html: `
         <div class="1">
         <button class="2"
         type="button"
@@ -26,36 +26,32 @@ export default {
         <img class="3" src='./static/studioImage/FooterBasic.png' width="300" height="300">
         <div> dfdsfdsfds </div>
         </div>
-        `,
-      }
+        `
+    }
   },
   mounted () {
-    
+
   },
   methods: {
-    onFileChange(file) {
-
-    console.log(file)  
-    //   console.log(file.srcElement.value)
+    onFileChange (file) {
+      console.log(file)
+      //   console.log(file.srcElement.value)
       console.log(file.target.files[0].name)
-    //   var rawFile = new XMLHttpRequest();
-        rawFile.open("GET", file.target.files[0].name);
-        console.log(rawFile)
-        rawFile.onreadystatechange = function ()
-        {
-            if(rawFile.readyState === 4)
-            {
-                if(rawFile.status === 200 || rawFile.status == 0)
-                {
-                    // var allText = ;
-                    console.log(rawFile)
-                    console.log(rawFile.responseText)
-                }
-            }
+      //   var rawFile = new XMLHttpRequest();
+      rawFile.open('GET', file.target.files[0].name)
+      console.log(rawFile)
+      rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+          if (rawFile.status === 200 || rawFile.status == 0) {
+            // var allText = ;
+            console.log(rawFile)
+            console.log(rawFile.responseText)
+          }
         }
-        rawFile.send(null);
-        }
-    }  
+      }
+      rawFile.send(null)
+    }
+  }
 }
 </script>
 

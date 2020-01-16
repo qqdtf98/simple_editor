@@ -247,8 +247,8 @@ export default {
       // console.log(this.dom.length)
       for (var i = 0; i < this.dom.length; i++) {
         if (this.isActiveLabel[i]) {
-            this.isActiveLabel[i] = false
-            $(`label[for="${i}"]`).trigger('click')
+          this.isActiveLabel[i] = false
+          $(`label[for="${i}"]`).trigger('click')
         }
       }
       // console.log(this.dom.length)
@@ -297,7 +297,7 @@ export default {
           // console.log(getComputedStyle(payload).color)
           // console.log(obj.parentElement.querySelector(`label`))
           // console.log(newObj.parentElement.querySelector(`label`).id)
-          while(1){
+          while (1) {
             var newObj = obj
             console.log(newObj)
             console.log(newObj.parentElement.querySelector(`label`))
@@ -305,15 +305,12 @@ export default {
               if(newObj.parentElement.querySelector(`label`).id!=obj.parentElement.querySelector(`label`).id){
                 obj = newObj.parentElement
                 console.log(newObj.parentElement.querySelector(`label`).id)
-              }
-              else{
+              } else {
                 obj = newObj.parentElement
               }
-              
-            }
-            else{
-              console.log("끝")
-              break;
+            } else {
+              console.log('끝')
+              break
             }
           }
           // console.log(obj)
@@ -360,11 +357,11 @@ export default {
 
 <style lang="scss">
 .container {
-  overflow: auto;
   justify-content: left;
   justify-items: left;
   padding: 0.2rem;
   text-align:left;
+  overflow:auto;
 }
 li{
   // float:left;
