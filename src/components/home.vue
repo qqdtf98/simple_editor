@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <div class="editor-box">
+    <div class="editor-box" @scroll="handleScroll">
       <div
         @keydown.enter="isContentNotEditable"
         ref="dash"
@@ -11,11 +11,11 @@
         @mousemove="onmouseMove"
         @mouseup="mouseup"
         @mousedown="mousedown"
-        @scroll="handleScroll"
       >
         <HtmlLoader class="navi" />
-        <!--<Navi class="navi" />
-        <Dashboard />-->
+        <!-- <Navi class="navi" /> -->
+        <Dashboard />
+        <Dashboard />
       </div>
     </div>
     <div class="top-bar"></div>
@@ -108,20 +108,26 @@ export default {
       isContentMovable: false,
       mouseElem: null,
       movePosition: null,
-      addComponentTag:null,
+      addComponentTag: null,
       borderTop: '',
       borderBottom: '',
       borderLeft: '',
-      borderRight: ''
+      borderRight: '',
+      isContentCopied: false
     }
   },
   mounted () {
-    let a = document.querySelector('.editor-component')
+    // let b = document.querySelector('.3')
+
+    let a = document.querySelector('.editor-box')
+
     // let b = document.getElementsByClassName('editor-component')
     this.borderTop = a.getBoundingClientRect().top
     this.borderBottom = a.getBoundingClientRect().height + a.getBoundingClientRect().top
     this.borderLeft = a.getBoundingClientRect().left
     this.borderRight = a.getBoundingClientRect().left + a.getBoundingClientRect().width
+    console.log(this.borderTop)
+    console.log(this.borderLeft)
     document.addEventListener('mouseover', e => {
       if (this.isContentMovable) {
         if (event.target.className === 'top-bar' || event.target.className === 'bottom-bar') {
@@ -578,8 +584,9 @@ export default {
           let move = document.querySelector('.move-icon')
           let moveHeight = getComputedStyle(move).height
           let deleteIcon = document.querySelector('.delete-icon')
-          move.style.left =
-            this.clickedElement.getBoundingClientRect().left + 'px'
+          let copyIcon = document.querySelector('.copy-icon')
+          // move.style.left =
+          //   this.clickedElement.getBoundingClientRect().left + 'px'
           let moveTop =
             this.clickedElement.getBoundingClientRect().top -
             parseInt(moveHeight)
@@ -587,29 +594,35 @@ export default {
           let moveBottom = this.clickedElement.getBoundingClientRect().bottom
           // let moveRight = this.clickedElement.getBoundingClientRect().right
           if (
-            (moveTop < 200 && moveBottom < 800) ||
-            (moveTop > 200 && moveBottom > 810)
+            (moveTop < 210 && moveBottom < 800) ||
+            (moveTop > 210 && moveBottom > 810)
           ) {
             this.$nextTick(() => {
               this.isContentClicked = false
               this.isContentRemovable = false
+              this.isContentCopied = false
             })
           } else {
             this.isContentClicked = true
             this.isContentRemovable = true
+            this.isContentCopied = true
             move.style.top = moveTop + 'px'
             deleteIcon.style.top = moveTop + 'px'
+            copyIcon.style.top = moveTop + 'px'
           }
           if (moveLeft > 300) {
             this.isContentClicked = true
             this.isContentRemovable = true
+            this.isContentCopied = true
             move.style.left = moveLeft + 'px'
             deleteIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) + 'px'
+              moveLeft + parseInt(getComputedStyle(move).width) * 2 + 'px'
+            copyIcon.style.left = moveLeft + parseInt(getComputedStyle(move).width) + 'px'
           } else {
             this.$nextTick(() => {
               this.isContentClicked = false
               this.isContentRemovable = false
+              this.isContentCopied = false
             })
           }
         })
@@ -708,11 +721,11 @@ export default {
     width: 100%;
     height: 80%;
     // display:table
-    overflow: scroll;
-
+    overflow: auto;
+    border: 1px solid #fff;
 
     .editor-component {
-     
+      // overflow: auto;
     }
 
   }
@@ -720,7 +733,7 @@ export default {
     width:100%;
     height:80%;
     //  overflow: auto;
-    overflow:"scroll";
+    // overflow:"scroll";
 
   }
   .top-bar {
