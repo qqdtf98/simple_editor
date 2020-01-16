@@ -69,10 +69,14 @@ export default {
       addTag: false,
       selectedTag: null,
       hasht: null,
-      isPustHtml: true
+      isPustHtml: true,
+      mouseOverTarget: null
     }
   },
   mounted () {
+    $(window).resize(() => {
+      this.$refs.home.windowResized()
+    })
     this.homeDocument = document.getElementById('dashboard')
     document.addEventListener('mouseup', (e) => {
       let tar = e.target
@@ -129,9 +133,8 @@ export default {
     this.hasht = h
   },
   methods: {
-    userSelectedTagComponent(tagComponent){
+    userSelectedTagComponent (tagComponent) {
       this.$refs.home.addComponentTag = tagComponent
-
     },
     componentSelected (payload) {
       this.payload = payload.target
@@ -209,12 +212,13 @@ export default {
   text-align: center;
   color: #2c3e50;
   // color: #fff;
+  overflow: hidden;
   display: flex;
   flex-direction: row;
   height: 58rem;
   background-color: #2c3134;
   align-items: center;
-
+  height: 100vh;
   .left-panel {
     width: 20%;
     height: 100%;

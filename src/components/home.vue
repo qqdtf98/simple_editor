@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <div class="editor-box">
+    <div class="editor-box" @scroll="handleScroll">
       <div
         @keydown.enter="isContentNotEditable"
         ref="dash"
@@ -11,15 +11,15 @@
         @mousemove="onmouseMove"
         @mouseup="mouseup"
         @mousedown="mousedown"
-        @scroll="handleScroll"
       >
         <HtmlLoader class="navi" />
-        <!--<Navi class="navi" />
-        <Dashboard />-->
+        <!-- <Navi class="navi" /> -->
+        <Dashboard />
+        <Dashboard />
       </div>
     </div>
-    <div class="top-bar"></div>
-    <div class="bottom-bar"></div>
+    <!-- <div v-if="isContentMovable" class="top-bar"></div>
+    <div v-if="isContentMovable" class="bottom-bar"></div> -->
 
     <div class="selector-box">
       <div v-show="onelementSelected" class="tagname"></div>
@@ -34,6 +34,13 @@
       v-show="isContentClicked"
       src="../assets/move.svg"
       class="move-icon"
+    />
+    <img
+    @click="copyElement"
+      style="cursor:pointer"
+      v-show="isContentCopied"
+      src="../assets/copy.svg"
+      class="copy-icon"
     />
     <img
       @click="removeContent"
@@ -108,15 +115,20 @@ export default {
       isContentMovable: false,
       mouseElem: null,
       movePosition: null,
-      addComponentTag:null,
+      addComponentTag: null,
       borderTop: '',
       borderBottom: '',
       borderLeft: '',
-      borderRight: ''
+      borderRight: '',
+      isContentCopied: false,
+      classIndex: 0
     }
   },
   mounted () {
-    let a = document.querySelector('.editor-component')
+    // let b = document.querySelector('.3')
+
+    let a = document.querySelector('.editor-box')
+
     // let b = document.getElementsByClassName('editor-component')
     this.borderTop = a.getBoundingClientRect().top
     this.borderBottom = a.getBoundingClientRect().height + a.getBoundingClientRect().top
@@ -227,12 +239,15 @@ export default {
         let deleteIcon = document.querySelector('.delete-icon')
         deleteIcon.style.left =
           this.clickedElement.getBoundingClientRect().left +
-          parseInt(getComputedStyle(move).width) +
+          parseInt(getComputedStyle(move).width) * 2 +
           'px'
         deleteIcon.style.top =
           this.clickedElement.getBoundingClientRect().top -
           deleteIcon.getBoundingClientRect().height +
           'px'
+        let copyIcon = document.querySelector('.copy-icon')
+        copyIcon.style.left = this.clickedElement.getBoundingClientRect().left + parseInt(getComputedStyle(move).width) + 'px'
+        copyIcon.style.top = this.clickedElement.getBoundingClientRect().top - deleteIcon.getBoundingClientRect().height + 'px'
       }
     })
     window.addEventListener('mouseup', e => {
@@ -246,16 +261,16 @@ export default {
         let addComponent = document.querySelector(
           '.' + this.clickedElement.className
         )
+        this.clickedElement.style.filter = 'blur(0)'
 
+        // console.log(e)
 
-        console.log(e)
         // tag가 추가할 element. 자식이 된다.
         // console.log(position)
         // position이 추가할 위치에 있는 element. 부모가 된다.
         // this.movePosition.parentElement
 
-
-        this.movePosition.appendChild(addComponent)
+        this.movePosition.target.appendChild(addComponent)
         if (
           e.target.className === 'left-border' ||
           e.target.className === 'right-border' ||
@@ -266,7 +281,7 @@ export default {
           let addComponent = document.querySelector(
             '.' + this.clickedElement.className
           )
-          this.movePosition.parentElement.appendChild(addComponent)
+          this.movePosition.target.parentElement.appendChild(addComponent)
         }
       }
       this.isContentMovable = false
@@ -275,23 +290,24 @@ export default {
     })
   },
   methods: {
-    addComponentTagStudio(){
+    addComponentTagStudio () {
 
     },
-    mousedown(e){
+    mousedown (e) {
       // this.addComponentTag=e.target
     },
-    mouseup(e){
+    mouseup (e) {
       // console.log(this.addComponentTag)
       // console.log(e.target)
       // if(this.addComponentTag!=e.target)
       //   e.target.appendChild(this.addComponentTag)
       // console.log(this.addComponentTag)
       // console.log(this.addComponentTag)
-      
+
     },
     onmouseMove (e) {
-      console.log(this.addComponentTag)
+      // console.log(this.addComponentTag)
+
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
@@ -302,7 +318,7 @@ export default {
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
-          this.movePosition = e.target
+          this.movePosition = e
         }
       } else {
         if (this.selectedElement !== e.target) {
@@ -312,7 +328,7 @@ export default {
             e.target.className !== 'editor-component'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
-            this.movePosition = e.target
+            this.movePosition = e
 
             let tag = document.querySelector('.tagname')
 
@@ -367,6 +383,7 @@ export default {
 
           this.isContentClicked = true
           this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.$nextTick(() => {
             // eslint-disable-next-line camelcase
@@ -403,9 +420,12 @@ export default {
             move.style.top =
               this.elem.top - move.getBoundingClientRect().height + 'px'
             let deleteIcon = document.querySelector('.delete-icon')
-            deleteIcon.style.left = this.elem.left + 'px'
+            deleteIcon.style.left = this.elem.left + move.getBoundingClientRect().width * 2 + 'px'
             deleteIcon.style.top =
               this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+            let copyIcon = document.querySelector('.copy-icon')
+            copyIcon.style.left = this.elem.left + move.getBoundingClientRect().width + 'px'
+            copyIcon.style.left = this.elem.top - copyIcon.getBoundingClientRect().height + 'px'
           })
         }
       } else if (this.clickedElement !== e.target) {
@@ -417,6 +437,7 @@ export default {
           this.$emit('componentSelected', e)
           this.isContentClicked = true
           this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.clickedElement.style.border = this.clickedBorder
           this.clickedElement.style.borderRadius = this.clickedBorderRadius
@@ -451,23 +472,25 @@ export default {
           right_line.style.height = this.elem.width + 'px'
 
           this.isContentClicked = true
-          this.isContnetRemovable = true
+          this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.$nextTick(() => {
             this.elem = e.target.getBoundingClientRect()
-            let tag = document.querySelector('.move-icon')
+            let moveIcon = document.querySelector('.move-icon')
+            moveIcon.style.left = this.elem.left + 'px'
+            moveIcon.style.top =
+              this.elem.top - moveIcon.getBoundingClientRect().height + 'px'
 
-            tag.style.left = this.elem.left + 'px'
-
-            tag.style.top =
-              this.elem.top - tag.getBoundingClientRect().height + 'px'
             let deleteIcon = document.querySelector('.delete-icon')
-
             deleteIcon.style.left =
-              this.elem.left + parseInt(getComputedStyle(tag).width) + 'px'
-
+              this.elem.left + parseInt(getComputedStyle(moveIcon).width) * 2 + 'px'
             deleteIcon.style.top =
               this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+
+            let copyIcon = document.querySelector('.copy-icon')
+            copyIcon.style.left = this.elem.left + parseInt(getComputedStyle(moveIcon).widht) + 'px'
+            copyIcon.style.top = this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
           })
         }
       } else {
@@ -481,10 +504,22 @@ export default {
       }
     },
     styleChanged (data) {
-      this.target = data.payload.className
+      this.target = data.payload.classList
+      var classValue = ''
+      let i
+      console.log(data.payload.classList.length)
+      for (i = 0; i < data.payload.classList.length; i++) {
+        if (i === data.payload.classList.length - 1) {
+          classValue += '.' + data.payload.classList[i]
+        } else {
+          classValue += '.' + data.payload.classList[i] + ' '
+        }
+      }
+      console.log(classValue)
       this.style = data.style
       this.value = data.value
-      let element = document.querySelector(`.${this.target}`)
+      let element = document.getElementsByClassName(this.target)[0]
+      console.log(element)
       element.style[this.style] = this.value
     },
     focusInput (e) {
@@ -578,8 +613,9 @@ export default {
           let move = document.querySelector('.move-icon')
           let moveHeight = getComputedStyle(move).height
           let deleteIcon = document.querySelector('.delete-icon')
-          move.style.left =
-            this.clickedElement.getBoundingClientRect().left + 'px'
+          let copyIcon = document.querySelector('.copy-icon')
+          // move.style.left =
+          //   this.clickedElement.getBoundingClientRect().left + 'px'
           let moveTop =
             this.clickedElement.getBoundingClientRect().top -
             parseInt(moveHeight)
@@ -587,29 +623,35 @@ export default {
           let moveBottom = this.clickedElement.getBoundingClientRect().bottom
           // let moveRight = this.clickedElement.getBoundingClientRect().right
           if (
-            (moveTop < 200 && moveBottom < 800) ||
-            (moveTop > 200 && moveBottom > 810)
+            (moveTop < 210 && moveBottom < 800) ||
+            (moveTop > 210 && moveBottom > 810)
           ) {
             this.$nextTick(() => {
               this.isContentClicked = false
               this.isContentRemovable = false
+              this.isContentCopied = false
             })
           } else {
             this.isContentClicked = true
             this.isContentRemovable = true
+            this.isContentCopied = true
             move.style.top = moveTop + 'px'
             deleteIcon.style.top = moveTop + 'px'
+            copyIcon.style.top = moveTop + 'px'
           }
           if (moveLeft > 300) {
             this.isContentClicked = true
             this.isContentRemovable = true
+            this.isContentCopied = true
             move.style.left = moveLeft + 'px'
             deleteIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) + 'px'
+              moveLeft + parseInt(getComputedStyle(move).width) * 2 + 'px'
+            copyIcon.style.left = moveLeft + parseInt(getComputedStyle(move).width) + 'px'
           } else {
             this.$nextTick(() => {
               this.isContentClicked = false
               this.isContentRemovable = false
+              this.isContentCopied = false
             })
           }
         })
@@ -690,10 +732,36 @@ export default {
     moveElement (e) {
       this.clickedElement.style.filter = 'blur(0.8px)'
       this.isContentMovable = true
-      let bordTop = document.querySelector('.top-bar')
-      let bordBottom = document.querySelector('.bottom-bar')
-      bordTop.style.top = this.borderTop + 20 + 'px'
-      bordBottom.style.top = this.borderBottom - 50 + 'px'
+      // let bordTop = document.querySelector('.top-bar')
+      // let bordBottom = document.querySelector('.bottom-bar')
+      // this.$nextTick(() => {
+      //   bordTop.style.top = this.borderTop + 20 + 'px'
+      //   bordBottom.style.top = this.borderBottom - 50 + 'px'
+      // })
+    },
+    windowResized () {
+      this.onmouseMove(this.movePosition)
+    },
+    copyElement () {
+      let elem = document.querySelector('.' + this.clickedElement.className)
+      let copyElem = elem.cloneNode(true)
+
+      let randomClass = elem.parentElement.classList.value.replace(/ /gi, '') + elem.classList.value.replace(/ /gi, '') + this.classIndex
+      copyElem.classList.add(randomClass)
+      this.classIndex++
+
+      // for (i = 0; i < data.payload.classList.length; i++) {
+      //   if (i === data.payload.classList.length - 1) {
+      //     classValue += '.' + data.payload.classList[i]
+      //   } else {
+      //     classValue += '.' + data.payload.classList[i] + ' '
+      //   }
+      // }
+      console.log(getComputedStyle(elem).right)
+
+      // this.$nextTick(() => {
+      this.clickedElement.parentElement.appendChild(copyElem)
+      // })
     }
   }
 }
@@ -708,11 +776,11 @@ export default {
     width: 100%;
     height: 80%;
     // display:table
-    overflow: scroll;
-
+    overflow: auto;
+    border: 1px solid #fff;
 
     .editor-component {
-     
+      // overflow: auto;
     }
 
   }
@@ -720,7 +788,7 @@ export default {
     width:100%;
     height:80%;
     //  overflow: auto;
-    overflow:"scroll";
+    // overflow:"scroll";
 
   }
   .top-bar {
@@ -784,6 +852,18 @@ export default {
     background-color: #f75c51;
     fill: #fff;
     overflow: auto !important;
+  }
+  .copy-icon{
+    z-index: 2;
+    position: fixed;
+    width: 1.2rem;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    padding: 0.15rem;
+     justify-content: center;
+    background-color: #f75c51;
+    fill: #fff;
   }
   .delete-icon {
     z-index: 2;

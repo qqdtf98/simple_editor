@@ -281,7 +281,7 @@
 
 			<div class="row">
 				<div class="col md-4"  :class="{fontActive:onBlur}" style="float:left">
-					Blur	
+					Blur
 				</div>
 				<div class="col md-4">
 					<range-slider
@@ -331,7 +331,7 @@
 					></input>
 				</div>
 			</div>
-			
+
 			<div class="row">
 
 				<div class="col md-4" :class="{fontActive:onContrast}" style="float:left">
@@ -411,7 +411,7 @@
 					></input>
 				</div>
 			</div>
-			<div class="row">		
+			<div class="row">
 				<div class="col md-4":class="{fontActive:onInvert}" style="float:left">
 					Invert
 				</div>

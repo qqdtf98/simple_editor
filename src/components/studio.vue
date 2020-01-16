@@ -147,7 +147,7 @@ export default {
   data () {
     return {
       tagTarget: null,
-      addComponetUserPick:null,
+      addComponetUserPick: null
     }
   },
   mounted () {
@@ -194,22 +194,20 @@ export default {
       ) {
         // console.log(e.target)
         this.$emit('addelement', e)
-        var docFrag = document.createDocumentFragment();
+        var docFrag = document.createDocumentFragment()
         docFrag.appendChild(document.createElement('div'))
 
-        docFrag.querySelector('div').innerHTML=
+        docFrag.querySelector('div').innerHTML =
         `<button class="2"
         type="button"
         style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
         onclick="alert('눌렀습니다.')">도움말</button>`
 
-        this.addComponetUserPick=docFrag.firstChild
-        
-        //////////////통신///////////////////////
+        this.addComponetUserPick = docFrag.firstChild
 
+        /// ///////////통신///////////////////////
 
-
-        //////////////통신///////////////////////
+        /// ///////////통신///////////////////////
         this.$emit('userSelectedTagComponent', this.addComponetUserPick)
       }
     },
@@ -278,6 +276,7 @@ export default {
 
 <style lang="scss">
 #studio {
+  // overflow:hidden;
   .studio-text-box {
     height: 5%;
     justify-content: left;
