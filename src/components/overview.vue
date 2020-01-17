@@ -9,7 +9,7 @@
             <input class="checkbox" type="checkbox" id="node3" />
             <label for="node3">Body</label>
             <ul id="bodySource" @mousemove="onmouseMove" @click="clickLabelEvent">
-              
+
               <!--
 
               <li id="aa">
@@ -49,7 +49,7 @@ export default {
       childNum: 10000,
       friendNum: 0,
       isActiveLabel: [],
-      myParent:[]
+      myParent: []
 
     }
   },
@@ -74,11 +74,8 @@ export default {
 
       // var child = this.getDocument.children
 
-      //새로 들어온 것
+      // 새로 들어온 것
 
-
-
-      
       var child = document.getElementById('newLoaderHtml').children
       console.log(child)
       console.log(child.length)
@@ -102,7 +99,6 @@ export default {
           // console.log(this.friendNum)
 
           var obj = document.getElementById(this.childNum)
-
 
           var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
@@ -135,21 +131,17 @@ export default {
 
           var newParentObj = document.getElementById(this.childNum)
           // console.log(obj)
-         console.log(newParentObj)
+          console.log(newParentObj)
 
           this.myParent.push(-1)
-          this.findChildren(child[i], newParentObj,0)
+          this.findChildren(child[i], newParentObj, 0)
 
           // console.log(payload.target)
           // this.domSelection(payload.target)
-
-
-         
-
         }
-      } 
+      }
     },
-    findChildren (child, obj,myParent) {
+    findChildren (child, obj, myParent) {
       // console.log("몇번")
       // console.log(child)
       // console.log(obj)
@@ -216,7 +208,6 @@ export default {
             // newDIV.style.backgroundColor="yellow";
             newParentObj.appendChild(newDIV)
 
-
             var newDIV = document.createElement('label')
             newDIV.setAttribute('for', this.friendNum)
             newDIV.setAttribute('id', this.friendNum)
@@ -232,12 +223,10 @@ export default {
             // newDIV.style.backgroundColor="yellow";
             newParentObj.appendChild(newDIV)
             this.myParent.push(myParent)
-            
+
             var newOriginalParentObj = document.getElementById(this.childNum)
-            this.findChildren(childOFchil[i], newOriginalParentObj,this.friendNum)
+            this.findChildren(childOFchil[i], newOriginalParentObj, this.friendNum)
           }
-          
-           
         }
       }
     },
@@ -257,28 +246,25 @@ export default {
       //   console.log(i+"번째")
       //   console.log(this.myParent[i])
       // }
-    
+
       for (var i = 0; i < this.dom.length; i++) {
         if (payload === this.dom[i]) {
           // console.log(i)
           var a = i
-          while(true){
-            
-            if(this.myParent[a]!='-1'){
-              console.log("메롱")
+          while (true) {
+            if (this.myParent[a] != '-1') {
               console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
-       
+
               this.isActiveLabel[this.myParent[a]] = true
               $(document.querySelector(`label[for="${this.myParent[a]}"]`)).trigger('click')
-       
+
               a = this.myParent[a]
-            }
-            else{
-              break;
+            } else {
+              break
             }
           }
           document.querySelector(`label[for="${i}"]`).scrollIntoView()
-          document.querySelector(`label[for="${i}"]`).style["backgroundColor"] = "blue";
+          document.querySelector(`label[for="${i}"]`).style['backgroundColor'] = 'blue'
           console.log(this.myParent[i])
           // console.log(document.querySelector(`label[for="${i}"]`))
           // console.log(document.querySelector(`label[for="${i}"]`).parentElement)
@@ -329,10 +315,9 @@ export default {
     clickLabelEvent (e) {
       if (e.target.tagName == 'LABEL') {
         // console.log(e.target.id)
-        if (this.isActiveLabel[e.target.id]) { 
-          this.isActiveLabel[e.target.id] = false 
-        }
-        else{
+        if (this.isActiveLabel[e.target.id]) {
+          this.isActiveLabel[e.target.id] = false
+        } else {
           this.isActiveLabel[e.target.id] = true
         }
       }
@@ -347,7 +332,7 @@ export default {
         // console.log(this.dom[e.target.id])
         // console.log(e.target.id)
         // console.log(this.dom)
-        
+
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }
