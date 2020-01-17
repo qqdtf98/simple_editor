@@ -91,7 +91,6 @@ export default {
 
           // 자식
           var obj = document.getElementById('bodySource')
-
           var newDIV = document.createElement('li')
           // newDIV.innerHTML = child[i].tagName;
           newDIV.setAttribute('id', this.childNum)
@@ -140,8 +139,8 @@ export default {
           this.myParent.push(-1)
           this.findChildren(child[i], newParentObj,0)
 
-          // console.log(payload.target)
-          // this.domSelection(payload.target)
+
+          
 
 
          
@@ -245,41 +244,48 @@ export default {
       // console.log(this.dom.length)
       // console.log(payload)
       // console.log(this.dom.length)
+      console.log(payload)
       for (var i = 0; i < this.dom.length; i++) {
         if (this.isActiveLabel[i]) {
           this.isActiveLabel[i] = false
           $(`label[for="${i}"]`).trigger('click')
         }
       }
+      
       // console.log(this.dom.length)
 
       // for (var i = 0; i < this.myParent.length; i++) {
       //   console.log(i+"번째")
       //   console.log(this.myParent[i])
       // }
-    
+
       for (var i = 0; i < this.dom.length; i++) {
         if (payload === this.dom[i]) {
           // console.log(i)
           var a = i
+          console.log(this.myParent)
+
           while(true){
             
             if(this.myParent[a]!='-1'){
-              console.log("메롱")
-              console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
-       
-              this.isActiveLabel[this.myParent[a]] = true
-              $(document.querySelector(`label[for="${this.myParent[a]}"]`)).trigger('click')
-       
+              // console.log("메롱")
+              // console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
+              if (this.isActiveLabel[this.myParent[a]] == true) {
+                  this.isActiveLabel[i] = false
+                  $(document.querySelector(`label[for="${this.myParent[a]}"]`)).trigger('click')
+                  
+              }
               a = this.myParent[a]
             }
             else{
+              this.isActiveLabel[0] = true
+              $(document.querySelector(`label[for="${0}}"]`)).trigger('click')
               break;
             }
           }
           document.querySelector(`label[for="${i}"]`).scrollIntoView()
           document.querySelector(`label[for="${i}"]`).style["backgroundColor"] = "blue";
-          console.log(this.myParent[i])
+          // console.log(this.myParent[i])
           // console.log(document.querySelector(`label[for="${i}"]`))
           // console.log(document.querySelector(`label[for="${i}"]`).parentElement)
           // console.log(document.querySelector(`label[for="${i}"]`).parentElement.parentElement)
@@ -319,12 +325,26 @@ export default {
           // console.log(obj.parent)
 
           */
+          
           // console.log('찾았다')
         } else {
           var obj = document.querySelector(`label[for="${i}"]`)
           obj.style['backgroundColor'] = ''
         }
       }
+      // for (var i = 0; i < this.dom.length; i++) {
+      //         if (payload === this.dom[i]) {
+      //           this.myParent.push(i)
+      //           break;
+      //         }
+      //     }
+
+        this.$emit('inParentTreeOption',this.myParent)
+        // console.log(this.dom)
+        // this.$emit('domWithTree',this.dom)
+
+        
+
     },
     clickLabelEvent (e) {
       if (e.target.tagName == 'LABEL') {
@@ -347,7 +367,6 @@ export default {
         // console.log(this.dom[e.target.id])
         // console.log(e.target.id)
         // console.log(this.dom)
-        
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }

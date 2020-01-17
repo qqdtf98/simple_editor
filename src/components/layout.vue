@@ -5,7 +5,7 @@
 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
   <li class="nav-item">
     <a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
-  </li>  \
+  </li>  
   <li class="nav-item">
     <a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="true">Options</a>
   </li>
@@ -200,6 +200,12 @@
 						<span class="addon increment-handle"></span>
 					</div>
 					</label>
+				</div>
+				<div>
+				 image
+					<input style="display:none"type="file" @change="onFileSelected" ref="fileInput">
+					<button @click="$refs.fileInput.click()">Pick File</button>
+					<button @click="onUpload">Upload</button>
 				</div>
 			</b-collapse>
 		</b-card>
@@ -510,48 +516,59 @@
 </div>
   
   
-  <!-- Options-->
-  <div class="tab-pane "  v-bind:class="{ active:tabStep===2 }"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-	<div v-if="isData" role="tablist">
+  <!-- Options v-if="isData" -->
+  <div class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	<div  role="tablist">
 <div>
-		<div v-if="isData" role="tablist">
-		<b-card no-body class="mb-1">
+		<div  role="tablist">
+		<b-card no-body class="mb-1" >
 			<b-card-header header-tag="header" class="p-1" role="tab">
-			<div>
-					<div class="addon">
-						<div class="breadcrumbs-option"><a>HTML</a><a>Body</a><a>Container</a><a>Header</a>
-						<a class="active">
-						Image</a>
-						</div>
-					</div>
-				</div>
+			<div class="parentTreeOption" id="inParentTreeOption" @click="domTrackingWithTree">
+				<button>HTML</button><button>Body</button>
+				
+			</div>
 			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Text Option</b-button>
 			</b-card-header>
 			<b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
 				<div>
 					<div>
-						<span>Alignment</span>
-					</div>
-					<div>
-						<button type="button" class="btn btn-default" aria-label="Left Align">
+						<span style>Alignment</span>
+
+						<button @click="submitChangeAlign" name="right" type="button" class="aling-button" aria-label="Left Align">
+							<i class="fas fa-align-right"></i>
+						</button>
+						<button @click="submitChangeAlign" name="center" type="button" class="aling-button" aria-label="Left Align">
+							<i class="fas fa-align-center"></i>
+						</button>
+						<button @click="submitChangeAlign" name="left"type="button" class="aling-button" aria-label="Left Align">
 							<i class="fas fa-align-left"></i>
 						</button>
-						<button type="button" class="btn btn-default" aria-label="Left Align">
-							<i class="fas fa-align-right"></i>
+						<button @click="submitChangeAlign" name="left" type="button" class="aling-button" aria-label="Left Align">
+							<i class="fas fa-align-justify"></i>
 						</button>
-						<button type="button" class="btn btn-default" aria-label="Left Align">
-							<i class="fas fa-align-right"></i>
+						<button @click="submitChangeAlign" name="no"  type="button" class="aling-button" aria-label="Left Align">
+							<i class="fas fa-times"></i>
 						</button>
-						<button type="button" class="btn btn-default" aria-label="Left Align">
-							<i class="fas fa-align-right"></i>
-						</button>
-						<button type="button" class="btn btn-default" aria-label="Left Align">
-							<i class="fas fa-align-right"></i>
-						</button>
-						
-
 					</div>
 				</div>
+
+				<div>
+					<b-form-select v-model="selected" :options="options" @change="submitChangeTextTransform"class="btn btn-info btn-sm dropdown-toggle"></b-form-select>
+					<div>Selected:  <strong>{{ selected }}</strong></div>
+				</div>
+				
+				<div>
+					<div>
+						<span>
+							Monospace
+						</span>
+						<span class="custom-switch">
+							<input type="checkbox" class="custom-control-input" id="customSwitches">
+							<label class="custom-control-label" for="customSwitches"></label>
+						</span>
+					</div>
+				</div>
+
 			</b-collapse>
 		</b-card>
 
@@ -868,7 +885,8 @@
 					<div class="col md-4" :class="{fontActive:onSepia}" style="float:left">
 						Sepia
 					</div>
-				<div class="col md-4">
+				<div class="col md-4
+				">
 				<range-slider
 					class="slider"
 					min="0"
@@ -920,6 +938,14 @@ export default {
   props: ['payload'],
   data () {
     return {
+		selected: 'none',
+        options: [
+          { value: 'none', text: 'None' },
+          { value: 'lowercase ', text: 'Lowercase' },
+          { value: 'uppercase ', text: 'Uppercase' },
+          { value: 'capitalize ', text: 'Capitalize' },
+        ],
+      
 	  tabStep:1,
 	  opacityValue: '',
 	  blurValue: '',
@@ -994,8 +1020,12 @@ export default {
 	  onHue: false,
 	  onInvert: false,
 	  onSaturate: false,
-	  onSepia: false
+	  onSepia: false,
 
+	  parentDom:[],
+	  selectedFile:null,
+	  domWithTree:[],
+	  backgroundImage:'',
 	  // on : true,
       //   widthFontActive:{
       // 	color:'blue',
@@ -1010,9 +1040,11 @@ export default {
   },
   created () {
 
-	  // console.log(this.payload)
+	//   console.log(this.parentDom[0])
   },
+  mounted(){
 
+  },
   methods: {
 	chageTab(e){
 		if(e.toElement.text=='Look & Feel'){
@@ -1041,7 +1073,9 @@ export default {
       this.onHue = false,
       this.onInvert = false,
       this.onSaturate = false,
-      this.onSepia = false
+      this.onSepia = false,
+	  this.selected = 'none'
+
 
       if (!this.isData) { this.isData = true }
       this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
@@ -1282,8 +1316,101 @@ export default {
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'sepia(' + e + '%)' } else { this.submitSorce.value = 'sepia(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onSepia = true
       this.$emit('userSelected', this.submitSorce)
-    }
+    },
+	submitChangeAlign(e){
+		// console.log(e.target.name)
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'text-align'
+		if((e.target.name)==='left'){
+			this.submitSorce.value = 'left'
+		}
+		else if((e.target.name)==='right'){
+			this.submitSorce.value = 'right'
+		}
+		else if((e.target.name)==='no'){
+			this.submitSorce.value = 'left'
+		}
+		else if((e.target.name)==='center'){
+			this.submitSorce.value = 'center'
+		}
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitChangeTextTransform(e){
+		console.log(e)
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'text-transform'
+		this.submitSorce.value = e
+		this.$emit('userSelected', this.submitSorce)
+	},
+	makeTreeParent(){
+		
+		
+		var obj = document.getElementById('inParentTreeOption')
+		$(obj).empty()
 
+		var newDIV = document.createElement('button')
+		newDIV.innerHTML = "HTML"
+		obj.appendChild(newDIV)
+
+		var newDIV = document.createElement('button')
+		newDIV.innerHTML = "Body"
+		obj.appendChild(newDIV)
+
+		var a = this.parentDom[this.parentDom.length-1]
+
+		while(true){
+        
+            if(this.parentDom[a]!='-1'){
+              // console.log("메롱")
+              // console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
+       
+				var obj = document.getElementById('inParentTreeOption')
+				console.log(obj)
+				var newDIV = document.createElement('button')
+				newDIV.innerHTML = document.querySelector(`label[for="${this.parentDom[a]}"]`).innerHTML
+				obj.appendChild(newDIV)
+       
+              	a = this.parentDom[a]
+            }
+            else{
+				var obj = document.getElementById('inParentTreeOption')
+				console.log(obj)
+				var newDIV = document.createElement('button')
+				newDIV.innerHTML = document.querySelector(`label[for="${this.parentDom[this.parentDom.length-1]}"]`).innerHTML
+				obj.appendChild(newDIV)
+       
+              	a = this.parentDom[a]
+
+              break;
+            }
+          }
+
+	},
+	
+	
+	onFileSelected(e){
+		// console.log(e.target.value)
+		// this.selectedFile = e.target.files[0]
+		// console.log(this.selectedFile)
+		var fileReader = new FileReader()
+		console.log(e.target.files[0])
+		fileReader.readAsDataURL(e.target.files[0])
+		fileReader.onload = (e) => {
+			this.backgroundImage=e.target.result
+		}
+		console.log(this.backgroundImage)
+		// this.submitSorce.payload = this.payload
+		// this.submitSorce.style = 'background-image'
+		// this.submitSorce.value = "C:\\fakepath\\다모넷 - 1.PNG"
+		// this.$emit('userSelected', this.submitSorce)
+
+	},
+	onUpload(){
+		/// 서버에 저장
+	},
+	domTrackingWithTree(e){
+		console.log(this.domWithTree[0])
+	},
   }
 }
 </script>
@@ -1351,4 +1478,15 @@ export default {
 	color:blue;
 	font-Weight:bold;
  }
+ .aling-button{
+	float:right;
+	margin:0.1rem;
+}
+.custom-control-label{
+	float:right;
+	margin:0.1rem;
+}
+.parentTreeOption{
+	overflow:auto;
+}
 </style>

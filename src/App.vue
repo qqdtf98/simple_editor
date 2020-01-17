@@ -12,6 +12,8 @@
       <overview
         ref="overview"
         @selectDomElement="selectDomElemented"
+        @inParentTreeOption="inParentTreeOption"
+        @domWithTree="domPushWithTree"
         :getDocument="homeDocument"
         class="overview"
       ></overview>
@@ -137,6 +139,7 @@ export default {
       this.$refs.home.addComponentTag = tagComponent
     },
     componentSelected (payload) {
+      this.$refs.layouts.isData = true
       this.payload = payload.target
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
@@ -197,6 +200,13 @@ export default {
       this.dom = domElement
       // console.log(this.dom)
       this.$refs.home.selectOverview(this.dom)
+    },
+    inParentTreeOption(dom){
+       this.$refs.layouts.parentDom = dom
+       this.$refs.layouts.makeTreeParent()
+    },
+    domPushWithTree(dom){
+      this.$refs.layouts.domWithTree = dom
     }
   }
 

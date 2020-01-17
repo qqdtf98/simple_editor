@@ -503,10 +503,11 @@ export default {
       }
     },
     styleChanged (data) {
+      console.log(data)
       this.target = data.payload.classList
       var classValue = ''
       let i
-      console.log(data.payload.classList.length)
+      // console.log(data.payload.classList.length)
       for (i = 0; i < data.payload.classList.length; i++) {
         if (i === data.payload.classList.length - 1) {
           classValue += '.' + data.payload.classList[i]
@@ -514,11 +515,11 @@ export default {
           classValue += '.' + data.payload.classList[i] + ' '
         }
       }
-      console.log(classValue)
+      // console.log(classValue)
       this.style = data.style
       this.value = data.value
       let element = document.getElementsByClassName(this.target)[0]
-      console.log(element)
+      // console.log(element)
       element.style[this.style] = this.value
     },
     focusInput (e) {
@@ -902,6 +903,9 @@ export default {
     .add-1 {
       background-color: red;
     }
+  }
+  .dashboard-text{
+    width:300px
   }
 }
 </style>
