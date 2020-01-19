@@ -16,7 +16,7 @@
           </div>
           <div class="earninga-wrapper">
             <div class="earninga-box">
-              <span class="earninga">EARNINGS(ANNUAL)</span>
+              <span class="earninga abcd">EARNINGS(ANNUAL)</span>
               <span class="dol2">$215,000</span>
             </div>
             <button class="button2"></button>
@@ -66,6 +66,7 @@ export default {}
       display: flex;
       flex-direction: row;
       align-items: center;
+      flex-wrap: wrap;
       margin: 0.5rem;
       position: relative;
       .dashboard-text {
@@ -92,25 +93,38 @@ export default {}
       .earningm-wrapper {
         border: 2px solid #d95353;
         box-shadow: 1px 0.5px 0.5px #c0c0c0;
-        width: 50%;
+        width: 20rem;
         display: flex;
         height: 5rem;
         flex-direction: row;
+        flex-wrap:wrap;
         padding: 0.5rem;
         border-radius: 0.4rem;
         margin-right: 1rem;
         align-items: center;
         position: relative;
         background-color: #fff;
-        .earningm {
+        .earningm-box{
+          width: 10rem;
+          height: 3rem;
+          .earningm {
+            width: 10rem;
           color: #d95353;
           font-size: 0.75rem;
           font-weight: bold;
+          text-align: left;
         }
         .dol1 {
+          width: 8rem;
           text-align: left;
           font-size: 1.2rem;
         }
+        }
+        .button1{
+          width: 3rem;
+          height: 3rem;
+        }
+
       }
       .earninga-wrapper {
         border: 2px solid #1cc88a;

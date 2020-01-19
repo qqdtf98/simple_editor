@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- <spliter class="spliter"/> -->
     <div class="left-panel">
       <studio
         @desc-close="tagNotSelected"
@@ -51,9 +52,10 @@ import home from './components/home'
 import layout from './components/layout'
 import studio from './components/studio'
 import overview from './components/overview'
+import spliter from './components/spliter'
 
 export default {
-  components: { htmlLoader, home, layout, studio, overview },
+  components: { htmlLoader, home, layout, studio, overview, spliter },
   props: ['selectDomElement'],
   name: 'App',
   data () {
@@ -219,6 +221,12 @@ export default {
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
+
+  .spliter{
+    left: 500px;
+
+  }
+
   .left-panel {
     width: 20%;
     height: 100%;
