@@ -151,7 +151,9 @@ export default {
   },
   methods: {
     userSelectedTagComponent (tagComponent) {
-      this.$refs.home.addComponentTag = tagComponent
+      // this.$refs.home.addComponentTag = tagComponent
+      this.selectedTag = tagComponent
+      console.log(tagComponent)
     },
     componentSelected (payload) {
       this.$refs.layouts.isData = true
