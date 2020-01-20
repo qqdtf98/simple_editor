@@ -701,7 +701,7 @@ export default {
       // tag가 추가할 element. 자식이 된다.
       // console.log(position)
       // position이 추가할 위치에 있는 element. 부모가 된다.
-      position.appendChild(addTag)
+      position.appendChild(tag)
     },
     selectOverview (payload) {
       let dashboardElem = document.querySelector('.editor')
