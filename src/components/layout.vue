@@ -1169,62 +1169,87 @@ export default {
       newDIV.innerHTML = 'Body'
       obj.appendChild(newDIV)
 
-      var a = 0
-      var print = []
-      for (var i = 0; i < this.parentDom.length; i++) {
-        if (payload == this.domWithTree[i]) {
-          a = i
-        }
-      }
-      print.push(a)
-      while (true) {
-        if (this.parentDom[a] != '-1') {
+		var a=0;
+		var print=[]
+		for(var i=0;i<this.parentDom.length;i++){
+			if(payload==this.domWithTree[i]){
+				
+				a=i
+				break
+			}
+		}
+		
+		// console.log(a)
+		print.push(a)
+
+		// console.log(this.parentDom)
+
+		while(true){
+			if(this.parentDom[a]!='-1'){
+	
               	a = this.parentDom[a]
-          print.push(a)
-        } else {
-              	break
-        }
-      }
-      for (var i = print.length - 1; i >= 0; i--) {
-        var obj = document.getElementById('inParentTreeOption')
-        var newDIV = document.createElement('button')
-        newDIV.setAttribute('id', i)
-        newDIV.innerHTML = document.querySelector(`label[for="${print[i]}"]`).innerHTML
-        obj.appendChild(newDIV)
-      }
-    },
+				
+				print.push(a)
+            }
+            else{
+              	break;
+            }
+		}
+		for(var i=print.length-1;i>=0;i--){
+			var obj = document.getElementById('inParentTreeOption')
+			var newDIV = document.createElement('button')
+			newDIV.setAttribute('id', print[i])
+			newDIV.innerHTML = document.querySelector(`label[for="${print[i]}"]`).innerHTML
+			obj.appendChild(newDIV)
+		}
+	},
+	
+	
+	onFileSelected(e){
+		// console.log(e.target.value)
+		// this.selectedFile = e.target.files[0]
+		// console.log(this.selectedFile)
+		var fileReader = new FileReader()
+		// console.log(e.target.files[0])
+		fileReader.readAsDataURL(e.target.files[0])
+		fileReader.onload = (e) => {
+			this.backgroundImage=e.target.result
+		}
+		// console.log(this.backgroundImage)
+		// this.submitSorce.payload = this.payload
+		// this.submitSorce.style = 'background-image'
+		// this.submitSorce.value = "C:\\fakepath\\다모넷 - 1.PNG"
+		// this.$emit('userSelected', this.submitSorce)
+		var input = e.target;
 
-    onFileSelected (e) {
-      // console.log(e.target.value)
-      // this.selectedFile = e.target.files[0]
-      // console.log(this.selectedFile)
-      var fileReader = new FileReader()
-      // console.log(e.target.files[0])
-      fileReader.readAsDataURL(e.target.files[0])
-      fileReader.onload = (e) => {
-        this.backgroundImage = e.target.result
-      }
-      // console.log(this.backgroundImage)
-      // this.submitSorce.payload = this.payload
-      // this.submitSorce.style = 'background-image'
-      // this.submitSorce.value = "C:\\fakepath\\다모넷 - 1.PNG"
-      // this.$emit('userSelected', this.submitSorce)
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background-image'
-      this.submitSorce.value = 'url("static/studioImage/ArticleList.png")'
-      this.$emit('userSelected', this.submitSorce)
+		var reader = new FileReader();
+		reader.onload = function(){
+		var dataURL = reader.result;
+		var output = document.getElementById('output');
+		output.src = dataURL;
+		};
+		reader.readAsDataURL(input.files[0]);
+		console.log(input.files[0])
+		console.log(reader.readAsDataURL(input.files[0]))
 
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background-size'
-      this.submitSorce.value = '100%'
-      this.$emit('userSelected', this.submitSorce)
-    },
-    onUpload () {
-      /// 서버에 저장
-    },
-    domTrackingWithTree (e) {
-      console.log(e)
-    }
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'background-image'
+		this.submitSorce.value = reader.readAsDataURL(input.files[0])
+		this.$emit('userSelected', this.submitSorce)
+
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'background-size'
+		this.submitSorce.value = '100%'
+		this.$emit('userSelected', this.submitSorce)
+	},
+	onUpload(){
+		/// 서버에 저장
+	},
+	domTrackingWithTree(e){
+		// console.log(this.domWithTree[e.target.id])
+		if(e.target.innerText!=='HTML'&&e.target.innerText!=='Body')
+			this.$emit('selectDomElemented', this.domWithTree[e.target.id])
+	},
   }
 }
 </script>
