@@ -75,7 +75,7 @@
       @mousedown="mousedownMode"
       class="boundary-line-bottom"
     ></div>
-    <Context class="context" v-if="mouserightClick" />
+    <Context ref="context"  class="context" v-if="mouserightClick" />
 
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
@@ -853,15 +853,14 @@ export default {
       this.mode = mode
     },
     onmouseRightClick (e) {
-      console.log('aaaa')
       if (e.button === 2) {
-        let context = document.querySelector('.context')
         this.mouserightClick = true
-        console.log(e.target)
-        console.log(getComputedStyle(e.target).width)
         this.$nextTick(() => {
-          context.style.left = parseInt(getComputedStyle(e.target).left) + parseInt(getComputedStyle(e.target).width) / 2 + 'px'
-          context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
+          let context = document.querySelector('.context')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+          this.$refs.context.clickedElement(e.target)
+          // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
         })
       }
     }
