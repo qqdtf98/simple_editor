@@ -2,6 +2,7 @@
   <div id="dashboard">
     <div class="editor-box" @scroll="handleScroll">
       <div
+      @mouseup="onmouseRightClick"
         @keydown.enter="isContentNotEditable"
         ref="dash"
         class="editor-component"
@@ -9,17 +10,14 @@
         @dblclick="onmouseDoubleClick"
         @click="onmouseClick"
         @mousemove="onmouseMove"
-        @mouseup="mouseup"
         @mousedown="mousedown"
       >
+      <spliter />
         <HtmlLoader class="navi" />
         <!-- <Navi class="navi" /> -->
         <Dashboard />
-        <Dashboard />
       </div>
     </div>
-    <!-- <div v-if="isContentMovable" class="top-bar"></div>
-    <div v-if="isContentMovable" class="bottom-bar"></div> -->
 
     <div class="selector-box">
       <div v-show="onelementSelected" class="tagname"></div>
@@ -53,30 +51,32 @@
       v-if="isContentClicked"
       data-pos="top"
       style="cursor:ns-resize"
-      @mousedown="mouseDownBoundary"
+      @mousedown="mousedownMode"
       class="boundary-line-top"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="left"
       style="cursor:ew-resize"
-      @mousedown="mouseDownBoundary"
+      @mousedown="mousedownMode"
       class="boundary-line-left"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="right"
       style="cursor:ew-resize"
-      @mousedown="mouseDownBoundary"
+      @mousedown="mousedownMode"
       class="boundary-line-right"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="bottom"
       style="cursor:ns-resize"
-      @mousedown="mouseDownBoundary"
+      @mousedown="mousedownMode"
       class="boundary-line-bottom"
     ></div>
+    <Context ref="context"  class="context" v-if="mouserightClick" />
+
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
     </!-->
@@ -87,8 +87,11 @@
 import Dashboard from './dashboard.vue'
 import Navi from './navi.vue'
 import HtmlLoader from './htmlLoader.vue'
+import spliter from './spliter.vue'
+import Context from './Context'
+
 export default {
-  components: { Dashboard, Navi, HtmlLoader },
+  components: { Dashboard, Navi, HtmlLoader, spliter, Context },
   data () {
     return {
       selectedElement: null,
@@ -121,30 +124,30 @@ export default {
       borderLeft: '',
       borderRight: '',
       isContentCopied: false,
-      classIndex: 0
+      classIndex: 0,
+      currentTop: 0,
+      currentX: 0,
+      currentY: 0,
+      borderClicked: false,
+      borderElem: null,
+      mode: false,
+      mouserightClick: false
     }
   },
   mounted () {
     // let b = document.querySelector('.3')
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+    })
 
-    let a = document.querySelector('.editor-box')
+    let editor = document.querySelector('.editor-box')
 
     // let b = document.getElementsByClassName('editor-component')
-    this.borderTop = a.getBoundingClientRect().top
-    this.borderBottom = a.getBoundingClientRect().height + a.getBoundingClientRect().top
-    this.borderLeft = a.getBoundingClientRect().left
-    this.borderRight = a.getBoundingClientRect().left + a.getBoundingClientRect().width
-    document.addEventListener('mouseover', e => {
-      if (this.isContentMovable) {
-        if (event.target.className === 'top-bar' || event.target.className === 'bottom-bar') {
-          // border는 element move시에만 생기도록 해야함
-          // border에 닿았을 때 scroll 위치 받아와서 위치 이동시켜야한다.
-          // left,right border 생성해야함
+    this.borderTop = editor.getBoundingClientRect().top
+    this.borderBottom = editor.getBoundingClientRect().height + editor.getBoundingClientRect().top
+    this.borderLeft = editor.getBoundingClientRect().left
+    this.borderRight = editor.getBoundingClientRect().left + editor.getBoundingClientRect().width
 
-          // console.log(b.scrollY)
-        }
-      }
-    })
     window.addEventListener('mousemove', event => {
       event.preventDefault()
       if (this.isContentResizable) {
@@ -251,39 +254,49 @@ export default {
       }
     })
     window.addEventListener('mouseup', e => {
+      // this.clickedElement.style.filter = 'blur(0)'
       if (this.isContentResizable) {
         this.isContentResizable = false
       }
       this.resizedirection = null
-
-      if (this.mouseElem !== null && this.isContentMovable) {
-        this.mouseElem.style.backgroundColor = '#3e8ce4'
-        let addComponent = document.querySelector(
-          '.' + this.clickedElement.className
-        )
+      if (this.isContentMovable) {
         this.clickedElement.style.filter = 'blur(0)'
+        if (this.mouseElem !== null) {
+          this.mouseElem.style.backgroundColor = '#3e8ce4'
+          // let i
+          // let classValue = ''
+          // for (i = 0; i < this.clickedElement.classList.length; i++) {
+          //   if (i === this.clickedElement.classList.length - 1) {
+          //     classValue += '.' + this.clickedElement.classList[i]
+          //   } else {
+          //     classValue += '.' + this.clickedElement.classList[i] + ' '
+          //   }
+          // }
+          let addComponent = document.getElementsByClassName(this.clickedElement.classList.value)
+          this.$nextTick(() => {
+            console.log(addComponent[0])
+            // console.log(e)
 
-        // console.log(e)
+            // tag가 추가할 element. 자식이 된다.
+            // console.log(position)
+            // position이 추가할 위치에 있는 element. 부모가 된다.
+            // this.movePosition.parentElement
 
-        // tag가 추가할 element. 자식이 된다.
-        // console.log(position)
-        // position이 추가할 위치에 있는 element. 부모가 된다.
-        // this.movePosition.parentElement
-
-        this.movePosition.target.appendChild(addComponent)
-        if (
-          e.target.className === 'left-border' ||
+            this.movePosition.target.appendChild(addComponent[0])
+            if (
+              e.target.className === 'left-border' ||
           e.target.className === 'right-border' ||
           e.target.className === 'top-border' ||
           e.target.className === 'bottom-border'
-        ) {
-          // let pos = e.target.className.split('-')[0]
-          let addComponent = document.querySelector(
-            '.' + this.clickedElement.className
-          )
-          this.movePosition.target.parentElement.appendChild(addComponent)
+            ) {
+            // let pos = e.target.className.split('-')[0]
+              let addComponent = document.getElementsByClassName(this.clickedElement.classList.value)
+              this.movePosition.target.parentElement.appendChild(addComponent[0])
+            }
+          })
         }
       }
+
       this.isContentMovable = false
 
       this.$emit('elementresize', this.clickedElement)
@@ -366,6 +379,7 @@ export default {
       }
     },
     onmouseClick (e) {
+      this.mouserightClick = false
       if (this.clickedElement === null) {
         if (
           e.target.className !== 'tagname' &&
@@ -500,6 +514,12 @@ export default {
         ) {
           this.$emit('componentSelected', e)
         }
+      }
+      if (this.mode) {
+        console.log(getComputedStyle(this.clickedElement).flexWrap)
+        this.clickedElement.style.display = 'flex'
+        this.clickedElement.style.flexWrap = 'wrap'
+        console.log(getComputedStyle(this.clickedElement).flexWrap)
       }
     },
     styleChanged (data) {
@@ -732,36 +752,118 @@ export default {
     moveElement (e) {
       this.clickedElement.style.filter = 'blur(0.8px)'
       this.isContentMovable = true
-      // let bordTop = document.querySelector('.top-bar')
-      // let bordBottom = document.querySelector('.bottom-bar')
-      // this.$nextTick(() => {
-      //   bordTop.style.top = this.borderTop + 20 + 'px'
-      //   bordBottom.style.top = this.borderBottom - 50 + 'px'
-      // })
     },
     windowResized () {
       this.onmouseMove(this.movePosition)
     },
     copyElement () {
-      let elem = document.querySelector('.' + this.clickedElement.className)
-      let copyElem = elem.cloneNode(true)
+      let classValue = ''
+      let i
+      console.log(this.clickedElement.classList.length)
+      for (i = 0; i < this.clickedElement.classList.length; i++) {
+        if (i === this.clickedElement.classList.length - 1) {
+          classValue += '.' + this.clickedElement.classList[i]
+        } else {
+          classValue += '.' + this.clickedElement.classList[i] + ' '
+        }
+      }
+      console.log(classValue)
+      let elem = document.getElementsByClassName(this.clickedElement.classList.value)
+      console.log(elem[0])
+      let copyElem = elem[0].cloneNode(true)
 
-      let randomClass = elem.parentElement.classList.value.replace(/ /gi, '') + elem.classList.value.replace(/ /gi, '') + this.classIndex
+      let randomClass = elem[0].parentElement.classList.value.replace(/ /gi, '') + elem[0].classList.value.replace(/ /gi, '') + this.classIndex
       copyElem.classList.add(randomClass)
       this.classIndex++
 
-      // for (i = 0; i < data.payload.classList.length; i++) {
-      //   if (i === data.payload.classList.length - 1) {
-      //     classValue += '.' + data.payload.classList[i]
-      //   } else {
-      //     classValue += '.' + data.payload.classList[i] + ' '
-      //   }
-      // }
-      console.log(getComputedStyle(elem).right)
+      var newparent = document.createElement('div')
 
-      // this.$nextTick(() => {
-      this.clickedElement.parentElement.appendChild(copyElem)
-      // })
+      this.$nextTick(() => {
+        console.log(this.clickedElement.parentElement.children)
+        this.clickedElement.parentElement.appendChild(newparent)
+        newparent.appendChild(elem[0])
+        newparent.appendChild(copyElem)
+        // if (getComputedStyle(elem).position === 'absolute') {
+        this.$nextTick(() => {
+          // console.log(parseInt(getComputedStyle(elem).))
+          // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
+          newparent.style.height = parseInt(getComputedStyle(elem[0]).height) + 'px'
+          if (getComputedStyle(elem[0]).right !== 0) {
+            console.log('right')
+            copyElem.style.left = parseInt(getComputedStyle(elem[0]).left) - parseInt(getComputedStyle(elem[0]).width) + 'px'
+            copyElem.style.border = this.clickedBorder
+            copyElem.style.borderRadius = this.clickedBorderRadius
+          } else {
+            console.log('left')
+            copyElem.style.left = parseInt(getComputedStyle(elem[0]).left) + parseInt(getComputedStyle(elem[0]).width) + 'px'
+            copyElem.style.border = this.clickedBorder
+            copyElem.style.borderRadius = this.clickedBorderRadius
+          }
+
+          // console.log(getComputedStyle(copyElem).right)
+        })
+        // }
+      })
+    },
+    splitBorder (e) {
+      this.borderClicked = true
+      // let bottomBord = document.querySelector('.bottom-border')
+      // let topBord = document.querySelector('.top-border')
+      // let rightBord = document.querySelector('.right-border')
+      // let leftBord = document.querySelector('.left-border')
+
+      // topBord.style.backgroundColor = '#34d6c1'
+      // bottomBord.style.backgroundColor = '#34d6c1'
+
+      let elemWidth = getComputedStyle(this.clickedElement).width
+      let elemHeight = getComputedStyle(this.clickedElement).height
+      let elemLeft = getComputedStyle(this.clickedElement).left
+      let initialX = e.clientX
+      let initialY = e.clientY
+      this.borderElem = e.target
+      // let initialLeft = getComputedStyle(this.clickedElement).left
+
+      let edit = document.querySelector('.editor')
+
+      edit.addEventListener('mousemove', (event) => {
+        if (this.borderClicked) {
+          if (this.borderElem.className === 'boundary-line-right') {
+            this.clickedElement.style.width = parseInt(elemWidth) - (initialX - event.clientX) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-left') {
+            this.clickedElement.style.width = parseInt(elemWidth) - (event.clientX - initialX) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-top') {
+            this.clickedElement.style.height = parseInt(elemHeight) - (event.clientY - initialY) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-bottom') {
+            this.clickedElement.style.height = parseInt(elemHeight) - (initialY - event.clientY) * 2 + 'px'
+          }
+        }
+      })
+      edit.addEventListener('mouseup', () => {
+        this.borderClicked = false
+      })
+    },
+    mousedownMode (e) {
+      if (this.mode) {
+        this.splitBorder(e)
+      } else {
+        this.mouseDownBoundary(e)
+      }
+    },
+    modeSelect (mode) {
+      console.log(mode)
+      this.mode = mode
+    },
+    onmouseRightClick (e) {
+      if (e.button === 2) {
+        this.mouserightClick = true
+        this.$nextTick(() => {
+          let context = document.querySelector('.context')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+          this.$refs.context.clickedElement(e.target)
+          // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
+        })
+      }
     }
   }
 }
@@ -777,6 +879,7 @@ export default {
     height: 80%;
     // display:table
     overflow: auto;
+    scroll-behavior: smooth;
     border: 1px solid #fff;
 
     .editor-component {
@@ -791,21 +894,23 @@ export default {
     // overflow:"scroll";
 
   }
-  .top-bar {
-      height: 15px;
-      width: 55%;
-      background-color: #c200a8;
-      position: fixed;
-      top: 0;
-    }
-      .bottom-bar {
-      color: #fff;
-      height: 15px;
-      width: 55%;
-      background-color: #c200a8;
-      position: fixed;
-      bottom: 0;
-    }
+  // .top-bar {
+  //     height: 15px;
+  //     width: 55%;
+  //     background-color: #c200a8;
+  //     position: fixed;
+  //     top: 0;
+  //     z-index:100000;
+  //   }
+  //     .bottom-bar {
+  //     color: #fff;
+  //     height: 15px;
+  //     width: 55%;
+  //     background-color: #c200a8;
+  //     position: fixed;
+  //     bottom: 0;
+  //     z-index: 100000;
+  //   }
 
   .selector-box {
     display: flex;
@@ -905,7 +1010,10 @@ export default {
     }
   }
   .dashboard-text{
-    width:300px
+    width:300px;
+    }
+  .context{
+    position:fixed;
   }
 }
 </style>

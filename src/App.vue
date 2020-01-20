@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- <spliter class="spliter"/> -->
     <div class="left-panel">
       <studio
         @desc-close="tagNotSelected"
@@ -21,7 +22,11 @@
 
     <div class="center-panel">
       <div class="title">Editor</div>
+       <img class="scale" src="./assets/scale.svg" />
+      <img class="width" src="./assets/width.svg" />
+      <switches @click="toggleClicked" class="swtich" theme="bootstrap" color="info" v-model="enabled">
 
+      </switches>
       <div class="editor">
         <home
           ref="home"
@@ -54,9 +59,11 @@ import home from './components/home'
 import layout from './components/layout'
 import studio from './components/studio'
 import overview from './components/overview'
+import spliter from './components/spliter'
+import Switches from 'vue-switches'
 
 export default {
-  components: { htmlLoader, home, layout, studio, overview },
+  components: { htmlLoader, home, layout, studio, overview, spliter, Switches },
   props: ['selectDomElement'],
   name: 'App',
   data () {
@@ -66,6 +73,7 @@ export default {
       homeLayoutLocation: '',
       tagDescription: false,
       childOFchil: [],
+      enabled: false,
       homeDocument: '',
       uiDescription: false,
       dom: '',
@@ -74,6 +82,11 @@ export default {
       hasht: null,
       isPustHtml: true,
       mouseOverTarget: null
+    }
+  },
+  watch: {
+    enabled: function () {
+      this.$refs.home.modeSelect(this.enabled)
     }
   },
   mounted () {
@@ -211,6 +224,9 @@ export default {
     },
     userSelectBorder(e){
       console.log(e)
+      }.
+    toggleClicked () {
+      console.log('aaa')
     }
   }
 
@@ -233,6 +249,12 @@ export default {
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
+
+  .spliter{
+    left: 500px;
+
+  }
+
   .left-panel {
     width: 20%;
     height: 100%;
@@ -266,6 +288,26 @@ export default {
       padding-left: 0.9rem;
       padding-right: 0.9rem;
       top: 0;
+    }
+    .scale{
+      position: absolute;
+      width: 0.8rem;
+      right: 2.7rem;
+      height: 0.8rem;
+      top:2.7rem;
+    }
+    .width{
+      position: absolute;
+      width: 1rem;
+      right: 0.8rem;
+      top:2.9rem;
+    }
+    .vue-switcher{
+      position:absolute;
+      right: 1rem;
+      top: 4rem;
+      transform: scale(1.25);
+      z-index: 9999;
     }
     .editor {
       width: 100%;
