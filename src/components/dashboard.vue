@@ -86,10 +86,11 @@ export default {}
       .earning-box {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         margin-bottom: 1rem;
         align-items: center;
         justify-content: center;
-      }
+
       .earningm-wrapper {
         border: 2px solid #d95353;
         box-shadow: 1px 0.5px 0.5px #c0c0c0;
@@ -97,18 +98,18 @@ export default {}
         display: flex;
         height: 5rem;
         flex-direction: row;
-        flex-wrap:wrap;
+        flex-wrap: wrap;
         padding: 0.5rem;
         border-radius: 0.4rem;
         margin-right: 1rem;
         align-items: center;
-        position: relative;
+        // position: relative;
         background-color: #fff;
         .earningm-box{
           width: 10rem;
           height: 3rem;
           .earningm {
-            width: 10rem;
+          // width: 10rem;
           color: #d95353;
           font-size: 0.75rem;
           font-weight: bold;
@@ -166,6 +167,7 @@ export default {}
         display: flex;
         flex-direction: column;
         margin-left: 0.5rem;
+      }
       }
 
       .task-box {

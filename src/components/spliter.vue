@@ -63,8 +63,7 @@
 //     }
 //   }
 // }
-// </script>
-
+</script>
 <style lang="scss">
 #spliter {
   width: 40rem;
@@ -144,7 +143,7 @@
           width: 10rem;
           height: 3rem;
           .earningm {
-            width: 10rem;
+            // width: 10rem;
           color: #d95353;
           font-size: 0.75rem;
           font-weight: bold;

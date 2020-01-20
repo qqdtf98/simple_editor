@@ -2,6 +2,7 @@
   <div id="dashboard">
     <div class="editor-box" @scroll="handleScroll">
       <div
+      @mouseup="onmouseRightClick"
         @keydown.enter="isContentNotEditable"
         ref="dash"
         class="editor-component"
@@ -9,7 +10,6 @@
         @dblclick="onmouseDoubleClick"
         @click="onmouseClick"
         @mousemove="onmouseMove"
-        @mouseup="mouseup"
         @mousedown="mousedown"
       >
       <spliter />
@@ -51,30 +51,32 @@
       v-if="isContentClicked"
       data-pos="top"
       style="cursor:ns-resize"
-      @mousedown="splitBorder"
+      @mousedown="mousedownMode"
       class="boundary-line-top"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="left"
       style="cursor:ew-resize"
-      @mousedown="splitBorder"
+      @mousedown="mousedownMode"
       class="boundary-line-left"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="right"
       style="cursor:ew-resize"
-      @mousedown="splitBorder"
+      @mousedown="mousedownMode"
       class="boundary-line-right"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="bottom"
       style="cursor:ns-resize"
-      @mousedown="splitBorder"
+      @mousedown="mousedownMode"
       class="boundary-line-bottom"
     ></div>
+    <Context ref="context"  class="context" v-if="mouserightClick" />
+
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
     </!-->
@@ -86,8 +88,10 @@ import Dashboard from './dashboard.vue'
 import Navi from './navi.vue'
 import HtmlLoader from './htmlLoader.vue'
 import spliter from './spliter.vue'
+import Context from './Context'
+
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter },
+  components: { Dashboard, Navi, HtmlLoader, spliter, Context },
   data () {
     return {
       selectedElement: null,
@@ -125,11 +129,16 @@ export default {
       currentX: 0,
       currentY: 0,
       borderClicked: false,
-      borderElem: null
+      borderElem: null,
+      mode: false,
+      mouserightClick: false
     }
   },
   mounted () {
     // let b = document.querySelector('.3')
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+    })
 
     let editor = document.querySelector('.editor-box')
 
@@ -370,6 +379,7 @@ export default {
       }
     },
     onmouseClick (e) {
+      this.mouserightClick = false
       if (this.clickedElement === null) {
         if (
           e.target.className !== 'tagname' &&
@@ -504,6 +514,12 @@ export default {
         ) {
           this.$emit('componentSelected', e)
         }
+      }
+      if (this.mode) {
+        console.log(getComputedStyle(this.clickedElement).flexWrap)
+        this.clickedElement.style.display = 'flex'
+        this.clickedElement.style.flexWrap = 'wrap'
+        console.log(getComputedStyle(this.clickedElement).flexWrap)
       }
     },
     styleChanged (data) {
@@ -790,16 +806,17 @@ export default {
     },
     splitBorder (e) {
       this.borderClicked = true
-      let bottomBord = document.querySelector('.bottom-border')
-      let topBord = document.querySelector('.top-border')
-      let rightBord = document.querySelector('.right-border')
-      let leftBord = document.querySelector('.left-border')
+      // let bottomBord = document.querySelector('.bottom-border')
+      // let topBord = document.querySelector('.top-border')
+      // let rightBord = document.querySelector('.right-border')
+      // let leftBord = document.querySelector('.left-border')
 
       // topBord.style.backgroundColor = '#34d6c1'
       // bottomBord.style.backgroundColor = '#34d6c1'
 
       let elemWidth = getComputedStyle(this.clickedElement).width
       let elemHeight = getComputedStyle(this.clickedElement).height
+      let elemLeft = getComputedStyle(this.clickedElement).left
       let initialX = e.clientX
       let initialY = e.clientY
       this.borderElem = e.target
@@ -809,18 +826,43 @@ export default {
 
       edit.addEventListener('mousemove', (event) => {
         if (this.borderClicked) {
-          if (this.borderElem.className === 'boundary-line-right' || this.borderElem.className === 'boundary-line-left') {
-            // this.borderElem.style.backgroundColor = '#fff
-            // this.borderElem.style.backgroundColor = '#34d6c1'
-            this.clickedElement.style.width = parseInt(elemWidth) - (initialX - event.clientX) + 'px'
-          } else if (this.borderElem.className === 'boundary-line-top' || this.borderElem.className === 'boundary-line-bottom') {
-            this.clickedElement.style.height = parseInt(elemHeight) - (initialY - event.clientY) + 'px'
+          if (this.borderElem.className === 'boundary-line-right') {
+            this.clickedElement.style.width = parseInt(elemWidth) - (initialX - event.clientX) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-left') {
+            this.clickedElement.style.width = parseInt(elemWidth) - (event.clientX - initialX) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-top') {
+            this.clickedElement.style.height = parseInt(elemHeight) - (event.clientY - initialY) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-bottom') {
+            this.clickedElement.style.height = parseInt(elemHeight) - (initialY - event.clientY) * 2 + 'px'
           }
         }
       })
       edit.addEventListener('mouseup', () => {
         this.borderClicked = false
       })
+    },
+    mousedownMode (e) {
+      if (this.mode) {
+        this.splitBorder(e)
+      } else {
+        this.mouseDownBoundary(e)
+      }
+    },
+    modeSelect (mode) {
+      console.log(mode)
+      this.mode = mode
+    },
+    onmouseRightClick (e) {
+      if (e.button === 2) {
+        this.mouserightClick = true
+        this.$nextTick(() => {
+          let context = document.querySelector('.context')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+          this.$refs.context.clickedElement(e.target)
+          // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
+        })
+      }
     }
   }
 }
@@ -965,6 +1007,9 @@ export default {
     .add-1 {
       background-color: red;
     }
+  }
+  .context{
+    position:fixed;
   }
 }
 </style>
