@@ -5,7 +5,7 @@
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
 	<li class="nav-item">
 		<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
-	</li>  
+	</li>
 	<li class="nav-item">
 		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="true">Options</a>
 	</li>
@@ -15,7 +15,7 @@
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
   <div class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-  
+
 	<!-- Look % Feel-->
 	<div>
 		<div v-if="isData" role="tablist">
@@ -300,7 +300,7 @@
 
 				<div class="row">
 					<div class="col md-4"  :class="{fontActive:onBlur}" style="float:left">
-						Blur	
+						Blur
 					</div>
 					<div class="col md-4">
 						<range-slider
@@ -350,7 +350,7 @@
 						></input>
 					</div>
 				</div>
-				
+
 				<div class="row">
 
 					<div class="col md-4" :class="{fontActive:onContrast}" style="float:left">
@@ -430,7 +430,7 @@
 						></input>
 					</div>
 				</div>
-				<div class="row">		
+				<div class="row">
 					<div class="col md-4":class="{fontActive:onInvert}" style="float:left">
 						Invert
 					</div>
@@ -514,8 +514,7 @@
 		</div>
 	</div>
 </div>
-  
-  
+
   <!-- Options v-if="isData" -->
   <div class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	<div  role="tablist">
@@ -525,7 +524,7 @@
 			<b-card-header header-tag="header" class="p-1" role="tab">
 			<div class="parentTreeOption" id="inParentTreeOption" @click="domTrackingWithTree">
 				<button>HTML</button><button>Body</button>
-				
+
 			</div>
 			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Text Option</b-button>
 			</b-card-header>
@@ -556,7 +555,7 @@
 					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="transformantionSelected" :options="transformantion" @change="submitChangeTextTransform"></b-form-select>
 					</div>
 				</div>
-				
+
 				<div class="row">
 					<span class="col-md-5">Font-family</span>
 					<div class="col-md-7">
@@ -578,7 +577,7 @@
 					<input @change="submitChangeTextFontWeight" v-if="fontWeightSelected=='number'"></input>
 					</div>
 				</div>
-				
+
 			</b-collapse>
 		</b-card>
 
@@ -591,7 +590,7 @@
 
 					<div class="row">>
 						<span class="col-md-5">
-							Border 
+							Border
 						</span>
 						<span class="col-md-6 custom-switch">
 							<input v-model="border" @change="submitChangeBorder" type="checkbox" class="custom-control-input" id="customSwitches">
@@ -640,7 +639,7 @@
 			</b-card-header>
 
 			<b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
-				
+
 				<div class="row">
 					<span class="col-md-4" style>Float</span>
 					<div class="col-md-7">
@@ -670,9 +669,6 @@
   </div>
   <!--
 
-      
-	
-  
   -->
 </template>
 
@@ -688,49 +684,49 @@ export default {
   props: ['payload'],
   data () {
     return {
-		transformantionSelected: 'none',
-		transformantion: [
-			{ value: 'none', text: 'None' },
-			{ value: 'lowercase ', text: 'Lowercase' },
-			{ value: 'uppercase ', text: 'Uppercase' },
-			{ value: 'capitalize ', text: 'Capitalize' },
-		],
-		fontFamilySelected:'none',
-			fontFamily: [
-			{ value: 'none', text: 'None' },
-			{ value: 'geogia', text: 'Geogia' },
-			{ value: 'serif ', text: 'Serif' },
-			{ value: 'sans-serif ', text: 'Sans-serif' },
-			{ value: 'monospace ', text: 'Monospace' },
-			{ value: 'cursive ', text: 'Cursive' },
-			{ value: 'fantasy ', text: 'Fantasy' },
-		],
-		fontStyleSelected:'none',
-		fontStyle: [
-			{ value: 'none', text: 'None' },
-			{ value: 'initial  ', text: 'Initial  ' },
-			{ value: 'italic ', text: 'Italic' },
-			{ value: 'oblique ', text: 'Oblique' },
-			{ value: 'underline', text: 'Underline' },
-		],
-		fontWeightSelected:'none',
-		fontWeight: [
-			{ value: 'none', text: 'None' },
-			{ value: 'lighter', text: 'Lighter' },
-			{ value: 'bold', text: 'Bold' },
-			{ value: 'number', text: 'Number' },
-		],
-      borderStyleSelected:'none',
+      transformantionSelected: 'none',
+      transformantion: [
+        { value: 'none', text: 'None' },
+        { value: 'lowercase ', text: 'Lowercase' },
+        { value: 'uppercase ', text: 'Uppercase' },
+        { value: 'capitalize ', text: 'Capitalize' }
+      ],
+      fontFamilySelected: 'none',
+      fontFamily: [
+        { value: 'none', text: 'None' },
+        { value: 'geogia', text: 'Geogia' },
+        { value: 'serif ', text: 'Serif' },
+        { value: 'sans-serif ', text: 'Sans-serif' },
+        { value: 'monospace ', text: 'Monospace' },
+        { value: 'cursive ', text: 'Cursive' },
+        { value: 'fantasy ', text: 'Fantasy' }
+      ],
+      fontStyleSelected: 'none',
+      fontStyle: [
+        { value: 'none', text: 'None' },
+        { value: 'initial  ', text: 'Initial  ' },
+        { value: 'italic ', text: 'Italic' },
+        { value: 'oblique ', text: 'Oblique' },
+        { value: 'underline', text: 'Underline' }
+      ],
+      fontWeightSelected: 'none',
+      fontWeight: [
+        { value: 'none', text: 'None' },
+        { value: 'lighter', text: 'Lighter' },
+        { value: 'bold', text: 'Bold' },
+        { value: 'number', text: 'Number' }
+      ],
+      borderStyleSelected: 'none',
 	  borderStyle: [
-			{ value: 'none', text: 'None' },
-			{ value: 'solid', text: 'Solid' },
-			{ value: 'dotted', text: 'Dotted' },
-			{ value: 'dashed', text: 'Dashed' },
-			{ value: 'double', text: 'Double' },
-		],
+        { value: 'none', text: 'None' },
+        { value: 'solid', text: 'Solid' },
+        { value: 'dotted', text: 'Dotted' },
+        { value: 'dashed', text: 'Dashed' },
+        { value: 'double', text: 'Double' }
+      ],
 
-	  border:'false',
-	  tabStep:1,
+	  border: 'false',
+	  tabStep: 1,
 	  opacityValue: '',
 	  blurValue: '',
 	  brightnessValue: 100 + '%',
@@ -806,10 +802,10 @@ export default {
 	  onSaturate: false,
 	  onSepia: false,
 
-	  parentDom:[],
-	  selectedFile:null,
-	  domWithTree:[],
-	  backgroundImage:'',
+	  parentDom: [],
+	  selectedFile: null,
+	  domWithTree: [],
+	  backgroundImage: ''
 	  // on : true,
       //   widthFontActive:{
       // 	color:'blue',
@@ -823,23 +819,21 @@ export default {
     ChromeColor: VueColor.Chrome
   },
   created () {
-	
+
   },
-  mounted(){
-	  
+  mounted () {
+
   },
   methods: {
-	chageTab(e){
-		if(e.toElement.text=='Look & Feel'){
-			this.tabStep=1
-		}
-		else if(e.toElement.text=='Options'){
-			this.tabStep=2
-		}
-		else if(e.toElement.text=='Animation'){
-			this.tabStep=3
-		}
-	},
+    chageTab (e) {
+      if (e.toElement.text == 'Look & Feel') {
+        this.tabStep = 1
+      } else if (e.toElement.text == 'Options') {
+        this.tabStep = 2
+      } else if (e.toElement.text == 'Animation') {
+        this.tabStep = 3
+      }
+    },
     getData (payload, homeLayoutLocation) {
       this.onWidth = false
       this.onHeight = false
@@ -858,7 +852,6 @@ export default {
       this.onSaturate = false,
       this.onSepia = false,
 	  this.selected = 'none'
-
 
       if (!this.isData) { this.isData = true }
       this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
@@ -940,7 +933,7 @@ export default {
       this.isFontPicker = true
     },
     updateBackgroundValue (colorData) {
-    this.backgroundColor.background = colorData.hex
+      this.backgroundColor.background = colorData.hex
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'background'
       this.submitSorce.value = colorData.hex
@@ -1100,87 +1093,81 @@ export default {
       this.onSepia = true
       this.$emit('userSelected', this.submitSorce)
     },
-	submitChangeAlign(e){
-		// console.log(e.target.name)
-		this.submitSorce.payload = this.payload
-		this.submitSorce.style = 'text-align'
-		if((e.target.name)==='left'){
-			this.submitSorce.value = 'left'
-		}
-		else if((e.target.name)==='right'){
-			this.submitSorce.value = 'right'
-		}
-		else if((e.target.name)==='no'){
-			this.submitSorce.value = 'left'
-		}
-		else if((e.target.name)==='center'){
-			this.submitSorce.value = 'center'
-		}
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitChangeTextTransform(e){
-		// console.log(e)
-		this.submitSorce.payload = this.payload
-		this.submitSorce.style = 'text-transform'
-		this.submitSorce.value = e
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitChangeTextFontFamily(e){
-		this.submitSorce.payload = this.payload
-		this.submitSorce.style = 'font-family'
-		this.submitSorce.value = e
-		this.$emit('userSelected', this.submitSorce)
-	},
-	submitChangeTextFontStyle(e){
-		// console.log(e)
-		if(e=='underline'){
-			// console.log("s")
-			this.submitSorce.payload = this.payload
-			this.submitSorce.style = 'text-decoration'
-			this.submitSorce.value = e
-			this.$emit('userSelected', this.submitSorce)
-		}
-		else{
-			this.submitSorce.payload = this.payload
-			this.submitSorce.style = 'font-style'
-			this.submitSorce.value = e
-			this.$emit('userSelected', this.submitSorce)
-		}
-	},
-	submitChangeTextFontWeight(e){
-		if(e.isTrusted){
-			this.submitSorce.payload = this.payload
-			this.submitSorce.style = 'font-weight'
-			this.submitSorce.value = e.target.value
-			this.$emit('userSelected', this.submitSorce)
-		}
-		else{
-			this.submitSorce.payload = this.payload
-			this.submitSorce.style = 'font-weight'
-			this.submitSorce.value = e
-			this.$emit('userSelected', this.submitSorce)
-		}
-	},
-	submitChangeBorder(e){
-		// console.log("dasd")
-		this.submitSorce.payload = this.payload
-		this.submitSorce.style = 'border-style'
-		this.submitSorce.value = 'dotted'
-		// console.log(this.submitSorce)
-		this.$emit('userSelectBorder', this.submitSorce)
-		
-	},
-	makeTreeParent(payload){
-		var obj = document.getElementById('inParentTreeOption')
-		$(obj).empty()
+    submitChangeAlign (e) {
+      // console.log(e.target.name)
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'text-align'
+      if ((e.target.name) === 'left') {
+        this.submitSorce.value = 'left'
+      } else if ((e.target.name) === 'right') {
+        this.submitSorce.value = 'right'
+      } else if ((e.target.name) === 'no') {
+        this.submitSorce.value = 'left'
+      } else if ((e.target.name) === 'center') {
+        this.submitSorce.value = 'center'
+      }
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitChangeTextTransform (e) {
+      // console.log(e)
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'text-transform'
+      this.submitSorce.value = e
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitChangeTextFontFamily (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'font-family'
+      this.submitSorce.value = e
+      this.$emit('userSelected', this.submitSorce)
+    },
+    submitChangeTextFontStyle (e) {
+      // console.log(e)
+      if (e == 'underline') {
+        // console.log("s")
+        this.submitSorce.payload = this.payload
+        this.submitSorce.style = 'text-decoration'
+        this.submitSorce.value = e
+        this.$emit('userSelected', this.submitSorce)
+      } else {
+        this.submitSorce.payload = this.payload
+        this.submitSorce.style = 'font-style'
+        this.submitSorce.value = e
+        this.$emit('userSelected', this.submitSorce)
+      }
+    },
+    submitChangeTextFontWeight (e) {
+      if (e.isTrusted) {
+        this.submitSorce.payload = this.payload
+        this.submitSorce.style = 'font-weight'
+        this.submitSorce.value = e.target.value
+        this.$emit('userSelected', this.submitSorce)
+      } else {
+        this.submitSorce.payload = this.payload
+        this.submitSorce.style = 'font-weight'
+        this.submitSorce.value = e
+        this.$emit('userSelected', this.submitSorce)
+      }
+    },
+    submitChangeBorder (e) {
+      // console.log("dasd")
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'border'
+      this.submitSorce.value = 'dotted'
+      // console.log(this.submitSorce)
+      this.$emit('userSelectBorder', this.submitSorce)
+    },
+    makeTreeParent (payload) {
+      var obj = document.getElementById('inParentTreeOption')
+      $(obj).empty()
 
-		var newDIV = document.createElement('button')
-		newDIV.innerHTML = "HTML"
-		obj.appendChild(newDIV)
+      var newDIV = document.createElement('button')
+      newDIV.innerHTML = 'HTML'
+      obj.appendChild(newDIV)
 
-		var newDIV = document.createElement('button')
-		newDIV.innerHTML = "Body"
-		obj.appendChild(newDIV)
+      var newDIV = document.createElement('button')
+      newDIV.innerHTML = 'Body'
+      obj.appendChild(newDIV)
 
 		var a=0;
 		var print=[]
