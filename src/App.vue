@@ -13,6 +13,8 @@
       <overview
         ref="overview"
         @selectDomElement="selectDomElemented"
+        @inParentTreeOption="inParentTreeOption"
+        @domWithTree="domPushWithTree"
         :getDocument="homeDocument"
         class="overview"
       ></overview>
@@ -37,6 +39,7 @@
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
+      @userSelectBorder="userSelectBorder"
       class="layout"
     ></layout>
     <span v-if="tagDescription" class="description-tag">
@@ -150,6 +153,7 @@ export default {
       this.$refs.home.addComponentTag = tagComponent
     },
     componentSelected (payload) {
+      this.$refs.layouts.isData = true
       this.payload = payload.target
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
@@ -160,6 +164,7 @@ export default {
         this.isPustHtml = false
       }
       this.$refs.overview.domSelection(payload.target)
+      this.$refs.layouts.makeTreeParent(this.payload)
     },
     userSelectedWidth (data) {
       this.data = data
@@ -211,6 +216,15 @@ export default {
       // console.log(this.dom)
       this.$refs.home.selectOverview(this.dom)
     },
+    inParentTreeOption(dom){
+       this.$refs.layouts.parentDom = dom
+    },
+    domPushWithTree(dom){
+      this.$refs.layouts.domWithTree = dom
+    },
+    userSelectBorder(e){
+      console.log(e)
+      }.
     toggleClicked () {
       console.log('aaa')
     }
