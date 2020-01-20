@@ -35,6 +35,7 @@
       :payload="payload"
       @userSelected="userSelectedWidth"
       @userSelectBorder="userSelectBorder"
+      @selectDomElemented="selectDomElemented"
       class="layout"
     ></layout>
     <span v-if="tagDescription" class="description-tag">

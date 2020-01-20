@@ -1186,13 +1186,22 @@ export default {
 		var print=[]
 		for(var i=0;i<this.parentDom.length;i++){
 			if(payload==this.domWithTree[i]){
+				
 				a=i
+				break
 			}
 		}
+		
+		// console.log(a)
 		print.push(a)
+
+		// console.log(this.parentDom)
+
 		while(true){
 			if(this.parentDom[a]!='-1'){
+	
               	a = this.parentDom[a]
+				
 				print.push(a)
             }
             else{
@@ -1202,7 +1211,7 @@ export default {
 		for(var i=print.length-1;i>=0;i--){
 			var obj = document.getElementById('inParentTreeOption')
 			var newDIV = document.createElement('button')
-			newDIV.setAttribute('id', i)
+			newDIV.setAttribute('id', print[i])
 			newDIV.innerHTML = document.querySelector(`label[for="${print[i]}"]`).innerHTML
 			obj.appendChild(newDIV)
 		}
@@ -1224,9 +1233,21 @@ export default {
 		// this.submitSorce.style = 'background-image'
 		// this.submitSorce.value = "C:\\fakepath\\다모넷 - 1.PNG"
 		// this.$emit('userSelected', this.submitSorce)
+		var input = e.target;
+
+		var reader = new FileReader();
+		reader.onload = function(){
+		var dataURL = reader.result;
+		var output = document.getElementById('output');
+		output.src = dataURL;
+		};
+		reader.readAsDataURL(input.files[0]);
+		console.log(input.files[0])
+		console.log(reader.readAsDataURL(input.files[0]))
+
 		this.submitSorce.payload = this.payload
 		this.submitSorce.style = 'background-image'
-		this.submitSorce.value = 'url("static/studioImage/ArticleList.png")'
+		this.submitSorce.value = reader.readAsDataURL(input.files[0])
 		this.$emit('userSelected', this.submitSorce)
 
 		this.submitSorce.payload = this.payload
@@ -1238,7 +1259,9 @@ export default {
 		/// 서버에 저장
 	},
 	domTrackingWithTree(e){
-		console.log(e)
+		// console.log(this.domWithTree[e.target.id])
+		if(e.target.innerText!=='HTML'&&e.target.innerText!=='Body')
+			this.$emit('selectDomElemented', this.domWithTree[e.target.id])
 	},
   }
 }
