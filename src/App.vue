@@ -216,15 +216,15 @@ export default {
       // console.log(this.dom)
       this.$refs.home.selectOverview(this.dom)
     },
-    inParentTreeOption(dom){
-       this.$refs.layouts.parentDom = dom
+    inParentTreeOption (dom) {
+      this.$refs.layouts.parentDom = dom
     },
-    domPushWithTree(dom){
+    domPushWithTree (dom) {
       this.$refs.layouts.domWithTree = dom
     },
-    userSelectBorder(e){
-      console.log(e)
-      }.
+    userSelectBorder (e) {
+      this.$refs.home.borderStyleChanged(e)
+    },
     toggleClicked () {
       console.log('aaa')
     }

@@ -542,6 +542,19 @@ export default {
       // console.log(element)
       element.style[this.style] = this.value
     },
+    borderStyleChanged (data) {
+      console.log(data)
+      this.target = data.payload.classList
+      this.style = data.style
+      this.value = data.value
+      let prevBorder = this.clickedBorder.split(' ')
+      let element = document.getElementsByClassName(this.target)[0]
+      console.log(element)
+      console.log(this.style)
+      this.value = prevBorder[0] + ' ' + data.value + ' ' + prevBorder[2] + ' ' + prevBorder[3] + ' ' + prevBorder[4]
+      element.style[this.style] = this.value
+      this.clickedBorder = this.value
+    },
     focusInput (e) {
       if (
         e.target.className !== 'tagname' &&
