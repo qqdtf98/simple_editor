@@ -17,7 +17,7 @@ export default {
         <button class="2"
         type="button"
         style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
-        onclick="alert('눌렀습니다.')">도움말
+        >도움말
         <div> dfdsfdsfds 
         <div> dfdsfdsfds </div>
         <div> dfdsfdsfds </div>
