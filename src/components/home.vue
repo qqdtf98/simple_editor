@@ -2,6 +2,7 @@
   <div id="dashboard">
     <div class="editor-box" @scroll="handleScroll">
       <div
+      @mouseup="onmouseRightClick"
         @keydown.enter="isContentNotEditable"
         ref="dash"
         class="editor-component"
@@ -9,7 +10,6 @@
         @dblclick="onmouseDoubleClick"
         @click="onmouseClick"
         @mousemove="onmouseMove"
-        @mouseup="mouseup"
         @mousedown="mousedown"
       >
       <spliter />
@@ -88,8 +88,10 @@ import Dashboard from './dashboard.vue'
 import Navi from './navi.vue'
 import HtmlLoader from './htmlLoader.vue'
 import spliter from './spliter.vue'
+import Context from './Context'
+
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter },
+  components: { Dashboard, Navi, HtmlLoader, spliter, Context },
   data () {
     return {
       selectedElement: null,
@@ -127,11 +129,16 @@ export default {
       currentX: 0,
       currentY: 0,
       borderClicked: false,
-      borderElem: null
+      borderElem: null,
+      mode: false,
+      mouserightClick: false
     }
   },
   mounted () {
     // let b = document.querySelector('.3')
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault()
+    })
 
     let editor = document.querySelector('.editor-box')
 
@@ -372,6 +379,7 @@ export default {
       }
     },
     onmouseClick (e) {
+      this.mouserightClick = false
       if (this.clickedElement === null) {
         if (
           e.target.className !== 'tagname' &&
@@ -844,6 +852,18 @@ export default {
       console.log(mode)
       this.mode = mode
     },
+    onmouseRightClick (e) {
+      console.log('aaaa')
+      if (e.button === 2) {
+        let context = document.querySelector('.context')
+        this.mouserightClick = true
+        console.log(e.target)
+        console.log(getComputedStyle(e.target).width)
+        this.$nextTick(() => {
+          context.style.left = parseInt(getComputedStyle(e.target).left) + parseInt(getComputedStyle(e.target).width) / 2 + 'px'
+          context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
+        })
+      }
     }
   }
 }
@@ -988,6 +1008,9 @@ export default {
     .add-1 {
       background-color: red;
     }
+  }
+  .context{
+    position:fixed;
   }
 }
 </style>
