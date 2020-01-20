@@ -2,7 +2,7 @@
     <div id="app">
         <div>
             <div id="newLoaderHtml" ref="mydiv" v-html="html"></div>
-            <button id="test4" >test</button> 
+            <button id="test4" >test</button>
         </div>
     </div>
 </template>
@@ -16,7 +16,6 @@ export default {
       html: `
         <div class="dsa">
         <button class="dsadsadsa" id="dsadsadsa"
-        @click="testLoaderScript"
         type="button"
         >도움말
         <div> dfdsfdsfds 
@@ -28,13 +27,13 @@ export default {
         <div> dfdsfdsfds </div>
         </div>
         `,
-        test:'2',
+      test: '2'
     }
   },
   created () {
-      var oScript = document.createElement('style');
-      oScript.type ='text/css';
-      oScript.innerHTML=`
+    var oScript = document.createElement('style')
+    oScript.type = 'text/css'
+    oScript.innerHTML = `
       #dsadsadsa{
         color: #fff; 
         background:blue;
@@ -43,16 +42,16 @@ export default {
         padding:5px 20px;
       }
       `
-      document.getElementsByTagName('head')[0].appendChild(oScript)
-      // var vScript = document.createElement('script');
-      // vScript.type ='text/javascript';
-      // vScript.charset ='utf-8';		  
-      // vScript.innerHTML=`
-      // open(){
-      //   alert("s")
-      // }
-      // `
-      // document.getElementsByTagName('head')[0].appendChild(vScript)
+    document.getElementsByTagName('head')[0].appendChild(oScript)
+    // var vScript = document.createElement('script');
+    // vScript.type ='text/javascript';
+    // vScript.charset ='utf-8';
+    // vScript.innerHTML=`
+    // open(){
+    //   alert("s")
+    // }
+    // `
+    // document.getElementsByTagName('head')[0].appendChild(vScript)
   },
   methods: {
     onFileChange (file) {
@@ -73,27 +72,26 @@ export default {
       }
       rawFile.send(null)
     },
-    testLoaderScript(){
+    testLoaderScript () {
       // var oScript = document.createElement('script');
       // oScript.type ='text/javascript';
-      // oScript.charset ='utf-8';		  
+      // oScript.charset ='utf-8';
       // oScript.src = 'ssss.js';
       // console.log(oScript)
       // alert("s")
       // document.getElementsByTagName('head')[0].appendChild(oScript);
-     
-      
+
     }
   },
-  mounted(){
+  mounted () {
     console.log(this.$refs['mydiv'].firstChild)
-    this.$refs['mydiv'].firstChild.addEventListener('click', function(event) {
-    event.preventDefault();
-    console.log('clicked: ', event.target);
-     alert("눌렀습니다")
+    this.$refs['mydiv'].firstChild.addEventListener('click', function (event) {
+      event.preventDefault()
+      console.log('clicked: ', event.target)
+      alert('눌렀습니다')
     })
   }
-  
+
 }
 </script>
 

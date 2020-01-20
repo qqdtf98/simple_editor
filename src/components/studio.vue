@@ -198,15 +198,25 @@ export default {
         docFrag.appendChild(document.createElement('div'))
 
         docFrag.querySelector('div').innerHTML =
-        `<button class="2"
+        `<button class="2 dsadsadsa"
         type="button"
-        style="color: #fff; background:blue; font-size:2em; border-radius:0.5em; padding:5px 20px;"
-        onclick="alert('눌렀습니다.')">도움말</button>`
+        >도움말</button>`
 
         this.addComponetUserPick = docFrag.firstChild
 
         /// ///////////통신///////////////////////
-
+        var oScript = document.createElement('style')
+        oScript.type = 'text/css'
+        oScript.innerHTML = `
+      .dsadsadsa{
+        color: #fff; 
+        background:blue;
+        font-size:2em; 
+        border-radius:0.5em;
+        padding:5px 20px;
+      }
+      `
+        document.getElementsByTagName('head')[0].appendChild(oScript)
         /// ///////////통신///////////////////////
         this.$emit('userSelectedTagComponent', this.addComponetUserPick)
       }
