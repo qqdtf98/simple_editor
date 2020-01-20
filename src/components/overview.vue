@@ -80,8 +80,8 @@ export default {
 
       
       var child = document.getElementById('newLoaderHtml').children
-      console.log(child)
-      console.log(child.length)
+      // console.log(child)
+      // console.log(child.length)
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
         // console.log(child[i])
@@ -134,16 +134,11 @@ export default {
 
           var newParentObj = document.getElementById(this.childNum)
           // console.log(obj)
-         console.log(newParentObj)
+        //  console.log(newParentObj)
 
           this.myParent.push(-1)
           this.findChildren(child[i], newParentObj,0)
 
-
-          
-
-
-         
 
         }
       } 
@@ -244,14 +239,16 @@ export default {
       // console.log(this.dom.length)
       // console.log(payload)
       // console.log(this.dom.length)
-      console.log(payload)
+      // console.log(payload)
+      
+      
       for (var i = 0; i < this.dom.length; i++) {
-        if (this.isActiveLabel[i]) {
-          this.isActiveLabel[i] = false
+          // console.log(this.isActiveLabel)
+          // console.log(this.isActiveLabel[i])
           $(`label[for="${i}"]`).trigger('click')
-        }
       }
       
+      // console.log(this.isActiveLabel)
       // console.log(this.dom.length)
 
       // for (var i = 0; i < this.myParent.length; i++) {
@@ -260,26 +257,29 @@ export default {
       // }
 
       for (var i = 0; i < this.dom.length; i++) {
+        
         if (payload === this.dom[i]) {
           // console.log(i)
           var a = i
-          console.log(this.myParent)
+          // console.log(this.myParent)
 
           while(true){
             
             if(this.myParent[a]!='-1'){
               // console.log("메롱")
               // console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
-              if (this.isActiveLabel[this.myParent[a]] == true) {
-                  this.isActiveLabel[i] = false
+              console.log(this.myParent[a])
+              if (this.isActiveLabel[this.myParent[a]] == false) {
                   $(document.querySelector(`label[for="${this.myParent[a]}"]`)).trigger('click')
                   
               }
               a = this.myParent[a]
             }
             else{
-              this.isActiveLabel[0] = true
-              $(document.querySelector(`label[for="${0}}"]`)).trigger('click')
+              if (this.isActiveLabel[0] == false) {
+                  $(document.querySelector(`label[for="${0}}"]`)).trigger('click')
+                  break;
+              }
               break;
             }
           }
@@ -340,8 +340,9 @@ export default {
       //     }
 
         this.$emit('inParentTreeOption',this.myParent)
+        // this.$emit('inEventDomTree',this.dom)
         // console.log(this.dom)
-        // this.$emit('domWithTree',this.dom)
+        this.$emit('domWithTree',this.dom)
 
         
 
@@ -359,14 +360,6 @@ export default {
     },
     onmouseMove (e) {
       if (e.target.tagName === 'LABEL') {
-        // console.log(e.target)
-        // console.log(e.target.tagName)
-        // console.log(e.target.id)
-        // console.log(this.dom[e.target.id])
-        // console.log(this.numberinDom[2])
-        // console.log(this.dom[e.target.id])
-        // console.log(e.target.id)
-        // console.log(this.dom)
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }
@@ -410,79 +403,4 @@ li{
   content:'\f105';
   font-family: FontAwesome;
 }
-// #overview {
-//   .studio-text-box {
-//     height: 5%;
-//     justify-content: left;
-//     justify-items: left;
-//     .studio-text {
-//       background-color: #41474c;
-//       padding: 0.2rem;
-//       color: #fff;
-//     }
-//   }
-//   .tag-studio {
-//     border: 3px solid #49b6a7;
-//     height: 95%;
-//     // display: flex;
-//     // flex-direction: column;
-//     overflow: auto;
-//     .tag-studio::-webkit-scrollbar{
-//         width: 5px;
-//     }
-//     .search {
-//       background-color: #41474c;
-//       color: #fff;
-//     }
-//     .tag-box {
-//       // overflow:scroll;
-//       align-items: left;
-//       justify-content: left;
-//       .tag-list-box {
-//         // float: left;
-//         text-align: left;
-//         margin: 0.1rem;
-//         .tag-list {
-//           margin-left: 0.4rem;
-//           color: #e7e4e4;
-//           cursor: pointer;
-//           user-select: none; /* Prevent text selection */
-//           //   float: left;
-//         }
-
-//         /* Create the tag-list/arrow with a unicode, and style it */
-//         .tag-list::before {
-//           content: "\25B6";
-//           color: #e7e4e4;
-//           display: inline-block;
-//           margin-right: 6px;
-//         }
-
-//         /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
-//         .tag-list-down::before {
-//           transform: rotate(90deg);
-//         }
-//         .nested {
-//           display: none;
-//         }
-
-//         /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
-//         .active {
-//           display: block;
-//         }
-//         .template {
-//           margin-left: 2rem;
-//           color: #e7e4e4;
-//         }
-//         .template::before {
-//           content: "\2B1A";
-//           margin-right: 0.2rem;
-//         }
-//         .ui {
-//           margin-left: 1.2rem;
-//         }
-//       }
-//     }
-//   }
-// }
 </style>

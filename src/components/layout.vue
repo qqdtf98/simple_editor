@@ -2,18 +2,18 @@
 
   <div>
 	<!-- Nav tabs -->
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
-  <li class="nav-item">
-    <a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="true">Options</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" v-bind:class="{ active:tabStep===3 }" :active="tabStep === 3"id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
-  </li>
-</ul>
-<div class="tab-content" id="pills-tabContent">
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
+	<li class="nav-item">
+		<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
+	</li>  
+	<li class="nav-item">
+		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="true">Options</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" v-bind:class="{ active:tabStep===3 }" :active="tabStep === 3"id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
+	</li>
+	</ul>
+	<div class="tab-content" id="pills-tabContent">
   <div class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
   
 	<!-- Look % Feel-->
@@ -205,7 +205,7 @@
 				 image
 					<input style="display:none"type="file" @change="onFileSelected" ref="fileInput">
 					<button @click="$refs.fileInput.click()">Pick File</button>
-					<button @click="onUpload">Upload</button>
+					<button @click="onUpload">Save</button>
 				</div>
 			</b-collapse>
 		</b-card>
@@ -530,383 +530,133 @@
 			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Text Option</b-button>
 			</b-card-header>
 			<b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
-				<div>
-					<div>
-						<span style>Alignment</span>
-
-						<button @click="submitChangeAlign" name="right" type="button" class="aling-button" aria-label="Left Align">
-							<i class="fas fa-align-right"></i>
-						</button>
-						<button @click="submitChangeAlign" name="center" type="button" class="aling-button" aria-label="Left Align">
-							<i class="fas fa-align-center"></i>
-						</button>
-						<button @click="submitChangeAlign" name="left"type="button" class="aling-button" aria-label="Left Align">
-							<i class="fas fa-align-left"></i>
-						</button>
-						<button @click="submitChangeAlign" name="left" type="button" class="aling-button" aria-label="Left Align">
-							<i class="fas fa-align-justify"></i>
-						</button>
-						<button @click="submitChangeAlign" name="no"  type="button" class="aling-button" aria-label="Left Align">
-							<i class="fas fa-times"></i>
-						</button>
+				<div class="row">
+					<span class="col-md-4" style>Alignment</span>
+					<div class="col-md-7">
+					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-right"></i>
+					</button>
+					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-center"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-left"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left" type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-justify"></i>
+					</button>
+					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-times"></i>
+					</button>
 					</div>
 				</div>
-
-				<div>
-					<b-form-select v-model="selected" :options="options" @change="submitChangeTextTransform"class="btn btn-info btn-sm dropdown-toggle"></b-form-select>
-					<div>Selected:  <strong>{{ selected }}</strong></div>
+				<div class="row">
+					<span class="col-md-5">Transformantion</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="transformantionSelected" :options="transformantion" @change="submitChangeTextTransform"></b-form-select>
+					</div>
 				</div>
 				
-				<div>
-					<div>
-						<span>
-							Monospace
-						</span>
-						<span class="custom-switch">
-							<input type="checkbox" class="custom-control-input" id="customSwitches">
-							<label class="custom-control-label" for="customSwitches"></label>
-						</span>
+				<div class="row">
+					<span class="col-md-5">Font-family</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="fontFamilySelected" :options="fontFamily" @change="submitChangeTextFontFamily"></b-form-select>
 					</div>
 				</div>
 
+				<div class="row">
+					<span class="col-md-5">Font-style</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="fontStyleSelected" :options="fontStyle" @change="submitChangeTextFontStyle"></b-form-select>
+					</div>
+				</div>
+
+				<div class="row">
+					<span class="col-md-5">Font-weight</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="fontWeightSelected" :options="fontWeight" @change="submitChangeTextFontWeight"></b-form-select>
+					<input @change="submitChangeTextFontWeight" v-if="fontWeightSelected=='number'"></input>
+					</div>
+				</div>
+				
 			</b-collapse>
 		</b-card>
 
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
-			<b-button block href="#" v-b-toggle.accordion-2 variant="info">Background</b-button>
+			<b-button block href="#" v-b-toggle.accordion-2 variant="info">Border</b-button>
 			</b-card-header>
 			<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
 				<div class="option textboxoption has-addon collapsed">
-					<label class="option-content">
-					<span :class="{fontActive:onBackgroundColor}"title>
-						BackgroundColor
-						<i class="caret" style="display: inline-block;"></i>
-					</span>
-					<div class="control">
-						<b-button  @click = "colorBackgroundpicker" @keyup.enter="submitSourceOriginal" style="width:30px; height:30px" :style="backgroundColor"variant="free"></b-button>
-						<input
-						type
-						name="backgroundColor"
-						value
-						title
-						placeholder=""
-						@keyup.enter="submitSourceOriginal"
-						v-model="backgroundColor.backgroundColor.hex"
-						/>
-						<chrome-color
-						class="chrome"
-						v-if="isBackgroundPicker"
-						:value="backgroundColor.backgroundColor"
-						v-model="backgroundColor.backgroundColor"
-						@input="updateBackgroundValue"
-						></chrome-color>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle"></span>
+
+					<div class="row">>
+						<span class="col-md-5">
+							Border 
+						</span>
+						<span class="col-md-6 custom-switch">
+							<input v-model="border" @change="submitChangeBorder" type="checkbox" class="custom-control-input" id="customSwitches">
+							<label class="custom-control-label" for="customSwitches" ></label>
+						</span>
 					</div>
-					</label>
+
+					<div class="row">
+						<span class="col-md-5">border-style</span>
+						<div class="col-md-7">
+						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderStyleSelected" :options="fontWeight" @change="borderStyle"></b-form-select>
+						</div>
+					</div>
+
 				</div>
 			</b-collapse>
 		</b-card>
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
-			<b-button block href="#" v-b-toggle.accordion-3 variant="info">Heading Options</b-button>
+			<b-button block href="#" v-b-toggle.accordion-3 variant="info">Flex box</b-button>
 			</b-card-header>
 			<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
-				<div class="option textboxoption has-addon collapsed">
-					<label class="option-content">
-					<span :class="{fontActive:onColor}" title>
-						Color
-						<i class="caret" style="display: inline-block;"></i>
-					</span>
-					<div class="control">
-						<b-button  @click = "colorFontpicker" @keyup.enter="submitSourceOriginal" style="width:30px; height:30px":style="fontColor"variant="free"></b-button>
-						<input
-						type
-						name="color"
-						title
-						placeholder=""
-						@keyup.enter="submitSourceOriginal"
-						v-model= "fontColor.background"
-						/>
-						<chrome-color
-						class="chrome"
-						v-if="isFontPicker"
-						:value="fontColor.backgroundColor"
-						v-model="fontColor.backgroundColor"
-						@input="updateFontValue"
-						></chrome-color>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle"></span>
+				<div class="row">
+					<span class="col-md-4" style>Float</span>
+					<div class="col-md-7">
+					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-right"></i>
+					</button>
+					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-center"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-left"></i>
+					</button>
+					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-times"></i>
+					</button>
 					</div>
-					</label>
-					<label class="option-content">
-					<span :class="{fontActive:onFontSize}" title>
-						Font Size
-						<i class="caret" style="display: inline-block;"></i>
-					</span>
-					<div class="control">
-						<input
-						type="text"
-						name="fontSize"
-						title
-						placeholder="40px"
-						@keyup.enter="submitSourceWithPX"
-						v-model="componentSorce.fontSize"
-						/>
-						<span class="warning-badge" style="display: none;"></span>
-						<span class="addon increment-handle">
-						<i></i>
-						</span>
-					</div>
-					</label>
 				</div>
 			</b-collapse>
 		</b-card>
 
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
-			<b-button block href="#" v-b-toggle.accordion-4 variant="info">Filters</b-button>
+			<b-button block href="#" v-b-toggle.accordion-4 variant="info">Display</b-button>
 			</b-card-header>
 
 			<b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
-				<div class="row">
-					<div class="col md-4" :class="{fontActive:onOpacity}" style="float:left">
-					Opacity
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="1"
-							step="0.01"
-							name="Opacity"
-							submitSorce.style="Opacity"
-							@input = "submitOpacity"
-							v-model="opacityValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							v-model="opacityValue"
-							placeholder="0"
-							name="Opacity"
-							@keyup.enter="submitOpacity"
-						></input>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col md-4"  :class="{fontActive:onBlur}" style="float:left">
-						Blur	
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="100"
-							step="1"
-							name="Blur"
-							submitSorce.style="Blur"
-							@input = "submitBlur"
-							v-model="blurValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							placeholder="0px"
-							name="Blur"
-							@keyup.enter="submitBlur"
-							v-model="blurValue"
-						></input>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col md-4":class="{fontActive:onBrightness}" style="float:left">
-						Brightness
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="100"
-							step="1"
-							name="Brightness"
-							submitSorce.style="Brightness"
-							@input = "submitBrightness"
-							v-model="brightnessValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							placeholder="0%"
-							name="Brightness"
-							@keyup.enter="submitBrightness"
-							v-model="brightnessValue"
-						></input>
-					</div>
-				</div>
 				
 				<div class="row">
-
-					<div class="col md-4" :class="{fontActive:onContrast}" style="float:left">
-						Contrast
+					<span class="col-md-4" style>Float</span>
+					<div class="col-md-7">
+					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-right"></i>
+					</button>
+					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-center"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-left"></i>
+					</button>
+					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-times"></i>
+					</button>
 					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="200"
-							step="1"
-							name="Contrast"
-							submitSorce.style="Contrast"
-							@input = "submitContrast"
-							v-model="contrastValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							placeholder="0%"
-							name="Contrast"
-							@keyup.enter="submitContrast"
-							v-model="contrastValue"
-						></input>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col md-4":class="{fontActive:onGrayscale}" style="float:left">
-						Grayscale
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="100"
-							step="1"
-							name="Grayscale"
-							submitSorce.style="Grayscale"
-							@input = "submitGrayscale"
-							v-model="grayscaleValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							placeholder="0%"
-							name="Grayscale"
-							@keyup.enter="submitGrayscale"
-							v-model="grayscaleValue"
-						></input>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col md-4":class="{fontActive:onHue}" style="float:left">
-						Hue
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="360"
-							step="3"
-							name="Hue"
-							submitSorce.style="Hue"
-							@input = "submitHue"
-							v-model="hueValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							placeholder="0deg"
-							name="Hue"
-							@keyup.enter="submitHue"
-							v-model="hueValue"
-						></input>
-					</div>
-				</div>
-				<div class="row">		
-					<div class="col md-4":class="{fontActive:onInvert}" style="float:left">
-						Invert
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="100"
-							step="1"
-							name="Invert"
-							submitSorce.style="Invert"
-							@input = "submitInvert"
-							v-model="invertValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-							style="width:50px"
-							placeholder="100%"
-							name="Invert"
-							@keyup.enter="submitInvert"
-							v-model="invertValue"
-						></input>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col md-4":class="{fontActive:onSaturate}" style="float:left">
-						Saturate
-					</div>
-					<div class="col md-4">
-						<range-slider
-							class="slider"
-							min="0"
-							max="200"
-							step="1"
-							name="Saturate"
-							submitSorce.style="Saturate"
-							@input = "submitSaturate"
-							v-model="saturateValue">
-						</range-slider>
-					</div>
-					<div class="col md-4">
-						<input
-						style="width:50px"
-						placeholder="0%"
-						name="Saturate"
-						@keyup.enter="submitSaturate"
-						v-model="saturateValue"
-						></input>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col md-4" :class="{fontActive:onSepia}" style="float:left">
-						Sepia
-					</div>
-				<div class="col md-4
-				">
-				<range-slider
-					class="slider"
-					min="0"
-					max="100"
-					step="1"
-					name="Sepia"
-					submitSorce.style="Sepia"
-					@input = "submitSepia"
-					v-model="sepiaValue">
-				</range-slider>
-				</div>
-				<div class="col md-4">
-				<input
-					style="width:50px"
-					placeholder="0%"
-					name="Sepia"
-					@keyup.enter="submitSepia"
-					v-model="sepiaValue"
-				></input>
-				</div>
 				</div>
 
 			</b-collapse>
@@ -938,14 +688,48 @@ export default {
   props: ['payload'],
   data () {
     return {
-		selected: 'none',
-        options: [
-          { value: 'none', text: 'None' },
-          { value: 'lowercase ', text: 'Lowercase' },
-          { value: 'uppercase ', text: 'Uppercase' },
-          { value: 'capitalize ', text: 'Capitalize' },
-        ],
-      
+		transformantionSelected: 'none',
+		transformantion: [
+			{ value: 'none', text: 'None' },
+			{ value: 'lowercase ', text: 'Lowercase' },
+			{ value: 'uppercase ', text: 'Uppercase' },
+			{ value: 'capitalize ', text: 'Capitalize' },
+		],
+		fontFamilySelected:'none',
+			fontFamily: [
+			{ value: 'none', text: 'None' },
+			{ value: 'geogia', text: 'Geogia' },
+			{ value: 'serif ', text: 'Serif' },
+			{ value: 'sans-serif ', text: 'Sans-serif' },
+			{ value: 'monospace ', text: 'Monospace' },
+			{ value: 'cursive ', text: 'Cursive' },
+			{ value: 'fantasy ', text: 'Fantasy' },
+		],
+		fontStyleSelected:'none',
+		fontStyle: [
+			{ value: 'none', text: 'None' },
+			{ value: 'initial  ', text: 'Initial  ' },
+			{ value: 'italic ', text: 'Italic' },
+			{ value: 'oblique ', text: 'Oblique' },
+			{ value: 'underline', text: 'Underline' },
+		],
+		fontWeightSelected:'none',
+		fontWeight: [
+			{ value: 'none', text: 'None' },
+			{ value: 'lighter', text: 'Lighter' },
+			{ value: 'bold', text: 'Bold' },
+			{ value: 'number', text: 'Number' },
+		],
+      borderStyleSelected:'none',
+	  borderStyle: [
+			{ value: 'none', text: 'None' },
+			{ value: 'solid', text: 'Solid' },
+			{ value: 'dotted', text: 'Dotted' },
+			{ value: 'dashed', text: 'Dashed' },
+			{ value: 'double', text: 'Double' },
+		],
+
+	  border:'false',
 	  tabStep:1,
 	  opacityValue: '',
 	  blurValue: '',
@@ -1039,11 +823,10 @@ export default {
     ChromeColor: VueColor.Chrome
   },
   created () {
-
-	//   console.log(this.parentDom[0])
+	
   },
   mounted(){
-
+	  
   },
   methods: {
 	chageTab(e){
@@ -1157,7 +940,7 @@ export default {
       this.isFontPicker = true
     },
     updateBackgroundValue (colorData) {
-    	this.backgroundColor.background = colorData.hex
+    this.backgroundColor.background = colorData.hex
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'background'
       this.submitSorce.value = colorData.hex
@@ -1336,15 +1119,58 @@ export default {
 		this.$emit('userSelected', this.submitSorce)
 	},
 	submitChangeTextTransform(e){
-		console.log(e)
+		// console.log(e)
 		this.submitSorce.payload = this.payload
 		this.submitSorce.style = 'text-transform'
 		this.submitSorce.value = e
 		this.$emit('userSelected', this.submitSorce)
 	},
-	makeTreeParent(){
+	submitChangeTextFontFamily(e){
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'font-family'
+		this.submitSorce.value = e
+		this.$emit('userSelected', this.submitSorce)
+	},
+	submitChangeTextFontStyle(e){
+		// console.log(e)
+		if(e=='underline'){
+			// console.log("s")
+			this.submitSorce.payload = this.payload
+			this.submitSorce.style = 'text-decoration'
+			this.submitSorce.value = e
+			this.$emit('userSelected', this.submitSorce)
+		}
+		else{
+			this.submitSorce.payload = this.payload
+			this.submitSorce.style = 'font-style'
+			this.submitSorce.value = e
+			this.$emit('userSelected', this.submitSorce)
+		}
+	},
+	submitChangeTextFontWeight(e){
+		if(e.isTrusted){
+			this.submitSorce.payload = this.payload
+			this.submitSorce.style = 'font-weight'
+			this.submitSorce.value = e.target.value
+			this.$emit('userSelected', this.submitSorce)
+		}
+		else{
+			this.submitSorce.payload = this.payload
+			this.submitSorce.style = 'font-weight'
+			this.submitSorce.value = e
+			this.$emit('userSelected', this.submitSorce)
+		}
+	},
+	submitChangeBorder(e){
+		// console.log("dasd")
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'border-style'
+		this.submitSorce.value = 'dotted'
+		// console.log(this.submitSorce)
+		this.$emit('userSelectBorder', this.submitSorce)
 		
-		
+	},
+	makeTreeParent(payload){
 		var obj = document.getElementById('inParentTreeOption')
 		$(obj).empty()
 
@@ -1356,35 +1182,30 @@ export default {
 		newDIV.innerHTML = "Body"
 		obj.appendChild(newDIV)
 
-		var a = this.parentDom[this.parentDom.length-1]
-
+		var a=0;
+		var print=[]
+		for(var i=0;i<this.parentDom.length;i++){
+			if(payload==this.domWithTree[i]){
+				a=i
+			}
+		}
+		print.push(a)
 		while(true){
-        
-            if(this.parentDom[a]!='-1'){
-              // console.log("메롱")
-              // console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
-       
-				var obj = document.getElementById('inParentTreeOption')
-				console.log(obj)
-				var newDIV = document.createElement('button')
-				newDIV.innerHTML = document.querySelector(`label[for="${this.parentDom[a]}"]`).innerHTML
-				obj.appendChild(newDIV)
-       
+			if(this.parentDom[a]!='-1'){
               	a = this.parentDom[a]
+				print.push(a)
             }
             else{
-				var obj = document.getElementById('inParentTreeOption')
-				console.log(obj)
-				var newDIV = document.createElement('button')
-				newDIV.innerHTML = document.querySelector(`label[for="${this.parentDom[this.parentDom.length-1]}"]`).innerHTML
-				obj.appendChild(newDIV)
-       
-              	a = this.parentDom[a]
-
-              break;
+              	break;
             }
-          }
-
+		}
+		for(var i=print.length-1;i>=0;i--){
+			var obj = document.getElementById('inParentTreeOption')
+			var newDIV = document.createElement('button')
+			newDIV.setAttribute('id', i)
+			newDIV.innerHTML = document.querySelector(`label[for="${print[i]}"]`).innerHTML
+			obj.appendChild(newDIV)
+		}
 	},
 	
 	
@@ -1393,23 +1214,31 @@ export default {
 		// this.selectedFile = e.target.files[0]
 		// console.log(this.selectedFile)
 		var fileReader = new FileReader()
-		console.log(e.target.files[0])
+		// console.log(e.target.files[0])
 		fileReader.readAsDataURL(e.target.files[0])
 		fileReader.onload = (e) => {
 			this.backgroundImage=e.target.result
 		}
-		console.log(this.backgroundImage)
+		// console.log(this.backgroundImage)
 		// this.submitSorce.payload = this.payload
 		// this.submitSorce.style = 'background-image'
 		// this.submitSorce.value = "C:\\fakepath\\다모넷 - 1.PNG"
 		// this.$emit('userSelected', this.submitSorce)
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'background-image'
+		this.submitSorce.value = 'url("static/studioImage/ArticleList.png")'
+		this.$emit('userSelected', this.submitSorce)
 
+		this.submitSorce.payload = this.payload
+		this.submitSorce.style = 'background-size'
+		this.submitSorce.value = '100%'
+		this.$emit('userSelected', this.submitSorce)
 	},
 	onUpload(){
 		/// 서버에 저장
 	},
 	domTrackingWithTree(e){
-		console.log(this.domWithTree[0])
+		console.log(e)
 	},
   }
 }

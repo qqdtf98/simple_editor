@@ -34,6 +34,7 @@
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
+      @userSelectBorder="userSelectBorder"
       class="layout"
     ></layout>
     <span v-if="tagDescription" class="description-tag">
@@ -150,6 +151,7 @@ export default {
         this.isPustHtml = false
       }
       this.$refs.overview.domSelection(payload.target)
+      this.$refs.layouts.makeTreeParent(this.payload)
     },
     userSelectedWidth (data) {
       this.data = data
@@ -203,10 +205,12 @@ export default {
     },
     inParentTreeOption(dom){
        this.$refs.layouts.parentDom = dom
-       this.$refs.layouts.makeTreeParent()
     },
     domPushWithTree(dom){
       this.$refs.layouts.domWithTree = dom
+    },
+    userSelectBorder(e){
+      console.log(e)
     }
   }
 

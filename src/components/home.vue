@@ -503,7 +503,7 @@ export default {
       }
     },
     styleChanged (data) {
-      console.log(data)
+      // console.log(data)
       this.target = data.payload.classList
       var classValue = ''
       let i
