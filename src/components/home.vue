@@ -547,6 +547,9 @@ export default {
       this.target = data.payload.classList
       this.style = data.style
       this.value = data.value
+      if (this.clickedBorder === null) {
+        this.clickedBorder = '1px solid black'
+      }
       let prevBorder = this.clickedBorder.split(' ')
       let element = document.getElementsByClassName(this.target)[0]
       console.log(element)
@@ -694,6 +697,7 @@ export default {
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
     addContent (tag, position) {
+      console.log('ffsafdsf')
       // console.log(tag)
       // console.log(position)
       let addTag = document.querySelector('#add')
