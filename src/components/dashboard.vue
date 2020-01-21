@@ -12,7 +12,7 @@
               <span class="earningm">EARNINGS(MONTHLY)</span>
               <span class="dol1">$40000</span>
             </div>
-            <button class="button1"></button>
+            <!-- <button class="button1"></button> -->
           </div>
           <div class="earninga-wrapper">
             <div class="earninga-box">

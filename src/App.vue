@@ -6,7 +6,6 @@
         @desc-close="tagNotSelected"
         @ui-select="uiSelected"
         @tag-select="tagSelected"
-        @addelement="addElement"
         @userSelectedTagComponent = "userSelectedTagComponent"
         class="studio"
       ></studio>
@@ -208,12 +207,13 @@ export default {
 
         // ui.innerHTML = this.hasht[innerText]
       })
+      }
     },
-    addElement (e) {
-      this.addTag = true
-      // console.log(e.target)
-      this.selectedTag = e.target
-    },
+    // addElement (e) {
+    //   this.addTag = true
+    //   // console.log(e.target)
+    //   this.selectedTag = e.target
+    // },
     selectDomElemented (domElement) {
       this.dom = domElement
       // console.log(this.dom)

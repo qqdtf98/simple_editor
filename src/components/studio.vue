@@ -193,7 +193,10 @@ export default {
         e.target.className === 'ui-tag template'
       ) {
         // console.log(e.target)
-        this.$emit('addelement', e)
+        // this.$emit('addelement', e)
+
+        // e.target이 사용자가 선택한 템플릿
+        // target 정보를 가지고 DB에서 불러온다.
         var docFrag = document.createDocumentFragment()
         docFrag.appendChild(document.createElement('div'))
 
@@ -218,7 +221,7 @@ export default {
       `
         document.getElementsByTagName('head')[0].appendChild(oScript)
         /// ///////////통신///////////////////////
-        this.$emit('userSelectedTagComponent', this.addComponetUserPick)
+        this.$emit('userSelectedTagComponent', e, this.addComponetUserPick)
       }
     },
     onSearchElement (e) {
