@@ -7,18 +7,19 @@
 		<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="true">Options</a>
+		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Options</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" v-bind:class="{ active:tabStep===3 }" :active="tabStep === 3"id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
+		<a class="nav-link" v-bind:class="{ active:tabStep===3 }" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
 	</li>
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+  <div v-if="isData"  class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
 	<!-- Look % Feel-->
 	<div>
-		<div v-if="isData" role="tablist">
+		<div role="tablist">
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
 			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
@@ -516,7 +517,7 @@
 </div>
 
   <!-- Options v-if="isData" -->
-  <div class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+  <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	<div  role="tablist">
 <div>
 		<div  role="tablist">
@@ -587,7 +588,6 @@
 			</b-card-header>
 			<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
 				<div class="option textboxoption has-addon collapsed">
-
 					<div class="row">>
 						<span class="col-md-5">
 							Border
@@ -597,14 +597,12 @@
 							<label class="custom-control-label" for="customSwitches" ></label>
 						</span>
 					</div>
-
 					<div class="row">
 						<span class="col-md-5">border-style</span>
 						<div class="col-md-7">
 						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderStyleSelected" :options="fontWeight" @change="borderStyle"></b-form-select>
 						</div>
 					</div>
-
 				</div>
 			</b-collapse>
 		</b-card>
@@ -664,7 +662,7 @@
 	</div>
 	</div>
   </div>
-  <div class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
+  <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
 </div>
   </div>
   <!--
@@ -1153,7 +1151,7 @@ export default {
       // console.log("dasd")
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
-      this.submitSorce.value = 'dotted'
+      this.submitSorce.value = 'solid'
       // console.log(this.submitSorce)
       this.$emit('userSelectBorder', this.submitSorce)
     },

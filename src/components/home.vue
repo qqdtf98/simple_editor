@@ -547,6 +547,11 @@ export default {
       this.target = data.payload.classList
       this.style = data.style
       this.value = data.value
+      console.log(this.clickedBorder)
+      if(this.clickedBorder === '0px none rgb(44, 62, 80)'){
+        this.clickedBorder = '1px solid rgb(0, 0, 0)'
+        console.log("click")
+      }
       let prevBorder = this.clickedBorder.split(' ')
       let element = document.getElementsByClassName(this.target)[0]
       console.log(element)
