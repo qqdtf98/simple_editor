@@ -90,7 +90,10 @@ export default {
       hasht: null,
       isPustHtml: true,
       mouseOverTarget: null,
-      viewTemplate: false
+      viewTemplate: false,
+      isCtrl: false,
+      i: 0,
+      workStack: []
     }
   },
   watch: {
@@ -101,6 +104,19 @@ export default {
   mounted () {
     $(window).resize(() => {
       this.$refs.home.windowResized()
+    })
+    document.addEventListener('keydown', (e) => {
+      if (e.which === 17) {
+        this.isCtrl = true
+      }
+      if (e.which === 90 && this.isCtrl) {
+        console.log('rd')
+      }
+    })
+    document.addEventListener('keyup', (e) => {
+      if (e.which === 17) {
+        this.isCtrl = false
+      }
     })
     document.addEventListener('mousemove', (e) => {
       if (this.viewTemplate) {
@@ -122,7 +138,6 @@ export default {
     document.addEventListener('mouseup', (e) => {
       this.viewTemplate = false
       let tar = e.target
-      console.log(e.target)
       if (this.addTag) {
         // console.log(e.taret)
         // console.log(tar.parentElement.id)
