@@ -537,10 +537,20 @@ export default {
       }
       // console.log(classValue)
       this.style = data.style
-      this.value = data.value
       let element = document.getElementsByClassName(this.target)[0]
+      var style = {
+        work: 'style',
+        elem: element,
+        style: this.style,
+        value: getComputedStyle(element)[this.style]
+      }
+
+      this.value = data.value
+
       // console.log(element)
       element.style[this.style] = this.value
+
+      this.$emit('stack-style', style)
     },
     borderStyleChanged (data) {
       console.log(data)

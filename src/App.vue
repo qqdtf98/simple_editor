@@ -26,10 +26,12 @@
       <switches @click="toggleClicked" class="swtich" theme="bootstrap" color="info" v-model="enabled">
 
       </switches>
+      <img @click="undoWork" class="undo" src="./assets/undo.svg" />
       <div class="editor">
         <home
           ref="home"
           @componentSelected="componentSelected"
+          @stack-style="stackStyle"
           class="home"
         ></home>
       </div>
@@ -53,6 +55,7 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
+    <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
   </div>
 </template>
 
@@ -64,6 +67,7 @@ import studio from './components/studio'
 import overview from './components/overview'
 import spliter from './components/spliter'
 import Switches from 'vue-switches'
+// import UndoRedo from './components/UndoRedo'
 
 export default {
   components: { htmlLoader, home, layout, studio, overview, spliter, Switches },
@@ -86,7 +90,10 @@ export default {
       hasht: null,
       isPustHtml: true,
       mouseOverTarget: null,
-      viewTemplate: false
+      viewTemplate: false,
+      isCtrl: false,
+      i: 0,
+      workStack: []
     }
   },
   watch: {
@@ -97,6 +104,19 @@ export default {
   mounted () {
     $(window).resize(() => {
       this.$refs.home.windowResized()
+    })
+    document.addEventListener('keydown', (e) => {
+      if (e.which === 17) {
+        this.isCtrl = true
+      }
+      if (e.which === 90 && this.isCtrl) {
+        console.log('rd')
+      }
+    })
+    document.addEventListener('keyup', (e) => {
+      if (e.which === 17) {
+        this.isCtrl = false
+      }
     })
     document.addEventListener('mousemove', (e) => {
       if (this.viewTemplate) {
@@ -118,7 +138,6 @@ export default {
     document.addEventListener('mouseup', (e) => {
       this.viewTemplate = false
       let tar = e.target
-      console.log(e.target)
       if (this.addTag) {
         // console.log(e.taret)
         // console.log(tar.parentElement.id)
@@ -172,6 +191,21 @@ export default {
     this.hasht = h
   },
   methods: {
+    undoWork () {
+      let i
+      for (i = 0; i < this.workStack.length; i++) {
+        console.log(this.workStack[i])
+      }
+      console.log('aaa')
+      let work = this.workStack.pop()
+      if (work.work === 'style') {
+        console.log('aa')
+        work.elem.style[work.style] = work.value
+      }
+    },
+    stackStyle (elem) {
+      this.workStack.push(elem)
+    },
     userSelectedTagComponent (e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
       this.addTag = true
@@ -185,7 +219,6 @@ export default {
         img.style.left = e.clientX + 10 + 'px'
         img.style.top = e.clientY + 10 + 'px'
       })
-      console.log(tagComponent)
     },
     componentSelected (payload) {
       this.$refs.layouts.isData = true
@@ -340,6 +373,13 @@ export default {
       width: 1rem;
       right: 0.8rem;
       top:2.9rem;
+    }
+    .undo{
+      position: absolute;
+      top: 0.3rem;
+      cursor: pointer;
+      left: 5rem;
+      height: 1.15rem;
     }
     .vue-switcher{
       position:absolute;
