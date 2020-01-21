@@ -200,7 +200,7 @@ export default {
         docFrag.querySelector('div').innerHTML =
         `<button class="2 dsadsadsa"
         type="button"
-        >도움말</button>`
+        >도ss움말</button>`
 
         this.addComponetUserPick = docFrag.firstChild
 
@@ -222,6 +222,7 @@ export default {
       }
     },
     onSearchElement (e) {
+      
       let tagBox = document.querySelector('.tag-box')
       let list = document.querySelectorAll('.tag-list')
       let name = document.querySelectorAll('.nested')
