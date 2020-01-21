@@ -6,7 +6,6 @@
         @desc-close="tagNotSelected"
         @ui-select="uiSelected"
         @tag-select="tagSelected"
-        @addelement="addElement"
         @userSelectedTagComponent = "userSelectedTagComponent"
         class="studio"
       ></studio>
@@ -51,6 +50,9 @@
       <div class="image-name">name</div>
       <div class="desc-ui-text">text</div>
     </div>
+    <div v-if="viewTemplate" class="description-img">
+      <img />
+    </div>
   </div>
 </template>
 
@@ -79,10 +81,12 @@ export default {
       uiDescription: false,
       dom: '',
       addTag: false,
+      selectedTemplate: null,
       selectedTag: null,
       hasht: null,
       isPustHtml: true,
-      mouseOverTarget: null
+      mouseOverTarget: null,
+      viewTemplate: false
     }
   },
   watch: {
@@ -94,9 +98,27 @@ export default {
     $(window).resize(() => {
       this.$refs.home.windowResized()
     })
+    document.addEventListener('mousemove', (e) => {
+      if (this.viewTemplate) {
+        this.$nextTick(() => {
+          let img = document.querySelector('.description-img')
+          let stu = document.querySelector('.studio')
+
+          let name = this.selectedTemplate.target.innerHTML.replace(/ /gi, '')
+          // ui 말고 나머지 템플릿의 사진을 추가하거나 예외처리해줘야함.
+          // name은 ui와 tag구분없이 들어온다.
+          img.children[0].src = './static/studioImage/' + name + '.png'
+          img.style.left = e.clientX + 10 + 'px'
+          img.style.top = e.clientY + 10 + 'px'
+        // ui.innerHTML = this.hasht[innerText]
+        })
+      }
+    })
     this.homeDocument = document.getElementById('dashboard')
     document.addEventListener('mouseup', (e) => {
+      this.viewTemplate = false
       let tar = e.target
+      console.log(e.target)
       if (this.addTag) {
         // console.log(e.taret)
         // console.log(tar.parentElement.id)
@@ -150,9 +172,19 @@ export default {
     this.hasht = h
   },
   methods: {
-    userSelectedTagComponent (tagComponent) {
+    userSelectedTagComponent (e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
+      this.addTag = true
+      this.viewTemplate = true
+      this.tagDescription = false
+      this.uiDescription = false
+      this.selectedTemplate = e
       this.selectedTag = tagComponent
+      this.$nextTick(() => {
+        let img = document.querySelector('.description-img')
+        img.style.left = e.clientX + 10 + 'px'
+        img.style.top = e.clientY + 10 + 'px'
+      })
       console.log(tagComponent)
     },
     componentSelected (payload) {
@@ -174,46 +206,50 @@ export default {
       this.$refs.home.styleChanged(this.data)
     },
     tagSelected (payload) {
-      this.tagDescription = true
-      this.uiDescription = false
-      this.$nextTick(() => {
-        let text = document.querySelector('.description-tag')
-        let stu = document.querySelector('.studio')
-        let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
-        text.innerHTML = this.hasht[innerText]
+      if (!this.viewTemplate) {
+        this.tagDescription = true
+        this.uiDescription = false
+        this.$nextTick(() => {
+          let text = document.querySelector('.description-tag')
+          let stu = document.querySelector('.studio')
+          let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
+          text.innerHTML = this.hasht[innerText]
 
-        text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
-        text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
-      })
+          text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
+          text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+        })
+      }
     },
     tagNotSelected () {
       this.tagDescription = false
       this.uiDescription = false
     },
     uiSelected (payload) {
-      this.uiDescription = true
-      this.tagDescription = false
-      this.$nextTick(() => {
-        let ui = document.querySelector('.description-ui')
-        let stu = document.querySelector('.studio')
-        let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
+      if (!this.viewTemplate) {
+        this.uiDescription = true
+        this.tagDescription = false
+        this.$nextTick(() => {
+          let ui = document.querySelector('.description-ui')
+          let stu = document.querySelector('.studio')
+          let innerText = payload.target.innerHTML.toLowerCase().replace(/ /gi, '')
 
-        let name = payload.target.innerHTML.replace(/ /gi, '')
-        ui.children[0].src = './static/studioImage/' + name + '.png'
-        ui.children[1].innerHTML = payload.target.innerHTML
-        ui.children[2].innerHTML = this.hasht[innerText]
+          let name = payload.target.innerHTML.replace(/ /gi, '')
+          ui.children[0].src = './static/studioImage/' + name + '.png'
+          ui.children[1].innerHTML = payload.target.innerHTML
+          ui.children[2].innerHTML = this.hasht[innerText]
 
-        ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
-        ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+          ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
+          ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
 
         // ui.innerHTML = this.hasht[innerText]
-      })
+        })
+      }
     },
-    addElement (e) {
-      this.addTag = true
-      // console.log(e.target)
-      this.selectedTag = e.target
-    },
+    // addElement (e) {
+    //   this.addTag = true
+    //   // console.log(e.target)
+    //   this.selectedTag = e.target
+    // },
     selectDomElemented (domElement) {
       this.dom = domElement
       // console.log(this.dom)
@@ -340,7 +376,7 @@ export default {
   }
 
   .description-tag,
-  .description-ui {
+  .description-ui{
     background-color: #000;
     position: fixed;
     z-index: 15;
@@ -359,6 +395,14 @@ export default {
     .desc-ui-text{
       color: #a1a1a1;
     }
+  }
+  .description-img {
+    background-color: #000;
+    position: fixed;
+    z-index: 15;
+    max-width: 30rem;
+    float: left;
+    filter: blur(0.8px)
   }
 }
 </style>
