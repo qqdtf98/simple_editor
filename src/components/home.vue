@@ -537,14 +537,23 @@ export default {
       }
       // console.log(classValue)
       this.style = data.style
-      this.value = data.value
       let element = document.getElementsByClassName(this.target)[0]
+      var style = {
+        work: 'style',
+        elem: element,
+        style: this.style,
+        value: getComputedStyle(element)[this.style]
+      }
+
+      this.value = data.value
+
       // console.log(element)
       element.style[this.style] = this.value
 
-      console.log("바꼈다")
+      //console.log("꼈다")
       // console.log(document.getElementsByClassName(this.target)[0].className)
-      console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
+      //console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
+      this.$emit('stack-style', style)
     },
     borderStyleChanged (data) {
       // console.log(data)
@@ -703,6 +712,7 @@ export default {
       this.clickedElement.parentNode.removeChild(this.clickedElement)
     },
     addContent (tag, position) {
+      console.log('ffsafdsf')
       // console.log(tag)
       // console.log(position)
       let addTag = document.querySelector('#add')
