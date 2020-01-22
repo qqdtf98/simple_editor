@@ -5,45 +5,56 @@
     <div class="main-panel">
       <div class="left-panel">
         <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
-        <img @click="overviewBtn" class="overview-btn" src="./assets/overview.svg" />
+        <img
+          @click="overviewBtn"
+          class="overview-btn"
+          src="./assets/overview.svg"
+        />
       </div>
-      <div class="center-panel">
-        <div class="title">Editor</div>
-        <img class="scale" src="./assets/scale.svg" />
-        <img class="width" src="./assets/width.svg" />
-        <switches
-          @click="toggleClicked"
-          class="swtich"
-          theme="bootstrap"
-          color="info"
-          v-model="enabled"
-        >
-        </switches>
-        <img @click="undoWork" class="undo" src="./assets/undo.svg" />
-        <img @click="redoWork" class="redo" src="./assets/undo.svg" />
-        <div class="editor">
-          <home
-            ref="home"
-            @componentSelected="componentSelected"
-            @stack-push="stackPush"
-            class="home"
-          ></home>
+      <div class="editor-panel">
+        <div class="center-panel">
+          <div class="title">Editor</div>
+          <img class="scale" src="./assets/scale.svg" />
+          <img class="width" src="./assets/width.svg" />
+          <switches
+            @click="toggleClicked"
+            class="swtich"
+            theme="bootstrap"
+            color="info"
+            v-model="enabled"
+          >
+          </switches>
+          <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+          <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+          <div class="editor">
+            <home
+              ref="home"
+              @componentSelected="componentSelected"
+              @stack-push="stackPush"
+              class="home"
+            ></home>
+          </div>
         </div>
+        <div class="bottom-panel"></div>
+        
       </div>
 
       <div class="right-panel">
         <img @click="layoutBtn" class="layout-btn" src="./assets/layout.svg" />
+        <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
       </div>
     </div>
+
+    <CodeLoader v-if="codeOn" class="code-loader">sdddd</CodeLoader>
     <layout
-    v-if="layoutOn"
-          ref="layouts"
-          :payload="payload"
-          @userSelected="userSelectedWidth"
-          @userSelectBorder="userSelectBorder"
-          @selectDomElemented="selectDomElemented"
-          class="layout"
-        ></layout>
+      v-if="layoutOn"
+      ref="layouts"
+      :payload="payload"
+      @userSelected="userSelectedWidth"
+      @userSelectBorder="userSelectBorder"
+      @selectDomElemented="selectDomElemented"
+      class="layout"
+    ></layout>
     <studio
       v-if="studioOn"
       @desc-close="tagNotSelected"
@@ -53,7 +64,7 @@
       class="studio"
     ></studio>
     <overview
-    v-if="overviewOn"
+      v-if="overviewOn"
       ref="overview"
       @selectDomElement="selectDomElemented"
       @inParentTreeOption="inParentTreeOption"
@@ -85,10 +96,20 @@ import studio from "./components/studio";
 import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
+import CodeLoader from "./components/CodeLoader";
 // import UndoRedo from './components/UndoRedo'
 
 export default {
-  components: { htmlLoader, home, layout, studio, overview, spliter, Switches },
+  components: {
+    htmlLoader,
+    home,
+    layout,
+    studio,
+    overview,
+    spliter,
+    Switches,
+    CodeLoader
+  },
   props: ["selectDomElement"],
   name: "App",
   data() {
@@ -115,7 +136,8 @@ export default {
       reworkStack: [],
       studioOn: false,
       overviewOn: false,
-      layoutOn: false
+      layoutOn: false,
+      codeOn: false
     };
   },
   watch: {
@@ -229,27 +251,34 @@ export default {
     this.hasht = h;
   },
   methods: {
-    layoutBtn(){
-      if(this.layoutOn === true){
-        this.layoutOn = false
-      } else{
-        this.layoutOn = true
+    codeBtn() {
+      if (this.codeOn === true) {
+        this.codeOn = false;
+      } else {
+        this.codeOn = true;
+      }
+    },
+    layoutBtn() {
+      if (this.layoutOn === true) {
+        this.layoutOn = false;
+      } else {
+        this.layoutOn = true;
       }
     },
     studioBtn() {
       if (this.studioOn === true) {
         this.studioOn = false;
       } else {
-        this.overviewOn = false
+        this.overviewOn = false;
         this.studioOn = true;
       }
     },
-    overviewBtn(){
-      if(this.overviewOn === true){
-        this.overviewOn =false
-      } else{
-        this.studioOn = false
-        this.overviewOn = true
+    overviewBtn() {
+      if (this.overviewOn === true) {
+        this.overviewOn = false;
+      } else {
+        this.studioOn = false;
+        this.overviewOn = true;
       }
     },
     redoWork() {
@@ -424,7 +453,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   // color: #fff;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 58rem;
@@ -476,13 +504,13 @@ export default {
       flex-direction: column;
       align-items: center;
       .studio-btn {
-        width: 1.5rem;
+        width: 1.3rem;
         margin-top: 1rem;
         cursor: pointer;
       }
-      .overview-btn{
-        width: 1.2rem;
-        margin-top: 1.1rem;
+      .overview-btn {
+        width: 1rem;
+        margin-top: 1.3rem;
         cursor: pointer;
       }
     }
@@ -490,91 +518,122 @@ export default {
       width: 4%;
       background-color: #2c3134;
       height: 100%;
-      .layout-btn{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .layout-btn {
         margin-top: 1rem;
-        width: 1.15rem;
-        cursor:pointer;
+        width: 1rem;
+        cursor: pointer;
+      }
+      .code-btn {
+        margin-top: 1.3rem;
+        background-color: #fff;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
       }
     }
-    .center-panel {
+    .editor-panel {
       width: 92%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      position: relative;
-      .title {
-        position: absolute;
-        text-align: center;
-        left: 0;
-        color: #fff;
-        height: 4.02%;
-        background-color: #545e66;
-        padding: 0.3rem;
-        padding-left: 0.9rem;
-        padding-right: 0.9rem;
-        top: 0;
-      }
-      .scale {
-        position: absolute;
-        width: 0.8rem;
-        right: 2.7rem;
-        height: 0.8rem;
-        top: 2.7rem;
-      }
-      .width {
-        position: absolute;
-        width: 1rem;
-        right: 0.8rem;
-        top: 2.9rem;
-      }
-      .undo {
-        -moz-transform: scaleX(-1);
-        -o-transform: scaleX(-1);
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-        position: absolute;
-        top: 0.3rem;
-        cursor: pointer;
-        left: 5rem;
-        height: 1.15rem;
-      }
-      .redo {
-        position: absolute;
-        top: 0.3rem;
-        cursor: pointer;
-        left: 7rem;
-        height: 1.15rem;
-      }
-      .vue-switcher {
-        position: absolute;
-        right: 1rem;
-        top: 4rem;
-        transform: scale(1.25);
-        z-index: 9;
-      }
-      .editor {
+      .center-panel {
         width: 100%;
-        position: absolute;
-        bottom: 0;
-        height: 96%;
-        border: 3px solid #545e66;
+        height:95%;
+
         display: flex;
         align-items: center;
         justify-content: center;
-        // overflow: hidden;
-        .home {
+        flex-direction: column;
+        position: relative;
+
+        .title {
+          position: absolute;
+          text-align: center;
+          left: 0;
+          color: #fff;
+          height: 4.02%;
+          background-color: #545e66;
+          padding: 0.3rem;
+          padding-left: 0.9rem;
+          padding-right: 0.9rem;
+          top: 0;
+        }
+        .scale {
+          position: absolute;
+          width: 0.8rem;
+          right: 2.7rem;
+          height: 0.8rem;
+          top: 2.7rem;
+        }
+        .width {
+          position: absolute;
+          width: 1rem;
+          right: 0.8rem;
+          top: 2.9rem;
+        }
+        .undo {
+          -moz-transform: scaleX(-1);
+          -o-transform: scaleX(-1);
+          -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+          position: absolute;
+          top: 0.3rem;
+          cursor: pointer;
+          left: 5rem;
+          height: 1.15rem;
+        }
+        .redo {
+          position: absolute;
+          top: 0.3rem;
+          cursor: pointer;
+          left: 7rem;
+          height: 1.15rem;
+        }
+        .vue-switcher {
+          position: absolute;
+          right: 1rem;
+          top: 4rem;
+          transform: scale(1.25);
+          z-index: 9;
+        }
+        .editor {
+          width: 100%;
+          position: absolute;
+          bottom: 0;
+          height: 96%;
+          border: 3px solid #545e66;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 70rem;
-          height: 60rem;
-          overflow: hidden;
+          // overflow: hidden;
+          .home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70rem;
+            height: 60rem;
+            overflow: hidden;
+          }
         }
       }
+      .bottom-panel{
+        z-index: 10;
+        width: 100%;
+        background-color: #3c474c;
+        height: 5%;
+      }
+     
     }
   }
+   .code-loader {
+        width: 92%;
+        z-index: 10000;
+        position: fixed;
+        bottom: 5%;
+        height: 20rem;
+        background-color: red;
+      }
 
   .layout {
     width: 20rem;
