@@ -289,8 +289,14 @@ export default {
             // console.log(position)
             // position이 추가할 위치에 있는 element. 부모가 된다.
             // this.movePosition.parentElement
-
-            this.movePosition.target.appendChild(addComponent[0])
+              var move = {
+              work: 'move',
+              position: this.clickedElement.parentElement,
+              elem: this.clickedElement,
+              afterMovePosition: this.movePosition.target
+            }
+            this.$emit('stack-push', move)
+            this.movePosition.target.appendChild(addComponent[0]);
             if (
               e.target.className === 'left-border' ||
           e.target.className === 'right-border' ||
@@ -744,7 +750,13 @@ export default {
       // tag가 추가할 element. 자식이 된다.
       // console.log(position)
       // position이 추가할 위치에 있는 element. 부모가 된다.
-      position.appendChild(tag)
+      position.appendChild(tag);
+        var add = {
+          work: 'add',
+          position: position,
+          elem: tag
+        }
+        this.$emit('stack-push',add)
     },
     selectOverview (payload) {
       let dashboardElem = document.querySelector('.editor')
@@ -832,7 +844,15 @@ export default {
       copyElem.classList.add(randomClass)
       this.classIndex++
 
-      var newparent = document.createElement('div')
+      var newparent = document.createElement("div");
+      var copy = {
+        work: 'copy',
+        position: this.clickedElement.parentElement,
+        elem: elem[0],
+        parentElem: newparent,
+        copyElem: copyElem
+      }
+      this.$emit('stack-push', copy)
 
       this.$nextTick(() => {
         // console.log(this.clickedElement.parentElement.children)

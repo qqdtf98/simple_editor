@@ -193,10 +193,37 @@ export default {
   methods: {
     undoWork () {
       let i
+      if(this.reworkStack.length !== 0){
+        for (i = 0; i < this.reworkStack.length; i++) {
+          console.log(this.reworkStack[i]);
+        }
+      let rework = this.reworkStack.pop()
       if(rework.work === 'style'){
         rework.elem.style[rework.style] = rework.afterValue;
+      } else if (rework.work === 'move'){
+        rework.afterMovePosition.appendChild(rework.elem)
       } else if (rework.work === 'remove') {
         let parent = rework.position
+        parent.removeChild(rework.elem)
+      } else if (rework.work === 'add'){
+        rework.position.appendChild(rework.elem)
+      } else if(rework.work === 'copy'){
+        rework.position.appendChild(rework.parentElem)
+        rework.parentElem.appendChild(rework.elem)
+        rework.parentElem.appendChild(rework.copyElem)
+      }
+      }
+      
+    },
+    undoWork() {
+      let i;
+      if (this.workStack.length !== 0) {
+        // for (i = 0; i < this.workStack.length; i++) {
+        //   console.log(this.workStack[i]);
+        // }
+        let work = this.workStack.pop();
+        let rework = work
+        this.reworkStack.push(rework)
         if (work.work === "style") {
           work.elem.style[work.style] = work.value;
         } else if (work.work === "remove") {
@@ -204,12 +231,21 @@ export default {
           // console.log(work.nth)
           // parent.insertBefore(work.elem, parent.chlidNodes[work.nth]);
           parent.appendChild(work.elem);
+        } else if (work.work === "add") {
+          let parent = work.position;
+          parent.removeChild(work.elem);
+        } else if (work.work === "copy") {
+          console.log("copy");
+          work.position.removeChild(work.parentElem);
+          work.position.appendChild(work.elem);
+        } else if (work.work === "move") {
+          console.log(work.position);
+          console.log(work.elem);
+          console.log(work.afterMovePosition);
+          work.afterMovePosition.removeChild(work.elem);
+          work.position.appendChild(work.elem);
       }
-      console.log('aaa')
-      let work = this.workStack.pop()
-      if (work.work === 'style') {
-        console.log('aa')
-        work.elem.style[work.style] = work.value
+        
       }
     },
     stackPush(elem) {
