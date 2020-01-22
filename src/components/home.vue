@@ -94,8 +94,9 @@ import HtmlLoader from "./htmlLoader.vue";
 import spliter from "./spliter.vue";
 import Context from "./Context";
 
+
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter, Context },
+  components: { Dashboard, Navi, HtmlLoader, spliter, Context},
   data() {
     return {
       selectedElement: null,
@@ -1018,14 +1019,13 @@ export default {
 #dashboard {
   display: inline-block;
   align-items: center;
-  width: 100%;
   .editor-box {
     width: 100%;
     height: 80%;
     // display:table
     overflow: auto;
     scroll-behavior: smooth;
-    border: 1px solid #fff;
+    border: 1px solid #000000;
 
     .editor-component {
       // overflow: auto;

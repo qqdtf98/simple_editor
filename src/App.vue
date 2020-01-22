@@ -1,48 +1,53 @@
 <template>
   <div id="app">
     <!-- <spliter class="spliter"/> -->
-    <div class="left-panel">
-      <studio
-        @desc-close="tagNotSelected"
-        @ui-select="uiSelected"
-        @tag-select="tagSelected"
-        @userSelectedTagComponent="userSelectedTagComponent"
-        class="studio"
-      ></studio>
-      <overview
-        ref="overview"
-        @selectDomElement="selectDomElemented"
-        @inParentTreeOption="inParentTreeOption"
-        @domWithTree="domPushWithTree"
-        :getDocument="homeDocument"
-        class="overview"
-      ></overview>
-    </div>
+    <div class="top-panel"></div>
+    <div class="main-panel">
+      <div class="left-panel">
+        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img
+          @click="overviewBtn"
+          class="overview-btn"
+          src="./assets/overview.svg"
+        />
+      </div>
+      <div class="editor-panel">
+        <div class="center-panel">
+          <div class="title">Editor</div>
+          <img class="scale" src="./assets/scale.svg" />
+          <img class="width" src="./assets/width.svg" />
+          <switches
+            @click="toggleClicked"
+            class="swtich"
+            theme="bootstrap"
+            color="info"
+            v-model="enabled"
+          >
+          </switches>
+          <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+          <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+          <div class="editor">
+            <home
+              ref="home"
+              @componentSelected="componentSelected"
+              @stack-push="stackPush"
+              class="home"
+            ></home>
+          </div>
+        </div>
+        <div class="bottom-panel"></div>
+        
+      </div>
 
-    <div class="center-panel">
-      <div class="title">Editor</div>
-      <img class="scale" src="./assets/scale.svg" />
-      <img class="width" src="./assets/width.svg" />
-      <switches
-        @click="toggleClicked"
-        class="swtich"
-        theme="bootstrap"
-        color="info"
-        v-model="enabled"
-      >
-      </switches>
-      <img @click="undoWork" class="undo" src="./assets/undo.svg" />
-      <img @click="redoWork" class="redo" src="./assets/undo.svg" />
-      <div class="editor">
-        <home
-          ref="home"
-          @componentSelected="componentSelected"
-          @stack-push="stackPush"
-          class="home"
-        ></home>
+      <div class="right-panel">
+        <img @click="layoutBtn" class="layout-btn" src="./assets/layout.svg" />
+        <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
       </div>
     </div>
+
+    <CodeLoader v-if="codeOn" class="code-loader">sdddd</CodeLoader>
     <layout
+      v-if="layoutOn"
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
@@ -50,6 +55,24 @@
       @selectDomElemented="selectDomElemented"
       class="layout"
     ></layout>
+    <studio
+      v-if="studioOn"
+      @desc-close="tagNotSelected"
+      @ui-select="uiSelected"
+      @tag-select="tagSelected"
+      @userSelectedTagComponent="userSelectedTagComponent"
+      class="studio"
+    ></studio>
+    <overview
+      v-if="overviewOn"
+      ref="overview"
+      @selectDomElement="selectDomElemented"
+      @inParentTreeOption="inParentTreeOption"
+      @domWithTree="domPushWithTree"
+      :getDocument="homeDocument"
+      class="overview"
+    ></overview>
+
     <span v-if="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
     </span>
@@ -73,10 +96,20 @@ import studio from "./components/studio";
 import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
+import CodeLoader from "./components/CodeLoader";
 // import UndoRedo from './components/UndoRedo'
 
 export default {
-  components: { htmlLoader, home, layout, studio, overview, spliter, Switches },
+  components: {
+    htmlLoader,
+    home,
+    layout,
+    studio,
+    overview,
+    spliter,
+    Switches,
+    CodeLoader
+  },
   props: ["selectDomElement"],
   name: "App",
   data() {
@@ -98,7 +131,11 @@ export default {
       isCtrl: false,
       i: 0,
       workStack: [],
-      reworkStack: []
+      reworkStack: [],
+      studioOn: false,
+      overviewOn: false,
+      layoutOn: false,
+      codeOn: false
     };
   },
   watch: {
@@ -212,29 +249,58 @@ export default {
     this.hasht = h;
   },
   methods: {
+    codeBtn() {
+      if (this.codeOn === true) {
+        this.codeOn = false;
+      } else {
+        this.codeOn = true;
+      }
+    },
+    layoutBtn() {
+      if (this.layoutOn === true) {
+        this.layoutOn = false;
+      } else {
+        this.layoutOn = true;
+      }
+    },
+    studioBtn() {
+      if (this.studioOn === true) {
+        this.studioOn = false;
+      } else {
+        this.overviewOn = false;
+        this.studioOn = true;
+      }
+    },
+    overviewBtn() {
+      if (this.overviewOn === true) {
+        this.overviewOn = false;
+      } else {
+        this.studioOn = false;
+        this.overviewOn = true;
+      }
+    },
     redoWork() {
-      let i
-      if(this.reworkStack.length !== 0){
+      let i;
+      if (this.reworkStack.length !== 0) {
         for (i = 0; i < this.reworkStack.length; i++) {
           console.log(this.reworkStack[i]);
         }
-      let rework = this.reworkStack.pop()
-      if(rework.work === 'style'){
-        rework.elem.style[rework.style] = rework.afterValue;
-      } else if (rework.work === 'move'){
-        rework.afterMovePosition.appendChild(rework.elem)
-      } else if (rework.work === 'remove') {
-        let parent = rework.position
-        parent.removeChild(rework.elem)
-      } else if (rework.work === 'add'){
-        rework.position.appendChild(rework.elem)
-      } else if(rework.work === 'copy'){
-        rework.position.appendChild(rework.parentElem)
-        rework.parentElem.appendChild(rework.elem)
-        rework.parentElem.appendChild(rework.copyElem)
+        let rework = this.reworkStack.pop();
+        if (rework.work === "style") {
+          rework.elem.style[rework.style] = rework.afterValue;
+        } else if (rework.work === "move") {
+          rework.afterMovePosition.appendChild(rework.elem);
+        } else if (rework.work === "remove") {
+          let parent = rework.position;
+          parent.removeChild(rework.elem);
+        } else if (rework.work === "add") {
+          rework.position.appendChild(rework.elem);
+        } else if (rework.work === "copy") {
+          rework.position.appendChild(rework.parentElem);
+          rework.parentElem.appendChild(rework.elem);
+          rework.parentElem.appendChild(rework.copyElem);
+        }
       }
-      }
-      
     },
     undoWork() {
       let i;
@@ -243,8 +309,8 @@ export default {
         //   console.log(this.workStack[i]);
         // }
         let work = this.workStack.pop();
-        let rework = work
-        this.reworkStack.push(rework)
+        let rework = work;
+        this.reworkStack.push(rework);
         if (work.work === "style") {
           work.elem.style[work.style] = work.value;
         } else if (work.work === "remove") {
@@ -266,7 +332,6 @@ export default {
           work.afterMovePosition.removeChild(work.elem);
           work.position.appendChild(work.elem);
         }
-        
       }
     },
     stackPush(elem) {
@@ -386,9 +451,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   // color: #fff;
-  overflow: hidden;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 58rem;
   background-color: #2c3134;
   align-items: center;
@@ -397,104 +461,188 @@ export default {
   .spliter {
     left: 500px;
   }
-
-  .left-panel {
-    width: 20%;
-    height: 100%;
-
-    .studio {
-      height: 50%;
-      border: 2px solid #23282b;
-    }
-
-    .overview {
-      border: 2px solid #23282b;
-      height: 50%;
-    }
+  .studio {
+    width: 20rem;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    z-index: 11;
+    top: 6%;
   }
-  .center-panel {
-    width: 60%;
-    height: 80%;
+
+  .overview {
+    width: 20rem;
+    z-index: 11;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    top: 6%;
+  }
+  .top-panel {
+    height: 6%;
+    background-color: #3c474c;
+    background-image: linear-gradient(to bottom, #48545a, #3d484d);
+    width: 100%;
+  }
+  .main-panel {
+    width: 100%;
+    height: 94%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    position: relative;
-    .title {
-      position: absolute;
-      text-align: center;
-      left: 0;
-      color: #fff;
-      height: 4.02%;
-      background-color: #545e66;
-      padding: 0.3rem;
-      padding-left: 0.9rem;
-      padding-right: 0.9rem;
-      top: 0;
-    }
-    .scale {
-      position: absolute;
-      width: 0.8rem;
-      right: 2.7rem;
-      height: 0.8rem;
-      top: 2.7rem;
-    }
-    .width {
-      position: absolute;
-      width: 1rem;
-      right: 0.8rem;
-      top: 2.9rem;
-    }
-    .undo {
-      -moz-transform: scaleX(-1);
-      -o-transform: scaleX(-1);
-      -webkit-transform: scaleX(-1);
-      transform: scaleX(-1);
-      position: absolute;
-      top: 0.3rem;
-      cursor: pointer;
-      left: 5rem;
-      height: 1.15rem;
-    }
-    .redo{
-      position: absolute;
-      top: 0.3rem;
-      cursor: pointer;
-      left: 7rem;
-      height: 1.15rem;
-    }
-    .vue-switcher {
-      position: absolute;
-      right: 1rem;
-      top: 4rem;
-      transform: scale(1.25);
-      z-index: 9999;
-    }
-    .editor {
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-      height: 96%;
-      border: 2px solid #545e66;
+    flex-direction: row;
+
+    .left-panel {
+      width: 4%;
+      height: 100%;
+      background-color: #2c3134;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      // overflow: hidden;
-      .home {
+      .studio-btn {
+        width: 1.3rem;
+        margin-top: 1rem;
+        cursor: pointer;
+      }
+      .overview-btn {
+        width: 1rem;
+        margin-top: 1.3rem;
+        cursor: pointer;
+      }
+    }
+    .right-panel {
+      width: 4%;
+      background-color: #2c3134;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .layout-btn {
+        margin-top: 1rem;
+        width: 1rem;
+        cursor: pointer;
+      }
+      .code-btn {
+        margin-top: 1.3rem;
+        background-color: #fff;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
+      }
+    }
+    .editor-panel {
+      width: 92%;
+      height: 100%;
+      .center-panel {
+        width: 100%;
+        height:95%;
+
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 97%;
-        height: 100%;
-        overflow: hidden;
+        flex-direction: column;
+        position: relative;
+
+        .title {
+          position: absolute;
+          text-align: center;
+          left: 0;
+          color: #fff;
+          height: 4.02%;
+          background-color: #545e66;
+          padding: 0.3rem;
+          padding-left: 0.9rem;
+          padding-right: 0.9rem;
+          top: 0;
+        }
+        .scale {
+          position: absolute;
+          width: 0.8rem;
+          right: 2.7rem;
+          height: 0.8rem;
+          top: 2.7rem;
+        }
+        .width {
+          position: absolute;
+          width: 1rem;
+          right: 0.8rem;
+          top: 2.9rem;
+        }
+        .undo {
+          -moz-transform: scaleX(-1);
+          -o-transform: scaleX(-1);
+          -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+          position: absolute;
+          top: 0.3rem;
+          cursor: pointer;
+          left: 5rem;
+          height: 1.15rem;
+        }
+        .redo {
+          position: absolute;
+          top: 0.3rem;
+          cursor: pointer;
+          left: 7rem;
+          height: 1.15rem;
+        }
+        .vue-switcher {
+          position: absolute;
+          right: 1rem;
+          top: 4rem;
+          transform: scale(1.25);
+          z-index: 9;
+        }
+        .editor {
+          width: 100%;
+          position: absolute;
+          bottom: 0;
+          height: 96%;
+          border: 3px solid #545e66;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // overflow: hidden;
+          .home {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70rem;
+            height: 60rem;
+            overflow: hidden;
+          }
+        }
       }
+      .bottom-panel{
+        z-index: 10;
+        width: 100%;
+        background-color: #3c474c;
+        height: 5%;
+      }
+     
     }
   }
+   .code-loader {
+        width: 92%;
+        z-index: 10000;
+        position: fixed;
+        bottom: 5%;
+        height: 20rem;
+        background-color: red;
+      }
 
   .layout {
-    width: 20%;
-    height: 100%;
-    border: 2px solid #23282b;
+    width: 20rem;
+    z-index: 11;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    right: 4%;
+    background-color: #32373a;
+    z-index: 12;
+    top: 6%;
   }
 
   .description-tag,

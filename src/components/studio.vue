@@ -1,7 +1,9 @@
 <template>
   <div id="studio">
     <div class="studio-text-box">
-      <span class="studio-text">studio</span>
+      <span class="studio-text">Studio</span>
+     <img class="close-btn" src="../assets/close.svg" />
+
     </div>
     <div class="tag-studio">
       <div class="search">
@@ -292,17 +294,25 @@ export default {
 #studio {
   // overflow:hidden;
   .studio-text-box {
-    height: 5%;
-    justify-content: left;
-    justify-items: left;
+    height: 7%;
+    justify-content: center;
+    position: relative;
     .studio-text {
-      background-color: #41474c;
       padding: 0.2rem;
-      color: #fff;
+      color: #ffffff;
+      font-size: 1.4rem;
+      position: absolute;
+      left: 0.4rem;
+    }
+    .close-btn{
+      width: 1.1rem;
+      right: 0.4rem;
+      top: 0.4rem;
+      position: absolute;
     }
   }
   .tag-studio {
-    height: 95%;
+    height: 93%;
     // display: flex;
     // flex-direction: column;
     padding: 0.4rem;
