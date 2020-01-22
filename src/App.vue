@@ -1,24 +1,12 @@
 <template>
   <div id="app">
     <!-- <spliter class="spliter"/> -->
+    <div class="top-panel"></div>
+    <div class="main-panel">
     <div class="left-panel">
-      <studio
-        @desc-close="tagNotSelected"
-        @ui-select="uiSelected"
-        @tag-select="tagSelected"
-        @userSelectedTagComponent="userSelectedTagComponent"
-        class="studio"
-      ></studio>
-      <overview
-        ref="overview"
-        @selectDomElement="selectDomElemented"
-        @inParentTreeOption="inParentTreeOption"
-        @domWithTree="domPushWithTree"
-        :getDocument="homeDocument"
-        class="overview"
-      ></overview>
+        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img @click="overviewBtn" class="overview-btn" src="./assets/overview.svg" />
     </div>
-
     <div class="center-panel">
       <div class="title">Editor</div>
       <img class="scale" src="./assets/scale.svg" />
@@ -100,7 +88,10 @@ export default {
       isCtrl: false,
       i: 0,
       workStack: [],
-      reworkStack: []
+      reworkStack: [],
+      studioOn: false,
+      overviewOn: false,
+      layoutOn: false
     };
   },
   watch: {
@@ -214,6 +205,22 @@ export default {
     this.hasht = h;
   },
   methods: {
+    studioBtn() {
+      if (this.studioOn === true) {
+        this.studioOn = false;
+      } else {
+        this.overviewOn = false
+        this.studioOn = true;
+      }
+    },
+    overviewBtn(){
+      if(this.overviewOn === true){
+        this.overviewOn =false
+      } else{
+        this.studioOn = false
+        this.overviewOn = true
+      }
+    },
     redoWork() {
       let i
       if(this.reworkStack.length !== 0){
@@ -399,6 +406,38 @@ export default {
   .spliter {
     left: 500px;
   }
+  .studio {
+    width: 20rem;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    z-index: 11;
+    top: 6%;
+  }
+
+  .overview {
+    width: 20rem;
+    z-index: 11;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    top: 6%;
+  }
+  .top-panel {
+    height: 6%;
+    background-color: #3c474c;
+    background-image: linear-gradient(to bottom, #48545a, #3d484d);
+    width: 100%;
+  }
+  .main-panel {
+    width: 100%;
+    height: 94%;
+    display: flex;
+    flex-direction: row;
 
   .left-panel {
     width: 20%;

@@ -1012,7 +1012,6 @@ export default {
 #dashboard {
   display: inline-block;
   align-items: center;
-  width: 100%;
   .editor-box {
     width: 100%;
     height: 80%;
