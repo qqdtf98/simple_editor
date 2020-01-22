@@ -200,6 +200,14 @@ export default {
             this.clickedElement.style.transform = `scale(${size})`
           }
         }
+        var style = {
+            work: "style",
+            elem: this.clickedElement,
+            style: "transform",
+            afterValue: `scale(${this.size})`,
+            value: `scale(${this.initialscale})`
+          };
+          this.$emit("stack-push", style);
       }
       if (this.isContentMovable) {
         let borderElem
@@ -539,21 +547,22 @@ export default {
       this.style = data.style
       let element = document.getElementsByClassName(this.target)[0]
       var style = {
-        work: 'style',
+        work: "style",
         elem: element,
         style: this.style,
+        afterValue: data.value,
         value: getComputedStyle(element)[this.style]
-      }
+      };
 
-      this.value = data.value
+      this.value = data.value;
 
       // console.log(element)
-      element.style[this.style] = this.value
+      element.style[this.style] = this.value;
 
       //console.log("꼈다")
       // console.log(document.getElementsByClassName(this.target)[0].className)
       //console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
-      this.$emit('stack-style', style)
+      this.$emit("stack-push", style);
     },
     borderStyleChanged (data) {
       // console.log(data)

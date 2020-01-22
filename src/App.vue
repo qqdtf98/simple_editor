@@ -193,8 +193,10 @@ export default {
   methods: {
     undoWork () {
       let i
-      for (i = 0; i < this.workStack.length; i++) {
-        console.log(this.workStack[i])
+      if(rework.work === 'style'){
+        rework.elem.style[rework.style] = rework.afterValue;
+        if (work.work === "style") {
+          work.elem.style[work.style] = work.value;
       }
       console.log('aaa')
       let work = this.workStack.pop()
@@ -203,8 +205,8 @@ export default {
         work.elem.style[work.style] = work.value
       }
     },
-    stackStyle (elem) {
-      this.workStack.push(elem)
+    stackPush(elem) {
+      this.workStack.push(elem);
     },
     userSelectedTagComponent (e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
