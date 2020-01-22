@@ -1322,7 +1322,7 @@ export default {
 		// console.log(reader.readAsDataURL(input.files[0]))
 		
 		var file = document.querySelector('#getfile');
-		console.log(this.payload.className)
+		// console.log(this.payload.className)
 
 		file.onchange = function () {
 			var fileList = file.files ;
@@ -1333,15 +1333,16 @@ export default {
 
 			//로드 한 후
 			reader.onload = function  () {
+				console.log("fss")
 				console.log(reader.result)
-				console.log(document.querySelector('.button1').background-image)
-				document.querySelector('#preview').src = reader.result;
-			this.submitSorce.payload = this.payload
-					this.submitSorce.style = 'background-size'
-					this.submitSorce.value = '100%'
-					this.submitSorce.change = 1,
-					this.$emit('userSelected', this.submitSorce)
-				document.querySelector('button1').backgroundImage = reader.result;
+				// console.log(document.querySelector('.button1').background-image)
+				$(document.querySelector('.button2')).attr( 'src', reader.result);
+				// this.submitSorce.payload = this.payload
+				// 	this.submitSorce.style = 'background-size'
+				// 	this.submitSorce.value = '100%'
+				// 	this.submitSorce.change = 1,
+				// 	this.$emit('userSelected', this.submitSorce)
+				// document.querySelector('button1').backgroundImage = reader.result;
 				// this.submitSorce.value = reader.result
 			};
 		};

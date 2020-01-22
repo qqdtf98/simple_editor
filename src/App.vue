@@ -48,7 +48,6 @@
       @userSelected="userSelectedWidth"
       @userSelectBorder="userSelectBorder"
       @selectDomElemented="selectDomElemented"
-      :loadData="loadData"
       class="layout"
     ></layout>
     <span v-if="tagDescription" class="description-tag">
