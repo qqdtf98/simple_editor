@@ -519,7 +519,7 @@
   <!-- Options v-if="isData" -->
   <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	<div  role="tablist">
-<div>
+	<div>
 		<div  role="tablist">
 		<b-card no-body class="mb-1" >
 			<b-card-header header-tag="header" class="p-1" role="tab">
@@ -670,6 +670,48 @@
   </div>
   <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
 </div>
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
+		<li class="nav-item">
+			<a class="nav-link active" v-bind:class="{ active:tabStep===4 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Design</a>
+		</li>
+	</ul>
+	<div class="tab-pane  active"  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+      <div class="tag-box">
+
+        <div class="tag-list-box">
+          <span class="tag-list">Pages</span>
+          <div class="nested">
+            <div name = "html" @click="changeProperty">index.html</div>
+          </div>
+        </div>
+		
+        
+        <div class="tag-list-box">
+          <span class="tag-list">Style</span>
+          <div class="nested">
+            <div name = "css" @click="changeProperty">index.css</div>
+          </div>
+        </div>
+
+        <div class="tag-list-box">
+          <span class="tag-list">JavaScript</span>
+          <div class="nested">
+            <div name = "js" @click="changeProperty">index.js</div>
+          </div>
+        </div>
+
+      </div>
+	  <div v-if="kindOfLoadDate==1">
+	  	<pre>{{testMessage}}</pre>
+	  </div>
+	  <div v-if="kindOfLoadDate==2">
+		<pre v-bind:value="this.loadData[1]" id="preview2">불러올 데이터가 없습니다.</pre>
+	  </div>
+	  <div v-if="kindOfLoadDate==3">
+		<textarea style="word-break:break-all"  class ="showJS" v-bind:value="this.loadData[2]" id="preview3"></textarea>
+		<input  type="submit"  value="Apply" @change="inputFile" id="getfile" accept="text/*">
+	  </div>
+	</div>
   </div>
   <!--
 
@@ -685,7 +727,7 @@ import 'vue-range-slider/dist/vue-range-slider.css'
 
 export default {
   name: 'App',
-  props: ['payload'],
+  props: ['payload','loadData'],
   data () {
     return {
       transformantionSelected: 'none',
@@ -763,7 +805,8 @@ export default {
       submitSorce: {
         payload: '',
         style: '',
-        value: ''
+        value: '',
+		change:'',
       },
       componentSorce: {
         x: 228,
@@ -816,7 +859,9 @@ export default {
 	  parentDom: [],
 	  selectedFile: null,
 	  domWithTree: [],
-	  backgroundImage: ''
+	  backgroundImage: '',
+	  kindOfLoadDate:0,
+	  test:'as',
 	  // on : true,
       //   widthFontActive:{
       // 	color:'blue',
@@ -829,11 +874,16 @@ export default {
     RangeSlider,
     ChromeColor: VueColor.Chrome
   },
+
   created () {
-
+	//   console.log("s")
+	  console.log(this.loadData)
   },
-  mounted () {
-
+  computed:{
+	  testMessage: function (){
+		  this.test = document.getElementById("newLoaderHtml").innerHTML
+		  return this.test
+	  }
   },
   methods: {
     chageTab (e) {
@@ -949,6 +999,7 @@ export default {
       this.submitSorce.style = 'background'
       this.submitSorce.value = colorData.hex
       this.onBackgroundColor = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     updateFontValue (colorData) {
@@ -956,7 +1007,8 @@ export default {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'color'
       this.submitSorce.value = colorData.hex
-      this.onColor = true
+      this.onColor = true,
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSourceWithPX (e) {
@@ -1015,7 +1067,7 @@ export default {
           }
         }
       } else if (e.target.name == 'width') { this.onWidth = true } else if (e.target.name == 'fontSize') { this.onFontSize = true }
-
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSourceOriginal (e) {
@@ -1033,6 +1085,7 @@ export default {
         // onsole.log(this.submitSorce)
         this.submitSorce.value = e
       }
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitOpacity (e) {
@@ -1043,6 +1096,7 @@ export default {
         // this.submitSorce.value=e
       } else { this.submitSorce.value = e }
       this.onOpacity = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitBlur (e) {
@@ -1053,6 +1107,7 @@ export default {
         this.submitSorce.value = 'blur(' + e.target.value.replace(/px/gi, '') + 'px)'
       }
       this.onBlur = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitBrightness (e) {
@@ -1060,6 +1115,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'brightness(' + e + '%)' } else { this.submitSorce.value = 'brightness(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onBrightness = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitContrast (e) {
@@ -1067,6 +1123,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'contrast(' + e + '%)' } else { this.submitSorce.value = 'contrast(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onContrast = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitGrayscale (e) {
@@ -1074,6 +1131,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'grayscale(' + e + '%)' } else { this.submitSorce.value = 'grayscale(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onGrayscale = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitHue (e) {
@@ -1081,6 +1139,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'hue(' + e + 'deg)' } else { this.submitSorce.value = 'hue(' + e.target.value.replace(/deg/gi, '') + 'deg)' }
       this.onHue = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitInvert (e) {
@@ -1088,6 +1147,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'invert(' + e + '%)' } else { this.submitSorce.value = 'invert(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onInvert = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSaturate (e) {
@@ -1095,6 +1155,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'saturate(' + e + '%)' } else { this.submitSorce.value = 'saturate(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onSaturate = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSepia (e) {
@@ -1102,11 +1163,12 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'sepia(' + e + '%)' } else { this.submitSorce.value = 'sepia(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onSepia = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeAlign (e) {
     //   console.log(e)
-	console.log("드갔다")
+	// console.log("드갔다")
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'text-align'
       if ((e.target.name) === 'left') {
@@ -1118,6 +1180,7 @@ export default {
       } else if ((e.target.name) === 'center') {
         this.submitSorce.value = 'center'
       }
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeTextTransform (e) {
@@ -1125,12 +1188,14 @@ export default {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'text-transform'
       this.submitSorce.value = e
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeTextFontFamily (e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'font-family'
       this.submitSorce.value = e
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeTextFontStyle (e) {
@@ -1140,11 +1205,13 @@ export default {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'text-decoration'
         this.submitSorce.value = e
+	    this.submitSorce.change = 1,
         this.$emit('userSelected', this.submitSorce)
       } else {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'font-style'
         this.submitSorce.value = e
+    	this.submitSorce.change = 1,
         this.$emit('userSelected', this.submitSorce)
       }
     },
@@ -1153,12 +1220,14 @@ export default {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'font-weight'
         this.submitSorce.value = e.target.value
+		this.submitSorce.change = 1,
         this.$emit('userSelected', this.submitSorce)
       } else {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'font-weight'
         this.submitSorce.value = e
-        this.$emit('userSelected', this.submitSorce)
+    	this.submitSorce.change = 1,
+		this.$emit('userSelected', this.submitSorce)
       }
     },
     submitChangeBorder (e) {
@@ -1167,19 +1236,22 @@ export default {
       this.submitSorce.style = 'border'
       this.submitSorce.value = 'solid'
       // console.log(this.submitSorce)
-      this.$emit('userSelectBorder', this.submitSorce)
+      this.submitSorce.change = 1,
+	  this.$emit('userSelectBorder', this.submitSorce)
     },
 	submitChangeBorderWidth(e){
 	  this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
       this.submitSorce.value = e
       // console.log(this.submitSorce)
-      this.$emit('userSelectBorder', this.submitSorce)
+	  this.submitSorce.change = 1,
+	  this.$emit('userSelectBorder', this.submitSorce)
 	},
 	submitChangeBorderStyle(e){
 	  this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
       this.submitSorce.value = e
+	  this.submitSorce.change = 1,
       // console.log(this.submitSorce)
       this.$emit('userSelectBorder', this.submitSorce)
 	},
@@ -1190,6 +1262,7 @@ export default {
       this.submitSorce.style = 'float'
       this.submitSorce.value = e
       // console.log(this.submitSorce)
+	  this.submitSorce.change = 1,
       this.$emit('userSelectBorder', this.submitSorce)
 	},
     makeTreeParent (payload) {
@@ -1208,7 +1281,6 @@ export default {
 		var print=[]
 		for(var i=0;i<this.parentDom.length;i++){
 			if(payload==this.domWithTree[i]){
-				
 				a=i
 				break
 			}
@@ -1267,6 +1339,7 @@ export default {
 			this.submitSorce.payload = this.payload
 					this.submitSorce.style = 'background-size'
 					this.submitSorce.value = '100%'
+					this.submitSorce.change = 1,
 					this.$emit('userSelected', this.submitSorce)
 				document.querySelector('button1').backgroundImage = reader.result;
 				// this.submitSorce.value = reader.result
@@ -1281,6 +1354,7 @@ export default {
 		this.submitSorce.payload = this.payload
 		this.submitSorce.style = 'background-size'
 		this.submitSorce.value = '100%'
+    	this.submitSorce.change = 1,
 		this.$emit('userSelected', this.submitSorce)
 	},
 	onUpload(){
@@ -1291,11 +1365,62 @@ export default {
 		if(e.target.innerText!=='HTML'&&e.target.innerText!=='Body')
 			this.$emit('selectDomElemented', this.domWithTree[e.target.id])
 	},
+	inputFile(e){
+		console.log(e)
+		var file = document.querySelector('#getfile');
+		file.onchange = function () { 
+			var fileList = file.files ;
+			
+			// 읽기
+			var reader = new FileReader();
+			reader.readAsText(fileList [0]);
+
+			//로드 한 후
+			reader.onload = function  () {
+				document.querySelector('#preview').textContent = reader.result ;
+			}; 
+		}; 
+	},
+	loadDataSetting(data){
+		// console.log("dsda")
+		// console.log(data[0])
+	},
+	changeProperty(e){
+		// console.log(this.loadData[0])
+		// console.log(document.getElementById("newLoaderHtml"))
+		if(e.target.getAttribute('name')=='html'){
+			this.kindOfLoadDate=1
+			
+		}
+		else if(e.target.getAttribute('name')=='css'){
+			this.kindOfLoadDate=2
+		}
+		else if(e.target.getAttribute('name')=='js'){
+			this.kindOfLoadDate=3
+		}
+		this.chageContent()
+		
+	},
+	chageContent(){
+		if(this.kindOfLoadDate==1){
+			// document.querySelector('#preview').textContent = this.loadData[0]
+			 this.test = document.getElementById("newLoaderHtml").innerHTML
+			 console.log(this.test)
+			
+		}
+		else if(this.kindOfLoadDate==2){
+			document.querySelector('#preview2').textContent = this.loadData[1]
+			this.test = 'dd'
+		}
+		else if(this.kindOfLoadDate==3){
+			document.querySelector('#preview3').textContent = this.loadData[2]
+		}
+	}
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .dsadsadsad{
 	color: white !important;
 }
@@ -1368,5 +1493,75 @@ export default {
 }
 .parentTreeOption{
 	overflow:auto;
+}
+    .tag-box {
+      // overflow:scroll;
+      align-items: left;
+      justify-content: left;
+      .tag-list-box {
+        // float: left;
+        text-align: left;
+        margin: 0.1rem;
+        .tag-list {
+          margin-left: 0.4rem;
+          color: #e7e4e4;
+          cursor: pointer;
+          user-select: none; /* Prevent text selection */
+          //   float: left;
+          transition: all 300ms ease;
+        }
+
+        /* Create the tag-list/arrow with a unicode, and style it */
+        .tag-list::before {
+          content: "\25B6";
+          color: #e7e4e4;
+          display: inline-block;
+          margin-right: 6px;
+        }
+
+        /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
+        .tag-list-down::before {
+          transform: rotate(90deg);
+        }
+        .nested {
+          display: none;
+        }
+
+        /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
+        .active {
+          display: block;
+        }
+        .template {
+          margin-left: 2rem;
+          color: #e7e4e4;
+          &:hover {
+            background-color: #414649;
+            cursor: default;
+          }
+        }
+        .template::before {
+          content: "\2B1A";
+          margin-right: 0.2rem;
+        }
+        .ui {
+          margin-left: 1.2rem;
+        }
+      }
+      .filter{
+        color:white;
+        text-align: left;
+        margin-left: 1rem;
+
+      }
+    }
+pre, .showJS {
+	text-align:left;
+	width:100%;
+	height:500px;
+    padding: 1em;
+    background: rgb(240, 240, 240);
+    color: rgb(0, 0, 0);
+    border-radius: .5em;
+	overflow:scroll;
 }
 </style>

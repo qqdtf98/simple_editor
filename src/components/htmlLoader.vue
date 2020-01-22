@@ -13,35 +13,50 @@ export default {
   data () {
     return {
       // yuri: 's',
-      html: `
-        <div class="dsa">
-        <button class="dsadsadsa" id="dsadsadsa"
-        type="button"
-        >도움말
-        <div> dfdsfdsfds 
-        <div> dfdsfdsfds </div>
-        <div> dfdsfdsfds </div>
-        </div>
-        </button>
-        <img class="adasdsadas" src='./static/studioImage/FooterBasic.png' width="300" height="300">
-        <div> dfdsfdsfds </div>
-        </div>
-        `,
-      test: '2'
+      html: 
+`<div class="dsa">
+  <button class="dsadsadsa" id="dsadsadsa"
+  type="button"
+  >도움말
+  <div> dfdsfdsfds 
+    <div> dfdsfdsfds </div>
+    <div> dfdsfdsfds </div>
+  </div>
+  </button>
+  <img class="adasdsadas" src='./static/studioImage/FooterBasic.png' width="300" height="300">
+  <div> dfdsfdsfds </div>
+</div>`,
+      test: '2',
+      loadJavaScript:
+
+`var file = document.querySelector('#getfile');
+
+file.onchange = function () { 
+    var fileList = file.files ;
+    
+    // 읽기
+    var reader = new FileReader();
+    reader.readAsText(fileList [0]);
+
+    //로드 한 후
+    reader.onload = function  () {
+        document.querySelector('#preview').textContent = reader.result ;
+    }; 
+};`,
+      loadDate:[]
     }
   },
   created () {
     var oScript = document.createElement('style')
     oScript.type = 'text/css'
-    oScript.innerHTML = `
-      #dsadsadsa{
-        color: #fff; 
-        background:blue;
-        font-size:2em; 
-        border-radius:0.5em;
-        padding:5px 20px;
-      }
-      `
+    oScript.innerHTML = 
+`#dsadsadsa{
+  color: #fff; 
+  background:blue;
+  font-size:2em; 
+  border-radius:0.5em;
+  padding:5px 20px;
+}`
     document.getElementsByTagName('head')[0].appendChild(oScript)
     // var vScript = document.createElement('script');
     // vScript.type ='text/javascript';
@@ -52,6 +67,13 @@ export default {
     // }
     // `
     // document.getElementsByTagName('head')[0].appendChild(vScript)
+    this.loadDate.push(this.html)
+    this.loadDate.push(oScript.innerHTML)
+    this.loadDate.push(this.loadJavaScript)
+
+    this.$emit('loadData', this.loadDate)
+    
+    // console.log(this.loadDate)
   },
   methods: {
     onFileChange (file) {
@@ -88,7 +110,7 @@ export default {
     this.$refs['mydiv'].firstChild.addEventListener('click', function (event) {
       event.preventDefault()
       console.log('clicked: ', event.target)
-      alert('눌렀습니다')
+      // alert('눌렀습니다')
     })
   }
 

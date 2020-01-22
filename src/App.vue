@@ -31,6 +31,7 @@
         <home
           ref="home"
           @componentSelected="componentSelected"
+          @loadData="loadDataSave"
           class="home"
         ></home>
       </div>
@@ -41,6 +42,7 @@
       @userSelected="userSelectedWidth"
       @userSelectBorder="userSelectBorder"
       @selectDomElemented="selectDomElemented"
+      :loadData="loadData"
       class="layout"
     ></layout>
     <span v-if="tagDescription" class="description-tag">
@@ -82,7 +84,8 @@ export default {
       selectedTag: null,
       hasht: null,
       isPustHtml: true,
-      mouseOverTarget: null
+      mouseOverTarget: null,
+      loadData:''
     }
   },
   watch: {
@@ -229,7 +232,10 @@ export default {
       this.$refs.home.borderStyleChanged(e)
     },
     toggleClicked () {
-      console.log('aaa')
+      // console.log('aaa')
+    },
+    loadDataSave(data){
+      this.loadData = data
     }
   }
 

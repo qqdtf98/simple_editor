@@ -13,7 +13,11 @@
         @mousedown="mousedown"
       >
       <spliter />
-        <HtmlLoader class="navi" />
+        <HtmlLoader  
+        class="navi"
+        @loadData="loadData"
+
+        />
         <!-- <Navi class="navi" /> -->
         <Dashboard />
       </div>
@@ -541,10 +545,9 @@ export default {
       let element = document.getElementsByClassName(this.target)[0]
       // console.log(element)
       element.style[this.style] = this.value
-
-      console.log("바꼈다")
+      // console.log("바꼈다")
       // console.log(document.getElementsByClassName(this.target)[0].className)
-      console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
+      // console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
     },
     borderStyleChanged (data) {
       // console.log(data)
@@ -886,6 +889,10 @@ export default {
           // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
         })
       }
+    },
+    loadData(data){
+      // console.log(data)
+       this.$emit('loadData', data)
     }
   }
 }
