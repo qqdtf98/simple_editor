@@ -516,10 +516,10 @@ export default {
         }
       }
       if (this.mode) {
-        console.log(getComputedStyle(this.clickedElement).flexWrap)
+        // console.log(getComputedStyle(this.clickedElement).flexWrap)
         this.clickedElement.style.display = 'flex'
         this.clickedElement.style.flexWrap = 'wrap'
-        console.log(getComputedStyle(this.clickedElement).flexWrap)
+        // console.log(getComputedStyle(this.clickedElement).flexWrap)
       }
     },
     styleChanged (data) {
@@ -550,20 +550,25 @@ export default {
       // console.log(element)
       element.style[this.style] = this.value
 
+      //console.log("꼈다")
+      // console.log(document.getElementsByClassName(this.target)[0].className)
+      //console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
       this.$emit('stack-style', style)
     },
     borderStyleChanged (data) {
-      console.log(data)
+      // console.log(data)
       this.target = data.payload.classList
       this.style = data.style
       this.value = data.value
-      if (this.clickedBorder === null) {
-        this.clickedBorder = '1px solid black'
+      // console.log(this.clickedBorder)
+      if(this.clickedBorder === '0px none rgb(44, 62, 80)'){
+        this.clickedBorder = '1px solid rgb(0, 0, 0)'
+        // console.log("click")
       }
       let prevBorder = this.clickedBorder.split(' ')
       let element = document.getElementsByClassName(this.target)[0]
-      console.log(element)
-      console.log(this.style)
+      // console.log(element)
+      // console.log(this.style)
       this.value = prevBorder[0] + ' ' + data.value + ' ' + prevBorder[2] + ' ' + prevBorder[3] + ' ' + prevBorder[4]
       element.style[this.style] = this.value
       this.clickedBorder = this.value
@@ -786,7 +791,7 @@ export default {
     copyElement () {
       let classValue = ''
       let i
-      console.log(this.clickedElement.classList.length)
+      // console.log(this.clickedElement.classList.length)
       for (i = 0; i < this.clickedElement.classList.length; i++) {
         if (i === this.clickedElement.classList.length - 1) {
           classValue += '.' + this.clickedElement.classList[i]
@@ -794,9 +799,9 @@ export default {
           classValue += '.' + this.clickedElement.classList[i] + ' '
         }
       }
-      console.log(classValue)
+      // console.log(classValue)
       let elem = document.getElementsByClassName(this.clickedElement.classList.value)
-      console.log(elem[0])
+      // console.log(elem[0])
       let copyElem = elem[0].cloneNode(true)
 
       let randomClass = elem[0].parentElement.classList.value.replace(/ /gi, '') + elem[0].classList.value.replace(/ /gi, '') + this.classIndex
@@ -806,7 +811,7 @@ export default {
       var newparent = document.createElement('div')
 
       this.$nextTick(() => {
-        console.log(this.clickedElement.parentElement.children)
+        // console.log(this.clickedElement.parentElement.children)
         this.clickedElement.parentElement.appendChild(newparent)
         newparent.appendChild(elem[0])
         newparent.appendChild(copyElem)
@@ -816,12 +821,12 @@ export default {
           // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
           newparent.style.height = parseInt(getComputedStyle(elem[0]).height) + 'px'
           if (getComputedStyle(elem[0]).right !== 0) {
-            console.log('right')
+            // console.log('right')
             copyElem.style.left = parseInt(getComputedStyle(elem[0]).left) - parseInt(getComputedStyle(elem[0]).width) + 'px'
             copyElem.style.border = this.clickedBorder
             copyElem.style.borderRadius = this.clickedBorderRadius
           } else {
-            console.log('left')
+            // console.log('left')
             copyElem.style.left = parseInt(getComputedStyle(elem[0]).left) + parseInt(getComputedStyle(elem[0]).width) + 'px'
             copyElem.style.border = this.clickedBorder
             copyElem.style.borderRadius = this.clickedBorderRadius
@@ -877,7 +882,7 @@ export default {
       }
     },
     modeSelect (mode) {
-      console.log(mode)
+      // console.log(mode)
       this.mode = mode
     },
     onmouseRightClick (e) {

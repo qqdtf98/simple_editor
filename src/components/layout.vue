@@ -7,18 +7,19 @@
 		<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="true">Options</a>
+		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Options</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" v-bind:class="{ active:tabStep===3 }" :active="tabStep === 3"id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
+		<a class="nav-link" v-bind:class="{ active:tabStep===3 }" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
 	</li>
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+
+  <div v-if="isData"  class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
 	<!-- Look % Feel-->
 	<div>
-		<div v-if="isData" role="tablist">
+		<div role="tablist">
 		<b-card no-body class="mb-1">
 			<b-card-header header-tag="header" class="p-1" role="tab">
 			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
@@ -203,7 +204,7 @@
 				</div>
 				<div>
 				 image
-					<input style="display:none"type="file" @change="onFileSelected" ref="fileInput">
+					<input style="display:none"type="file" @change="onFileSelected" id="getfile"ref="fileInput">
 					<button @click="$refs.fileInput.click()">Pick File</button>
 					<button @click="onUpload">Save</button>
 				</div>
@@ -516,7 +517,7 @@
 </div>
 
   <!-- Options v-if="isData" -->
-  <div class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+  <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	<div  role="tablist">
 <div>
 		<div  role="tablist">
@@ -587,7 +588,6 @@
 			</b-card-header>
 			<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
 				<div class="option textboxoption has-addon collapsed">
-
 					<div class="row">>
 						<span class="col-md-5">
 							Border
@@ -597,14 +597,18 @@
 							<label class="custom-control-label" for="customSwitches" ></label>
 						</span>
 					</div>
-
+					<div class="row">
+						<span class="col-md-5">border-width</span>
+						<div class="col-md-7">
+						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderWidthSelected" :options="borderWidth" @change="submitChangeBorderWidth"></b-form-select>
+						</div>
+					</div>
 					<div class="row">
 						<span class="col-md-5">border-style</span>
 						<div class="col-md-7">
-						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderStyleSelected" :options="fontWeight" @change="borderStyle"></b-form-select>
+						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderStyleSelected" :options="borderStyle" @change="submitChangeBorderStyle"></b-form-select>
 						</div>
 					</div>
-
 				</div>
 			</b-collapse>
 		</b-card>
@@ -617,7 +621,7 @@
 					<span class="col-md-4" style>Float</span>
 					<div class="col-md-7">
 					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-right"></i>
+						<i @click="submitChangeAlign($event)" class="fas fa-align-right" ></i>
 					</button>
 					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
 						<i class="fas fa-align-center"></i>
@@ -641,18 +645,18 @@
 			<b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
 
 				<div class="row">
-					<span class="col-md-4" style>Float</span>
+					<span class="col-md-4" >Float</span>
 					<div class="col-md-7">
-					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-right"></i>
+					<button  @click ="submitChangeFloat" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i  @click ="submitChangeFloat" name="right"  class="fas fa-align-right"></i>
 					</button>
-					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+					<button @click ="submitChangeFloat" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
 						<i class="fas fa-align-center"></i>
 					</button>
-					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+					<button @click ="submitChangeFloat" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
 						<i class="fas fa-align-left"></i>
 					</button>
-					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+					<button @click ="submitChangeFloat" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
 						<i class="fas fa-times"></i>
 					</button>
 					</div>
@@ -664,7 +668,7 @@
 	</div>
 	</div>
   </div>
-  <div class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
+  <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
 </div>
   </div>
   <!--
@@ -724,7 +728,14 @@ export default {
         { value: 'dashed', text: 'Dashed' },
         { value: 'double', text: 'Double' }
       ],
-
+	  borderWidthSelected: 'none',
+	  borderWidth: [
+        { value: 'none', text: 'None' },
+        { value: 'medium', text: 'Medium' },
+        { value: 'thick', text: 'Thick' },
+        { value: 'thin', text: 'Thin' },
+        { value: 'length', text: 'Length' }
+      ],
 	  border: 'false',
 	  tabStep: 1,
 	  opacityValue: '',
@@ -1094,7 +1105,8 @@ export default {
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeAlign (e) {
-      // console.log(e.target.name)
+    //   console.log(e)
+	console.log("드갔다")
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'text-align'
       if ((e.target.name) === 'left') {
@@ -1153,10 +1165,33 @@ export default {
       // console.log("dasd")
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
-      this.submitSorce.value = 'dotted'
+      this.submitSorce.value = 'solid'
       // console.log(this.submitSorce)
       this.$emit('userSelectBorder', this.submitSorce)
     },
+	submitChangeBorderWidth(e){
+	  this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'border'
+      this.submitSorce.value = e
+      // console.log(this.submitSorce)
+      this.$emit('userSelectBorder', this.submitSorce)
+	},
+	submitChangeBorderStyle(e){
+	  this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'border'
+      this.submitSorce.value = e
+      // console.log(this.submitSorce)
+      this.$emit('userSelectBorder', this.submitSorce)
+	},
+	submitChangeFloat(e){
+	  console.log(e.target.name)
+
+	  this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'float'
+      this.submitSorce.value = e
+      // console.log(this.submitSorce)
+      this.$emit('userSelectBorder', this.submitSorce)
+	},
     makeTreeParent (payload) {
       var obj = document.getElementById('inParentTreeOption')
       $(obj).empty()
@@ -1209,33 +1244,39 @@ export default {
 		// console.log(e.target.value)
 		// this.selectedFile = e.target.files[0]
 		// console.log(this.selectedFile)
-		var fileReader = new FileReader()
-		// console.log(e.target.files[0])
-		fileReader.readAsDataURL(e.target.files[0])
-		fileReader.onload = (e) => {
-			this.backgroundImage=e.target.result
-		}
-		// console.log(this.backgroundImage)
+
+		// reader.readAsDataURL(input.files[0]);
+		// console.log(input.files[0])
+		// console.log(reader.readAsDataURL(input.files[0]))
+		
+		var file = document.querySelector('#getfile');
+		console.log(this.payload.className)
+
+		file.onchange = function () {
+			var fileList = file.files ;
+
+			// 읽기
+			var reader = new FileReader();
+			reader.readAsDataURL(fileList [0]);
+
+			//로드 한 후
+			reader.onload = function  () {
+				console.log(reader.result)
+				console.log(document.querySelector('.button1').background-image)
+				document.querySelector('#preview').src = reader.result;
+			this.submitSorce.payload = this.payload
+					this.submitSorce.style = 'background-size'
+					this.submitSorce.value = '100%'
+					this.$emit('userSelected', this.submitSorce)
+				document.querySelector('button1').backgroundImage = reader.result;
+				// this.submitSorce.value = reader.result
+			};
+		};
+
 		// this.submitSorce.payload = this.payload
 		// this.submitSorce.style = 'background-image'
-		// this.submitSorce.value = "C:\\fakepath\\다모넷 - 1.PNG"
+		// // this.submitSorce.value = reader.readAsDataURL(input.files[0])
 		// this.$emit('userSelected', this.submitSorce)
-		var input = e.target;
-
-		var reader = new FileReader();
-		reader.onload = function(){
-		var dataURL = reader.result;
-		var output = document.getElementById('output');
-		output.src = dataURL;
-		};
-		reader.readAsDataURL(input.files[0]);
-		console.log(input.files[0])
-		console.log(reader.readAsDataURL(input.files[0]))
-
-		this.submitSorce.payload = this.payload
-		this.submitSorce.style = 'background-image'
-		this.submitSorce.value = reader.readAsDataURL(input.files[0])
-		this.$emit('userSelected', this.submitSorce)
 
 		this.submitSorce.payload = this.payload
 		this.submitSorce.style = 'background-size'

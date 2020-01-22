@@ -225,6 +225,7 @@ export default {
       }
     },
     onSearchElement (e) {
+      
       let tagBox = document.querySelector('.tag-box')
       let list = document.querySelectorAll('.tag-list')
       let name = document.querySelectorAll('.nested')
