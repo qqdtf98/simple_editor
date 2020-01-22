@@ -90,8 +90,9 @@ import HtmlLoader from "./htmlLoader.vue";
 import spliter from "./spliter.vue";
 import Context from "./Context";
 
+
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter, Context },
+  components: { Dashboard, Navi, HtmlLoader, spliter, Context},
   data() {
     return {
       selectedElement: null,
@@ -1018,7 +1019,7 @@ export default {
     // display:table
     overflow: auto;
     scroll-behavior: smooth;
-    border: 1px solid #fff;
+    border: 1px solid #000000;
 
     .editor-component {
       // overflow: auto;
