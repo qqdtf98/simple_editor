@@ -14,7 +14,7 @@
 	</li>
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
-
+		<div class="no-text" v-if="!isData">No components selected</div>
   <div v-if="isData"  class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
 	<!-- Look % Feel-->
@@ -1298,6 +1298,10 @@ export default {
 <style>
 .dsadsadsad{
 	color: white !important;
+}
+.no-text{
+	margin-top: 0.5rem;
+	color: #fff;
 }
 .blue {
   padding: 5px;
