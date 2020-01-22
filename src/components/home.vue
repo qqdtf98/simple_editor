@@ -717,8 +717,23 @@ export default {
         })
       }
     },
-    removeContent () {
-      this.clickedElement.parentNode.removeChild(this.clickedElement)
+    removeContent() {
+      let i
+      let nChild
+      for(i = 0; i < this.clickedElement.parentNode.childNodes.length;i++){
+        if(this.clickedElement.parentNode.childNodes[i] === this.clickedElement){
+          nChild = i
+          break
+        }
+      }
+      var remove = {
+        work: "remove",
+        position: this.clickedElement.parentNode,
+        elem: this.clickedElement,
+        nth: nChild
+      };
+      this.$emit("stack-push", remove);
+      this.clickedElement.parentNode.removeChild(this.clickedElement);
     },
     addContent (tag, position) {
       console.log('ffsafdsf')

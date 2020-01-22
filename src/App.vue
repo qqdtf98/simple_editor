@@ -195,8 +195,15 @@ export default {
       let i
       if(rework.work === 'style'){
         rework.elem.style[rework.style] = rework.afterValue;
+      } else if (rework.work === 'remove') {
+        let parent = rework.position
         if (work.work === "style") {
           work.elem.style[work.style] = work.value;
+        } else if (work.work === "remove") {
+          let parent = work.position;
+          // console.log(work.nth)
+          // parent.insertBefore(work.elem, parent.chlidNodes[work.nth]);
+          parent.appendChild(work.elem);
       }
       console.log('aaa')
       let work = this.workStack.pop()
