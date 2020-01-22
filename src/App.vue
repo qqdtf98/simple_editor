@@ -1,7 +1,22 @@
 <template>
   <div id="app">
     <!-- <spliter class="spliter"/> -->
-    <div class="top-panel"></div>
+    <div class="top-panel">
+      <!-- <img class="scale" src="./assets/scale.svg" />
+      <img class="width" src="./assets/width.svg" /> -->
+      <div class="switch-box">
+        <switches
+        @click="toggleClicked"
+        class="swtich"
+        theme="bootstrap"
+        color="info"
+        v-model="enabled" />
+        <div class="switch-text">Switch</div>
+      </div>
+      
+      <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+      <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+    </div>
     <div class="main-panel">
       <div class="left-panel">
         <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
@@ -14,18 +29,7 @@
       <div class="editor-panel">
         <div class="center-panel">
           <div class="title">Editor</div>
-          <img class="scale" src="./assets/scale.svg" />
-          <img class="width" src="./assets/width.svg" />
-          <switches
-            @click="toggleClicked"
-            class="swtich"
-            theme="bootstrap"
-            color="info"
-            v-model="enabled"
-          >
-          </switches>
-          <img @click="undoWork" class="undo" src="./assets/undo.svg" />
-          <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+
           <div class="editor">
             <home
               ref="home"
@@ -36,7 +40,6 @@
           </div>
         </div>
         <div class="bottom-panel"></div>
-        
       </div>
 
       <div class="right-panel">
@@ -489,6 +492,39 @@ export default {
     background-color: #3c474c;
     background-image: linear-gradient(to bottom, #48545a, #3d484d);
     width: 100%;
+    display: flex;
+    justify-content: left;
+    
+    // .scale {
+    //   width: 2rem;
+    // }
+    // .width {
+    //   width: 2rem;
+    // }
+    .switch-box{
+      display: flex;
+      flex-direction: row;
+      .vue-switcher {
+      transform: scale(1.25);
+      z-index: 9;
+      .switch-text{
+        
+      }
+    }
+    }
+    .undo {
+      -moz-transform: scaleX(-1);
+      -o-transform: scaleX(-1);
+      -webkit-transform: scaleX(-1);
+      transform: scaleX(-1);
+      cursor: pointer;
+      height: 2rem;
+    }
+    .redo {
+      cursor: pointer;
+      height: 2rem;
+    }
+    
   }
   .main-panel {
     width: 100%;
@@ -539,7 +575,7 @@ export default {
       height: 100%;
       .center-panel {
         width: 100%;
-        height:95%;
+        height: 95%;
 
         display: flex;
         align-items: center;
@@ -558,44 +594,6 @@ export default {
           padding-left: 0.9rem;
           padding-right: 0.9rem;
           top: 0;
-        }
-        .scale {
-          position: absolute;
-          width: 0.8rem;
-          right: 2.7rem;
-          height: 0.8rem;
-          top: 2.7rem;
-        }
-        .width {
-          position: absolute;
-          width: 1rem;
-          right: 0.8rem;
-          top: 2.9rem;
-        }
-        .undo {
-          -moz-transform: scaleX(-1);
-          -o-transform: scaleX(-1);
-          -webkit-transform: scaleX(-1);
-          transform: scaleX(-1);
-          position: absolute;
-          top: 0.3rem;
-          cursor: pointer;
-          left: 5rem;
-          height: 1.15rem;
-        }
-        .redo {
-          position: absolute;
-          top: 0.3rem;
-          cursor: pointer;
-          left: 7rem;
-          height: 1.15rem;
-        }
-        .vue-switcher {
-          position: absolute;
-          right: 1rem;
-          top: 4rem;
-          transform: scale(1.25);
-          z-index: 9;
         }
         .editor {
           width: 100%;
@@ -617,23 +615,22 @@ export default {
           }
         }
       }
-      .bottom-panel{
+      .bottom-panel {
         z-index: 10;
         width: 100%;
         background-color: #3c474c;
         height: 5%;
       }
-     
     }
   }
-   .code-loader {
-        width: 92%;
-        z-index: 10000;
-        position: fixed;
-        bottom: 5%;
-        height: 20rem;
-        background-color: red;
-      }
+  .code-loader {
+    width: 92%;
+    z-index: 10000;
+    position: fixed;
+    bottom: 5%;
+    height: 20rem;
+    background-color: red;
+  }
 
   .layout {
     width: 20rem;
