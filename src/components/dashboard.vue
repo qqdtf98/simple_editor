@@ -5,6 +5,40 @@
         <div class="dashboard-text">Dashboard</div>
         <button class="generate">Generate Report</button>
       </div>
+      <div class="component-wrapper">
+        <div class="earning-box">
+          <div class="earningm-wrapper">
+            <div class="earningm-box">
+              <span class="earningm">EARNINGS(MONTHLY)</span>
+              <span class="dol1">$40000</span>
+            </div>
+            <!-- <button class="button1"></button> -->
+          </div>
+          <div class="earninga-wrapper">
+            <div class="earninga-box">
+              <span class="earninga abcd">EARNINGS(ANNUAL)</span>
+              <span class="dol2">$215,000</span>
+            </div>
+            <button class="button2"></button>
+          </div>
+        </div>
+        <div class="task-box">
+          <div class="tasks-wrapper">
+            <div class="task-box">
+              <span class="tasks">TASKS</span>
+              <span class="task">50%</span>
+            </div>
+            <button class="button3"></button>
+          </div>
+          <div class="pending-wrapper">
+            <div class="pending-box">
+              <span class="pending">PENDING REQUESTS</span>
+              <span class="pend">18</span>
+            </div>
+            <button class="button4"></button>
+          </div>
+        </div>
+      </div>
       <div class="img-wrapper">
         <img class="img1" src="../assets/logo.png" />
       </div>
