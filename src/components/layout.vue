@@ -1,5 +1,4 @@
 <template>
-
   <div>
 	<!-- Nav tabs -->
 	<!-- <img @click="closeOverview" class="close-btn" src="../assets/close.svg" /> -->
@@ -16,7 +15,7 @@
 	
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
-		<div class="no-text" v-if="!isData">No components selected</div>
+		<div class="no-text" v-show="!isData">No components selected</div>
   <div v-if="isData"  class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
 	<!-- Look % Feel-->
@@ -525,7 +524,7 @@
 </div>
 
   <!-- Options v-if="isData" -->
-  <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+  <div v-show="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	<div  role="tablist">
 	<div>
 		<div  role="tablist">
@@ -1441,9 +1440,6 @@ export default {
 }
 </script>
 
-<<<<<<< HEAD
-<style lang="scss">
-=======
 <style>
 .close-btn{
       width: 1.1rem;
@@ -1452,7 +1448,6 @@ export default {
 	  cursor:pointer;
     }
 
->>>>>>> c9c981ddace3da8a433d2e65bdea8434dbdaaf81
 .dsadsadsad{
 	color: white !important;
 }

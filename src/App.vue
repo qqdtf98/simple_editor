@@ -85,7 +85,7 @@
       assssssssssssssssssssssss<br>ffffffffffffffffffffffffffffffffffff<br>sddddddddddddddddddddddddddddddd<br>ddd</CodeLoader>
     <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
-      v-if="layoutOn"
+      v-show="layoutOn"
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
@@ -448,7 +448,9 @@ export default {
       });
     },
     componentSelected(payload) {
-      this.$refs.layouts.isData = true;
+      this.layoutOn=true
+      // $('.layout-btn').trigger('click')
+      // this.$refs.layouts.isData = true;
       this.payload = payload.target;
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
@@ -461,6 +463,7 @@ export default {
         this.isPustHtml = false;
       }
       this.$refs.overview.domSelection(payload.target);
+      this.$refs.layouts.isData = true;
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
