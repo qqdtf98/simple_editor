@@ -26,22 +26,22 @@
       </div>
       <div class="switch-box">
         <switches
-        @click="toggleClicked"
-        class="swtich"
-        theme="bootstrap"
-        color="info"
+          @click="toggleClicked"
+          class="swtich"
+          theme="bootstrap"
+          color="info"
           v-model="enabled"
         />
         <div class="switch-text">Switch</div>
       </div>
       <div class="undo-box">
-      <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+        <img @click="undoWork" class="undo" src="./assets/undo.svg" />
         <div @click="undoWork" class="undo-text">Undo</div>
       </div>
       <div class="redo-box">
-      <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+        <img @click="redoWork" class="redo" src="./assets/undo.svg" />
         <div @click="redoWork" class="redo-text">Redo</div>
-    </div>
+      </div>
     </div>
     <div class="main-panel">
       <div class="left-panel">
@@ -74,7 +74,10 @@
       </div>
     </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader">sdddd</CodeLoader>
+    <CodeLoader v-if="codeOn" class="code-loader">
+      
+      assssssssssssssssssssssss<br>ffffffffffffffffffffffffffffffffffff<br>sddddddddddddddddddddddddddddddd<br>ddd</CodeLoader>
+    <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
       v-if="layoutOn"
       ref="layouts"
@@ -189,10 +192,24 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if (e.which === 90 && this.isCtrl) {
+      if(e.which === 16){
+        this.isShift = true
+      }
+      if (e.which === 90 && this.isCtrl &&!this.isShift) {
         this.undoWork();
       }
+      if(e.which === 90 && this.isCtrl && this.isShift){
+        this.redoWork()
+      }
+      if(e.which === 67 && this.isCtrl){
+        //복사
+      }
     });
+    document.addEventListener('keyup', e => {
+      if(e.which === 16){
+        this.isShift = false
+      }
+    })
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -208,9 +225,21 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
+      if(this.resizeLoader){
+        let loader = document.querySelector(".code-loader");
+        let bord = document.querySelector('.loader-bord')
+        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
+        console.log(parseInt(getComputedStyle(loader).top))
+        console.log(parseInt(getComputedStyle(bord).height))
+        this.$nextTick(()=>{
+          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
+        })
+        
+      }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
+      this.resizeLoader = false
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
@@ -287,11 +316,27 @@ export default {
     this.hasht = h;
   },
   methods: {
+    loaderResize(event){
+      let loader = document.querySelector(".code-loader");
+      this.resizeLoader = true
+      this.initialY = event.clientY
+      this.initialHeight = parseInt(getComputedStyle(loader).height)
+    },
+    lo(to){
+      let loader = document.querySelector('.code-loader')
+      loader.style.top = to
+    },
     codeBtn() {
       if (this.codeOn === true) {
         this.codeOn = false;
       } else {
         this.codeOn = true;
+        this.$nextTick(() => {
+          let loader = document.querySelector(".code-loader");
+          let bord = document.querySelector('.loader-bord')
+          bord.style.top = getComputedStyle(loader).top 
+    this.initialTop = getComputedStyle(loader).top
+        });
       }
     },
     layoutBtn() {
@@ -500,7 +545,7 @@ export default {
   // color: #fff;
   display: flex;
   flex-direction: column;
-  height: 58rem;
+  // height: 58rem;
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
@@ -529,6 +574,7 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
+ 
   .top-panel {
     height: 6%;
     background-color: #3c474c;
@@ -537,7 +583,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: left;
-    
+
     // .scale {
     //   width: 2rem;
     // }
@@ -556,7 +602,7 @@ export default {
        border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
-      z-index: 9;
+        z-index: 9;
         // margin-right: 0.5rem;
         margin: 0;
         margin-right: 0.5rem;
@@ -597,14 +643,14 @@ export default {
     }
     .undo-box{
       .undo{
-      -moz-transform: scaleX(-1);
-      -o-transform: scaleX(-1);
-      -webkit-transform: scaleX(-1);
-      transform: scaleX(-1);
-      cursor: pointer;
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        cursor: pointer;
         margin-right: 0.5rem;
         height: 1.2rem;
-    }
+      }
     }
     
   }
@@ -711,7 +757,16 @@ export default {
     position: fixed;
     bottom: 5%;
     height: 20rem;
-    background-color: red;
+    background-color: #23282b;
+  }
+   .loader-bord {
+     cursor: n-resize;
+    height:7px;
+    width: 92%;
+    position: fixed;
+    z-index: 10000;
+    //  bottom: 5%;
+    background-color:#545e66 ;
   }
 
   .layout {
