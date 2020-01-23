@@ -35,17 +35,20 @@
             ></home>
           </div>
         </div>
-        <div class="bottom-panel"></div>
+        
         
       </div>
-
       <div class="right-panel">
         <img @click="layoutBtn" class="layout-btn" src="./assets/layout.svg" />
         <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
       </div>
     </div>
-
-    <CodeLoader v-if="codeOn" class="code-loader">sdddd</CodeLoader>
+    <div class="row bottom-panel">
+          <span class="fileTitle">HTML</span>
+          <span class="fileTitle">CSS</span>
+          <span class="fileTitle">JavaScript</span>
+    </div>
+    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>
     <layout
       v-if="layoutOn"
       ref="layouts"
@@ -368,6 +371,7 @@ export default {
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
+      console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },
@@ -674,5 +678,21 @@ export default {
     float: left;
     filter: blur(0.8px);
   }
+  .bottom-panel{
+    width:92%;
+  }
+  .fileTitle {
+    font-size: 15px;
+    color:white;
+    font-weight: bold;
+    padding: 7px 14px;
+    vertical-align: bottom;
+    display: inline-block;
+    margin-right: 25%;
+    float: none;
+    border: 2px solid black;
+    background-color:#666666;
+    
+}
 }
 </style>

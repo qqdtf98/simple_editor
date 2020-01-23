@@ -208,6 +208,12 @@
 					<button @click="$refs.fileInput.click()">Pick File</button>
 					<button @click="onUpload">Save</button>
 				</div>
+				<div class="row">
+					<span class="col-md-5">image-size</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="imageSizeSelected" :options="imageSize" @change="submitChangeImageSize"></b-form-select>
+					</div>
+				</div>
 			</b-collapse>
 		</b-card>
 		<b-card no-body class="mb-1">
@@ -534,19 +540,19 @@
 					<span class="col-md-4" style>Alignment</span>
 					<div class="col-md-7">
 					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-right"></i>
+						<img  name="right" class="fas fa-align-right"></img>
 					</button>
 					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-center"></i>
+						<i name="center" class="fas fa-align-center"></i>
 					</button>
 					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-left"></i>
+						<i name="left" class="fas fa-align-left"></i>
 					</button>
 					<button @click="submitChangeAlign" name="left" type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-justify"></i>
+						<i name="left" class="fas fa-align-justify"></i>
 					</button>
-					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-times"></i>
+					<button @click="submitChangeAlign" name=""  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="" class="fas fa-times"></i>
 					</button>
 					</div>
 				</div>
@@ -648,16 +654,13 @@
 					<span class="col-md-4" >Float</span>
 					<div class="col-md-7">
 					<button  @click ="submitChangeFloat" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i  @click ="submitChangeFloat" name="right"  class="fas fa-align-right"></i>
-					</button>
-					<button @click ="submitChangeFloat" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-center"></i>
+						<i  name="right"  class="fas fa-align-right"></i>
 					</button>
 					<button @click ="submitChangeFloat" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-left"></i>
+						<i name="left" class="fas fa-align-left"></i>
 					</button>
-					<button @click ="submitChangeFloat" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-times"></i>
+					<button @click ="submitChangeFloat" name=""  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="" class="fas fa-times"></i>
 					</button>
 					</div>
 				</div>
@@ -730,6 +733,15 @@ export default {
   props: ['payload','loadData'],
   data () {
     return {
+	  imageSizeSelected: 'none',
+      imageSize: [
+        { value: 'none', text: 'None' },
+        { value: 'auto', text: 'Auto' },
+        { value: 'length', text: 'Length' },
+        { value: 'cover', text: 'Cover' },
+		{ value: 'contain', text: 'Contain'},
+        { value: 'initial', text: 'Initial' }
+      ],
       transformantionSelected: 'none',
       transformantion: [
         { value: 'none', text: 'None' },
@@ -1167,19 +1179,22 @@ export default {
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeAlign (e) {
-    //   console.log(e)
-	// console.log("드갔다")
+	if(e.target.getAttribute('name')==null){
+		if ((e.target.parentElement.getAttribute('name')) === 'left') {
+			this.submitSorce.value = 'left'
+		} else if ((e.target.parentElement.getAttribute('name')) === 'right') {
+			this.submitSorce.value = 'right'
+		} else if ((e.target.parentElement.getAttribute('name')) === 'no') {
+			this.submitSorce.value = 'left'
+		} else if ((e.target.parentElement.getAttribute('name')) === 'center') {
+			this.submitSorce.value = 'center'
+		}
+	}
+	else{
+		this.submitSorce.value = e.target.getAttribute('name')
+	}
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'text-align'
-      if ((e.target.name) === 'left') {
-        this.submitSorce.value = 'left'
-      } else if ((e.target.name) === 'right') {
-        this.submitSorce.value = 'right'
-      } else if ((e.target.name) === 'no') {
-        this.submitSorce.value = 'left'
-      } else if ((e.target.name) === 'center') {
-        this.submitSorce.value = 'center'
-      }
 	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
@@ -1256,14 +1271,26 @@ export default {
       this.$emit('userSelectBorder', this.submitSorce)
 	},
 	submitChangeFloat(e){
-	  console.log(e.target.name)
+		if(e.target.getAttribute('name')==null){
+			if ((e.target.parentElement.getAttribute('name')) === 'left') {
+				this.submitSorce.value = 'left'
+			} else if ((e.target.parentElement.getAttribute('name')) === 'right') {
+				this.submitSorce.value = 'right'
+			} else if ((e.target.parentElement.getAttribute('name')) === 'no') {
+				this.submitSorce.value = 'left'
+			} else if ((e.target.parentElement.getAttribute('name')) === 'center') {
+				this.submitSorce.value = 'center'
+			}
+			}
+		else{
+			this.submitSorce.value = e.target.getAttribute('name')
+		}
 
 	  this.submitSorce.payload = this.payload
       this.submitSorce.style = 'float'
-      this.submitSorce.value = e
       // console.log(this.submitSorce)
 	  this.submitSorce.change = 1,
-      this.$emit('userSelectBorder', this.submitSorce)
+      this.$emit('userSelected', this.submitSorce)
 	},
     makeTreeParent (payload) {
       var obj = document.getElementById('inParentTreeOption')
@@ -1313,49 +1340,35 @@ export default {
 	
 	
 	onFileSelected(e){
-		// console.log(e.target.value)
-		// this.selectedFile = e.target.files[0]
-		// console.log(this.selectedFile)
-
-		// reader.readAsDataURL(input.files[0]);
-		// console.log(input.files[0])
-		// console.log(reader.readAsDataURL(input.files[0]))
-		
 		var file = document.querySelector('#getfile');
-		// console.log(this.payload.className)
+		var fileList = file.files ;
 
-		file.onchange = function () {
-			var fileList = file.files ;
+		// 읽기
+		console.log(fileList)
+		var reader = new FileReader();
+		reader.readAsDataURL(fileList [0]);
+		// console.log(reader)
+		var submit = this.submitSorce
+		var data = this.payload
+		//로드 한 후
+		var vm =this;
+		reader.onload = function  () {
 
-			// 읽기
-			var reader = new FileReader();
-			reader.readAsDataURL(fileList [0]);
-
-			//로드 한 후
-			reader.onload = function  () {
-				console.log("fss")
-				console.log(reader.result)
-				// console.log(document.querySelector('.button1').background-image)
-				$(document.querySelector('.button2')).attr( 'src', reader.result);
-				// this.submitSorce.payload = this.payload
-				// 	this.submitSorce.style = 'background-size'
-				// 	this.submitSorce.value = '100%'
-				// 	this.submitSorce.change = 1,
-				// 	this.$emit('userSelected', this.submitSorce)
-				// document.querySelector('button1').backgroundImage = reader.result;
-				// this.submitSorce.value = reader.result
-			};
+			submit.payload =data
+			submit.style = 'background-image'
+			submit.value = 'url(' + reader.result+ ')';
+			submit.change = 1,
+			
+			vm.$emit('userSelected', submit)
 		};
-
-		// this.submitSorce.payload = this.payload
-		// this.submitSorce.style = 'background-image'
-		// // this.submitSorce.value = reader.readAsDataURL(input.files[0])
-		// this.$emit('userSelected', this.submitSorce)
-
+	},
+	submitChangeImageSize(e){
+		console.log(e)
 		this.submitSorce.payload = this.payload
 		this.submitSorce.style = 'background-size'
-		this.submitSorce.value = '100%'
-    	this.submitSorce.change = 1,
+		this.submitSorce.value = e
+		// console.log(this.submitSorce)
+		this.submitSorce.change = 1,
 		this.$emit('userSelected', this.submitSorce)
 	},
 	onUpload(){
@@ -1416,7 +1429,12 @@ export default {
 		else if(this.kindOfLoadDate==3){
 			document.querySelector('#preview3').textContent = this.loadData[2]
 		}
+	},
+	test(e){
+		console.log(e)
+		console.log("adsaD")
 	}
+
   }
 }
 </script>
