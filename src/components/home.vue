@@ -884,6 +884,13 @@ export default {
         }
       }
       // console.log(classValue)
+      let nChild
+      for(i = 0; i < this.clickedElement.parentElement.children.length;i++){
+        if(this.clickedElement.parentElement.children[i] === this.clickedElement){
+          nChild = i
+          break
+        }
+      }
       let elem = document.getElementsByClassName(
         this.clickedElement.classList.value
       );
@@ -896,50 +903,53 @@ export default {
         this.classIndex;
       copyElem.classList.add(randomClass);
       this.classIndex++;
+      console.log(this.clickedElement.parentElement.children)
 
       var newparent = document.createElement("div");
       var copy = {
         work: 'copy',
         position: this.clickedElement.parentElement,
         elem: elem[0],
-        parentElem: newparent,
-        copyElem: copyElem
+        copyElem: copyElem,
+        nth: nChild
       }
+      console.log(copy)
       this.$emit('stack-push', copy)
+      $(elem[0]).after(copyElem)
 
-      this.$nextTick(() => {
-        // console.log(this.clickedElement.parentElement.children)
-        this.clickedElement.parentElement.appendChild(newparent);
-        newparent.appendChild(elem[0]);
-        newparent.appendChild(copyElem);
-        // if (getComputedStyle(elem).position === 'absolute') {
-        this.$nextTick(() => {
-          // console.log(parseInt(getComputedStyle(elem).))
-          // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
-          newparent.style.height =
-            parseInt(getComputedStyle(elem[0]).height) + "px";
-          if (getComputedStyle(elem[0]).right !== 0) {
-            // console.log('right')
-            copyElem.style.left =
-              parseInt(getComputedStyle(elem[0]).left) -
-              parseInt(getComputedStyle(elem[0]).width) +
-              "px";
-            copyElem.style.border = this.clickedBorder;
-            copyElem.style.borderRadius = this.clickedBorderRadius;
-          } else {
-            // console.log('left')
-            copyElem.style.left =
-              parseInt(getComputedStyle(elem[0]).left) +
-              parseInt(getComputedStyle(elem[0]).width) +
-              "px";
-            copyElem.style.border = this.clickedBorder;
-            copyElem.style.borderRadius = this.clickedBorderRadius;
-          }
+      // this.$nextTick(() => {
+      //   // console.log(this.clickedElement.parentElement.children)
+      //   this.clickedElement.parentElement.appendChild(newparent);
+      //   newparent.appendChild(elem[0]);
+      //   newparent.appendChild(copyElem);
+      //   // if (getComputedStyle(elem).position === 'absolute') {
+      //   this.$nextTick(() => {
+      //     // console.log(parseInt(getComputedStyle(elem).))
+      //     // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
+      //     newparent.style.height =
+      //       parseInt(getComputedStyle(elem[0]).height) + "px";
+      //     if (getComputedStyle(elem[0]).right !== 0) {
+      //       // console.log('right')
+      //       copyElem.style.left =
+      //         parseInt(getComputedStyle(elem[0]).left) -
+      //         parseInt(getComputedStyle(elem[0]).width) +
+      //         "px";
+      //       copyElem.style.border = this.clickedBorder;
+      //       copyElem.style.borderRadius = this.clickedBorderRadius;
+      //     } else {
+      //       // console.log('left')
+      //       copyElem.style.left =
+      //         parseInt(getComputedStyle(elem[0]).left) +
+      //         parseInt(getComputedStyle(elem[0]).width) +
+      //         "px";
+      //       copyElem.style.border = this.clickedBorder;
+      //       copyElem.style.borderRadius = this.clickedBorderRadius;
+      //     }
 
-          // console.log(getComputedStyle(copyElem).right)
-        });
-        // }
-      });
+      //     // console.log(getComputedStyle(copyElem).right)
+      //   });
+      //   // }
+      // });
     },
     splitBorder(e) {
       this.borderClicked = true;

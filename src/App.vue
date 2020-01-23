@@ -286,11 +286,13 @@ export default {
     },
     redoWork() {
       let i;
+      console.log("redo");
       if (this.reworkStack.length !== 0) {
         for (i = 0; i < this.reworkStack.length; i++) {
           console.log(this.reworkStack[i]);
         }
         let rework = this.reworkStack.pop();
+        let work = rework;
         if (rework.work === "style") {
           rework.elem.style[rework.style] = rework.afterValue;
         } else if (rework.work === "move") {
@@ -301,18 +303,25 @@ export default {
         } else if (rework.work === "add") {
           rework.position.appendChild(rework.elem);
         } else if (rework.work === "copy") {
-          rework.position.appendChild(rework.parentElem);
-          rework.parentElem.appendChild(rework.elem);
-          rework.parentElem.appendChild(rework.copyElem);
+          $(rework.elem).after(rework.copyElem);
+        } else if (rework.work === "width") {
+          rework.elem.style.width = rework.afterSize;
+        } else if (rework.work === "height") {
+          rework.elem.style.height = rework.afterSize;
+        } else if (rework.work === "edit") {
+          rework.elem.textContent = rework.afterEdit;
         }
+        this.stackPush(work);
       }
     },
     undoWork() {
+      // console.log('aaa')
       let i;
+      console.log("undo");
       if (this.workStack.length !== 0) {
-        // for (i = 0; i < this.workStack.length; i++) {
-        //   console.log(this.workStack[i]);
-        // }
+        for (i = 0; i < this.workStack.length; i++) {
+          console.log(this.workStack[i]);
+        }
         let work = this.workStack.pop();
         let rework = work;
         this.reworkStack.push(rework);
@@ -320,22 +329,22 @@ export default {
           work.elem.style[work.style] = work.value;
         } else if (work.work === "remove") {
           let parent = work.position;
-          // console.log(work.nth)
-          // parent.insertBefore(work.elem, parent.chlidNodes[work.nth]);
-          parent.appendChild(work.elem);
+          $(work.elem).insertBefore(parent.children[work.nth]);
         } else if (work.work === "add") {
           let parent = work.position;
           parent.removeChild(work.elem);
         } else if (work.work === "copy") {
-          console.log("copy");
-          work.position.removeChild(work.parentElem);
-          work.position.appendChild(work.elem);
+          work.position.removeChild(work.copyElem);
         } else if (work.work === "move") {
-          console.log(work.position);
-          console.log(work.elem);
-          console.log(work.afterMovePosition);
           work.afterMovePosition.removeChild(work.elem);
           work.position.appendChild(work.elem);
+        } else if (work.work === "width") {
+          console.log("aaa");
+          work.elem.style.width = work.beforeSize;
+        } else if (work.work === "height") {
+          work.elem.style.height = work.beforeSize;
+        } else if (work.work === "edit") {
+          work.elem.textContent = work.beforeEdit;
         }
       }
     },
