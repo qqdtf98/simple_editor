@@ -2,16 +2,18 @@
 
   <div>
 	<!-- Nav tabs -->
+	<!-- <img @click="closeOverview" class="close-btn" src="../assets/close.svg" /> -->
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
-	<li class="nav-item">
-		<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Options</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link" v-bind:class="{ active:tabStep===3 }" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
-	</li>
+		<li class="nav-item">
+			<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link " v-bind:class="{ active:tabStep===2 }" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Options</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" v-bind:class="{ active:tabStep===3 }" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
+		</li>
+	
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
 		<div class="no-text" v-if="!isData">No components selected</div>
@@ -1296,6 +1298,13 @@ export default {
 </script>
 
 <style>
+.close-btn{
+      width: 1.1rem;
+	  /* position: fixed; */
+	  right: 4%;
+	  cursor:pointer;
+    }
+
 .dsadsadsad{
 	color: white !important;
 }
