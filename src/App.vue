@@ -1,7 +1,48 @@
 <template>
   <div id="app">
     <!-- <spliter class="spliter"/> -->
-    <div class="top-panel"></div>
+    <div class="top-panel">
+      <!-- <img class="scale" src="./assets/scale.svg" />
+      <img class="width" src="./assets/width.svg" /> -->
+      <div class="new-box">
+        <img class="new" src="./assets/new.svg" />
+        <div class="new-text">New</div>
+      </div>
+      <div class="open-box">
+        <img class="open" src="./assets/open.svg" />
+        <div class="open-text">Open</div>
+      </div>
+      <div class="save-box">
+        <img class="save" src="./assets/save.svg" />
+        <div class="save-text">Save</div>
+      </div>
+      <div class="export-box">
+        <img class="export" src="./assets/export.svg" />
+        <div class="export-text">Export</div>
+      </div>
+      <div class="setting-box">
+        <img class="setting" src="./assets/settings.svg" />
+        <div class="setting-text">Setting</div>
+      </div>
+      <div class="switch-box">
+        <switches
+          @click="toggleClicked"
+          class="swtich"
+          theme="bootstrap"
+          color="info"
+          v-model="enabled"
+        />
+        <div class="switch-text">Switch</div>
+      </div>
+      <div class="undo-box">
+        <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+        <div @click="undoWork" class="undo-text">Undo</div>
+      </div>
+      <div class="redo-box">
+        <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+        <div @click="redoWork" class="redo-text">Redo</div>
+      </div>
+    </div>
     <div class="main-panel">
       <div class="left-panel">
         <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
@@ -14,18 +55,7 @@
       <div class="editor-panel">
         <div class="center-panel">
           <div class="title">Editor</div>
-          <img class="scale" src="./assets/scale.svg" />
-          <img class="width" src="./assets/width.svg" />
-          <switches
-            @click="toggleClicked"
-            class="swtich"
-            theme="bootstrap"
-            color="info"
-            v-model="enabled"
-          >
-          </switches>
-          <img @click="undoWork" class="undo" src="./assets/undo.svg" />
-          <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+
           <div class="editor">
             <home
               ref="home"
@@ -36,7 +66,6 @@
           </div>
         </div>
         <div class="bottom-panel"></div>
-        
       </div>
 
       <div class="right-panel">
@@ -45,7 +74,10 @@
       </div>
     </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader">sdddd</CodeLoader>
+    <CodeLoader v-if="codeOn" class="code-loader">
+      
+      assssssssssssssssssssssss<br>ffffffffffffffffffffffffffffffffffff<br>sddddddddddddddddddddddddddddddd<br>ddd</CodeLoader>
+    <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
       v-if="layoutOn"
       ref="layouts"
@@ -61,6 +93,7 @@
       @ui-select="uiSelected"
       @tag-select="tagSelected"
       @userSelectedTagComponent="userSelectedTagComponent"
+      @close-studio="studioBtn"
       class="studio"
     ></studio>
     <overview
@@ -69,6 +102,7 @@
       @selectDomElement="selectDomElemented"
       @inParentTreeOption="inParentTreeOption"
       @domWithTree="domPushWithTree"
+      @close-overview="overviewBtn"
       :getDocument="homeDocument"
       class="overview"
     ></overview>
@@ -137,7 +171,12 @@ export default {
       studioOn: false,
       overviewOn: false,
       layoutOn: false,
-      codeOn: false
+      codeOn: false,
+      resizeLoader: false,
+      initialTop: null,
+      initialY: null,
+      initialHeight: null,
+      isShift : false
     };
   },
   watch: {
@@ -153,10 +192,24 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if (e.which === 90 && this.isCtrl) {
+      if(e.which === 16){
+        this.isShift = true
+      }
+      if (e.which === 90 && this.isCtrl &&!this.isShift) {
         this.undoWork();
       }
+      if(e.which === 90 && this.isCtrl && this.isShift){
+        this.redoWork()
+      }
+      if(e.which === 67 && this.isCtrl){
+        //복사
+      }
     });
+    document.addEventListener('keyup', e => {
+      if(e.which === 16){
+        this.isShift = false
+      }
+    })
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -172,9 +225,21 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
+      if(this.resizeLoader){
+        let loader = document.querySelector(".code-loader");
+        let bord = document.querySelector('.loader-bord')
+        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
+        console.log(parseInt(getComputedStyle(loader).top))
+        console.log(parseInt(getComputedStyle(bord).height))
+        this.$nextTick(()=>{
+          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
+        })
+        
+      }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
+      this.resizeLoader = false
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
@@ -251,11 +316,27 @@ export default {
     this.hasht = h;
   },
   methods: {
+    loaderResize(event){
+      let loader = document.querySelector(".code-loader");
+      this.resizeLoader = true
+      this.initialY = event.clientY
+      this.initialHeight = parseInt(getComputedStyle(loader).height)
+    },
+    lo(to){
+      let loader = document.querySelector('.code-loader')
+      loader.style.top = to
+    },
     codeBtn() {
       if (this.codeOn === true) {
         this.codeOn = false;
       } else {
         this.codeOn = true;
+        this.$nextTick(() => {
+          let loader = document.querySelector(".code-loader");
+          let bord = document.querySelector('.loader-bord')
+          bord.style.top = getComputedStyle(loader).top 
+    this.initialTop = getComputedStyle(loader).top
+        });
       }
     },
     layoutBtn() {
@@ -283,11 +364,13 @@ export default {
     },
     redoWork() {
       let i;
+      console.log("redo");
       if (this.reworkStack.length !== 0) {
         for (i = 0; i < this.reworkStack.length; i++) {
           console.log(this.reworkStack[i]);
         }
         let rework = this.reworkStack.pop();
+        let work = rework;
         if (rework.work === "style") {
           rework.elem.style[rework.style] = rework.afterValue;
         } else if (rework.work === "move") {
@@ -298,18 +381,25 @@ export default {
         } else if (rework.work === "add") {
           rework.position.appendChild(rework.elem);
         } else if (rework.work === "copy") {
-          rework.position.appendChild(rework.parentElem);
-          rework.parentElem.appendChild(rework.elem);
-          rework.parentElem.appendChild(rework.copyElem);
+          $(rework.elem).after(rework.copyElem);
+        } else if (rework.work === "width") {
+          rework.elem.style.width = rework.afterSize;
+        } else if (rework.work === "height") {
+          rework.elem.style.height = rework.afterSize;
+        } else if (rework.work === "edit") {
+          rework.elem.textContent = rework.afterEdit;
         }
+        this.stackPush(work);
       }
     },
     undoWork() {
+      // console.log('aaa')
       let i;
+      console.log("undo");
       if (this.workStack.length !== 0) {
-        // for (i = 0; i < this.workStack.length; i++) {
-        //   console.log(this.workStack[i]);
-        // }
+        for (i = 0; i < this.workStack.length; i++) {
+          console.log(this.workStack[i]);
+        }
         let work = this.workStack.pop();
         let rework = work;
         this.reworkStack.push(rework);
@@ -317,22 +407,22 @@ export default {
           work.elem.style[work.style] = work.value;
         } else if (work.work === "remove") {
           let parent = work.position;
-          // console.log(work.nth)
-          // parent.insertBefore(work.elem, parent.chlidNodes[work.nth]);
-          parent.appendChild(work.elem);
+          $(work.elem).insertBefore(parent.children[work.nth]);
         } else if (work.work === "add") {
           let parent = work.position;
           parent.removeChild(work.elem);
         } else if (work.work === "copy") {
-          console.log("copy");
-          work.position.removeChild(work.parentElem);
-          work.position.appendChild(work.elem);
+          work.position.removeChild(work.copyElem);
         } else if (work.work === "move") {
-          console.log(work.position);
-          console.log(work.elem);
-          console.log(work.afterMovePosition);
           work.afterMovePosition.removeChild(work.elem);
           work.position.appendChild(work.elem);
+        } else if (work.work === "width") {
+          console.log("aaa");
+          work.elem.style.width = work.beforeSize;
+        } else if (work.work === "height") {
+          work.elem.style.height = work.beforeSize;
+        } else if (work.work === "edit") {
+          work.elem.textContent = work.beforeEdit;
         }
       }
     },
@@ -455,7 +545,7 @@ export default {
   // color: #fff;
   display: flex;
   flex-direction: column;
-  height: 58rem;
+  // height: 58rem;
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
@@ -484,11 +574,85 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
+ 
   .top-panel {
     height: 6%;
     background-color: #3c474c;
     background-image: linear-gradient(to bottom, #48545a, #3d484d);
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+    // .scale {
+    //   width: 2rem;
+    // }
+    // .width {
+    //   width: 2rem;
+    // }
+    .switch-box {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      padding: 0.2rem;
+      align-items: center;
+      margin-left: 1rem;
+      font-size: 0.9rem;
+      margin-right: 1rem;
+       border-radius: 0.3rem;
+      .vue-switcher {
+        // transform: scale(1);
+        z-index: 9;
+        // margin-right: 0.5rem;
+        margin: 0;
+        margin-right: 0.5rem;
+        cursor: pointer;
+      }
+      .switch-text {
+        cursor: pointer;
+        color: #fff;
+      }
+       &:hover{
+        background-color: #616c72;
+      }
+    }
+    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+       padding: 0.2rem;
+      margin-right: 1rem;
+      font-size: 0.9rem;
+      border-radius: 0.3rem;
+      .undo, .redo, .new, .open, .save, .export, .setting  {
+        cursor: pointer;
+        height: 1.2rem;
+        margin-right: 0.5rem;
+      }
+      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
+        cursor: pointer;
+        color: #fff;
+      }
+      &:hover{
+        background-color: #616c72;
+      }
+    }
+    .new-box{
+      margin-left: 1rem;
+    }
+    .undo-box{
+      .undo{
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        cursor: pointer;
+        margin-right: 0.5rem;
+        height: 1.2rem;
+      }
+    }
+    
   }
   .main-panel {
     width: 100%;
@@ -539,7 +703,7 @@ export default {
       height: 100%;
       .center-panel {
         width: 100%;
-        height:95%;
+        height: 95%;
 
         display: flex;
         align-items: center;
@@ -559,44 +723,6 @@ export default {
           padding-right: 0.9rem;
           top: 0;
         }
-        .scale {
-          position: absolute;
-          width: 0.8rem;
-          right: 2.7rem;
-          height: 0.8rem;
-          top: 2.7rem;
-        }
-        .width {
-          position: absolute;
-          width: 1rem;
-          right: 0.8rem;
-          top: 2.9rem;
-        }
-        .undo {
-          -moz-transform: scaleX(-1);
-          -o-transform: scaleX(-1);
-          -webkit-transform: scaleX(-1);
-          transform: scaleX(-1);
-          position: absolute;
-          top: 0.3rem;
-          cursor: pointer;
-          left: 5rem;
-          height: 1.15rem;
-        }
-        .redo {
-          position: absolute;
-          top: 0.3rem;
-          cursor: pointer;
-          left: 7rem;
-          height: 1.15rem;
-        }
-        .vue-switcher {
-          position: absolute;
-          right: 1rem;
-          top: 4rem;
-          transform: scale(1.25);
-          z-index: 9;
-        }
         .editor {
           width: 100%;
           position: absolute;
@@ -612,28 +738,36 @@ export default {
             align-items: center;
             justify-content: center;
             width: 70rem;
-            height: 60rem;
+            height: 55rem;
             overflow: hidden;
           }
         }
       }
-      .bottom-panel{
-        z-index: 10;
+      .bottom-panel {
+        z-index: 10000;
         width: 100%;
         background-color: #3c474c;
         height: 5%;
       }
-     
     }
   }
-   .code-loader {
-        width: 92%;
-        z-index: 10000;
-        position: fixed;
-        bottom: 5%;
-        height: 20rem;
-        background-color: red;
-      }
+  .code-loader {
+    width: 92%;
+    z-index: 10000;
+    position: fixed;
+    bottom: 5%;
+    height: 20rem;
+    background-color: #23282b;
+  }
+   .loader-bord {
+     cursor: n-resize;
+    height:7px;
+    width: 92%;
+    position: fixed;
+    z-index: 10000;
+    //  bottom: 5%;
+    background-color:#545e66 ;
+  }
 
   .layout {
     width: 20rem;
