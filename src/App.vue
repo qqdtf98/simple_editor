@@ -4,18 +4,44 @@
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
+      <div class="new-box">
+        <img class="new" src="./assets/new.svg" />
+        <div class="new-text">New</div>
+      </div>
+      <div class="open-box">
+        <img class="open" src="./assets/open.svg" />
+        <div class="open-text">Open</div>
+      </div>
+      <div class="save-box">
+        <img class="save" src="./assets/save.svg" />
+        <div class="save-text">Save</div>
+      </div>
+      <div class="export-box">
+        <img class="export" src="./assets/export.svg" />
+        <div class="export-text">Export</div>
+      </div>
+      <div class="setting-box">
+        <img class="setting" src="./assets/settings.svg" />
+        <div class="setting-text">Setting</div>
+      </div>
       <div class="switch-box">
         <switches
         @click="toggleClicked"
         class="swtich"
         theme="bootstrap"
         color="info"
-        v-model="enabled" />
+          v-model="enabled"
+        />
         <div class="switch-text">Switch</div>
       </div>
-      
+      <div class="undo-box">
       <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+        <div @click="undoWork" class="undo-text">Undo</div>
+      </div>
+      <div class="redo-box">
       <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+        <div @click="redoWork" class="redo-text">Redo</div>
+    </div>
     </div>
     <div class="main-panel">
       <div class="left-panel">
@@ -64,6 +90,7 @@
       @ui-select="uiSelected"
       @tag-select="tagSelected"
       @userSelectedTagComponent="userSelectedTagComponent"
+      @close-studio="studioBtn"
       class="studio"
     ></studio>
     <overview
@@ -72,6 +99,7 @@
       @selectDomElement="selectDomElemented"
       @inParentTreeOption="inParentTreeOption"
       @domWithTree="domPushWithTree"
+      @close-overview="overviewBtn"
       :getDocument="homeDocument"
       class="overview"
     ></overview>
@@ -140,7 +168,12 @@ export default {
       studioOn: false,
       overviewOn: false,
       layoutOn: false,
-      codeOn: false
+      codeOn: false,
+      resizeLoader: false,
+      initialTop: null,
+      initialY: null,
+      initialHeight: null,
+      isShift : false
     };
   },
   watch: {
@@ -502,6 +535,7 @@ export default {
     background-image: linear-gradient(to bottom, #48545a, #3d484d);
     width: 100%;
     display: flex;
+    align-items: center;
     justify-content: left;
     
     // .scale {
@@ -510,28 +544,67 @@ export default {
     // .width {
     //   width: 2rem;
     // }
-    .switch-box{
+    .switch-box {
       display: flex;
       flex-direction: row;
+      justify-content: center;
+      padding: 0.2rem;
+      align-items: center;
+      margin-left: 1rem;
+      font-size: 0.9rem;
+      margin-right: 1rem;
+       border-radius: 0.3rem;
       .vue-switcher {
-      transform: scale(1.25);
+        // transform: scale(1);
       z-index: 9;
-      .switch-text{
-        
+        // margin-right: 0.5rem;
+        margin: 0;
+        margin-right: 0.5rem;
+        cursor: pointer;
+      }
+      .switch-text {
+        cursor: pointer;
+        color: #fff;
+      }
+       &:hover{
+        background-color: #616c72;
       }
     }
+    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+       padding: 0.2rem;
+      margin-right: 1rem;
+      font-size: 0.9rem;
+      border-radius: 0.3rem;
+      .undo, .redo, .new, .open, .save, .export, .setting  {
+        cursor: pointer;
+        height: 1.2rem;
+        margin-right: 0.5rem;
+      }
+      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
+        cursor: pointer;
+        color: #fff;
+      }
+      &:hover{
+        background-color: #616c72;
+      }
     }
-    .undo {
+    .new-box{
+      margin-left: 1rem;
+    }
+    .undo-box{
+      .undo{
       -moz-transform: scaleX(-1);
       -o-transform: scaleX(-1);
       -webkit-transform: scaleX(-1);
       transform: scaleX(-1);
       cursor: pointer;
-      height: 2rem;
+        margin-right: 0.5rem;
+        height: 1.2rem;
     }
-    .redo {
-      cursor: pointer;
-      height: 2rem;
     }
     
   }
@@ -619,13 +692,13 @@ export default {
             align-items: center;
             justify-content: center;
             width: 70rem;
-            height: 60rem;
+            height: 55rem;
             overflow: hidden;
           }
         }
       }
       .bottom-panel {
-        z-index: 10;
+        z-index: 10000;
         width: 100%;
         background-color: #3c474c;
         height: 5%;
