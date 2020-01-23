@@ -137,7 +137,9 @@ export default {
       borderElem: null,
       mode: false,
       mouserightClick: false,
-      size: null
+      size: null,
+      targetText: null,
+      editElem: null
     };
   },
   mounted() {
@@ -218,14 +220,7 @@ export default {
             this.size = size
           }
         }
-        var style = {
-            work: "style",
-            elem: this.clickedElement,
-            style: "transform",
-            afterValue: `scale(${this.size})`,
-            value: `scale(${this.initialscale})`
-          };
-          this.$emit("stack-push", style);
+        
       }
       if (this.isContentMovable) {
         let borderElem;
@@ -288,6 +283,14 @@ export default {
     window.addEventListener("mouseup", e => {
       // this.clickedElement.style.filter = 'blur(0)'
       if (this.isContentResizable) {
+        var style = {
+            work: "style",
+            elem: this.clickedElement,
+            style: "transform",
+            afterValue: `scale(${this.size})`,
+            value: `scale(${this.initialscale})`
+          };
+          this.$emit("stack-push", style);
         this.isContentResizable = false;
       }
       this.resizedirection = null;
@@ -642,6 +645,8 @@ export default {
         e.target.className !== "editor-component"
       ) {
         this.isContentEditable = true;
+        this.targetText = e.target.textContent
+        console.log(this.targetText)
         this.$nextTick(() => {
           const sel = window.getSelection();
           sel.removeAllRanges();
@@ -660,6 +665,7 @@ export default {
         e.target.className !== "editor-component"
       ) {
         this.focusInput(e);
+        this.editElem = e.target
       }
     },
     placeCaretAtEnd(el) {
@@ -683,6 +689,16 @@ export default {
     },
     isContentNotEditable(e) {
       e.preventDefault();
+      console.log('abc')
+      console.log(this.editElem)
+      console.log('bcd')
+      var edit = {
+        work: 'edit',
+        elem: this.editElem,
+        beforeEdit: this.targetText,
+        afterEdit: this.editElem.textContent
+      }
+      this.$emit('stack-push', edit)
       this.isContentEditable = false;
     },
     mouseDownBoundary(e) {
@@ -776,12 +792,13 @@ export default {
     removeContent() {
       let i
       let nChild
-      for(i = 0; i < this.clickedElement.parentNode.childNodes.length;i++){
-        if(this.clickedElement.parentNode.childNodes[i] === this.clickedElement){
+      for(i = 0; i < this.clickedElement.parentElement.children.length;i++){
+        if(this.clickedElement.parentElement.children[i] === this.clickedElement){
           nChild = i
           break
         }
       }
+      console.log(nChild)
       var remove = {
         work: "remove",
         position: this.clickedElement.parentNode,
@@ -886,6 +903,13 @@ export default {
         }
       }
       // console.log(classValue)
+      let nChild
+      for(i = 0; i < this.clickedElement.parentElement.children.length;i++){
+        if(this.clickedElement.parentElement.children[i] === this.clickedElement){
+          nChild = i
+          break
+        }
+      }
       let elem = document.getElementsByClassName(
         this.clickedElement.classList.value
       );
@@ -898,50 +922,53 @@ export default {
         this.classIndex;
       copyElem.classList.add(randomClass);
       this.classIndex++;
+      console.log(this.clickedElement.parentElement.children)
 
       var newparent = document.createElement("div");
       var copy = {
         work: 'copy',
         position: this.clickedElement.parentElement,
         elem: elem[0],
-        parentElem: newparent,
-        copyElem: copyElem
+        copyElem: copyElem,
+        nth: nChild
       }
+      console.log(copy)
       this.$emit('stack-push', copy)
+      $(elem[0]).after(copyElem)
 
-      this.$nextTick(() => {
-        // console.log(this.clickedElement.parentElement.children)
-        this.clickedElement.parentElement.appendChild(newparent);
-        newparent.appendChild(elem[0]);
-        newparent.appendChild(copyElem);
-        // if (getComputedStyle(elem).position === 'absolute') {
-        this.$nextTick(() => {
-          // console.log(parseInt(getComputedStyle(elem).))
-          // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
-          newparent.style.height =
-            parseInt(getComputedStyle(elem[0]).height) + "px";
-          if (getComputedStyle(elem[0]).right !== 0) {
-            // console.log('right')
-            copyElem.style.left =
-              parseInt(getComputedStyle(elem[0]).left) -
-              parseInt(getComputedStyle(elem[0]).width) +
-              "px";
-            copyElem.style.border = this.clickedBorder;
-            copyElem.style.borderRadius = this.clickedBorderRadius;
-          } else {
-            // console.log('left')
-            copyElem.style.left =
-              parseInt(getComputedStyle(elem[0]).left) +
-              parseInt(getComputedStyle(elem[0]).width) +
-              "px";
-            copyElem.style.border = this.clickedBorder;
-            copyElem.style.borderRadius = this.clickedBorderRadius;
-          }
+      // this.$nextTick(() => {
+      //   // console.log(this.clickedElement.parentElement.children)
+      //   this.clickedElement.parentElement.appendChild(newparent);
+      //   newparent.appendChild(elem[0]);
+      //   newparent.appendChild(copyElem);
+      //   // if (getComputedStyle(elem).position === 'absolute') {
+      //   this.$nextTick(() => {
+      //     // console.log(parseInt(getComputedStyle(elem).))
+      //     // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
+      //     newparent.style.height =
+      //       parseInt(getComputedStyle(elem[0]).height) + "px";
+      //     if (getComputedStyle(elem[0]).right !== 0) {
+      //       // console.log('right')
+      //       copyElem.style.left =
+      //         parseInt(getComputedStyle(elem[0]).left) -
+      //         parseInt(getComputedStyle(elem[0]).width) +
+      //         "px";
+      //       copyElem.style.border = this.clickedBorder;
+      //       copyElem.style.borderRadius = this.clickedBorderRadius;
+      //     } else {
+      //       // console.log('left')
+      //       copyElem.style.left =
+      //         parseInt(getComputedStyle(elem[0]).left) +
+      //         parseInt(getComputedStyle(elem[0]).width) +
+      //         "px";
+      //       copyElem.style.border = this.clickedBorder;
+      //       copyElem.style.borderRadius = this.clickedBorderRadius;
+      //     }
 
-          // console.log(getComputedStyle(copyElem).right)
-        });
-        // }
-      });
+      //     // console.log(getComputedStyle(copyElem).right)
+      //   });
+      //   // }
+      // });
     },
     splitBorder(e) {
       this.borderClicked = true;
@@ -952,7 +979,7 @@ export default {
 
       // topBord.style.backgroundColor = '#34d6c1'
       // bottomBord.style.backgroundColor = '#34d6c1'
-
+ 
       let elemWidth = getComputedStyle(this.clickedElement).width;
       let elemHeight = getComputedStyle(this.clickedElement).height;
       let elemLeft = getComputedStyle(this.clickedElement).left;
@@ -981,6 +1008,22 @@ export default {
         }
       });
       edit.addEventListener("mouseup", () => {
+        if(this.borderElem.className === 'boundary-line-right' || this.borderElem.className === 'boundary-line-left'){
+          var resize={
+            work: 'width',
+            elem: this.clickedElement,
+            beforeSize: elemWidth,
+            afterSize: getComputedStyle(this.clickedElement).width
+          }
+        }else if(this.borderElem.className === "boundary-line-top" || this.borderElem.className === "boundary-line-bottom"){
+          var resize={
+            work: 'height',
+            elem: this.clickedElement,
+            beforeSize: elemHeight,
+            afterSize: getComputedStyle(this.clickedElement).height
+          }
+        }
+        this.$emit('stack-push',resize)
         this.borderClicked = false;
       });
     },

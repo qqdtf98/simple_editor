@@ -2,7 +2,7 @@
   <div id="studio">
     <div class="studio-text-box">
       <span class="studio-text">Studio</span>
-     <img class="close-btn" src="../assets/close.svg" />
+     <img @click="closeStudio" class="close-btn" src="../assets/close.svg" />
 
     </div>
     <div class="tag-studio">
@@ -180,6 +180,9 @@ export default {
     }
   },
   methods: {
+    closeStudio(){
+      this.$emit('close-studio')
+    },
     mouseOver (e) {
       if (e.target.className === 'template') {
         this.$emit('tag-select', e)
@@ -308,6 +311,7 @@ export default {
       width: 1.1rem;
       right: 0.4rem;
       top: 0.4rem;
+      cursor:pointer;
       position: absolute;
     }
   }

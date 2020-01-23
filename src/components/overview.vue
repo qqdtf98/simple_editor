@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <div class="overview-text">Overview</div>
+    <img @click="closeOverview" class="close-btn" src="../assets/close.svg" />
     <ul class="acol" >
       <li>
         <input class="checkbox" type="checkbox" id="root" />
@@ -59,6 +61,9 @@ export default {
   },
 
   methods: {
+    closeOverview(){
+      this.$emit('close-overview')
+    },
     printHomeDocument () {
       // console.log(this.getDocument)
       // console.log(document.body.children)
@@ -360,10 +365,21 @@ export default {
 .container {
   justify-content: left;
   justify-items: left;
-  padding: 0.2rem;
+  padding: 0.4rem;
   text-align:left;
   overflow:auto;
 }
+.overview-text{
+  font-size: 1.4rem;
+  color: #Fff;
+}
+.close-btn{
+      width: 1.1rem;
+      right: 0.4rem;
+      top: 0.4rem;
+      cursor:pointer;
+      position: absolute;
+    }
 li{
   // float:left;
 }
