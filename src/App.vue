@@ -61,6 +61,7 @@
               ref="home"
               @componentSelected="componentSelected"
               @stack-push="stackPush"
+              @loadData="loadData"
               class="home"
             ></home>
           </div>
@@ -72,18 +73,41 @@
         <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
       </div>
     </div>
-    <!--
+    
     <div class="row bottom-panel">
-          <span class="fileTitle">HTML</span>
-          <span class="fileTitle">CSS</span>
-          <span class="fileTitle">JavaScript</span>
-    </div>
-    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>-->
-
-    <CodeLoader v-if="codeOn" class="code-loader">
       
-      assssssssssssssssssssssss<br>ffffffffffffffffffffffffffffffffffff<br>sddddddddddddddddddddddddddddddd<br>ddd</CodeLoader>
-    <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
+      <div v-if="isData" class="loadDataPanel">
+        <div @mousedown="loaderResize" class="loader-bord"></div>
+        <div class="studio-text-box"> 
+          <span class="studio-text">CodeReview</span>
+          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+        </div>
+        <div>
+          <div v-if="tabStep===1"  class="tab-pane "  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+              <div>
+                  <pre v-highlightjs ><code class="HTML" >{{message[0]}}</code></pre>
+              </div>
+          </div>
+          <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+              <div>
+                  <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+              </div>
+          </div>
+          <div v-show="tabStep===3" class="tab-pane " id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+              <div>
+                  <textarea class ="showJS" v-model="this.message[2]" id="preview3"></textarea><pre ><code ref="code" class="syntax-highlight JavaScript"></code></pre>
+                  <input  style="float:left;" type="submit"  value="Apply" @change="inputFile" id="getfile" accept="text/*">
+              </div>
+          </div>
+        </div>
+      </div>
+          <span class="fileTitle" @click="clickSoure" name="html">HTML</span>
+          <span class="fileTitle" @click="clickSoure" name="css">CSS</span>
+          <span class="fileTitle" @click="clickSoure" name="js">JavaScript</span>
+    </div>
+
+    <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
+    
     <layout
       v-show="layoutOn"
       ref="layouts"
@@ -180,15 +204,23 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
-      isShift : false
+      isShift : false,
+      message:"",
+      isData:true,
+      tabStep:0,
     };
   },
-  watch: {
-    enabled: function() {
-      this.$refs.home.modeSelect(this.enabled);
-    }
+  computed:{
+	  testMessage: function (){
+		  this.test = document.getElementById("newLoaderHtml").innerHTML
+		  return this.test
+	  },
+     
   },
   mounted() {
+     
+    this.highlightSyntax();
+  
     $(window).resize(() => {
       this.$refs.home.windowResized();
     });
@@ -230,7 +262,7 @@ export default {
         });
       }
       if(this.resizeLoader){
-        let loader = document.querySelector(".code-loader");
+        let loader = document.querySelector(".loadDataPanel");
         let bord = document.querySelector('.loader-bord')
         loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
         console.log(parseInt(getComputedStyle(loader).top))
@@ -321,13 +353,15 @@ export default {
   },
   methods: {
     loaderResize(event){
-      let loader = document.querySelector(".code-loader");
+      let loader = document.querySelector(".loadDataPanel");
+      // console.log( document.querySelector(".code-loader"))
+      // console.log( document.querySelector(".loadDataPanel"))
       this.resizeLoader = true
       this.initialY = event.clientY
       this.initialHeight = parseInt(getComputedStyle(loader).height)
     },
     lo(to){
-      let loader = document.querySelector('.code-loader')
+      let loader = document.querySelector('.loadDataPanel')
       loader.style.top = to
     },
     codeBtn() {
@@ -336,10 +370,10 @@ export default {
       } else {
         this.codeOn = true;
         this.$nextTick(() => {
-          let loader = document.querySelector(".code-loader");
+          let loader = document.querySelector(".loadDataPanel");
           let bord = document.querySelector('.loader-bord')
           bord.style.top = getComputedStyle(loader).top 
-    this.initialTop = getComputedStyle(loader).top
+          this.initialTop = getComputedStyle(loader).top
         });
       }
     },
@@ -431,7 +465,22 @@ export default {
       }
     },
     stackPush(elem) {
+      console.log("sdsa")
       this.workStack.push(elem);
+      if(this.tabStep==1){
+            // document.querySelector('#preview').textContent = this.loadData[0]
+            this.message[0] = document.getElementById("newLoaderHtml").innerHTML
+            console.log(this.message[0])
+      }
+      else if(this.tabStep==2){
+          
+          document.querySelector('#preview2').innerHTML = this.message[1]
+      }
+      else if(this.tabStep==3){
+          console.log(document.querySelector('#preview3'))
+          document.querySelector('#preview3').innerHTML = this.message[2]
+      }
+
     },
     userSelectedTagComponent(e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
@@ -536,8 +585,70 @@ export default {
       this.$refs.home.borderStyleChanged(e);
     },
     toggleClicked() {
-      console.log("aaa");
-    }
+    },
+    loadData(data){
+      this.message = data
+    },
+    chageContent(){
+      // console.log(this.message)
+        if(this.tabStep==1){
+            // document.querySelector('#preview').textContent = this.loadData[0]
+            this.test = document.getElementById("newLoaderHtml").innerHTML
+        }
+        else if(this.tabStep==2){
+            document.querySelector('#preview2').innerHTML = this.message[1]
+        }
+        else if(this.tabStep==3){
+            console.log(document.querySelector('#preview3'))
+            document.querySelector('#preview3').innerHTML = this.message[2]
+        }
+    },
+    inputFile(e){
+        // console.log(e)
+        var file = document.querySelector('#getfile');
+        file.onchange = function () { 
+            var fileList = file.files ;
+            
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsText(fileList [0]);
+
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').textContent = reader.result ;
+            }; 
+        }; 
+    },
+    clickSoure(e){
+      if (e.target.getAttribute('name')=='html') {
+          this.tabStep = 1
+      } else if (e.target.getAttribute('name')=='css') {
+          this.tabStep = 2
+      } else if (e.target.getAttribute('name')=='js') {
+          this.tabStep = 3
+      }
+    },
+    setFile(file){
+      // console.log(file)
+      this.chageContent()
+      this.isData=true
+       if (file=='html') {
+          this.tabStep = 1
+      } else if (file=='css') {
+          this.tabStep = 2
+      } else if (file=='js') {
+          this.tabStep = 3
+      }
+    },
+    highlightSyntax(){
+      $('code').html(this.escapedQuery);
+
+      $('.syntax-highlight').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+
+      
+    },
   }
 };
 </script>
@@ -760,12 +871,21 @@ export default {
     }
   }
   .code-loader {
-    width: 92%;
-    z-index: 10000;
+    // width: 92%;
+    // z-index: 10000;
+    // position: fixed;
+    // bottom: 5%;
+    // height: 20rem;
+    // background-color: #23282b;
+    width: 20rem;
+    z-index: 11;
+    height: 30rem;
+    border: 1.5px solid #000000;
     position: fixed;
-    bottom: 5%;
-    height: 20rem;
-    background-color: #23282b;
+    right: 4%;
+    background-color: #32373a;
+    z-index: 12;
+    top: 6%;
   }
    .loader-bord {
      cursor: n-resize;
@@ -832,7 +952,34 @@ export default {
     float: none;
     border: 2px solid black;
     background-color:#666666;
-    
+  }
 }
-}
+.loadDataPanel{
+        width: 92%;
+        z-index: 10000;
+        position: fixed;
+        bottom: 5%;
+        height: 20rem;
+        background-color: #23282b;
+    }
+.studio-text-box {
+    height: 7%;
+    justify-content: center;
+    position: relative;
+    .studio-text {
+      padding: 0.2rem;
+      color: #ffffff;
+      font-size: 1.4rem;
+      position: absolute;
+      left: 0.4rem;
+    }
+    .close-btn{
+      width: 1.1rem;
+      right: 0.4rem;
+      top: 0.4rem;
+      cursor:pointer;
+      position: absolute;
+    }
+  }
+
 </style>

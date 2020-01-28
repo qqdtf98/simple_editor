@@ -680,46 +680,23 @@
 		</li>
 	</ul>
 	<div class="tab-pane  active"  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-      <div class="tag-box">
-
-        <div class="tag-list-box">
-          <span class="tag-list">Pages</span>
-          <div class="nested">
-            <div name = "html" @click="changeProperty">index.html</div>
-          </div>
-        </div>
-		
-        
-        <div class="tag-list-box">
-          <span class="tag-list">Style</span>
-          <div class="nested">
-            <div name = "css" @click="changeProperty">index.css</div>
-          </div>
-        </div>
-
-        <div class="tag-list-box">
-          <span class="tag-list">JavaScript</span>
-          <div class="nested">
-            <div name = "js" @click="changeProperty">index.js</div>
-          </div>
-        </div>
-
-      </div>
+      
+<!--
 	  <div v-if="kindOfLoadDate==1">
 	  	<pre>{{testMessage}}</pre>
 	  </div>
+
 	  <div v-if="kindOfLoadDate==2">
 		<pre v-bind:value="this.loadData[1]" id="preview2">불러올 데이터가 없습니다.</pre>
 	  </div>
+
 	  <div v-if="kindOfLoadDate==3">
 		<textarea style="word-break:break-all"  class ="showJS" v-bind:value="this.loadData[2]" id="preview3"></textarea>
 		<input  type="submit"  value="Apply" @change="inputFile" id="getfile" accept="text/*">
 	  </div>
+-->  
 	</div>
   </div>
-  <!--
-
-  -->
 </template>
 
 <script>
@@ -873,7 +850,7 @@ export default {
 	  selectedFile: null,
 	  domWithTree: [],
 	  backgroundImage: '',
-	  kindOfLoadDate:0,
+	//   kindOfLoadDate:0,
 	  test:'as',
 	  // on : true,
       //   widthFontActive:{
@@ -890,7 +867,8 @@ export default {
 
   created () {
 	//   console.log("s")
-	  console.log(this.loadData)
+	//   console.log(this.loadData)
+	//   console.log("s")
   },
   computed:{
 	  testMessage: function (){
@@ -1420,12 +1398,9 @@ export default {
 		if(this.kindOfLoadDate==1){
 			// document.querySelector('#preview').textContent = this.loadData[0]
 			 this.test = document.getElementById("newLoaderHtml").innerHTML
-			 console.log(this.test)
-			
 		}
 		else if(this.kindOfLoadDate==2){
 			document.querySelector('#preview2').textContent = this.loadData[1]
-			this.test = 'dd'
 		}
 		else if(this.kindOfLoadDate==3){
 			document.querySelector('#preview3').textContent = this.loadData[2]
@@ -1525,74 +1500,5 @@ export default {
 .parentTreeOption{
 	overflow:auto;
 }
-    .tag-box {
-      // overflow:scroll;
-      align-items: left;
-      justify-content: left;
-      .tag-list-box {
-        // float: left;
-        text-align: left;
-        margin: 0.1rem;
-        .tag-list {
-          margin-left: 0.4rem;
-          color: #e7e4e4;
-          cursor: pointer;
-          user-select: none; /* Prevent text selection */
-          //   float: left;
-          transition: all 300ms ease;
-        }
-
-        /* Create the tag-list/arrow with a unicode, and style it */
-        .tag-list::before {
-          content: "\25B6";
-          color: #e7e4e4;
-          display: inline-block;
-          margin-right: 6px;
-        }
-
-        /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
-        .tag-list-down::before {
-          transform: rotate(90deg);
-        }
-        .nested {
-          display: none;
-        }
-
-        /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
-        .active {
-          display: block;
-        }
-        .template {
-          margin-left: 2rem;
-          color: #e7e4e4;
-          &:hover {
-            background-color: #414649;
-            cursor: default;
-          }
-        }
-        .template::before {
-          content: "\2B1A";
-          margin-right: 0.2rem;
-        }
-        .ui {
-          margin-left: 1.2rem;
-        }
-      }
-      .filter{
-        color:white;
-        text-align: left;
-        margin-left: 1rem;
-
-      }
-    }
-pre, .showJS {
-	text-align:left;
-	width:100%;
-	height:500px;
-    padding: 1em;
-    background: rgb(240, 240, 240);
-    color: rgb(0, 0, 0);
-    border-radius: .5em;
-	overflow:scroll;
-}
+    
 </style>
