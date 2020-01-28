@@ -2,7 +2,7 @@
   <div id="dashboard">
     <div class="editor-box" @scroll="handleScroll">
       <div
-        @mouseup="onmouseRightClick"
+        @mouseup="onmouserightClick"
         @keydown.enter="isContentNotEditable"
         ref="dash"
         class="editor-component"
@@ -75,7 +75,12 @@
       @mousedown="mousedownMode"
       class="boundary-line-bottom"
     ></div>
-    <Context ref="context" class="context" v-if="mouserightClick" />
+    <Context
+      @comment="commentMode"
+      ref="context"
+      class="context"
+      v-if="mouseRightClick"
+    />
 
     <!-- <div id="add">
       <div class="add-1">aaaaa</div>
@@ -132,7 +137,7 @@ export default {
       borderClicked: false,
       borderElem: null,
       mode: false,
-      mouserightClick: false,
+      mouseRightClick: false,
       size: null,
       targetText: null,
       editElem: null
@@ -346,6 +351,10 @@ export default {
     });
   },
   methods: {
+    commentMode() {
+      this.mouseRightClick = false;
+      this.$emit("comment", this.clickedElement);
+    },
     addComponentTagStudio() {},
     mousedown(e) {
       // this.addComponentTag=e.target
@@ -419,7 +428,7 @@ export default {
       }
     },
     onmouseClick(e) {
-      this.mouserightClick = false;
+      this.mouseRightClick = false;
       if (this.clickedElement === null) {
         if (
           e.target.className !== "tagname" &&

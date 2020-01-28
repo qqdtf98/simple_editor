@@ -61,10 +61,35 @@
               ref="home"
               @componentSelected="componentSelected"
               @stack-push="stackPush"
+                @comment="commentBtn"
               class="home"
             ></home>
           </div>
+            <div v-if="isCommentOn" class="comment-board">
+              <div class="add-comment">
+                <textarea class="comment-input" placeholder="comment" />
+                <img
+                  @click="addComment"
+                  class="add-comment-btn"
+                  src="./assets/plus.svg"
+                />
         </div>
+              <div
+                :key="comment.index"
+                v-for="comment in comments"
+                class="comment-wrapper"
+              >
+                <div class="top-box">
+                  <div class="writer">{{ comment.writer }}</div>
+                  <div class="element">{{ comment.element }}</div>
+                  <div class="time">{{ comment.time }}</div>
+                </div>
+                <div class="comment-text">{{ comment.text }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="bottom-panel"></div>
       </div>
 
@@ -176,7 +201,24 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
-      isShift : false
+      isShift: false,
+      isCommentOn: false,
+      comments: [
+        {
+          writer: "이성민",
+          element: "aaa",
+          time: "2020/01/28",
+          text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          writer: "이성민",
+          element: "adsfsdf",
+          time: "2020/01/27",
+          text:
+            "annnnnnnnnnnnnnnaaaaaaaaaaerggggggggggsdddddddddddssssssssssssssssssssssssssssdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsssssssssssssssssg"
+        }
+      ],
+      commentTarget: null,
     };
   },
   watch: {
@@ -316,7 +358,31 @@ export default {
     this.hasht = h;
   },
   methods: {
-    loaderResize(event){
+    addComment() {
+      let text = document.querySelector(".comment-input");
+      let payload = {
+        writer: "이성민",
+        element: this.commentTarget.className,
+        time: "",
+        text: text.value
+      };
+      //writer는 유저의 이름으로 element는 선택한 element 또는 빈칸
+      var date = new Date();
+      payload.time =
+        date.getFullYear() + "/" + date.getMonth() + 1 + "/" + date.getDate();
+      this.comments.unshift(payload);
+      text.value = "";
+      // this.comments[this.comments.length-1]
+    },
+    commentBtn(target) {
+      if (this.isCommentOn === false) {
+        this.isCommentOn = true;
+      } else {
+        this.isCommentOn = false;
+      }
+      this.commentTarget = target;
+      console.log(this.commentTarget.className);
+    },
       let loader = document.querySelector(".code-loader");
       this.resizeLoader = true
       this.initialY = event.clientY
@@ -692,7 +758,8 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        background-color: #fff;
+      .comment-btn {
+        margin-top: 1.6rem;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
@@ -738,8 +805,78 @@ export default {
             align-items: center;
             justify-content: center;
             width: 70rem;
-            height: 55rem;
+          .comment-board {
+            // position: absolute;
+            right: 0;
+            width: 25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #dddddd;
+            .add-comment {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              display: flex;
+              flex-direction: row;
+              width: 19rem;
+              background-color: #ca8f8f;
+              cursor: pointer;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+              .comment-input {
+                background-color: inherit;
+                // border:1px solid #646464;
+                border: none;
+                width: 15rem;
+                border-radius: 0.3rem;
+              }
+              .add-comment-btn {
+                width: 1rem;
+                margin-left: 0.5rem;
+                right: 0;
+              }
+            }
+            .comment-wrapper {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              width: 19rem;
+              background-color: #fff;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+
+              .top-box {
+                width: 100%;
+                margin-bottom: 0.15rem;
+                display: flex;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                .writer {
+                  left: 0;
+                  font-weight: bold;
+                  font-size: 1.1rem;
+                  color: #696969;
+                }
+                .element {
+                  width: 10rem;
+                  position: absolute;
             overflow: hidden;
+                  right: 5.5rem;
+                }
+                .time {
+                  position: absolute;
+                  width: 5rem;
+                  right: 0;
+                }
+              }
+              .comment-text {
+                font-size: 0.8rem;
+                width: 100%;
+                text-align: left;
+                color: #8f8f8f;
+                word-break: break-all;
+              }
+            }
           }
         }
       }
