@@ -4,7 +4,7 @@
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
-      <div class="new-box">
+      <div @click="newPage" class="new-box">
         <img class="new" src="./assets/new.svg" />
         <div class="new-text">New</div>
       </div>
@@ -54,6 +54,10 @@
       </div>
       <div class="editor-panel">
         <div class="center-panel">
+          <div class="top-menu">
+            <div @click="changePage" :key="title.index" v-for="title in titles" class="title">
+              {{ title.text }}
+            </div>
             <img
               src="./assets/iphone.svg"
               @click="resizeEditor"
@@ -72,6 +76,8 @@
               class="monitor"
               title="992 x 687"
             />
+          </div>
+          <div class="main-menu">
           <div class="editor">
             <home
               ref="home"
@@ -235,6 +241,12 @@ export default {
         }
       ],
       commentTarget: null,
+      titles: [
+        {
+          text: "Untitled"
+        }
+      ],
+      editorNum: 1
     };
   },
   watch: {
@@ -374,6 +386,53 @@ export default {
     this.hasht = h;
   },
   methods: {
+    changePage(e){
+      let i
+      for(i=0;i<e.target.parentElement.children.length;i++){
+        if(e.target.parentElement.children[i] === e.target){
+          console.log(i)
+          break
+        }
+      }
+      let j
+      let editor = document.querySelectorAll('.board')
+      console.log(editor)
+      for(j=0;j<editor.length;j++){
+        if(j === i){
+          editor[j].classList.remove('hidden')
+          editor[j].classList.add('display')
+        }else{
+          editor[j].classList.remove('display')
+          editor[j].classList.add('hidden')
+        }
+      }
+    },
+    newPage() {
+      let payload = {
+        text: 'aaa'
+      }
+      this.titles.push(payload)
+      let editor = document.querySelector('.board')
+      // let copy = editor.cloneNode(true)
+      let newEditorBox = document.createElement('div')
+      let ne = document.createElement('button')
+      newEditorBox.classList.add('board')
+      newEditorBox.classList.add('hidden')
+      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.appendChild(ne)
+      console.log(editor.parentElement)
+      this.editorNum++
+      editor.parentElement.appendChild(newEditorBox)
+      console.log(newEditorBox.classList)
+      // this.titles[this.titles.length-1]
+      // console.log(this.titles[this.titles.length-1])
+      // console.log(getComputedStyle(this.titles[this.titles.length-1]).backgroundColor)
+      // this.titles[this.titles.length-1].style.backgroundColor = "#fff"
+      // let i
+      // for(i=1;i<this.titles.length;i++){
+        
+      // }
+    },
     addComment() {
       let text = document.querySelector(".comment-input");
       let payload = {
@@ -809,10 +868,12 @@ export default {
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        position: relative;
+        .top-menu {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
 
         .title {
-          position: absolute;
           text-align: center;
           left: 0;
           color: #fff;
@@ -825,9 +886,14 @@ export default {
         }
         .editor {
           width: 100%;
-          position: absolute;
           bottom: 0;
           height: 96%;
+          display: flex;
+          flex-direction: row;
+          
+          .editor {
+            width: 100%;
+            height: 100%;
           border: 3px solid #545e66;
           display: flex;
           align-items: center;
@@ -838,6 +904,16 @@ export default {
             align-items: center;
             justify-content: center;
             width: 70rem;
+              height: 100%;
+              overflow: hidden;
+            }
+          }
+          .hidden{
+            display: none;
+          }
+          .display{
+            display: block;
+          }
           .comment-board {
             // position: absolute;
             right: 0;
@@ -981,4 +1057,12 @@ export default {
     filter: blur(0.8px);
   }
 }
+.editor-component{
+  .board{
+  width: 100%;
+  height: 35rem;
+  border: 1px solid white;
+}
+}
+
 </style>

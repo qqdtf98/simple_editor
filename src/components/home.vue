@@ -12,11 +12,16 @@
         @mousemove="onmouseMove"
         @mousedown="mousedown"
       >
+        <div class="board">
+          <ss />
+          <!--       
         <spliter />
         <HtmlLoader class="navi" />
         <!-- <Navi class="navi" /> -->
-        <Dashboard />
+          <!-- <Dashboard /> -->
+          -->
       </div>
+    </div>
     </div>
 
     <div class="selector-box">
@@ -823,7 +828,15 @@ export default {
       // tag가 추가할 element. 자식이 된다.
       // console.log(position)
       // position이 추가할 위치에 있는 element. 부모가 된다.
+      if (
+        position.className !== "right-border" &&
+        position.className !== "left-border" &&
+        position.className !== "top-border" &&
+        position.className !== "bottom-border"
+      ) {
       position.appendChild(tag);
+      }
+
         var add = {
           work: 'add',
           position: position,
