@@ -4,7 +4,7 @@
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
-      <div class="new-box">
+      <div @click="newPage" class="new-box">
         <img class="new" src="./assets/new.svg" />
         <div class="new-text">New</div>
       </div>
@@ -45,38 +45,105 @@
     </div>
     <div class="main-panel">
       <div class="left-panel">
-        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img
+          @click="studioBtn"
+          class="studio-btn"
+          src="./assets/studio.svg"
+          title="studio"
+        />
         <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
+          title="overview"
         />
       </div>
       <div class="editor-panel">
         <div class="center-panel">
-          <div class="title">Editor</div>
-
-          <div class="editor">
-            <home
-              ref="home"
-              @componentSelected="componentSelected"
-              @stack-push="stackPush"
-              class="home"
-            ></home>
+          <div class="top-menu">
+            <div @click="changePage" :key="title.index" v-for="title in titles" class="title">
+              {{ title.text }}
+            </div>
+            <img
+              src="./assets/iphone.svg"
+              @click="resizeEditor"
+              class="iphone"
+              title="375 x 667"
+            />
+            <img
+              src="./assets/ipad.svg"
+              @click="resizeEditor"
+              class="ipad"
+              title="768 x 1024"
+            />
+            <img
+              src="./assets/monitor.svg"
+              @click="resizeEditor"
+              class="monitor"
+              title="992 x 687"
+            />
+          </div>
+          <div class="main-menu">
+            <div class="editor">
+              <home
+                ref="home"
+                @componentSelected="componentSelected"
+                @stack-push="stackPush"
+                @comment="commentBtn"
+                class="home"
+              ></home>
+            </div>
+            <div v-if="isCommentOn" class="comment-board">
+              <div class="add-comment">
+                <textarea class="comment-input" placeholder="comment" />
+                <img
+                  @click="addComment"
+                  class="add-comment-btn"
+                  src="./assets/plus.svg"
+                />
+              </div>
+              <div
+                :key="comment.index"
+                v-for="comment in comments"
+                class="comment-wrapper"
+              >
+                <div class="top-box">
+                  <div class="writer">{{ comment.writer }}</div>
+                  <div class="element">{{ comment.element }}</div>
+                  <div class="time">{{ comment.time }}</div>
+                </div>
+                <div class="comment-text">{{ comment.text }}</div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="bottom-panel"></div>
       </div>
 
       <div class="right-panel">
-        <img @click="layoutBtn" class="layout-btn" src="./assets/layout.svg" />
-        <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
+        <img
+          @click="layoutBtn"
+          class="layout-btn"
+          src="./assets/layout.svg"
+          title="layout"
+        />
+        <img
+          @click="codeBtn"
+          class="code-btn"
+          src="./assets/code.svg"
+          title="code-editor"
+        />
+        <img
+          @click="commentBtn"
+          class="comment-btn"
+          src="./assets/comment.svg"
+          title="comment"
+        />
       </div>
     </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader">
-      
-      assssssssssssssssssssssss<br>ffffffffffffffffffffffffffffffffffff<br>sddddddddddddddddddddddddddddddd<br>ddd</CodeLoader>
+    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>
     <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
       v-if="layoutOn"
@@ -176,7 +243,30 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
-      isShift : false
+      isShift: false,
+      isCommentOn: false,
+      comments: [
+        {
+          writer: "이성민",
+          element: "aaa",
+          time: "2020/01/28",
+          text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          writer: "이성민",
+          element: "adsfsdf",
+          time: "2020/01/27",
+          text:
+            "annnnnnnnnnnnnnnaaaaaaaaaaerggggggggggsdddddddddddssssssssssssssssssssssssssssdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsssssssssssssssssg"
+        }
+      ],
+      commentTarget: null,
+      titles: [
+        {
+          text: "Untitled"
+        }
+      ],
+      editorNum: 1
     };
   },
   watch: {
@@ -192,24 +282,24 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if(e.which === 16){
-        this.isShift = true
+      if (e.which === 16) {
+        this.isShift = true;
       }
-      if (e.which === 90 && this.isCtrl &&!this.isShift) {
+      if (e.which === 90 && this.isCtrl && !this.isShift) {
         this.undoWork();
       }
-      if(e.which === 90 && this.isCtrl && this.isShift){
-        this.redoWork()
+      if (e.which === 90 && this.isCtrl && this.isShift) {
+        this.redoWork();
       }
-      if(e.which === 67 && this.isCtrl){
+      if (e.which === 67 && this.isCtrl) {
         //복사
       }
     });
-    document.addEventListener('keyup', e => {
-      if(e.which === 16){
-        this.isShift = false
+    document.addEventListener("keyup", e => {
+      if (e.which === 16) {
+        this.isShift = false;
       }
-    })
+    });
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -225,21 +315,21 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
-      if(this.resizeLoader){
+      if (this.resizeLoader) {
         let loader = document.querySelector(".code-loader");
-        let bord = document.querySelector('.loader-bord')
-        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
-        console.log(parseInt(getComputedStyle(loader).top))
-        console.log(parseInt(getComputedStyle(bord).height))
-        this.$nextTick(()=>{
-          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
-        })
-        
+        let bord = document.querySelector(".loader-bord");
+        loader.style.height =
+          this.initialHeight - (e.clientY - this.initialY) + "px";
+        console.log(parseInt(getComputedStyle(loader).top));
+        console.log(parseInt(getComputedStyle(bord).height));
+        this.$nextTick(() => {
+          bord.style.top = parseInt(getComputedStyle(loader).top) + "px";
+        });
       }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
-      this.resizeLoader = false
+      this.resizeLoader = false;
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
@@ -316,15 +406,104 @@ export default {
     this.hasht = h;
   },
   methods: {
-    loaderResize(event){
-      let loader = document.querySelector(".code-loader");
-      this.resizeLoader = true
-      this.initialY = event.clientY
-      this.initialHeight = parseInt(getComputedStyle(loader).height)
+    changePage(e){
+      let i
+      for(i=0;i<e.target.parentElement.children.length;i++){
+        if(e.target.parentElement.children[i] === e.target){
+          console.log(i)
+          break
+        }
+      }
+      let j
+      let editor = document.querySelectorAll('.board')
+      console.log(editor)
+      for(j=0;j<editor.length;j++){
+        if(j === i){
+          editor[j].classList.remove('hidden')
+          editor[j].classList.add('display')
+        }else{
+          editor[j].classList.remove('display')
+          editor[j].classList.add('hidden')
+        }
+      }
     },
-    lo(to){
-      let loader = document.querySelector('.code-loader')
-      loader.style.top = to
+    newPage() {
+      let payload = {
+        text: 'aaa'
+      }
+      this.titles.push(payload)
+      let editor = document.querySelector('.board')
+      // let copy = editor.cloneNode(true)
+      let newEditorBox = document.createElement('div')
+      let ne = document.createElement('button')
+      newEditorBox.classList.add('board')
+      newEditorBox.classList.add('hidden')
+      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.appendChild(ne)
+      console.log(editor.parentElement)
+      this.editorNum++
+      editor.parentElement.appendChild(newEditorBox)
+      console.log(newEditorBox.classList)
+      // this.titles[this.titles.length-1]
+      // console.log(this.titles[this.titles.length-1])
+      // console.log(getComputedStyle(this.titles[this.titles.length-1]).backgroundColor)
+      // this.titles[this.titles.length-1].style.backgroundColor = "#fff"
+      // let i
+      // for(i=1;i<this.titles.length;i++){
+        
+      // }
+    },
+    addComment() {
+      let text = document.querySelector(".comment-input");
+      let payload = {
+        writer: "이성민",
+        element: this.commentTarget.className,
+        time: "",
+        text: text.value
+      };
+      //writer는 유저의 이름으로 element는 선택한 element 또는 빈칸
+      var date = new Date();
+      payload.time =
+        date.getFullYear() + "/" + date.getMonth() + 1 + "/" + date.getDate();
+      this.comments.unshift(payload);
+      text.value = "";
+      // this.comments[this.comments.length-1]
+    },
+    commentBtn(target) {
+      if (this.isCommentOn === false) {
+        this.isCommentOn = true;
+      } else {
+        this.isCommentOn = false;
+      }
+      this.commentTarget = target;
+      console.log(this.commentTarget.className);
+    },
+    resizeEditor(e) {
+      let editor = document.querySelector(".editor-box");
+      if (e.target.className === "iphone") {
+        console.log("aad");
+        editor.style.transform = "scale(1)";
+        editor.style.width = "375px";
+        editor.style.height = "667px";
+      } else if (e.target.className === "ipad") {
+        editor.style.transform = "scale(0.7)";
+        editor.style.width = "768px";
+        editor.style.height = "1024px";
+      } else if (e.target.className === "monitor") {
+        editor.style.transform = "scale(1)";
+        editor.style.width = "992px";
+        editor.style.height = "687px";
+      }
+    },
+    loaderResize(event) {
+      let loader = document.querySelector(".code-loader");
+      this.resizeLoader = true;
+      this.initialY = event.clientY;
+      this.initialHeight = parseInt(getComputedStyle(loader).height);
+    },
+    lo(to) {
+      let loader = document.querySelector(".code-loader");
+      loader.style.top = to;
     },
     codeBtn() {
       if (this.codeOn === true) {
@@ -333,9 +512,9 @@ export default {
         this.codeOn = true;
         this.$nextTick(() => {
           let loader = document.querySelector(".code-loader");
-          let bord = document.querySelector('.loader-bord')
-          bord.style.top = getComputedStyle(loader).top 
-    this.initialTop = getComputedStyle(loader).top
+          let bord = document.querySelector(".loader-bord");
+          bord.style.top = getComputedStyle(loader).top;
+          this.initialTop = getComputedStyle(loader).top;
         });
       }
     },
@@ -574,7 +753,7 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
- 
+
   .top-panel {
     height: 6%;
     background-color: #3c474c;
@@ -599,7 +778,7 @@ export default {
       margin-left: 1rem;
       font-size: 0.9rem;
       margin-right: 1rem;
-       border-radius: 0.3rem;
+      border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
         z-index: 9;
@@ -612,37 +791,55 @@ export default {
         cursor: pointer;
         color: #fff;
       }
-       &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
+    .undo-box,
+    .redo-box,
+    .new-box,
+    .open-box,
+    .save-box,
+    .export-box,
+    .setting-box {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-       padding: 0.2rem;
+      padding: 0.2rem;
       margin-right: 1rem;
       font-size: 0.9rem;
       border-radius: 0.3rem;
-      .undo, .redo, .new, .open, .save, .export, .setting  {
+      .undo,
+      .redo,
+      .new,
+      .open,
+      .save,
+      .export,
+      .setting {
         cursor: pointer;
         height: 1.2rem;
         margin-right: 0.5rem;
       }
-      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
+      .undo-text,
+      .redo-text,
+      .new-text,
+      .open-text,
+      .save-text,
+      .export-text,
+      .setting-text {
         cursor: pointer;
         color: #fff;
       }
-      &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .new-box{
+    .new-box {
       margin-left: 1rem;
     }
-    .undo-box{
-      .undo{
+    .undo-box {
+      .undo {
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
@@ -652,7 +849,6 @@ export default {
         height: 1.2rem;
       }
     }
-    
   }
   .main-panel {
     width: 100%;
@@ -692,7 +888,12 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        background-color: #fff;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
+      }
+      .comment-btn {
+        margin-top: 1.6rem;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
@@ -709,37 +910,153 @@ export default {
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        position: relative;
-
-        .title {
-          position: absolute;
-          text-align: center;
-          left: 0;
-          color: #fff;
-          height: 4.02%;
-          background-color: #545e66;
-          padding: 0.3rem;
-          padding-left: 0.9rem;
-          padding-right: 0.9rem;
-          top: 0;
-        }
-        .editor {
+        .top-menu {
+          display: flex;
+          flex-direction: row;
           width: 100%;
-          position: absolute;
+
+          .title {
+            text-align: center;
+            left: 0;
+            color: #fff;
+            height: auto;
+            cursor: pointer;
+            background-color: #545e66;
+            padding: 0.3rem;
+            padding-left: 0.9rem;
+            padding-right: 0.9rem;
+            top: 0;
+          }
+          .monitor,
+          .iphone,
+          .ipad {
+            text-align: center;
+            right: 0;
+            top: 0.35rem;
+            width: 1.4rem;
+            cursor: pointer;
+            z-index: 3333;
+            &:hover {
+              border-radius: 0.15rem;
+              background-color: #888888;
+            }
+          }
+          .iphone {
+            right: 5rem;
+            margin-right: 0.7rem;
+          }
+          .ipad {
+            width: 1.3rem;
+            margin-right: 0.7rem;
+            right: 2.5rem;
+          }
+          .monitor {
+            width: 1.3rem;
+          }
+        }
+        
+        .main-menu {
+          width: 100%;
           bottom: 0;
           height: 96%;
-          border: 3px solid #545e66;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          // overflow: hidden;
-          .home {
+          flex-direction: row;
+          
+          .editor {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #545e66;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 70rem;
-            height: 55rem;
-            overflow: hidden;
+            // overflow: hidden;
+            .home {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 70rem;
+              height: 100%;
+              overflow: hidden;
+            }
+          }
+          .hidden{
+            display: none;
+          }
+          .display{
+            display: block;
+          }
+          .comment-board {
+            // position: absolute;
+            right: 0;
+            width: 25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #dddddd;
+            .add-comment {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              display: flex;
+              flex-direction: row;
+              width: 19rem;
+              background-color: #ca8f8f;
+              cursor: pointer;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+              .comment-input {
+                background-color: inherit;
+                // border:1px solid #646464;
+                border: none;
+                width: 15rem;
+                border-radius: 0.3rem;
+              }
+              .add-comment-btn {
+                width: 1rem;
+                margin-left: 0.5rem;
+                right: 0;
+              }
+            }
+            .comment-wrapper {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              width: 19rem;
+              background-color: #fff;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+
+              .top-box {
+                width: 100%;
+                margin-bottom: 0.15rem;
+                display: flex;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                .writer {
+                  left: 0;
+                  font-weight: bold;
+                  font-size: 1.1rem;
+                  color: #696969;
+                }
+                .element {
+                  width: 10rem;
+                  position: absolute;
+                  overflow: hidden;
+                  right: 5.5rem;
+                }
+                .time {
+                  position: absolute;
+                  width: 5rem;
+                  right: 0;
+                }
+              }
+              .comment-text {
+                font-size: 0.8rem;
+                width: 100%;
+                text-align: left;
+                color: #8f8f8f;
+                word-break: break-all;
+              }
+            }
           }
         }
       }
@@ -759,14 +1076,14 @@ export default {
     height: 20rem;
     background-color: #23282b;
   }
-   .loader-bord {
-     cursor: n-resize;
-    height:7px;
+  .loader-bord {
+    cursor: n-resize;
+    height: 7px;
     width: 92%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
-    background-color:#545e66 ;
+    background-color: #545e66;
   }
 
   .layout {
@@ -811,4 +1128,12 @@ export default {
     filter: blur(0.8px);
   }
 }
+.editor-component{
+  .board{
+  width: 100%;
+  height: 35rem;
+  border: 1px solid white;
+}
+}
+
 </style>
