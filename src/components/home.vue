@@ -20,8 +20,8 @@
         <!-- <Navi class="navi" /> -->
           <!-- <Dashboard /> -->
           -->
+        </div>
       </div>
-    </div>
     </div>
 
     <div class="selector-box">
@@ -99,10 +99,10 @@ import Navi from "./navi.vue";
 import HtmlLoader from "./htmlLoader.vue";
 import spliter from "./spliter.vue";
 import Context from "./Context";
-
+import ss from "./ss";
 
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter, Context},
+  components: { Dashboard, Navi, HtmlLoader, spliter, Context, ss },
   data() {
     return {
       selectedElement: null,
@@ -175,13 +175,13 @@ export default {
               (this.initialwidth - (this.initialposition - event.pageX) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           } else if (event.pageX > this.initialposition) {
             const size =
               (this.initialwidth + (event.pageX - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           }
         } else if (this.resizedirection === "left") {
           if (event.pageX < this.initialposition) {
@@ -189,13 +189,13 @@ export default {
               (this.initialwidth + (this.initialposition - event.pageX) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           } else if (event.pageX > this.initialposition) {
             const size =
               (this.initialwidth - (event.pageX - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           }
         } else if (this.resizedirection === "top") {
           if (event.pageY < this.initialposition) {
@@ -203,13 +203,13 @@ export default {
               (this.initialheight + (this.initialposition - event.pageY) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           } else if (event.pageY > this.initialposition) {
             const size =
               (this.initialheight - (event.pageY - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           }
         } else if (this.resizedirection === "bottom") {
           if (event.pageY < this.initialposition) {
@@ -217,13 +217,13 @@ export default {
               (this.initialheight - (this.initialposition - event.pageY) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           } else if (event.pageY > this.initialposition) {
             const size =
               (this.initialheight + (event.pageY - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height);
             this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size
+            this.size = size;
           }
         }
         
@@ -290,13 +290,13 @@ export default {
       // this.clickedElement.style.filter = 'blur(0)'
       if (this.isContentResizable) {
         var style = {
-            work: "style",
-            elem: this.clickedElement,
-            style: "transform",
-            afterValue: `scale(${this.size})`,
-            value: `scale(${this.initialscale})`
-          };
-          this.$emit("stack-push", style);
+          work: "style",
+          elem: this.clickedElement,
+          style: "transform",
+          afterValue: `scale(${this.size})`,
+          value: `scale(${this.initialscale})`
+        };
+        this.$emit("stack-push", style);
         this.isContentResizable = false;
       }
       this.resizedirection = null;
@@ -324,13 +324,13 @@ export default {
             // console.log(position)
             // position이 추가할 위치에 있는 element. 부모가 된다.
             // this.movePosition.parentElement
-              var move = {
-              work: 'move',
+            var move = {
+              work: "move",
               position: this.clickedElement.parentElement,
               elem: this.clickedElement,
               afterMovePosition: this.movePosition.target
-            }
-            this.$emit('stack-push', move)
+            };
+            this.$emit("stack-push", move);
             this.movePosition.target.appendChild(addComponent[0]);
             if (
               e.target.className === "left-border" ||
@@ -600,10 +600,10 @@ export default {
       }
       // console.log(classValue)
       this.style = data.style;
-      let element = document.getElementsByClassName(this.target)[0]
-      console.log(element)
-      for(i=0;i<element.length;i++){
-        console.log(element[i])
+      let element = document.getElementsByClassName(this.target)[0];
+      console.log(element);
+      for (i = 0; i < element.length; i++) {
+        console.log(element[i]);
       }
       var style = {
         work: "style",
@@ -657,8 +657,8 @@ export default {
         e.target.className !== "editor-component"
       ) {
         this.isContentEditable = true;
-        this.targetText = e.target.textContent
-        console.log(this.targetText)
+        this.targetText = e.target.textContent;
+        console.log(this.targetText);
         this.$nextTick(() => {
           const sel = window.getSelection();
           sel.removeAllRanges();
@@ -677,7 +677,7 @@ export default {
         e.target.className !== "editor-component"
       ) {
         this.focusInput(e);
-        this.editElem = e.target
+        this.editElem = e.target;
       }
     },
     placeCaretAtEnd(el) {
@@ -701,16 +701,16 @@ export default {
     },
     isContentNotEditable(e) {
       e.preventDefault();
-      console.log('abc')
-      console.log(this.editElem)
-      console.log('bcd')
+      console.log("abc");
+      console.log(this.editElem);
+      console.log("bcd");
       var edit = {
-        work: 'edit',
+        work: "edit",
         elem: this.editElem,
         beforeEdit: this.targetText,
         afterEdit: this.editElem.textContent
-      }
-      this.$emit('stack-push', edit)
+      };
+      this.$emit("stack-push", edit);
       this.isContentEditable = false;
     },
     mouseDownBoundary(e) {
@@ -742,8 +742,7 @@ export default {
             scaleVal = Number(regExpResult[0]);
           }
           this.initialscale = scaleVal;
-          console.log(this.initialscale)
-          
+          console.log(this.initialscale);
         }
       });
     },
@@ -802,15 +801,17 @@ export default {
       }
     },
     removeContent() {
-      let i
-      let nChild
-      for(i = 0; i < this.clickedElement.parentElement.children.length;i++){
-        if(this.clickedElement.parentElement.children[i] === this.clickedElement){
-          nChild = i
-          break
+      let i;
+      let nChild;
+      for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
+        if (
+          this.clickedElement.parentElement.children[i] === this.clickedElement
+        ) {
+          nChild = i;
+          break;
         }
       }
-      console.log(nChild)
+      console.log(nChild);
       var remove = {
         work: "remove",
         position: this.clickedElement.parentNode,
@@ -834,15 +835,15 @@ export default {
         position.className !== "top-border" &&
         position.className !== "bottom-border"
       ) {
-      position.appendChild(tag);
+        position.appendChild(tag);
       }
 
-        var add = {
-          work: 'add',
-          position: position,
-          elem: tag
-        }
-        this.$emit('stack-push',add)
+      var add = {
+        work: "add",
+        position: position,
+        elem: tag
+      };
+      this.$emit("stack-push", add);
     },
     selectOverview(payload) {
       let dashboardElem = document.querySelector(".editor");
@@ -906,7 +907,6 @@ export default {
     moveElement(e) {
       this.clickedElement.style.filter = "blur(0.8px)";
       this.isContentMovable = true;
-    
     },
     windowResized() {
       this.onmouseMove(this.movePosition);
@@ -923,11 +923,13 @@ export default {
         }
       }
       // console.log(classValue)
-      let nChild
-      for(i = 0; i < this.clickedElement.parentElement.children.length;i++){
-        if(this.clickedElement.parentElement.children[i] === this.clickedElement){
-          nChild = i
-          break
+      let nChild;
+      for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
+        if (
+          this.clickedElement.parentElement.children[i] === this.clickedElement
+        ) {
+          nChild = i;
+          break;
         }
       }
       let elem = document.getElementsByClassName(
@@ -942,19 +944,19 @@ export default {
         this.classIndex;
       copyElem.classList.add(randomClass);
       this.classIndex++;
-      console.log(this.clickedElement.parentElement.children)
+      console.log(this.clickedElement.parentElement.children);
 
       var newparent = document.createElement("div");
       var copy = {
-        work: 'copy',
+        work: "copy",
         position: this.clickedElement.parentElement,
         elem: elem[0],
         copyElem: copyElem,
         nth: nChild
-      }
-      console.log(copy)
-      this.$emit('stack-push', copy)
-      $(elem[0]).after(copyElem)
+      };
+      console.log(copy);
+      this.$emit("stack-push", copy);
+      $(elem[0]).after(copyElem);
 
       // this.$nextTick(() => {
       //   // console.log(this.clickedElement.parentElement.children)
@@ -999,7 +1001,7 @@ export default {
 
       // topBord.style.backgroundColor = '#34d6c1'
       // bottomBord.style.backgroundColor = '#34d6c1'
- 
+
       let elemWidth = getComputedStyle(this.clickedElement).width;
       let elemHeight = getComputedStyle(this.clickedElement).height;
       let elemLeft = getComputedStyle(this.clickedElement).left;
@@ -1028,22 +1030,28 @@ export default {
         }
       });
       edit.addEventListener("mouseup", () => {
-        if(this.borderElem.className === 'boundary-line-right' || this.borderElem.className === 'boundary-line-left'){
-          var resize={
-            work: 'width',
+        if (
+          this.borderElem.className === "boundary-line-right" ||
+          this.borderElem.className === "boundary-line-left"
+        ) {
+          var resize = {
+            work: "width",
             elem: this.clickedElement,
             beforeSize: elemWidth,
             afterSize: getComputedStyle(this.clickedElement).width
-          }
-        }else if(this.borderElem.className === "boundary-line-top" || this.borderElem.className === "boundary-line-bottom"){
-          var resize={
-            work: 'height',
+          };
+        } else if (
+          this.borderElem.className === "boundary-line-top" ||
+          this.borderElem.className === "boundary-line-bottom"
+        ) {
+          var resize = {
+            work: "height",
             elem: this.clickedElement,
             beforeSize: elemHeight,
             afterSize: getComputedStyle(this.clickedElement).height
-          }
+          };
         }
-        this.$emit('stack-push',resize)
+        this.$emit("stack-push", resize);
         this.borderClicked = false;
       });
     },
@@ -1058,9 +1066,9 @@ export default {
       // console.log(mode)
       this.mode = mode;
     },
-    onmouseRightClick(e) {
+    onmouserightClick(e) {
       if (e.button === 2) {
-        this.mouserightClick = true;
+        this.mouseRightClick = true;
         this.$nextTick(() => {
           let context = document.querySelector(".context");
           context.style.left = e.clientX + "px";

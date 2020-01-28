@@ -84,15 +84,15 @@
             />
           </div>
           <div class="main-menu">
-          <div class="editor">
-            <home
-              ref="home"
-              @componentSelected="componentSelected"
-              @stack-push="stackPush"
+            <div class="editor">
+              <home
+                ref="home"
+                @componentSelected="componentSelected"
+                @stack-push="stackPush"
                 @comment="commentBtn"
-              class="home"
-            ></home>
-          </div>
+                class="home"
+              ></home>
+            </div>
             <div v-if="isCommentOn" class="comment-board">
               <div class="add-comment">
                 <textarea class="comment-input" placeholder="comment" />
@@ -101,7 +101,7 @@
                   class="add-comment-btn"
                   src="./assets/plus.svg"
                 />
-        </div>
+              </div>
               <div
                 :key="comment.index"
                 v-for="comment in comments"
@@ -282,24 +282,24 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if(e.which === 16){
-        this.isShift = true
+      if (e.which === 16) {
+        this.isShift = true;
       }
-      if (e.which === 90 && this.isCtrl &&!this.isShift) {
+      if (e.which === 90 && this.isCtrl && !this.isShift) {
         this.undoWork();
       }
-      if(e.which === 90 && this.isCtrl && this.isShift){
-        this.redoWork()
+      if (e.which === 90 && this.isCtrl && this.isShift) {
+        this.redoWork();
       }
-      if(e.which === 67 && this.isCtrl){
+      if (e.which === 67 && this.isCtrl) {
         //복사
       }
     });
-    document.addEventListener('keyup', e => {
-      if(e.which === 16){
-        this.isShift = false
+    document.addEventListener("keyup", e => {
+      if (e.which === 16) {
+        this.isShift = false;
       }
-    })
+    });
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -315,21 +315,21 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
-      if(this.resizeLoader){
+      if (this.resizeLoader) {
         let loader = document.querySelector(".code-loader");
-        let bord = document.querySelector('.loader-bord')
-        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
-        console.log(parseInt(getComputedStyle(loader).top))
-        console.log(parseInt(getComputedStyle(bord).height))
-        this.$nextTick(()=>{
-          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
-        })
-        
+        let bord = document.querySelector(".loader-bord");
+        loader.style.height =
+          this.initialHeight - (e.clientY - this.initialY) + "px";
+        console.log(parseInt(getComputedStyle(loader).top));
+        console.log(parseInt(getComputedStyle(bord).height));
+        this.$nextTick(() => {
+          bord.style.top = parseInt(getComputedStyle(loader).top) + "px";
+        });
       }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
-      this.resizeLoader = false
+      this.resizeLoader = false;
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
@@ -495,14 +495,15 @@ export default {
         editor.style.height = "687px";
       }
     },
+    loaderResize(event) {
       let loader = document.querySelector(".code-loader");
-      this.resizeLoader = true
-      this.initialY = event.clientY
-      this.initialHeight = parseInt(getComputedStyle(loader).height)
+      this.resizeLoader = true;
+      this.initialY = event.clientY;
+      this.initialHeight = parseInt(getComputedStyle(loader).height);
     },
-    lo(to){
-      let loader = document.querySelector('.code-loader')
-      loader.style.top = to
+    lo(to) {
+      let loader = document.querySelector(".code-loader");
+      loader.style.top = to;
     },
     codeBtn() {
       if (this.codeOn === true) {
@@ -511,9 +512,9 @@ export default {
         this.codeOn = true;
         this.$nextTick(() => {
           let loader = document.querySelector(".code-loader");
-          let bord = document.querySelector('.loader-bord')
-          bord.style.top = getComputedStyle(loader).top 
-    this.initialTop = getComputedStyle(loader).top
+          let bord = document.querySelector(".loader-bord");
+          bord.style.top = getComputedStyle(loader).top;
+          this.initialTop = getComputedStyle(loader).top;
         });
       }
     },
@@ -752,7 +753,7 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
- 
+
   .top-panel {
     height: 6%;
     background-color: #3c474c;
@@ -777,7 +778,7 @@ export default {
       margin-left: 1rem;
       font-size: 0.9rem;
       margin-right: 1rem;
-       border-radius: 0.3rem;
+      border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
         z-index: 9;
@@ -790,37 +791,55 @@ export default {
         cursor: pointer;
         color: #fff;
       }
-       &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
+    .undo-box,
+    .redo-box,
+    .new-box,
+    .open-box,
+    .save-box,
+    .export-box,
+    .setting-box {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-       padding: 0.2rem;
+      padding: 0.2rem;
       margin-right: 1rem;
       font-size: 0.9rem;
       border-radius: 0.3rem;
-      .undo, .redo, .new, .open, .save, .export, .setting  {
+      .undo,
+      .redo,
+      .new,
+      .open,
+      .save,
+      .export,
+      .setting {
         cursor: pointer;
         height: 1.2rem;
         margin-right: 0.5rem;
       }
-      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
+      .undo-text,
+      .redo-text,
+      .new-text,
+      .open-text,
+      .save-text,
+      .export-text,
+      .setting-text {
         cursor: pointer;
         color: #fff;
       }
-      &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .new-box{
+    .new-box {
       margin-left: 1rem;
     }
-    .undo-box{
-      .undo{
+    .undo-box {
+      .undo {
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
@@ -830,7 +849,6 @@ export default {
         height: 1.2rem;
       }
     }
-    
   }
   .main-panel {
     width: 100%;
@@ -870,6 +888,10 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
+      }
       .comment-btn {
         margin-top: 1.6rem;
         width: 1rem;
@@ -893,18 +915,47 @@ export default {
           flex-direction: row;
           width: 100%;
 
-        .title {
-          text-align: center;
-          left: 0;
-          color: #fff;
-          height: 4.02%;
-          background-color: #545e66;
-          padding: 0.3rem;
-          padding-left: 0.9rem;
-          padding-right: 0.9rem;
-          top: 0;
+          .title {
+            text-align: center;
+            left: 0;
+            color: #fff;
+            height: auto;
+            cursor: pointer;
+            background-color: #545e66;
+            padding: 0.3rem;
+            padding-left: 0.9rem;
+            padding-right: 0.9rem;
+            top: 0;
+          }
+          .monitor,
+          .iphone,
+          .ipad {
+            text-align: center;
+            right: 0;
+            top: 0.35rem;
+            width: 1.4rem;
+            cursor: pointer;
+            z-index: 3333;
+            &:hover {
+              border-radius: 0.15rem;
+              background-color: #888888;
+            }
+          }
+          .iphone {
+            right: 5rem;
+            margin-right: 0.7rem;
+          }
+          .ipad {
+            width: 1.3rem;
+            margin-right: 0.7rem;
+            right: 2.5rem;
+          }
+          .monitor {
+            width: 1.3rem;
+          }
         }
-        .editor {
+        
+        .main-menu {
           width: 100%;
           bottom: 0;
           height: 96%;
@@ -914,16 +965,16 @@ export default {
           .editor {
             width: 100%;
             height: 100%;
-          border: 3px solid #545e66;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          // overflow: hidden;
-          .home {
+            border: 3px solid #545e66;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 70rem;
+            // overflow: hidden;
+            .home {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 70rem;
               height: 100%;
               overflow: hidden;
             }
@@ -989,7 +1040,7 @@ export default {
                 .element {
                   width: 10rem;
                   position: absolute;
-            overflow: hidden;
+                  overflow: hidden;
                   right: 5.5rem;
                 }
                 .time {
@@ -1025,14 +1076,14 @@ export default {
     height: 20rem;
     background-color: #23282b;
   }
-   .loader-bord {
-     cursor: n-resize;
-    height:7px;
+  .loader-bord {
+    cursor: n-resize;
+    height: 7px;
     width: 92%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
-    background-color:#545e66 ;
+    background-color: #545e66;
   }
 
   .layout {
