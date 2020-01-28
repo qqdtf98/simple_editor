@@ -54,8 +54,24 @@
       </div>
       <div class="editor-panel">
         <div class="center-panel">
-          <div class="title">Editor</div>
-
+            <img
+              src="./assets/iphone.svg"
+              @click="resizeEditor"
+              class="iphone"
+              title="375 x 667"
+            />
+            <img
+              src="./assets/ipad.svg"
+              @click="resizeEditor"
+              class="ipad"
+              title="768 x 1024"
+            />
+            <img
+              src="./assets/monitor.svg"
+              @click="resizeEditor"
+              class="monitor"
+              title="992 x 687"
+            />
           <div class="editor">
             <home
               ref="home"
@@ -382,6 +398,23 @@ export default {
       }
       this.commentTarget = target;
       console.log(this.commentTarget.className);
+    },
+    resizeEditor(e) {
+      let editor = document.querySelector(".editor-box");
+      if (e.target.className === "iphone") {
+        console.log("aad");
+        editor.style.transform = "scale(1)";
+        editor.style.width = "375px";
+        editor.style.height = "667px";
+      } else if (e.target.className === "ipad") {
+        editor.style.transform = "scale(0.7)";
+        editor.style.width = "768px";
+        editor.style.height = "1024px";
+      } else if (e.target.className === "monitor") {
+        editor.style.transform = "scale(1)";
+        editor.style.width = "992px";
+        editor.style.height = "687px";
+      }
     },
       let loader = document.querySelector(".code-loader");
       this.resizeLoader = true
