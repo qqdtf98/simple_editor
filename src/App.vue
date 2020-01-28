@@ -45,11 +45,17 @@
     </div>
     <div class="main-panel">
       <div class="left-panel">
-        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img
+          @click="studioBtn"
+          class="studio-btn"
+          src="./assets/studio.svg"
+          title="studio"
+        />
         <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
+          title="overview"
         />
       </div>
       <div class="editor-panel">
@@ -116,14 +122,28 @@
       </div>
 
       <div class="right-panel">
-        <img @click="layoutBtn" class="layout-btn" src="./assets/layout.svg" />
-        <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
+        <img
+          @click="layoutBtn"
+          class="layout-btn"
+          src="./assets/layout.svg"
+          title="layout"
+        />
+        <img
+          @click="codeBtn"
+          class="code-btn"
+          src="./assets/code.svg"
+          title="code-editor"
+        />
+        <img
+          @click="commentBtn"
+          class="comment-btn"
+          src="./assets/comment.svg"
+          title="comment"
+        />
       </div>
     </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader">
-      
-      assssssssssssssssssssssss<br>ffffffffffffffffffffffffffffffffffff<br>sddddddddddddddddddddddddddddddd<br>ddd</CodeLoader>
+    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>
     <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
       v-if="layoutOn"
