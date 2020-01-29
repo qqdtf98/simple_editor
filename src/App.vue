@@ -163,6 +163,13 @@
       @close-studio="studioBtn"
       class="studio"
     ></studio>
+    <sitemap
+      ref="sitemap"
+      v-show="sitemapOn"
+      @copy-title="copyPage"
+      @close-sitemap="sitemapBtn"
+      class="sitemap"
+    />
     <overview
       v-if="overviewOn"
       ref="overview"
@@ -185,6 +192,9 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
+    <div v-if="isTitle" class="title-copy">
+      bb
+    </div>
     <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
   </div>
 </template>
@@ -198,6 +208,7 @@ import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
+import sitemap from "./components/sitemap";
 // import UndoRedo from './components/UndoRedo'
 
 export default {
@@ -209,7 +220,8 @@ export default {
     overview,
     spliter,
     Switches,
-    CodeLoader
+    CodeLoader,
+    sitemap
   },
   props: ["selectDomElement"],
   name: "App",
@@ -239,6 +251,7 @@ export default {
       overviewOn: false,
       layoutOn: false,
       codeOn: false,
+      sitemapOn: false,
       resizeLoader: false,
       initialTop: null,
       initialY: null,
@@ -266,7 +279,9 @@ export default {
           text: "Untitled"
         }
       ],
-      editorNum: 1
+      editorNum: 1,
+      isTitle: false,
+      copyTitle: null
     };
   },
   watch: {
@@ -326,6 +341,14 @@ export default {
           bord.style.top = parseInt(getComputedStyle(loader).top) + "px";
         });
       }
+      if (this.isTitle) {
+        // let sitemap = document.querySelector("#sitemap");
+            let copy = document.querySelector(".title-copy");
+            // console.log(this.copyTitle)
+            copy.textContent = this.copyTitle.textContent;
+            copy.style.left = e.clientX + 10 + "px";
+            copy.style.top = e.clientY + 10 + "px";
+      }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
@@ -351,6 +374,9 @@ export default {
             tar = tar.parentElement;
           }
         }
+      }
+      if(this.isTitle){
+        this.isTitle = false
       }
     });
     var h = {};
@@ -406,12 +432,15 @@ export default {
     this.hasht = h;
   },
   methods: {
-    changePage(e){
-      let i
-      for(i=0;i<e.target.parentElement.children.length;i++){
-        if(e.target.parentElement.children[i] === e.target){
-          console.log(i)
-          break
+    copyPage(payload) {
+      this.isTitle = true;
+      this.copyTitle = payload.target
+    },
+    sitemapBtn() {
+      if (this.sitemapOn === true) {
+        this.sitemapOn = false;
+      } else {
+        this.sitemapOn = true;
         }
       }
       let j
@@ -869,6 +898,11 @@ export default {
         cursor: pointer;
       }
       .overview-btn {
+        width: 1rem;
+        margin-top: 1.3rem;
+        cursor: pointer;
+      }
+      .sitemap-btn {
         width: 1rem;
         margin-top: 1.3rem;
         cursor: pointer;
