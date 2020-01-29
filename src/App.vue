@@ -290,6 +290,7 @@
 </template>
 
 <script>
+
 import htmlLoader from "./components/htmlLoader";
 import home from "./components/home";
 import layout from "./components/layout";
@@ -932,9 +933,14 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
+// @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css'); 
+@import url('https://rsms.me/inter/inter.css');
+
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  // font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
