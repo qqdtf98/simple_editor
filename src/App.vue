@@ -50,27 +50,87 @@
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
-        />
+        />C:\Users\anylogic\Desktop\any-editor\src\App.vue
       </div>
       <div class="editor-panel">
         <div class="center-panel">
           <div class="title">Editor</div>
 
-          <div class="editor">
-            <home
-              ref="home"
+            <img
+              src="./assets/iphone.svg"
+              @click="resizeEditor"
+              class="iphone"
+              title="375 x 667"
+            />
+            <img
+              src="./assets/ipad.svg"
+              @click="resizeEditor"
+              class="ipad"
+              title="768 x 1024"
+            />
+            <img
+              src="./assets/monitor.svg"
+              @click="resizeEditor"
+              class="monitor"
+              title="992 x 687"
+            />
+          </div>
+          <div class="main-menu">
+            <div class="editor">
+              <home
+               ref="home"C:\Users\anylogic\Desktop\any-editor\src\App.vue
               @componentSelected="componentSelected"
               @stack-push="stackPush"
               @loadData="loadData"
               class="home"
-            ></home>
+              ></home>
+            </div>
+            <div v-if="isCommentOn" class="comment-board">
+              <div class="add-comment">
+                <textarea class="comment-input" placeholder="comment" />
+                <img
+                  @click="addComment"
+                  class="add-comment-btn"
+                  src="./assets/plus.svg"
+                />
+              </div>
+              <div
+                :key="comment.index"
+                v-for="comment in comments"
+                class="comment-wrapper"
+              >
+                <div class="top-box">
+                  <div class="writer">{{ comment.writer }}</div>
+                  <div class="element">{{ comment.element }}</div>
+                  <div class="time">{{ comment.time }}</div>
+                </div>
+                <div class="comment-text">{{ comment.text }}</div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="bottom-panel"></div>
       </div>
+
       <div class="right-panel">
-        <img @click="layoutBtn" id="codeBtnLayout"class="layout-btn" src="./assets/layout.svg" />
-        <img @click="codeBtn" id="codeBtnFileList"class="code-btn" src="./assets/code.svg" />
+        <img
+          @click="layoutBtn"
+          class="layout-btn"
+          src="./assets/layout.svg"
+          title="layout"
+        />
+        <img
+          @click="codeBtn"
+          class="code-btn"
+          src="./assets/code.svg"
+          title="code-editor"
+        />
+        <img
+          @click="commentBtn"
+          class="comment-btn"
+          src="./assets/comment.svg"
+          title="comment"
+        />
       </div>
     </div>
     
@@ -108,8 +168,9 @@
 
     <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
     
+
     <layout
-      v-show="layoutOn"
+      v-if="layoutOn"
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
@@ -118,7 +179,7 @@
       class="layout"
     ></layout>
     <studio
-      v-show="studioOn"
+      v-if="studioOn"
       @desc-close="tagNotSelected"
       @ui-select="uiSelected"
       @tag-select="tagSelected"
@@ -127,7 +188,7 @@
       class="studio"
     ></studio>
     <overview
-      v-show="overviewOn"
+      v-if="overviewOn"
       ref="overview"
       @selectDomElement="selectDomElemented"
       @inParentTreeOption="inParentTreeOption"
@@ -188,6 +249,8 @@ export default {
       uiDescription: false,
       dom: "",
       addTag: false,
+      selectedTemplate: null,
+      selectedTag: null,
       hasht: null,
       isPustHtml: true,
       mouseOverTarget: null,
@@ -209,19 +272,45 @@ export default {
       isData:false,
       tabStep:0,
       js:" 불러올 데이터가 없습니다.",
+      isShift: false,
+      isCommentOn: false,
+      comments: [
+        {
+          writer: "이성민",
+          element: "aaa",
+          time: "2020/01/28",
+          text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          writer: "이성민",
+          element: "adsfsdf",
+          time: "2020/01/27",
+          text:
+            "annnnnnnnnnnnnnnaaaaaaaaaaerggggggggggsdddddddddddssssssssssssssssssssssssssssdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsssssssssssssssssg"
+        }
+      ],
+      commentTarget: null,
+      titles: [
+        {
+          text: "Untitled"
+        }
+      ],
+      editorNum: 1,
+      isTitle: false,
+      copyTitle: null
     };
   },
-  computed:{
+    computed:{
      testMessage: function (){
         this.test = document.getElementById("newLoaderHtml").innerHTML
         return this.test
      },
-     
+  watch: {
+    enabled: function() {
+      this.$refs.home.modeSelect(this.enabled);
+    }
   },
   mounted() {
-     
-    this.highlightSyntax();
-  
     $(window).resize(() => {
       this.$refs.home.windowResized();
     });
@@ -271,7 +360,15 @@ export default {
         this.$nextTick(()=>{
           bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
         })
-        
+        }
+      if (this.isTitle) {
+        // let sitemap = document.querySelector("#sitemap");
+            let copy = document.querySelector(".title-copy");
+            // console.log(this.copyTitle)
+            copy.textContent = this.copyTitle.textContent;
+            copy.style.left = e.clientX + 10 + "px";
+            copy.style.top = e.clientY + 10 + "px";
+
       }
     });
     this.homeDocument = document.getElementById("dashboard");
@@ -365,20 +462,154 @@ export default {
       let loader = document.querySelector('.loadDataPanel')
       loader.style.top = to
     },
+    copyPage(payload) {
+      this.isTitle = true;
+      this.copyTitle = payload.target
+    },
+    sitemapBtn() {
+      if (this.sitemapOn === true) {
+        this.sitemapOn = false;
+      } else {
+        this.sitemapOn = true;
+      }
+    },
+    closePage(e) {
+      let i;
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          console.log(i);
+          break;
+        }
+      }
+      this.titles.splice(i, 1);
+      let editorCompo = document.querySelector(".editor-component");
+      editorCompo.removeChild(editorCompo.children[i]);
+    },
+    changePage(e) {
+      let i;
+      let num;
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length - 3;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          num = i;
+          e.target.parentElement.style.backgroundColor = "#545e66";
+        } else {
+          e.target.parentElement.parentElement.children[
+            i
+          ].style.backgroundColor = "#2c3134";
+        }
+      }
+      let j;
+      let editor = document.querySelectorAll(".board");
+      console.log(editor);
+      for (j = 0; j < editor.length; j++) {
+        if (j === num) {
+          editor[j].classList.remove("hidden");
+          editor[j].classList.add("display");
+        } else {
+          editor[j].classList.remove("display");
+          editor[j].classList.add("hidden");
+        }
+      }
+    },
+    newPage(e) {
+      let payload = {
+        text: "aaa"
+      };
+      this.titles.push(payload);
+      let editor = document.querySelector(".board");
+      // let copy = editor.cloneNode(true)
+      let newEditorBox = document.createElement("div");
+      let ne = document.createElement("button");
+      newEditorBox.classList.add("board");
+      newEditorBox.classList.add("hidden");
+      newEditorBox.classList.add("board" + this.editorNum);
+      newEditorBox.appendChild(ne);
+      // console.log(editor.parentElement);
+
+      editor.parentElement.appendChild(newEditorBox);
+
+      // console.log(newEditorBox.classList);
+      this.editorNum++;
+
+      let files = document.querySelectorAll(".file-name");
+      let i;
+      // files[files.length-1].style.backgroundColor = '#2c3134'
+      for (i = 0; i < files.length; i++) {
+        if (i === 0) {
+          files[i].style.backgroundColor = "#545e66";
+        } else {
+          files[i].style.backgroundColor = "#2c3134";
+        }
+      }
+      this.$refs.sitemap.loadSitemap(this.titles);
+    },
+    addComment() {
+      let text = document.querySelector(".comment-input");
+      let payload = {
+        writer: "이성민",
+        element: this.commentTarget.className,
+        time: "",
+        text: text.value
+      };
+      //writer는 유저의 이름으로 element는 선택한 element 또는 빈칸
+      var date = new Date();
+      payload.time =
+        date.getFullYear() + "/" + date.getMonth() + 1 + "/" + date.getDate();
+      this.comments.unshift(payload);
+      text.value = "";
+      // this.comments[this.comments.length-1]
+    },
+    commentBtn(target) {
+      if (this.isCommentOn === false) {
+        this.isCommentOn = true;
+      } else {
+        this.isCommentOn = false;
+      }
+      this.commentTarget = target;
+      console.log(this.commentTarget.className);
+    },
+    resizeEditor(e) {
+      let editor = document.querySelector(".editor-box");
+      if (e.target.className === "iphone") {
+        console.log("aad");
+        editor.style.transform = "scale(1)";
+        editor.style.width = "375px";
+        editor.style.height = "667px";
+      } else if (e.target.className === "ipad") {
+        editor.style.transform = "scale(0.7)";
+        editor.style.width = "768px";
+        editor.style.height = "1024px";
+      } else if (e.target.className === "monitor") {
+        editor.style.transform = "scale(1)";
+        editor.style.width = "992px";
+        editor.style.height = "687px";
+      }
+    },
     codeBtn() {
       if (this.codeOn === true) {
         this.codeOn = false;
       } else {
         this.codeOn = true;
         this.$nextTick(() => {
-          let loader = document.querySelector(".loadDataPanel");
-          let bord = document.querySelector('.loader-bord')
-          bord.style.top = getComputedStyle(loader).top 
-          this.initialTop = getComputedStyle(loader).top
+          let loader = document.querySelector(".code-loader");
+          let bord = document.querySelector(".loader-bord");
+          bord.style.top = getComputedStyle(loader).top;
+          this.initialTop = getComputedStyle(loader).top;
         });
-      }
-      if (this.layoutOn === true) {
-        this.layoutOn = false;
       }
     },
     layoutBtn() {
@@ -386,10 +617,6 @@ export default {
         this.layoutOn = false;
       } else {
         this.layoutOn = true;
-      }
-
-      if (this.codeOn === true) {
-        this.codeOn = false;
       }
     },
     studioBtn() {
@@ -473,24 +700,7 @@ export default {
       }
     },
     stackPush(elem) {
-      // console.log("sdsa")
       this.workStack.push(elem);
-      if(this.tabStep==1){
-            // document.querySelector('#preview').textContent = this.loadData[0]
-            this.message[0] = document.getElementById("newLoaderHtml").innerHTML
-            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
-            console.log(document.getElementById("newLoaderHtml").innerHTML)
-            console.log(this.message[0])
-      }
-      else if(this.tabStep==2){
-          
-          document.querySelector('#preview2').innerHTML = this.message[1]
-      }
-      else if(this.tabStep==3){
-
-          document.querySelector('#preview3').innerText = this.message[2]
-      }
-
     },
     userSelectedTagComponent(e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
@@ -507,9 +717,7 @@ export default {
       });
     },
     componentSelected(payload) {
-      this.layoutOn=true
-      // $('.layout-btn').trigger('click')
-      // this.$refs.layouts.isData = true;
+      this.$refs.layouts.isData = true;
       this.payload = payload.target;
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
@@ -522,11 +730,9 @@ export default {
         this.isPustHtml = false;
       }
       this.$refs.overview.domSelection(payload.target);
-      this.$refs.layouts.isData = true;
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
-      console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },
@@ -595,82 +801,7 @@ export default {
       this.$refs.home.borderStyleChanged(e);
     },
     toggleClicked() {
-    },
-    loadData(data){
-      this.message = data
-    },
-    chageContent(){
-      console.log(this.message)
-      document.getElementById("newLoaderHtml").innerHTML
-        if(this.tabStep==1){
-            // document.querySelector('#preview').textContent = this.loadData[0]
-            this.test = document.getElementById("newLoaderHtml").innerHTML
-            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
-            console.log("dsd")
-        }
-        else if(this.tabStep==2){
-            document.querySelector('#preview2').innerHTML = this.message[1]
-        }
-        else if(this.tabStep==3){
-            console.log(document.querySelector('#preview3'))
-            console.log(this.message[2])
-            this.js = this.message[2]
-            // document.querySelector('#preview3').innerText = this.message[2]
-        }
-    },
-    inputFile(e){
-        alert("저장되었습니다")
-        // console.log(this.message[2])
-        var file = document.querySelector('#getfile');
-        file.onchange = function () { 
-            var fileList = file.files ;
-            
-            // 읽기
-            var reader = new FileReader();
-            reader.readAsText(fileList [0]);
-
-            //로드 한 후
-            reader.onload = function  () {
-                document.querySelector('#preview').textContent = reader.result ;
-            }; 
-        }; 
-    },
-    clickSoure(e){
-      this.isData=true
-      console.log("s")
-      // console.log(document.getElementById("newLoaderHtml").innerHTML)
-      if (e.target.getAttribute('name')=='html') {
-          this.tabStep = 1
-          // this.chageContent()
-          console.log("s")
-      } else if (e.target.getAttribute('name')=='css') {
-          this.tabStep = 2
-      } else if (e.target.getAttribute('name')=='js') {
-          this.tabStep = 3
-      }
-    },
-    setFile(file){
-      // console.log(file)
-      this.chageContent()
-      this.isData=true
-       if (file=='html') {
-          this.tabStep = 1
-
-      } else if (file=='css') {
-          this.tabStep = 2
-      } else if (file=='js') {
-          this.tabStep = 3
-      }
-    },
-    highlightSyntax(){
-      $('code').html(this.escapedQuery);
-
-      $('.syntax-highlight').each(function(i, block) {
-        hljs.highlightBlock(block);
-      });      
-    },
-    closeCodeRiview(){
-      this.isData=false
+      console.log("aaa");
     }
   }
 };
@@ -894,21 +1025,12 @@ export default {
     }
   }
   .code-loader {
-    // width: 92%;
-    // z-index: 10000;
-    // position: fixed;
-    // bottom: 5%;
-    // height: 20rem;
-    // background-color: #23282b;
-    width: 20rem;
-    z-index: 11;
-    height: 30rem;
-    border: 1.5px solid #000000;
+    width: 92%;
+    z-index: 10000;
     position: fixed;
-    right: 4%;
-    background-color: #32373a;
-    z-index: 12;
-    top: 6%;
+    bottom: 5%;
+    height: 20rem;
+    background-color: #23282b;
   }
    .loader-bord {
      cursor: n-resize;
@@ -961,6 +1083,15 @@ export default {
     float: left;
     filter: blur(0.8px);
   }
+  .title-copy {
+    text-align: left;
+    height: 1.5rem;
+    position: fixed;
+    z-index: 33;
+    background-color: #444444;
+    padding: 0.2rem;
+    color: #e7e4e4;
+  }
   .bottom-panel{
     width:92%;
   }
@@ -976,7 +1107,7 @@ export default {
     border: 2px solid black;
     background-color:#666666;
   }
-}
+
 .loadDataPanel{
       width: 92%;
       z-index: 10000;
@@ -1026,4 +1157,10 @@ export default {
     }
   }
 
+.editor-component {
+  .board {
+    width: 100%;
+    height: 35rem;
+  }
+}
 </style>
