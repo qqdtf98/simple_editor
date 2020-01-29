@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <!-- <spliter class="spliter"/> -->
     <div class="top-panel">
-      <!-- <img class="scale" src="./assets/scale.svg" />
-      <img class="width" src="./assets/width.svg" /> -->
-      <div class="new-box">
         <img class="new" src="./assets/new.svg" />
         <div class="new-text">New</div>
       </div>
@@ -168,7 +164,6 @@
 
     <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
     
-
     <layout
       v-if="layoutOn"
       ref="layouts"
@@ -209,7 +204,6 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
-    <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
   </div>
 </template>
 
@@ -222,7 +216,6 @@ import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
-// import UndoRedo from './components/UndoRedo'
 
 export default {
   components: {
@@ -300,11 +293,12 @@ export default {
       copyTitle: null
     };
   },
-    computed:{
+  computed:{
      testMessage: function (){
         this.test = document.getElementById("newLoaderHtml").innerHTML
         return this.test
      },
+  },
   watch: {
     enabled: function() {
       this.$refs.home.modeSelect(this.enabled);
@@ -328,7 +322,6 @@ export default {
         this.redoWork()
       }
       if(e.which === 67 && this.isCtrl){
-        //복사
       }
     });
     document.addEventListener('keyup', e => {
@@ -359,7 +352,7 @@ export default {
         console.log(parseInt(getComputedStyle(bord).height))
         this.$nextTick(()=>{
           bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
-        })
+        });
         }
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
@@ -368,7 +361,6 @@ export default {
             copy.textContent = this.copyTitle.textContent;
             copy.style.left = e.clientX + 10 + "px";
             copy.style.top = e.clientY + 10 + "px";
-
       }
     });
     this.homeDocument = document.getElementById("dashboard");
@@ -377,21 +369,14 @@ export default {
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
-        // console.log(e.taret)
-        // console.log(tar.parentElement.id)
-        // console.log(tar.parentElement)
-        // let i
         while (1) {
           if (tar.id === "dashboard") {
-            // console.log(tar.className)
-            // console.log('find')
             this.addTag = false;
             this.$refs.home.addContent(this.selectedTag, e.target);
             break;
           } else if (tar.id === "app") {
             break;
           } else {
-            // console.log(tar)
             tar = tar.parentElement;
           }
         }
@@ -803,6 +788,7 @@ export default {
     toggleClicked() {
       console.log("aaa");
     }
+  
   }
 };
 </script>
@@ -815,10 +801,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  // color: #fff;
   display: flex;
   flex-direction: column;
-  // height: 58rem;
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
@@ -1120,7 +1104,6 @@ export default {
 .showSorce{
     margin:14px 0px 0px 0px;
     height:60%;
-    
 }
 .tab-pane{
   height:145%;
@@ -1162,5 +1145,6 @@ export default {
     width: 100%;
     height: 35rem;
   }
+}
 }
 </style>
