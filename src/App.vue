@@ -961,13 +961,13 @@ export default {
     position: fixed;
     left: 4%;
     background-color: #32373a;
-    z-index: 11;
+    z-index: 33;
     top: 6%;
   }
 
   .overview {
     width: 20rem;
-    z-index: 11;
+    z-index: 33;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -1319,7 +1319,7 @@ export default {
 
   .layout {
     width: 20rem;
-    z-index: 11;
+    z-index: 33;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
