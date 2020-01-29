@@ -4,7 +4,7 @@
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
-      <div class="new-box">
+      <div @click="newPage" class="new-box">
         <img class="new" src="./assets/new.svg" />
         <div class="new-text">New</div>
       </div>
@@ -45,16 +45,38 @@
     </div>
     <div class="main-panel">
       <div class="left-panel">
-        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img
+          @click="studioBtn"
+          class="studio-btn"
+          src="./assets/studio.svg"
+          title="studio"
+        />
         <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
+          title="overview"
+        />
+        <img
+          @click="sitemapBtn"
+          class="sitemap-btn"
+          src="./assets/sitemap.svg"
+          title="sitemap"
         />
       </div>
       <div class="editor-panel">
         <div class="center-panel">
-          <div class="title">Editor</div>
+          <div class="top-menu">
+            <div class="file-name" :key="title.index" v-for="title in titles">
+              <div @click="changePage" class="title">
+                {{ title.text }}
+              </div>
+              <img
+                @click="closePage"
+                class="close-icon"
+                src="./assets/close.svg"
+              />
+            </div>
 
           <div class="editor">
             <home
@@ -64,13 +86,82 @@
               @loadData="loadData"
               class="home"
             ></home>
+
+            <img
+              src="./assets/iphone.svg"
+              @click="resizeEditor"
+              class="iphone"
+              title="375 x 667"
+            />
+            <img
+              src="./assets/ipad.svg"
+              @click="resizeEditor"
+              class="ipad"
+              title="768 x 1024"
+            />
+            <img
+              src="./assets/monitor.svg"
+              @click="resizeEditor"
+              class="monitor"
+              title="992 x 687"
+            />
+          </div>
+          <div class="main-menu">
+            <div class="editor">
+              <home
+                ref="home"
+                @componentSelected="componentSelected"
+                @stack-push="stackPush"
+                @comment="commentBtn"
+                class="home"
+              ></home>
+            </div>
+            <div v-if="isCommentOn" class="comment-board">
+              <div class="add-comment">
+                <textarea class="comment-input" placeholder="comment" />
+                <img
+                  @click="addComment"
+                  class="add-comment-btn"
+                  src="./assets/plus.svg"
+                />
+              </div>
+              <div
+                :key="comment.index"
+                v-for="comment in comments"
+                class="comment-wrapper"
+              >
+                <div class="top-box">
+                  <div class="writer">{{ comment.writer }}</div>
+                  <div class="element">{{ comment.element }}</div>
+                  <div class="time">{{ comment.time }}</div>
+                </div>
+                <div class="comment-text">{{ comment.text }}</div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="bottom-panel"></div>
       </div>
       <div class="right-panel">
-        <img @click="layoutBtn" id="codeBtnLayout"class="layout-btn" src="./assets/layout.svg" />
-        <img @click="codeBtn" id="codeBtnFileList"class="code-btn" src="./assets/code.svg" />
+       <img
+          @click="layoutBtn"
+          class="layout-btn"
+          src="./assets/layout.svg"
+          title="layout"
+        />
+        <img
+          @click="codeBtn"
+          class="code-btn"
+          src="./assets/code.svg"
+          title="code-editor"
+        />
+        <img
+          @click="commentBtn"
+          class="comment-btn"
+          src="./assets/comment.svg"
+          title="comment"
+        />
       </div>
     </div>
     
@@ -108,6 +199,8 @@
 
     <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
     
+
+    <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
       v-show="layoutOn"
       ref="layouts"
@@ -126,6 +219,13 @@
       @close-studio="studioBtn"
       class="studio"
     ></studio>
+    <sitemap
+      ref="sitemap"
+      v-show="sitemapOn"
+      @copy-title="copyPage"
+      @close-sitemap="sitemapBtn"
+      class="sitemap"
+    />
     <overview
       v-show="overviewOn"
       ref="overview"
@@ -148,6 +248,9 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
+    <div v-if="isTitle" class="title-copy">
+      bb
+    </div>
     <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
   </div>
 </template>
@@ -161,6 +264,7 @@ import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
+import sitemap from "./components/sitemap";
 // import UndoRedo from './components/UndoRedo'
 
 export default {
@@ -172,7 +276,8 @@ export default {
     overview,
     spliter,
     Switches,
-    CodeLoader
+    CodeLoader,
+    sitemap
   },
   props: ["selectDomElement"],
   name: "App",
@@ -200,6 +305,7 @@ export default {
       overviewOn: false,
       layoutOn: false,
       codeOn: false,
+      sitemapOn: false,
       resizeLoader: false,
       initialTop: null,
       initialY: null,
@@ -209,6 +315,32 @@ export default {
       isData:false,
       tabStep:0,
       js:" 불러올 데이터가 없습니다.",
+      isShift: false,
+      isCommentOn: false,
+      comments: [
+        {
+          writer: "이성민",
+          element: "aaa",
+          time: "2020/01/28",
+          text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          writer: "이성민",
+          element: "adsfsdf",
+          time: "2020/01/27",
+          text:
+            "annnnnnnnnnnnnnnaaaaaaaaaaerggggggggggsdddddddddddssssssssssssssssssssssssssssdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsssssssssssssssssg"
+        }
+      ],
+      commentTarget: null,
+      titles: [
+        {
+          text: "Untitled"
+        }
+      ],
+      editorNum: 1,
+      isTitle: false,
+      copyTitle: null
     };
   },
   computed:{
@@ -229,24 +361,24 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if(e.which === 16){
-        this.isShift = true
+      if (e.which === 16) {
+        this.isShift = true;
       }
-      if (e.which === 90 && this.isCtrl &&!this.isShift) {
+      if (e.which === 90 && this.isCtrl && !this.isShift) {
         this.undoWork();
       }
-      if(e.which === 90 && this.isCtrl && this.isShift){
-        this.redoWork()
+      if (e.which === 90 && this.isCtrl && this.isShift) {
+        this.redoWork();
       }
-      if(e.which === 67 && this.isCtrl){
+      if (e.which === 67 && this.isCtrl) {
         //복사
       }
     });
-    document.addEventListener('keyup', e => {
-      if(e.which === 16){
-        this.isShift = false
+    document.addEventListener("keyup", e => {
+      if (e.which === 16) {
+        this.isShift = false;
       }
-    })
+    });
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -272,11 +404,18 @@ export default {
           bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
         })
         
+      if (this.isTitle) {
+        // let sitemap = document.querySelector("#sitemap");
+            let copy = document.querySelector(".title-copy");
+            // console.log(this.copyTitle)
+            copy.textContent = this.copyTitle.textContent;
+            copy.style.left = e.clientX + 10 + "px";
+            copy.style.top = e.clientY + 10 + "px";
       }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
-      this.resizeLoader = false
+      this.resizeLoader = false;
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
@@ -298,6 +437,9 @@ export default {
             tar = tar.parentElement;
           }
         }
+      }
+      if(this.isTitle){
+        this.isTitle = false
       }
     });
     var h = {};
@@ -361,10 +503,143 @@ export default {
       this.initialY = event.clientY
       this.initialHeight = parseInt(getComputedStyle(loader).height)
     },
-    lo(to){
-      let loader = document.querySelector('.loadDataPanel')
-      loader.style.top = to
+    copyPage(payload) {
+      this.isTitle = true;
+      this.copyTitle = payload.target
     },
+    sitemapBtn() {
+      if (this.sitemapOn === true) {
+        this.sitemapOn = false;
+      } else {
+        this.sitemapOn = true;
+      }
+    },
+    closePage(e) {
+      let i;
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          console.log(i);
+          break;
+        }
+      }
+      this.titles.splice(i, 1);
+      let editorCompo = document.querySelector(".editor-component");
+      editorCompo.removeChild(editorCompo.children[i]);
+    },
+    changePage(e) {
+      let i;
+      let num;
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length - 3;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          num = i;
+          e.target.parentElement.style.backgroundColor = "#545e66";
+        } else {
+          e.target.parentElement.parentElement.children[
+            i
+          ].style.backgroundColor = "#2c3134";
+        }
+      }
+      let j;
+      let editor = document.querySelectorAll(".board");
+      console.log(editor);
+      for (j = 0; j < editor.length; j++) {
+        if (j === num) {
+          editor[j].classList.remove("hidden");
+          editor[j].classList.add("display");
+        } else {
+          editor[j].classList.remove("display");
+          editor[j].classList.add("hidden");
+        }
+      }
+    },
+    newPage(e) {
+      let payload = {
+        text: "aaa"
+      };
+      this.titles.push(payload);
+      let editor = document.querySelector(".board");
+      // let copy = editor.cloneNode(true)
+      let newEditorBox = document.createElement("div");
+      let ne = document.createElement("button");
+      newEditorBox.classList.add("board");
+      newEditorBox.classList.add("hidden");
+      newEditorBox.classList.add("board" + this.editorNum);
+      newEditorBox.appendChild(ne);
+      // console.log(editor.parentElement);
+
+      editor.parentElement.appendChild(newEditorBox);
+
+      // console.log(newEditorBox.classList);
+      this.editorNum++;
+
+      let files = document.querySelectorAll(".file-name");
+      let i;
+      // files[files.length-1].style.backgroundColor = '#2c3134'
+      for (i = 0; i < files.length; i++) {
+        if (i === 0) {
+          files[i].style.backgroundColor = "#545e66";
+        } else {
+          files[i].style.backgroundColor = "#2c3134";
+        }
+      }
+      this.$refs.sitemap.loadSitemap(this.titles);
+    },
+    addComment() {
+      let text = document.querySelector(".comment-input");
+      let payload = {
+        writer: "이성민",
+        element: this.commentTarget.className,
+        time: "",
+        text: text.value
+      };
+      //writer는 유저의 이름으로 element는 선택한 element 또는 빈칸
+      var date = new Date();
+      payload.time =
+        date.getFullYear() + "/" + date.getMonth() + 1 + "/" + date.getDate();
+      this.comments.unshift(payload);
+      text.value = "";
+      // this.comments[this.comments.length-1]
+    },
+    commentBtn(target) {
+      if (this.isCommentOn === false) {
+        this.isCommentOn = true;
+      } else {
+        this.isCommentOn = false;
+      }
+      this.commentTarget = target;
+      console.log(this.commentTarget.className);
+    },
+    resizeEditor(e) {
+      let editor = document.querySelector(".editor-box");
+      if (e.target.className === "iphone") {
+        console.log("aad");
+        editor.style.transform = "scale(1)";
+        editor.style.width = "375px";
+        editor.style.height = "667px";
+      } else if (e.target.className === "ipad") {
+        editor.style.transform = "scale(0.7)";
+        editor.style.width = "768px";
+        editor.style.height = "1024px";
+      } else if (e.target.className === "monitor") {
+        editor.style.transform = "scale(1)";
+        editor.style.width = "992px";
+        editor.style.height = "687px";
+      }
+    }
     codeBtn() {
       if (this.codeOn === true) {
         this.codeOn = false;
@@ -702,13 +977,13 @@ export default {
     position: fixed;
     left: 4%;
     background-color: #32373a;
-    z-index: 11;
+    z-index: 30;
     top: 6%;
   }
 
   .overview {
     width: 20rem;
-    z-index: 11;
+    z-index: 30;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -716,7 +991,17 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
- 
+  .sitemap {
+    width: 20rem;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    z-index: 30;
+    top: 6%;
+  }
+
   .top-panel {
     height: 6%;
     background-color: #3c474c;
@@ -741,7 +1026,7 @@ export default {
       margin-left: 1rem;
       font-size: 0.9rem;
       margin-right: 1rem;
-       border-radius: 0.3rem;
+      border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
         z-index: 9;
@@ -754,37 +1039,55 @@ export default {
         cursor: pointer;
         color: #fff;
       }
-       &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
+    .undo-box,
+    .redo-box,
+    .new-box,
+    .open-box,
+    .save-box,
+    .export-box,
+    .setting-box {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-       padding: 0.2rem;
+      padding: 0.2rem;
       margin-right: 1rem;
       font-size: 0.9rem;
       border-radius: 0.3rem;
-      .undo, .redo, .new, .open, .save, .export, .setting  {
+      .undo,
+      .redo,
+      .new,
+      .open,
+      .save,
+      .export,
+      .setting {
         cursor: pointer;
         height: 1.2rem;
         margin-right: 0.5rem;
       }
-      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
+      .undo-text,
+      .redo-text,
+      .new-text,
+      .open-text,
+      .save-text,
+      .export-text,
+      .setting-text {
         cursor: pointer;
         color: #fff;
       }
-      &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .new-box{
+    .new-box {
       margin-left: 1rem;
     }
-    .undo-box{
-      .undo{
+    .undo-box {
+      .undo {
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
@@ -794,7 +1097,6 @@ export default {
         height: 1.2rem;
       }
     }
-    
   }
   .main-panel {
     width: 100%;
@@ -819,6 +1121,11 @@ export default {
         margin-top: 1.3rem;
         cursor: pointer;
       }
+      .sitemap-btn {
+        width: 1rem;
+        margin-top: 1.3rem;
+        cursor: pointer;
+      }
     }
     .right-panel {
       width: 4%;
@@ -834,7 +1141,12 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        background-color: #fff;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
+      }
+      .comment-btn {
+        margin-top: 1.6rem;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
@@ -851,37 +1163,167 @@ export default {
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        position: relative;
-
-        .title {
-          position: absolute;
-          text-align: center;
-          left: 0;
-          color: #fff;
-          height: 4.02%;
-          background-color: #545e66;
-          padding: 0.3rem;
-          padding-left: 0.9rem;
-          padding-right: 0.9rem;
-          top: 0;
-        }
-        .editor {
+        .top-menu {
+          display: flex;
+          flex-direction: row;
           width: 100%;
-          position: absolute;
+          .file-name {
+            left: 0;
+            cursor: pointer;
+            // background-color: #545e66;
+            top: 0;
+            display: flex;
+            flex-direction: row;
+            border-top-left-radius: 0.3rem;
+            border-top-right-radius: 0.3rem;
+            padding-left: 0.15rem;
+            padding-right: 0.15rem;
+
+            .title {
+              text-align: center;
+              padding: 0.1rem;
+              padding-left: 0.4rem;
+              padding-right: 0.3rem;
+              color: #fff;
+              height: auto;
+            }
+            .close-icon {
+              width: 0.7rem;
+              padding-right: 0.1rem;
+              margin-right: 0.2rem;
+            }
+          }
+
+          .monitor,
+          .iphone,
+          .ipad {
+            text-align: center;
+            right: 0;
+            top: 0.35rem;
+            width: 1.4rem;
+            cursor: pointer;
+            z-index: 28;
+            &:hover {
+              border-radius: 0.15rem;
+              background-color: #888888;
+            }
+          }
+          .iphone {
+            right: 5rem;
+            margin-right: 0.7rem;
+          }
+          .ipad {
+            width: 1.3rem;
+            margin-right: 0.7rem;
+            right: 2.5rem;
+          }
+          .monitor {
+            width: 1.3rem;
+          }
+        }
+
+        .main-menu {
+          width: 100%;
           bottom: 0;
           height: 96%;
-          border: 3px solid #545e66;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          // overflow: hidden;
-          .home {
+          flex-direction: row;
+
+          .editor {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #545e66;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 70rem;
-            height: 55rem;
-            overflow: hidden;
+            // overflow: hidden;
+            .home {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 70rem;
+              height: 100%;
+              overflow: hidden;
+            }
+          }
+          .hidden {
+            display: none;
+          }
+          .display {
+            display: block;
+          }
+          .comment-board {
+            // position: absolute;
+            right: 0;
+            width: 25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #dddddd;
+            .add-comment {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              display: flex;
+              flex-direction: row;
+              width: 19rem;
+              background-color: #ca8f8f;
+              cursor: pointer;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+              .comment-input {
+                background-color: inherit;
+                // border:1px solid #646464;
+                border: none;
+                width: 15rem;
+                border-radius: 0.3rem;
+              }
+              .add-comment-btn {
+                width: 1rem;
+                margin-left: 0.5rem;
+                right: 0;
+              }
+            }
+            .comment-wrapper {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              width: 19rem;
+              background-color: #fff;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+
+              .top-box {
+                width: 100%;
+                margin-bottom: 0.15rem;
+                display: flex;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                .writer {
+                  left: 0;
+                  font-weight: bold;
+                  font-size: 1.1rem;
+                  color: #696969;
+                }
+                .element {
+                  width: 10rem;
+                  position: absolute;
+                  overflow: hidden;
+                  right: 5.5rem;
+                }
+                .time {
+                  position: absolute;
+                  width: 5rem;
+                  right: 0;
+                }
+              }
+              .comment-text {
+                font-size: 0.8rem;
+                width: 100%;
+                text-align: left;
+                color: #8f8f8f;
+                word-break: break-all;
+              }
+            }
           }
         }
       }
@@ -910,19 +1352,19 @@ export default {
     z-index: 12;
     top: 6%;
   }
-   .loader-bord {
-     cursor: n-resize;
-    height:7px;
+  .loader-bord {
+    cursor: n-resize;
+    height: 7px;
     width: 92%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
-    background-color:#545e66 ;
+    background-color: #545e66;
   }
 
   .layout {
     width: 20rem;
-    z-index: 11;
+    z-index: 30;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -996,6 +1438,21 @@ export default {
 }
 #pills-home{
   height:145%;
+  .title-copy {
+    text-align: left;
+    height: 1.5rem;
+    position: fixed;
+    z-index: 33;
+    background-color: #444444;
+    padding: 0.2rem;
+    color: #e7e4e4;
+  }
+}
+.editor-component {
+  .board {
+    width: 100%;
+    height: 35rem;
+  }
 }
 #pills-profile{
   height:145%;

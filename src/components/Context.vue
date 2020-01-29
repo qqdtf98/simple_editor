@@ -2,7 +2,7 @@
   <div id="context">
     <ol>
         <li @click="addMouseEvent" >마우스 이벤트</li>
-        <li>ㅇㅇㅇ</li>
+        <li @click="comment">comment</li>
         <li>ㅇㅇㅇ</li>
     </ol>
   </div>
@@ -18,6 +18,9 @@ export default {
     }
   },
   methods: {
+    comment(){
+      this.$emit('comment')
+    },
     addMouseEvent (event) {
     // event 선택
       let mo = 'mousemove'
