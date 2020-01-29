@@ -4,7 +4,7 @@
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
-      <div class="new-box">
+      <div @click="newPage" class="new-box">
         <img class="new" src="./assets/new.svg" />
         <div class="new-text">New</div>
       </div>
@@ -43,131 +43,197 @@
         <div @click="redoWork" class="redo-text">Redo</div>
       </div>
     </div>
+
+
     <div class="main-panel">
       <div class="left-panel">
-        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img
+          @click="studioBtn"
+          class="studio-btn"
+          src="./assets/studio.svg"
+          title="studio"
+        />
         <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
-        />C:\Users\anylogic\Desktop\any-editor\src\App.vue
+          title="overview"
+        />
+        <img
+          @click="sitemapBtn"
+          class="sitemap-btn"
+          src="./assets/sitemap.svg"
+          title="sitemap"
+        />
       </div>
       <div class="editor-panel">
         <div class="center-panel">
-          <div class="title">Editor</div>
+          <div class="top-menu">
+            <div class="file-name" :key="title.index" v-for="title in titles">
+              <div @click="changePage" class="title">
+                {{ title.text }}
+              </div>
+              <img
+                @click="closePage"
+                class="close-icon"
+                src="./assets/close.svg"
+              />
+            </div>
+          
 
-            <img
-              src="./assets/iphone.svg"
-              @click="resizeEditor"
-              class="iphone"
-              title="375 x 667"
-            />
-            <img
-              src="./assets/ipad.svg"
-              @click="resizeEditor"
-              class="ipad"
-              title="768 x 1024"
-            />
-            <img
-              src="./assets/monitor.svg"
-              @click="resizeEditor"
-              class="monitor"
-              title="992 x 687"
-            />
+          <img
+            src="./assets/iphone.svg"
+            @click="resizeEditor"
+            class="iphone"
+            title="375 x 667"
+          />
+          <img
+            src="./assets/ipad.svg"
+            @click="resizeEditor"
+            class="ipad"
+            title="768 x 1024"
+          />
+          <img
+            src="./assets/monitor.svg"
+            @click="resizeEditor"
+            class="monitor"
+            title="992 x 687"
+          />
           </div>
-          <div class="main-menu">
-            <div class="editor">
-              <home
-               ref="home"C:\Users\anylogic\Desktop\any-editor\src\App.vue
+        <div class="main-menu">
+          <div class="editor">
+            <home
+              ref="home"
               @componentSelected="componentSelected"
               @stack-push="stackPush"
               @loadData="loadData"
               class="home"
-              ></home>
+            ></home>
+          </div>
+          <div v-if="isCommentOn" class="comment-board">
+            <div class="add-comment">
+              <textarea class="comment-input" placeholder="comment" />
+              <img
+                @click="addComment"
+                class="add-comment-btn"
+                src="./assets/plus.svg"
+              />
             </div>
-            <div v-if="isCommentOn" class="comment-board">
-              <div class="add-comment">
-                <textarea class="comment-input" placeholder="comment" />
-                <img
-                  @click="addComment"
-                  class="add-comment-btn"
-                  src="./assets/plus.svg"
-                />
+            <div
+              :key="comment.index"
+              v-for="comment in comments"
+              class="comment-wrapper"
+            >
+              <div class="top-box">
+                <div class="writer">{{ comment.writer }}</div>
+                <div class="element">{{ comment.element }}</div>
+                <div class="time">{{ comment.time }}</div>
               </div>
-              <div
-                :key="comment.index"
-                v-for="comment in comments"
-                class="comment-wrapper"
-              >
-                <div class="top-box">
-                  <div class="writer">{{ comment.writer }}</div>
-                  <div class="element">{{ comment.element }}</div>
-                  <div class="time">{{ comment.time }}</div>
-                </div>
-                <div class="comment-text">{{ comment.text }}</div>
-              </div>
+              <div class="comment-text">{{ comment.text }}</div>
             </div>
           </div>
         </div>
-        <div class="bottom-panel"></div>
       </div>
-
-      <div class="right-panel">
-        <img
-          @click="layoutBtn"
-          class="layout-btn"
-          src="./assets/layout.svg"
-          title="layout"
-        />
-        <img
-          @click="codeBtn"
-          class="code-btn"
-          src="./assets/code.svg"
-          title="code-editor"
-        />
-        <img
-          @click="commentBtn"
-          class="comment-btn"
-          src="./assets/comment.svg"
-          title="comment"
-        />
-      </div>
-    </div>
-    
-    <div class="row bottom-panel">
-      
+      <!-- <div class="bottom-panel"></div> -->
+      <div class="row bottom-panel">
       <div v-show="isData" class="loadDataPanel">
         <div @mousedown="loaderResize" class="loader-bord"></div>
-        <div class="studio-text-box"> 
+        <div class="studio-text-box">
           <span class="studio-text">CodeReview</span>
-          <img @click="closeCodeRiview"src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+          <img
+            @click="closeCodeReview"
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
+            class="close-btn"
+          />
         </div>
         <div class="showSorce">
-          <div v-show="tabStep===1"  class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-              <div class="showCode">
-                  <pre id="preview1" v-highlightjs ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
-              </div>
+          <div
+            v-show="tabStep === 1"
+            class="tab-pane"
+            id="pills-home"
+            role="tabpanel"
+            aria-labelledby="pills-home-tab"
+          >
+            <div class="showCode">
+              <pre
+                id="preview1"
+                v-highlightjs
+              ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
+            </div>
           </div>
-          <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-              <div class="showCode">
-                  <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
-              </div>
+          <div
+            v-show="tabStep === 2"
+            class="tab-pane"
+            id="pills-profile"
+            role="tabpanel"
+            aria-labelledby="pills-profile-tab"
+          >
+            <div class="showCode">
+              <pre
+                v-highlightjs
+                id="preview2"
+              ><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+            </div>
           </div>
-          <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-              <div class="showCode">
-                  <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
-                  <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
-              </div>
+          <div
+            v-show="tabStep === 3"
+            class="tab-pane"
+            id="pills-contact"
+            role="tabpanel"
+            aria-labelledby="pills-contact-tab"
+          >
+            <div class="showCode">
+              <textarea class="showJS" v-model="js" id="preview3">
+ 불러올 데이터가 없습니다. </textarea
+              >
+              <input
+                style="float:left;"
+                type="submit"
+                value="Apply"
+                @click="inputFile"
+                id="getfile"
+                accept="text/*"
+              />
+            </div>
           </div>
         </div>
       </div>
-          <span class="fileTitle" @click="clickSoure" name="html">HTML</span>
-          <span class="fileTitle" @click="clickSoure" name="css">CSS</span>
-          <span class="fileTitle" @click="clickSoure" name="js">JavaScript</span>
+      <span class="fileTitle" @click="clickSource" name="html">HTML</span>
+      <span class="fileTitle" @click="clickSource" name="css">CSS</span>
+      <span class="fileTitle" @click="clickSource" name="js">JavaScript</span>
+    </div>
     </div>
 
-    <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
+    <div class="right-panel">
+      <img
+        @click="layoutBtn"
+        class="layout-btn"
+        src="./assets/layout.svg"
+        title="layout"
+      />
+      <img
+        @click="codeBtn"
+        class="code-btn"
+        src="./assets/code.svg"
+        title="code-editor"
+      />
+      <img
+        @click="commentBtn"
+        class="comment-btn"
+        src="./assets/comment.svg"
+        title="comment"
+      />
+    </div>
+  </div>
     
+
+    <CodeLoader
+      @setFile="setFile"
+      :loaderData="message"
+      ref="codeloader"
+      v-show="codeOn"
+      class="code-loader"
+    ></CodeLoader>
 
     <layout
       v-if="layoutOn"
@@ -187,6 +253,13 @@
       @close-studio="studioBtn"
       class="studio"
     ></studio>
+    <sitemap
+      ref="sitemap"
+      v-show="sitemapOn"
+      @copy-title="copyPage"
+      @close-sitemap="sitemapBtn"
+      class="sitemap"
+    />
     <overview
       v-if="overviewOn"
       ref="overview"
@@ -209,8 +282,11 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
-    <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
-  </div>
+    <div v-if="isTitle" class="title-copy">
+      bb
+    </div>
+</div>
+  <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
 </template>
 
 <script>
@@ -222,7 +298,7 @@ import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
-// import UndoRedo from './components/UndoRedo'
+import sitemap from "./components/sitemap";
 
 export default {
   components: {
@@ -233,7 +309,8 @@ export default {
     overview,
     spliter,
     Switches,
-    CodeLoader
+    CodeLoader,
+    sitemap
   },
   props: ["selectDomElement"],
   name: "App",
@@ -244,6 +321,7 @@ export default {
       homeLayoutLocation: "",
       tagDescription: false,
       childOFchil: [],
+       sitemapOn: false,
       enabled: false,
       homeDocument: "",
       uiDescription: false,
@@ -300,11 +378,12 @@ export default {
       copyTitle: null
     };
   },
-    computed:{
+  computed:{
      testMessage: function (){
         this.test = document.getElementById("newLoaderHtml").innerHTML
         return this.test
      },
+  },
   watch: {
     enabled: function() {
       this.$refs.home.modeSelect(this.enabled);
@@ -328,7 +407,6 @@ export default {
         this.redoWork()
       }
       if(e.which === 67 && this.isCtrl){
-        //복사
       }
     });
     document.addEventListener('keyup', e => {
@@ -359,7 +437,7 @@ export default {
         console.log(parseInt(getComputedStyle(bord).height))
         this.$nextTick(()=>{
           bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
-        })
+        });
         }
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
@@ -368,7 +446,6 @@ export default {
             copy.textContent = this.copyTitle.textContent;
             copy.style.left = e.clientX + 10 + "px";
             copy.style.top = e.clientY + 10 + "px";
-
       }
     });
     this.homeDocument = document.getElementById("dashboard");
@@ -377,24 +454,20 @@ export default {
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
-        // console.log(e.taret)
-        // console.log(tar.parentElement.id)
-        // console.log(tar.parentElement)
-        // let i
         while (1) {
           if (tar.id === "dashboard") {
-            // console.log(tar.className)
-            // console.log('find')
             this.addTag = false;
             this.$refs.home.addContent(this.selectedTag, e.target);
             break;
           } else if (tar.id === "app") {
             break;
           } else {
-            // console.log(tar)
             tar = tar.parentElement;
           }
         }
+      }
+      if(this.isTitle){
+        this.isTitle = false
       }
     });
     var h = {};
@@ -450,6 +523,56 @@ export default {
     this.hasht = h;
   },
   methods: {
+     clickSource(e){
+      this.isData=true
+      console.log("s")
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
+      if (e.target.getAttribute('name')=='html') {
+          this.tabStep = 1
+          // this.chageContent()
+          console.log("s")
+      } else if (e.target.getAttribute('name')=='css') {
+          this.tabStep = 2
+      } else if (e.target.getAttribute('name')=='js') {
+          this.tabStep = 3
+      }
+    },
+    inputFile(e){
+        alert("저장되었습니다")
+        // console.log(this.message[2])
+        var file = document.querySelector('#getfile');
+        file.onchange = function () { 
+            var fileList = file.files ;
+            
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsText(fileList [0]);
+
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').textContent = reader.result ;
+            }; 
+        }; 
+    },
+    setFile(file){
+      // console.log(file)
+      this.chageContent()
+      this.isData=true
+       if (file=='html') {
+          this.tabStep = 1
+
+      } else if (file=='css') {
+          this.tabStep = 2
+      } else if (file=='js') {
+          this.tabStep = 3
+      }
+    },
+    closeCodeReview(){
+      this.isData=false
+    },
+     loadData(data){
+      this.message = data
+    },
     loaderResize(event){
       let loader = document.querySelector(".loadDataPanel");
       // console.log( document.querySelector(".code-loader"))
@@ -803,6 +926,7 @@ export default {
     toggleClicked() {
       console.log("aaa");
     }
+  
   }
 };
 </script>
@@ -815,10 +939,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  // color: #fff;
   display: flex;
   flex-direction: column;
-  // height: 58rem;
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
@@ -847,6 +969,17 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
+  .sitemap {
+    width: 20rem;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    z-index: 30;
+    top: 6%;
+  }
+
  
   .top-panel {
     height: 6%;
@@ -950,6 +1083,11 @@ export default {
         margin-top: 1.3rem;
         cursor: pointer;
       }
+      .sitemap-btn {
+        width: 1rem;
+        margin-top: 1.3rem;
+        cursor: pointer;
+      }
     }
     .right-panel {
       width: 4%;
@@ -982,37 +1120,167 @@ export default {
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        position: relative;
-
-        .title {
-          position: absolute;
-          text-align: center;
-          left: 0;
-          color: #fff;
-          height: 4.02%;
-          background-color: #545e66;
-          padding: 0.3rem;
-          padding-left: 0.9rem;
-          padding-right: 0.9rem;
-          top: 0;
-        }
-        .editor {
+        .top-menu {
+          display: flex;
+          flex-direction: row;
           width: 100%;
-          position: absolute;
+          .file-name {
+            left: 0;
+            cursor: pointer;
+            // background-color: #545e66;
+            top: 0;
+            display: flex;
+            flex-direction: row;
+            border-top-left-radius: 0.3rem;
+            border-top-right-radius: 0.3rem;
+            padding-left: 0.15rem;
+            padding-right: 0.15rem;
+
+            .title {
+              text-align: center;
+              padding: 0.1rem;
+              padding-left: 0.4rem;
+              padding-right: 0.3rem;
+              color: #fff;
+              height: auto;
+            }
+            .close-icon {
+              width: 0.7rem;
+              padding-right: 0.1rem;
+              margin-right: 0.2rem;
+            }
+          }
+
+          .monitor,
+          .iphone,
+          .ipad {
+            text-align: center;
+            right: 0;
+            top: 0.35rem;
+            width: 1.4rem;
+            cursor: pointer;
+            z-index: 28;
+            &:hover {
+              border-radius: 0.15rem;
+              background-color: #888888;
+            }
+          }
+          .iphone {
+            right: 5rem;
+            margin-right: 0.7rem;
+          }
+          .ipad {
+            width: 1.3rem;
+            margin-right: 0.7rem;
+            right: 2.5rem;
+          }
+          .monitor {
+            width: 1.3rem;
+          }
+        }
+
+        .main-menu {
+          width: 100%;
           bottom: 0;
           height: 96%;
-          border: 3px solid #545e66;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          // overflow: hidden;
-          .home {
+          flex-direction: row;
+
+          .editor {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #545e66;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 70rem;
-            height: 55rem;
-            overflow: hidden;
+            // overflow: hidden;
+            .home {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 70rem;
+              height: 100%;
+              overflow: hidden;
+            }
+          }
+          .hidden {
+            display: none;
+          }
+          .display {
+            display: block;
+          }
+          .comment-board {
+            // position: absolute;
+            right: 0;
+            width: 25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #dddddd;
+            .add-comment {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              display: flex;
+              flex-direction: row;
+              width: 19rem;
+              background-color: #ca8f8f;
+              cursor: pointer;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+              .comment-input {
+                background-color: inherit;
+                // border:1px solid #646464;
+                border: none;
+                width: 15rem;
+                border-radius: 0.3rem;
+              }
+              .add-comment-btn {
+                width: 1rem;
+                margin-left: 0.5rem;
+                right: 0;
+              }
+            }
+            .comment-wrapper {
+              border-radius: 0.3rem;
+              margin: 0.2rem;
+              padding: 0.2rem;
+              width: 19rem;
+              background-color: #fff;
+              box-shadow: 1px 0.5px 0.5px #c0c0c0;
+
+              .top-box {
+                width: 100%;
+                margin-bottom: 0.15rem;
+                display: flex;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                .writer {
+                  left: 0;
+                  font-weight: bold;
+                  font-size: 1.1rem;
+                  color: #696969;
+                }
+                .element {
+                  width: 10rem;
+                  position: absolute;
+                  overflow: hidden;
+                  right: 5.5rem;
+                }
+                .time {
+                  position: absolute;
+                  width: 5rem;
+                  right: 0;
+                }
+              }
+              .comment-text {
+                font-size: 0.8rem;
+                width: 100%;
+                text-align: left;
+                color: #8f8f8f;
+                word-break: break-all;
+              }
+            }
           }
         }
       }
@@ -1021,6 +1289,7 @@ export default {
         width: 100%;
         background-color: #3c474c;
         height: 5%;
+        margin: 0;
       }
     }
   }
@@ -1120,7 +1389,6 @@ export default {
 .showSorce{
     margin:14px 0px 0px 0px;
     height:60%;
-    
 }
 .tab-pane{
   height:145%;
@@ -1162,5 +1430,6 @@ export default {
     width: 100%;
     height: 35rem;
   }
+}
 }
 </style>
