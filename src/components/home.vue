@@ -12,6 +12,12 @@
         @mousemove="onmouseMove"
         @mousedown="mousedown"
       >
+      <spliter />
+        <HtmlLoader  
+        class="navi"
+        @loadData="loadData"
+
+        />
         <div class="board">
           <ss />
           <!--       
@@ -616,12 +622,10 @@ export default {
       this.value = data.value;
 
       // console.log(element)
-      element.style[this.style] = this.value;
-
-      //console.log("꼈다")
+      element.style[this.style] = this.value
+      // console.log("바꼈다")
       // console.log(document.getElementsByClassName(this.target)[0].className)
-      //console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
-      this.$emit("stack-push", style);
+      // console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
     },
     borderStyleChanged(data) {
       // console.log(data)
@@ -811,7 +815,6 @@ export default {
           break;
         }
       }
-      console.log(nChild);
       var remove = {
         work: "remove",
         position: this.clickedElement.parentNode,
@@ -1077,6 +1080,10 @@ export default {
           // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
         });
       }
+    },
+    loadData(data){
+      // console.log(data)
+       this.$emit('loadData', data)
     }
   }
 };

@@ -78,6 +78,15 @@
               />
             </div>
 
+          <div class="editor">
+            <home
+              ref="home"
+              @componentSelected="componentSelected"
+              @stack-push="stackPush"
+              @loadData="loadData"
+              class="home"
+            ></home>
+
             <img
               src="./assets/iphone.svg"
               @click="resizeEditor"
@@ -134,9 +143,8 @@
 
         <div class="bottom-panel"></div>
       </div>
-
       <div class="right-panel">
-        <img
+       <img
           @click="layoutBtn"
           class="layout-btn"
           src="./assets/layout.svg"
@@ -156,11 +164,45 @@
         />
       </div>
     </div>
+    
+    <div class="row bottom-panel">
+      
+      <div v-show="isData" class="loadDataPanel">
+        <div @mousedown="loaderResize" class="loader-bord"></div>
+        <div class="studio-text-box"> 
+          <span class="studio-text">CodeReview</span>
+          <img @click="closeCodeRiview"src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+        </div>
+        <div class="showSorce">
+          <div v-show="tabStep===1"  class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+              <div class="showCode">
+                  <pre id="preview1" v-highlightjs ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
+              </div>
+          </div>
+          <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+              <div class="showCode">
+                  <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+              </div>
+          </div>
+          <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+              <div class="showCode">
+                  <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
+                  <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
+              </div>
+          </div>
+        </div>
+      </div>
+          <span class="fileTitle" @click="clickSoure" name="html">HTML</span>
+          <span class="fileTitle" @click="clickSoure" name="css">CSS</span>
+          <span class="fileTitle" @click="clickSoure" name="js">JavaScript</span>
+    </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>
+    <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
+    
+
     <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
     <layout
-      v-if="layoutOn"
+      v-show="layoutOn"
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
@@ -169,7 +211,7 @@
       class="layout"
     ></layout>
     <studio
-      v-if="studioOn"
+      v-show="studioOn"
       @desc-close="tagNotSelected"
       @ui-select="uiSelected"
       @tag-select="tagSelected"
@@ -185,7 +227,7 @@
       class="sitemap"
     />
     <overview
-      v-if="overviewOn"
+      v-show="overviewOn"
       ref="overview"
       @selectDomElement="selectDomElemented"
       @inParentTreeOption="inParentTreeOption"
@@ -251,8 +293,6 @@ export default {
       uiDescription: false,
       dom: "",
       addTag: false,
-      selectedTemplate: null,
-      selectedTag: null,
       hasht: null,
       isPustHtml: true,
       mouseOverTarget: null,
@@ -270,6 +310,11 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
+      isShift : false,
+      message:"",
+      isData:false,
+      tabStep:0,
+      js:" 불러올 데이터가 없습니다.",
       isShift: false,
       isCommentOn: false,
       comments: [
@@ -298,12 +343,17 @@ export default {
       copyTitle: null
     };
   },
-  watch: {
-    enabled: function() {
-      this.$refs.home.modeSelect(this.enabled);
-    }
+  computed:{
+	  testMessage: function (){
+		  this.test = document.getElementById("newLoaderHtml").innerHTML
+		  return this.test
+	  },
+     
   },
   mounted() {
+     
+    this.highlightSyntax();
+  
     $(window).resize(() => {
       this.$refs.home.windowResized();
     });
@@ -344,17 +394,16 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
-      if (this.resizeLoader) {
-        let loader = document.querySelector(".code-loader");
-        let bord = document.querySelector(".loader-bord");
-        loader.style.height =
-          this.initialHeight - (e.clientY - this.initialY) + "px";
-        console.log(parseInt(getComputedStyle(loader).top));
-        console.log(parseInt(getComputedStyle(bord).height));
-        this.$nextTick(() => {
-          bord.style.top = parseInt(getComputedStyle(loader).top) + "px";
-        });
-      }
+      if(this.resizeLoader){
+        let loader = document.querySelector(".loadDataPanel");
+        let bord = document.querySelector('.loader-bord')
+        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
+        console.log(parseInt(getComputedStyle(loader).top))
+        console.log(parseInt(getComputedStyle(bord).height))
+        this.$nextTick(()=>{
+          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
+        })
+        
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
             let copy = document.querySelector(".title-copy");
@@ -446,6 +495,14 @@ export default {
     this.hasht = h;
   },
   methods: {
+    loaderResize(event){
+      let loader = document.querySelector(".loadDataPanel");
+      // console.log( document.querySelector(".code-loader"))
+      // console.log( document.querySelector(".loadDataPanel"))
+      this.resizeLoader = true
+      this.initialY = event.clientY
+      this.initialHeight = parseInt(getComputedStyle(loader).height)
+    },
     copyPage(payload) {
       this.isTitle = true;
       this.copyTitle = payload.target
@@ -582,28 +639,21 @@ export default {
         editor.style.width = "992px";
         editor.style.height = "687px";
       }
-    },
-    loaderResize(event) {
-      let loader = document.querySelector(".code-loader");
-      this.resizeLoader = true;
-      this.initialY = event.clientY;
-      this.initialHeight = parseInt(getComputedStyle(loader).height);
-    },
-    lo(to) {
-      let loader = document.querySelector(".code-loader");
-      loader.style.top = to;
-    },
+    }
     codeBtn() {
       if (this.codeOn === true) {
         this.codeOn = false;
       } else {
         this.codeOn = true;
         this.$nextTick(() => {
-          let loader = document.querySelector(".code-loader");
-          let bord = document.querySelector(".loader-bord");
-          bord.style.top = getComputedStyle(loader).top;
-          this.initialTop = getComputedStyle(loader).top;
+          let loader = document.querySelector(".loadDataPanel");
+          let bord = document.querySelector('.loader-bord')
+          bord.style.top = getComputedStyle(loader).top 
+          this.initialTop = getComputedStyle(loader).top
         });
+      }
+      if (this.layoutOn === true) {
+        this.layoutOn = false;
       }
     },
     layoutBtn() {
@@ -611,6 +661,10 @@ export default {
         this.layoutOn = false;
       } else {
         this.layoutOn = true;
+      }
+
+      if (this.codeOn === true) {
+        this.codeOn = false;
       }
     },
     studioBtn() {
@@ -694,7 +748,24 @@ export default {
       }
     },
     stackPush(elem) {
+      // console.log("sdsa")
       this.workStack.push(elem);
+      if(this.tabStep==1){
+            // document.querySelector('#preview').textContent = this.loadData[0]
+            this.message[0] = document.getElementById("newLoaderHtml").innerHTML
+            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
+            console.log(document.getElementById("newLoaderHtml").innerHTML)
+            console.log(this.message[0])
+      }
+      else if(this.tabStep==2){
+          
+          document.querySelector('#preview2').innerHTML = this.message[1]
+      }
+      else if(this.tabStep==3){
+
+          document.querySelector('#preview3').innerText = this.message[2]
+      }
+
     },
     userSelectedTagComponent(e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
@@ -711,7 +782,9 @@ export default {
       });
     },
     componentSelected(payload) {
-      this.$refs.layouts.isData = true;
+      this.layoutOn=true
+      // $('.layout-btn').trigger('click')
+      // this.$refs.layouts.isData = true;
       this.payload = payload.target;
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
@@ -724,9 +797,11 @@ export default {
         this.isPustHtml = false;
       }
       this.$refs.overview.domSelection(payload.target);
+      this.$refs.layouts.isData = true;
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
+      console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },
@@ -795,7 +870,82 @@ export default {
       this.$refs.home.borderStyleChanged(e);
     },
     toggleClicked() {
-      console.log("aaa");
+    },
+    loadData(data){
+      this.message = data
+    },
+    chageContent(){
+      console.log(this.message)
+      document.getElementById("newLoaderHtml").innerHTML
+        if(this.tabStep==1){
+            // document.querySelector('#preview').textContent = this.loadData[0]
+            this.test = document.getElementById("newLoaderHtml").innerHTML
+            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
+            console.log("dsd")
+        }
+        else if(this.tabStep==2){
+            document.querySelector('#preview2').innerHTML = this.message[1]
+        }
+        else if(this.tabStep==3){
+            console.log(document.querySelector('#preview3'))
+            console.log(this.message[2])
+            this.js = this.message[2]
+            // document.querySelector('#preview3').innerText = this.message[2]
+        }
+    },
+    inputFile(e){
+        alert("저장되었습니다")
+        // console.log(this.message[2])
+        var file = document.querySelector('#getfile');
+        file.onchange = function () { 
+            var fileList = file.files ;
+            
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsText(fileList [0]);
+
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').textContent = reader.result ;
+            }; 
+        }; 
+    },
+    clickSoure(e){
+      this.isData=true
+      console.log("s")
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
+      if (e.target.getAttribute('name')=='html') {
+          this.tabStep = 1
+          // this.chageContent()
+          console.log("s")
+      } else if (e.target.getAttribute('name')=='css') {
+          this.tabStep = 2
+      } else if (e.target.getAttribute('name')=='js') {
+          this.tabStep = 3
+      }
+    },
+    setFile(file){
+      // console.log(file)
+      this.chageContent()
+      this.isData=true
+       if (file=='html') {
+          this.tabStep = 1
+
+      } else if (file=='css') {
+          this.tabStep = 2
+      } else if (file=='js') {
+          this.tabStep = 3
+      }
+    },
+    highlightSyntax(){
+      $('code').html(this.escapedQuery);
+
+      $('.syntax-highlight').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });      
+    },
+    closeCodeRiview(){
+      this.isData=false
     }
   }
 };
@@ -1186,12 +1336,21 @@ export default {
     }
   }
   .code-loader {
-    width: 92%;
-    z-index: 10000;
+    // width: 92%;
+    // z-index: 10000;
+    // position: fixed;
+    // bottom: 5%;
+    // height: 20rem;
+    // background-color: #23282b;
+    width: 20rem;
+    z-index: 11;
+    height: 30rem;
+    border: 1.5px solid #000000;
     position: fixed;
-    bottom: 5%;
-    height: 20rem;
-    background-color: #23282b;
+    right: 4%;
+    background-color: #32373a;
+    z-index: 12;
+    top: 6%;
   }
   .loader-bord {
     cursor: n-resize;
@@ -1244,6 +1403,41 @@ export default {
     float: left;
     filter: blur(0.8px);
   }
+  .bottom-panel{
+    width:92%;
+  }
+  .fileTitle {
+    font-size: 15px;
+    color:white;
+    font-weight: bold;
+    padding: 7px 14px;
+    vertical-align: bottom;
+    display: inline-block;
+    margin-right: 25%;
+    float: none;
+    border: 2px solid black;
+    background-color:#666666;
+  }
+}
+.loadDataPanel{
+      width: 92%;
+      z-index: 10000;
+      position: fixed;
+      bottom: 5%;
+      height: 100%;
+      background-color: #23282b;
+        
+    }
+.showSorce{
+    margin:14px 0px 0px 0px;
+    height:60%;
+    
+}
+.tab-pane{
+  height:145%;
+}
+#pills-home{
+  height:145%;
   .title-copy {
     text-align: left;
     height: 1.5rem;
@@ -1260,4 +1454,33 @@ export default {
     height: 35rem;
   }
 }
+#pills-profile{
+  height:145%;
+}
+#pills-contact{
+  height:125%;
+}
+.showCode{
+    height:100%;
+}
+.studio-text-box {
+    height: 7%;
+    justify-content: center;
+    position: relative;
+    .studio-text {
+      padding: 0.2rem;
+      color: #ffffff;
+      font-size: 1.4rem;
+      position: absolute;
+      left: 0.4rem;
+    }
+    .close-btn{
+      width: 1.1rem;
+      right: 0.4rem;
+      top: 0.4rem;
+      cursor:pointer;
+      position: absolute;
+    }
+  }
+
 </style>

@@ -1,6 +1,9 @@
 <template>
-
   <div>
+    <div class="studio-text-box"> 
+        <span class="studio-text">Layout</span>
+        <img @click="closeLayout"src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+	</div>
 	<!-- Nav tabs -->
 	<!-- <img @click="closeOverview" class="close-btn" src="../assets/close.svg" /> -->
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
@@ -16,7 +19,7 @@
 	
 	</ul>
 	<div class="tab-content" id="pills-tabContent">
-		<div class="no-text" v-if="!isData">No components selected</div>
+		<div class="no-text" v-show="!isData">No components selected</div>
   <div v-if="isData"  class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
 	<!-- Look % Feel-->
@@ -209,6 +212,12 @@
 					<input style="display:none"type="file" @change="onFileSelected" id="getfile"ref="fileInput">
 					<button @click="$refs.fileInput.click()">Pick File</button>
 					<button @click="onUpload">Save</button>
+				</div>
+				<div class="row">
+					<span class="col-md-5">image-size</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="imageSizeSelected" :options="imageSize" @change="submitChangeImageSize"></b-form-select>
+					</div>
 				</div>
 			</b-collapse>
 		</b-card>
@@ -519,9 +528,9 @@
 </div>
 
   <!-- Options v-if="isData" -->
-  <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+  <div v-show="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
 	<div  role="tablist">
-<div>
+	<div>
 		<div  role="tablist">
 		<b-card no-body class="mb-1" >
 			<b-card-header header-tag="header" class="p-1" role="tab">
@@ -536,19 +545,19 @@
 					<span class="col-md-4" style>Alignment</span>
 					<div class="col-md-7">
 					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-right"></i>
+						<img  name="right" class="fas fa-align-right"></img>
 					</button>
 					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-center"></i>
+						<i name="center" class="fas fa-align-center"></i>
 					</button>
 					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-left"></i>
+						<i name="left" class="fas fa-align-left"></i>
 					</button>
 					<button @click="submitChangeAlign" name="left" type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-justify"></i>
+						<i name="left" class="fas fa-align-justify"></i>
 					</button>
-					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-times"></i>
+					<button @click="submitChangeAlign" name=""  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="" class="fas fa-times"></i>
 					</button>
 					</div>
 				</div>
@@ -650,16 +659,13 @@
 					<span class="col-md-4" >Float</span>
 					<div class="col-md-7">
 					<button  @click ="submitChangeFloat" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i  @click ="submitChangeFloat" name="right"  class="fas fa-align-right"></i>
-					</button>
-					<button @click ="submitChangeFloat" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-center"></i>
+						<i  name="right"  class="fas fa-align-right"></i>
 					</button>
 					<button @click ="submitChangeFloat" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-align-left"></i>
+						<i name="left" class="fas fa-align-left"></i>
 					</button>
-					<button @click ="submitChangeFloat" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
-						<i class="fas fa-times"></i>
+					<button @click ="submitChangeFloat" name=""  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="" class="fas fa-times"></i>
 					</button>
 					</div>
 				</div>
@@ -672,10 +678,7 @@
   </div>
   <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
 </div>
-  </div>
-  <!--
-
-  -->
+</div>
 </template>
 
 <script>
@@ -687,9 +690,18 @@ import 'vue-range-slider/dist/vue-range-slider.css'
 
 export default {
   name: 'App',
-  props: ['payload'],
+  props: ['payload','loadData'],
   data () {
     return {
+	  imageSizeSelected: 'none',
+      imageSize: [
+        { value: 'none', text: 'None' },
+        { value: 'auto', text: 'Auto' },
+        { value: 'length', text: 'Length' },
+        { value: 'cover', text: 'Cover' },
+		{ value: 'contain', text: 'Contain'},
+        { value: 'initial', text: 'Initial' }
+      ],
       transformantionSelected: 'none',
       transformantion: [
         { value: 'none', text: 'None' },
@@ -765,7 +777,8 @@ export default {
       submitSorce: {
         payload: '',
         style: '',
-        value: ''
+        value: '',
+		change:'',
       },
       componentSorce: {
         x: 228,
@@ -818,7 +831,9 @@ export default {
 	  parentDom: [],
 	  selectedFile: null,
 	  domWithTree: [],
-	  backgroundImage: ''
+	  backgroundImage: '',
+	//   kindOfLoadDate:0,
+	  test:'as',
 	  // on : true,
       //   widthFontActive:{
       // 	color:'blue',
@@ -831,11 +846,17 @@ export default {
     RangeSlider,
     ChromeColor: VueColor.Chrome
   },
+
   created () {
-
+	//   console.log("s")
+	//   console.log(this.loadData)
+	//   console.log("s")
   },
-  mounted () {
-
+  computed:{
+	  testMessage: function (){
+		  this.test = document.getElementById("newLoaderHtml").innerHTML
+		  return this.test
+	  }
   },
   methods: {
     chageTab (e) {
@@ -951,6 +972,7 @@ export default {
       this.submitSorce.style = 'background'
       this.submitSorce.value = colorData.hex
       this.onBackgroundColor = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     updateFontValue (colorData) {
@@ -958,7 +980,8 @@ export default {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'color'
       this.submitSorce.value = colorData.hex
-      this.onColor = true
+      this.onColor = true,
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSourceWithPX (e) {
@@ -1017,7 +1040,7 @@ export default {
           }
         }
       } else if (e.target.name == 'width') { this.onWidth = true } else if (e.target.name == 'fontSize') { this.onFontSize = true }
-
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSourceOriginal (e) {
@@ -1035,6 +1058,7 @@ export default {
         // onsole.log(this.submitSorce)
         this.submitSorce.value = e
       }
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitOpacity (e) {
@@ -1045,6 +1069,7 @@ export default {
         // this.submitSorce.value=e
       } else { this.submitSorce.value = e }
       this.onOpacity = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitBlur (e) {
@@ -1055,6 +1080,7 @@ export default {
         this.submitSorce.value = 'blur(' + e.target.value.replace(/px/gi, '') + 'px)'
       }
       this.onBlur = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitBrightness (e) {
@@ -1062,6 +1088,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'brightness(' + e + '%)' } else { this.submitSorce.value = 'brightness(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onBrightness = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitContrast (e) {
@@ -1069,6 +1096,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'contrast(' + e + '%)' } else { this.submitSorce.value = 'contrast(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onContrast = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitGrayscale (e) {
@@ -1076,6 +1104,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'grayscale(' + e + '%)' } else { this.submitSorce.value = 'grayscale(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onGrayscale = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitHue (e) {
@@ -1083,6 +1112,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'hue(' + e + 'deg)' } else { this.submitSorce.value = 'hue(' + e.target.value.replace(/deg/gi, '') + 'deg)' }
       this.onHue = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitInvert (e) {
@@ -1090,6 +1120,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'invert(' + e + '%)' } else { this.submitSorce.value = 'invert(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onInvert = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSaturate (e) {
@@ -1097,6 +1128,7 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'saturate(' + e + '%)' } else { this.submitSorce.value = 'saturate(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onSaturate = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitSepia (e) {
@@ -1104,22 +1136,27 @@ export default {
       this.submitSorce.style = 'filter'
       if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'sepia(' + e + '%)' } else { this.submitSorce.value = 'sepia(' + e.target.value.replace(/%/gi, '') + '%)' }
       this.onSepia = true
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeAlign (e) {
-    //   console.log(e)
-	console.log("드갔다")
+	if(e.target.getAttribute('name')==null){
+		if ((e.target.parentElement.getAttribute('name')) === 'left') {
+			this.submitSorce.value = 'left'
+		} else if ((e.target.parentElement.getAttribute('name')) === 'right') {
+			this.submitSorce.value = 'right'
+		} else if ((e.target.parentElement.getAttribute('name')) === 'no') {
+			this.submitSorce.value = 'left'
+		} else if ((e.target.parentElement.getAttribute('name')) === 'center') {
+			this.submitSorce.value = 'center'
+		}
+	}
+	else{
+		this.submitSorce.value = e.target.getAttribute('name')
+	}
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'text-align'
-      if ((e.target.name) === 'left') {
-        this.submitSorce.value = 'left'
-      } else if ((e.target.name) === 'right') {
-        this.submitSorce.value = 'right'
-      } else if ((e.target.name) === 'no') {
-        this.submitSorce.value = 'left'
-      } else if ((e.target.name) === 'center') {
-        this.submitSorce.value = 'center'
-      }
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeTextTransform (e) {
@@ -1127,12 +1164,14 @@ export default {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'text-transform'
       this.submitSorce.value = e
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeTextFontFamily (e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'font-family'
       this.submitSorce.value = e
+	  this.submitSorce.change = 1,
       this.$emit('userSelected', this.submitSorce)
     },
     submitChangeTextFontStyle (e) {
@@ -1142,11 +1181,13 @@ export default {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'text-decoration'
         this.submitSorce.value = e
+	    this.submitSorce.change = 1,
         this.$emit('userSelected', this.submitSorce)
       } else {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'font-style'
         this.submitSorce.value = e
+    	this.submitSorce.change = 1,
         this.$emit('userSelected', this.submitSorce)
       }
     },
@@ -1155,12 +1196,14 @@ export default {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'font-weight'
         this.submitSorce.value = e.target.value
+		this.submitSorce.change = 1,
         this.$emit('userSelected', this.submitSorce)
       } else {
         this.submitSorce.payload = this.payload
         this.submitSorce.style = 'font-weight'
         this.submitSorce.value = e
-        this.$emit('userSelected', this.submitSorce)
+    	this.submitSorce.change = 1,
+		this.$emit('userSelected', this.submitSorce)
       }
     },
     submitChangeBorder (e) {
@@ -1169,30 +1212,46 @@ export default {
       this.submitSorce.style = 'border'
       this.submitSorce.value = 'solid'
       // console.log(this.submitSorce)
-      this.$emit('userSelectBorder', this.submitSorce)
+      this.submitSorce.change = 1,
+	  this.$emit('userSelectBorder', this.submitSorce)
     },
 	submitChangeBorderWidth(e){
 	  this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
       this.submitSorce.value = e
       // console.log(this.submitSorce)
-      this.$emit('userSelectBorder', this.submitSorce)
+	  this.submitSorce.change = 1,
+	  this.$emit('userSelectBorder', this.submitSorce)
 	},
 	submitChangeBorderStyle(e){
 	  this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
       this.submitSorce.value = e
+	  this.submitSorce.change = 1,
       // console.log(this.submitSorce)
       this.$emit('userSelectBorder', this.submitSorce)
 	},
 	submitChangeFloat(e){
-	  console.log(e.target.name)
+		if(e.target.getAttribute('name')==null){
+			if ((e.target.parentElement.getAttribute('name')) === 'left') {
+				this.submitSorce.value = 'left'
+			} else if ((e.target.parentElement.getAttribute('name')) === 'right') {
+				this.submitSorce.value = 'right'
+			} else if ((e.target.parentElement.getAttribute('name')) === 'no') {
+				this.submitSorce.value = 'left'
+			} else if ((e.target.parentElement.getAttribute('name')) === 'center') {
+				this.submitSorce.value = 'center'
+			}
+			}
+		else{
+			this.submitSorce.value = e.target.getAttribute('name')
+		}
 
 	  this.submitSorce.payload = this.payload
       this.submitSorce.style = 'float'
-      this.submitSorce.value = e
       // console.log(this.submitSorce)
-      this.$emit('userSelectBorder', this.submitSorce)
+	  this.submitSorce.change = 1,
+      this.$emit('userSelected', this.submitSorce)
 	},
     makeTreeParent (payload) {
       var obj = document.getElementById('inParentTreeOption')
@@ -1210,7 +1269,6 @@ export default {
 		var print=[]
 		for(var i=0;i<this.parentDom.length;i++){
 			if(payload==this.domWithTree[i]){
-				
 				a=i
 				break
 			}
@@ -1243,46 +1301,35 @@ export default {
 	
 	
 	onFileSelected(e){
-		// console.log(e.target.value)
-		// this.selectedFile = e.target.files[0]
-		// console.log(this.selectedFile)
-
-		// reader.readAsDataURL(input.files[0]);
-		// console.log(input.files[0])
-		// console.log(reader.readAsDataURL(input.files[0]))
-		
 		var file = document.querySelector('#getfile');
-		console.log(this.payload.className)
+		var fileList = file.files ;
 
-		file.onchange = function () {
-			var fileList = file.files ;
+		// 읽기
+		console.log(fileList)
+		var reader = new FileReader();
+		reader.readAsDataURL(fileList [0]);
+		// console.log(reader)
+		var submit = this.submitSorce
+		var data = this.payload
+		//로드 한 후
+		var vm =this;
+		reader.onload = function  () {
 
-			// 읽기
-			var reader = new FileReader();
-			reader.readAsDataURL(fileList [0]);
-
-			//로드 한 후
-			reader.onload = function  () {
-				console.log(reader.result)
-				console.log(document.querySelector('.button1').background-image)
-				document.querySelector('#preview').src = reader.result;
-			this.submitSorce.payload = this.payload
-					this.submitSorce.style = 'background-size'
-					this.submitSorce.value = '100%'
-					this.$emit('userSelected', this.submitSorce)
-				document.querySelector('button1').backgroundImage = reader.result;
-				// this.submitSorce.value = reader.result
-			};
+			submit.payload =data
+			submit.style = 'background-image'
+			submit.value = 'url(' + reader.result+ ')';
+			submit.change = 1,
+			
+			vm.$emit('userSelected', submit)
 		};
-
-		// this.submitSorce.payload = this.payload
-		// this.submitSorce.style = 'background-image'
-		// // this.submitSorce.value = reader.readAsDataURL(input.files[0])
-		// this.$emit('userSelected', this.submitSorce)
-
+	},
+	submitChangeImageSize(e){
+		console.log(e)
 		this.submitSorce.payload = this.payload
 		this.submitSorce.style = 'background-size'
-		this.submitSorce.value = '100%'
+		this.submitSorce.value = e
+		// console.log(this.submitSorce)
+		this.submitSorce.change = 1,
 		this.$emit('userSelected', this.submitSorce)
 	},
 	onUpload(){
@@ -1293,6 +1340,62 @@ export default {
 		if(e.target.innerText!=='HTML'&&e.target.innerText!=='Body')
 			this.$emit('selectDomElemented', this.domWithTree[e.target.id])
 	},
+	inputFile(e){
+		console.log(e)
+		var file = document.querySelector('#getfile');
+		file.onchange = function () { 
+			var fileList = file.files ;
+			
+			// 읽기
+			var reader = new FileReader();
+			reader.readAsText(fileList [0]);
+
+			//로드 한 후
+			reader.onload = function  () {
+				document.querySelector('#preview').textContent = reader.result ;
+			}; 
+		}; 
+	},
+	loadDataSetting(data){
+		// console.log("dsda")
+		// console.log(data[0])
+	},
+	changeProperty(e){
+		// console.log(this.loadData[0])
+		// console.log(document.getElementById("newLoaderHtml"))
+		if(e.target.getAttribute('name')=='html'){
+			this.kindOfLoadDate=1
+			
+		}
+		else if(e.target.getAttribute('name')=='css'){
+			this.kindOfLoadDate=2
+		}
+		else if(e.target.getAttribute('name')=='js'){
+			this.kindOfLoadDate=3
+		}
+		this.chageContent()
+		
+	},
+	chageContent(){
+		if(this.kindOfLoadDate==1){
+			// document.querySelector('#preview').textContent = this.loadData[0]
+			 this.test = document.getElementById("newLoaderHtml").innerHTML
+		}
+		else if(this.kindOfLoadDate==2){
+			document.querySelector('#preview2').textContent = this.loadData[1]
+		}
+		else if(this.kindOfLoadDate==3){
+			document.querySelector('#preview3').textContent = this.loadData[2]
+		}
+	},
+	closeLayout(){
+		$(document.getElementById("codeBtnLayout")).trigger('click')
+	},
+	test(e){
+		console.log(e)
+		console.log("adsaD")
+	}
+
   }
 }
 </script>
@@ -1382,4 +1485,5 @@ export default {
 .parentTreeOption{
 	overflow:auto;
 }
+    
 </style>
