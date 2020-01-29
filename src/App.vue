@@ -4,7 +4,7 @@
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
-      <div @click="newPage" class="new-box">
+      <div class="new-box">
         <img class="new" src="./assets/new.svg" />
         <div class="new-text">New</div>
       </div>
@@ -45,38 +45,16 @@
     </div>
     <div class="main-panel">
       <div class="left-panel">
-        <img
-          @click="studioBtn"
-          class="studio-btn"
-          src="./assets/studio.svg"
-          title="studio"
-        />
+        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
         <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
-          title="overview"
-        />
-        <img
-          @click="sitemapBtn"
-          class="sitemap-btn"
-          src="./assets/sitemap.svg"
-          title="sitemap"
-        />
+        />C:\Users\anylogic\Desktop\any-editor\src\App.vue
       </div>
       <div class="editor-panel">
         <div class="center-panel">
-          <div class="top-menu">
-            <div class="file-name" :key="title.index" v-for="title in titles">
-              <div @click="changePage" class="title">
-                {{ title.text }}
-              </div>
-              <img
-                @click="closePage"
-                class="close-icon"
-                src="./assets/close.svg"
-              />
-            </div>
+          <div class="title">Editor</div>
 
             <img
               src="./assets/iphone.svg"
@@ -100,11 +78,11 @@
           <div class="main-menu">
             <div class="editor">
               <home
-                ref="home"
-                @componentSelected="componentSelected"
-                @stack-push="stackPush"
-                @comment="commentBtn"
-                class="home"
+               ref="home"C:\Users\anylogic\Desktop\any-editor\src\App.vue
+              @componentSelected="componentSelected"
+              @stack-push="stackPush"
+              @loadData="loadData"
+              class="home"
               ></home>
             </div>
             <div v-if="isCommentOn" class="comment-board">
@@ -131,7 +109,6 @@
             </div>
           </div>
         </div>
-
         <div class="bottom-panel"></div>
       </div>
 
@@ -156,9 +133,42 @@
         />
       </div>
     </div>
+    
+    <div class="row bottom-panel">
+      
+      <div v-show="isData" class="loadDataPanel">
+        <div @mousedown="loaderResize" class="loader-bord"></div>
+        <div class="studio-text-box"> 
+          <span class="studio-text">CodeReview</span>
+          <img @click="closeCodeRiview"src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+        </div>
+        <div class="showSorce">
+          <div v-show="tabStep===1"  class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+              <div class="showCode">
+                  <pre id="preview1" v-highlightjs ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
+              </div>
+          </div>
+          <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+              <div class="showCode">
+                  <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+              </div>
+          </div>
+          <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+              <div class="showCode">
+                  <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
+                  <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
+              </div>
+          </div>
+        </div>
+      </div>
+          <span class="fileTitle" @click="clickSoure" name="html">HTML</span>
+          <span class="fileTitle" @click="clickSoure" name="css">CSS</span>
+          <span class="fileTitle" @click="clickSoure" name="js">JavaScript</span>
+    </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>
-    <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
+    <CodeLoader @setFile="setFile" :loaderData="message" ref="codeloader"v-show="codeOn" class="code-loader"></CodeLoader>
+    
+
     <layout
       v-if="layoutOn"
       ref="layouts"
@@ -177,13 +187,6 @@
       @close-studio="studioBtn"
       class="studio"
     ></studio>
-    <sitemap
-      ref="sitemap"
-      v-show="sitemapOn"
-      @copy-title="copyPage"
-      @close-sitemap="sitemapBtn"
-      class="sitemap"
-    />
     <overview
       v-if="overviewOn"
       ref="overview"
@@ -206,9 +209,6 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
-    <div v-if="isTitle" class="title-copy">
-      bb
-    </div>
     <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
   </div>
 </template>
@@ -222,7 +222,6 @@ import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
-import sitemap from "./components/sitemap";
 // import UndoRedo from './components/UndoRedo'
 
 export default {
@@ -234,8 +233,7 @@ export default {
     overview,
     spliter,
     Switches,
-    CodeLoader,
-    sitemap
+    CodeLoader
   },
   props: ["selectDomElement"],
   name: "App",
@@ -265,11 +263,15 @@ export default {
       overviewOn: false,
       layoutOn: false,
       codeOn: false,
-      sitemapOn: false,
       resizeLoader: false,
       initialTop: null,
       initialY: null,
       initialHeight: null,
+      isShift : false,
+      message:"",
+      isData:false,
+      tabStep:0,
+      js:" 불러올 데이터가 없습니다.",
       isShift: false,
       isCommentOn: false,
       comments: [
@@ -298,6 +300,11 @@ export default {
       copyTitle: null
     };
   },
+    computed:{
+     testMessage: function (){
+        this.test = document.getElementById("newLoaderHtml").innerHTML
+        return this.test
+     },
   watch: {
     enabled: function() {
       this.$refs.home.modeSelect(this.enabled);
@@ -311,24 +318,24 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if (e.which === 16) {
-        this.isShift = true;
+      if(e.which === 16){
+        this.isShift = true
       }
-      if (e.which === 90 && this.isCtrl && !this.isShift) {
+      if (e.which === 90 && this.isCtrl &&!this.isShift) {
         this.undoWork();
       }
-      if (e.which === 90 && this.isCtrl && this.isShift) {
-        this.redoWork();
+      if(e.which === 90 && this.isCtrl && this.isShift){
+        this.redoWork()
       }
-      if (e.which === 67 && this.isCtrl) {
+      if(e.which === 67 && this.isCtrl){
         //복사
       }
     });
-    document.addEventListener("keyup", e => {
-      if (e.which === 16) {
-        this.isShift = false;
+    document.addEventListener('keyup', e => {
+      if(e.which === 16){
+        this.isShift = false
       }
-    });
+    })
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -344,17 +351,16 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
-      if (this.resizeLoader) {
-        let loader = document.querySelector(".code-loader");
-        let bord = document.querySelector(".loader-bord");
-        loader.style.height =
-          this.initialHeight - (e.clientY - this.initialY) + "px";
-        console.log(parseInt(getComputedStyle(loader).top));
-        console.log(parseInt(getComputedStyle(bord).height));
-        this.$nextTick(() => {
-          bord.style.top = parseInt(getComputedStyle(loader).top) + "px";
-        });
-      }
+      if(this.resizeLoader){
+        let loader = document.querySelector(".loadDataPanel");
+        let bord = document.querySelector('.loader-bord')
+        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
+        console.log(parseInt(getComputedStyle(loader).top))
+        console.log(parseInt(getComputedStyle(bord).height))
+        this.$nextTick(()=>{
+          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
+        })
+        }
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
             let copy = document.querySelector(".title-copy");
@@ -362,11 +368,12 @@ export default {
             copy.textContent = this.copyTitle.textContent;
             copy.style.left = e.clientX + 10 + "px";
             copy.style.top = e.clientY + 10 + "px";
+
       }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
-      this.resizeLoader = false;
+      this.resizeLoader = false
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
@@ -388,9 +395,6 @@ export default {
             tar = tar.parentElement;
           }
         }
-      }
-      if(this.isTitle){
-        this.isTitle = false
       }
     });
     var h = {};
@@ -446,6 +450,18 @@ export default {
     this.hasht = h;
   },
   methods: {
+    loaderResize(event){
+      let loader = document.querySelector(".loadDataPanel");
+      // console.log( document.querySelector(".code-loader"))
+      // console.log( document.querySelector(".loadDataPanel"))
+      this.resizeLoader = true
+      this.initialY = event.clientY
+      this.initialHeight = parseInt(getComputedStyle(loader).height)
+    },
+    lo(to){
+      let loader = document.querySelector('.loadDataPanel')
+      loader.style.top = to
+    },
     copyPage(payload) {
       this.isTitle = true;
       this.copyTitle = payload.target
@@ -582,16 +598,6 @@ export default {
         editor.style.width = "992px";
         editor.style.height = "687px";
       }
-    },
-    loaderResize(event) {
-      let loader = document.querySelector(".code-loader");
-      this.resizeLoader = true;
-      this.initialY = event.clientY;
-      this.initialHeight = parseInt(getComputedStyle(loader).height);
-    },
-    lo(to) {
-      let loader = document.querySelector(".code-loader");
-      loader.style.top = to;
     },
     codeBtn() {
       if (this.codeOn === true) {
@@ -827,13 +833,13 @@ export default {
     position: fixed;
     left: 4%;
     background-color: #32373a;
-    z-index: 30;
+    z-index: 11;
     top: 6%;
   }
 
   .overview {
     width: 20rem;
-    z-index: 30;
+    z-index: 11;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -841,17 +847,7 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
-  .sitemap {
-    width: 20rem;
-    height: 30rem;
-    border: 1.5px solid #000000;
-    position: fixed;
-    left: 4%;
-    background-color: #32373a;
-    z-index: 30;
-    top: 6%;
-  }
-
+ 
   .top-panel {
     height: 6%;
     background-color: #3c474c;
@@ -876,7 +872,7 @@ export default {
       margin-left: 1rem;
       font-size: 0.9rem;
       margin-right: 1rem;
-      border-radius: 0.3rem;
+       border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
         z-index: 9;
@@ -889,55 +885,37 @@ export default {
         cursor: pointer;
         color: #fff;
       }
-      &:hover {
+       &:hover{
         background-color: #616c72;
       }
     }
-    .undo-box,
-    .redo-box,
-    .new-box,
-    .open-box,
-    .save-box,
-    .export-box,
-    .setting-box {
+    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      padding: 0.2rem;
+       padding: 0.2rem;
       margin-right: 1rem;
       font-size: 0.9rem;
       border-radius: 0.3rem;
-      .undo,
-      .redo,
-      .new,
-      .open,
-      .save,
-      .export,
-      .setting {
+      .undo, .redo, .new, .open, .save, .export, .setting  {
         cursor: pointer;
         height: 1.2rem;
         margin-right: 0.5rem;
       }
-      .undo-text,
-      .redo-text,
-      .new-text,
-      .open-text,
-      .save-text,
-      .export-text,
-      .setting-text {
+      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
         cursor: pointer;
         color: #fff;
       }
-      &:hover {
+      &:hover{
         background-color: #616c72;
       }
     }
-    .new-box {
+    .new-box{
       margin-left: 1rem;
     }
-    .undo-box {
-      .undo {
+    .undo-box{
+      .undo{
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
@@ -947,6 +925,7 @@ export default {
         height: 1.2rem;
       }
     }
+    
   }
   .main-panel {
     width: 100%;
@@ -971,11 +950,6 @@ export default {
         margin-top: 1.3rem;
         cursor: pointer;
       }
-      .sitemap-btn {
-        width: 1rem;
-        margin-top: 1.3rem;
-        cursor: pointer;
-      }
     }
     .right-panel {
       width: 4%;
@@ -991,12 +965,7 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        width: 1rem;
-        z-index: 100;
-        cursor: pointer;
-      }
-      .comment-btn {
-        margin-top: 1.6rem;
+        background-color: #fff;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
@@ -1013,167 +982,37 @@ export default {
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        .top-menu {
-          display: flex;
-          flex-direction: row;
-          width: 100%;
-          .file-name {
-            left: 0;
-            cursor: pointer;
-            // background-color: #545e66;
-            top: 0;
-            display: flex;
-            flex-direction: row;
-            border-top-left-radius: 0.3rem;
-            border-top-right-radius: 0.3rem;
-            padding-left: 0.15rem;
-            padding-right: 0.15rem;
+        position: relative;
 
-            .title {
-              text-align: center;
-              padding: 0.1rem;
-              padding-left: 0.4rem;
-              padding-right: 0.3rem;
-              color: #fff;
-              height: auto;
-            }
-            .close-icon {
-              width: 0.7rem;
-              padding-right: 0.1rem;
-              margin-right: 0.2rem;
-            }
-          }
-
-          .monitor,
-          .iphone,
-          .ipad {
-            text-align: center;
-            right: 0;
-            top: 0.35rem;
-            width: 1.4rem;
-            cursor: pointer;
-            z-index: 28;
-            &:hover {
-              border-radius: 0.15rem;
-              background-color: #888888;
-            }
-          }
-          .iphone {
-            right: 5rem;
-            margin-right: 0.7rem;
-          }
-          .ipad {
-            width: 1.3rem;
-            margin-right: 0.7rem;
-            right: 2.5rem;
-          }
-          .monitor {
-            width: 1.3rem;
-          }
+        .title {
+          position: absolute;
+          text-align: center;
+          left: 0;
+          color: #fff;
+          height: 4.02%;
+          background-color: #545e66;
+          padding: 0.3rem;
+          padding-left: 0.9rem;
+          padding-right: 0.9rem;
+          top: 0;
         }
-
-        .main-menu {
+        .editor {
           width: 100%;
+          position: absolute;
           bottom: 0;
           height: 96%;
+          border: 3px solid #545e66;
           display: flex;
-          flex-direction: row;
-
-          .editor {
-            width: 100%;
-            height: 100%;
-            border: 3px solid #545e66;
+          align-items: center;
+          justify-content: center;
+          // overflow: hidden;
+          .home {
             display: flex;
             align-items: center;
             justify-content: center;
-            // overflow: hidden;
-            .home {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 70rem;
-              height: 100%;
-              overflow: hidden;
-            }
-          }
-          .hidden {
-            display: none;
-          }
-          .display {
-            display: block;
-          }
-          .comment-board {
-            // position: absolute;
-            right: 0;
-            width: 25rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #dddddd;
-            .add-comment {
-              border-radius: 0.3rem;
-              margin: 0.2rem;
-              padding: 0.2rem;
-              display: flex;
-              flex-direction: row;
-              width: 19rem;
-              background-color: #ca8f8f;
-              cursor: pointer;
-              box-shadow: 1px 0.5px 0.5px #c0c0c0;
-              .comment-input {
-                background-color: inherit;
-                // border:1px solid #646464;
-                border: none;
-                width: 15rem;
-                border-radius: 0.3rem;
-              }
-              .add-comment-btn {
-                width: 1rem;
-                margin-left: 0.5rem;
-                right: 0;
-              }
-            }
-            .comment-wrapper {
-              border-radius: 0.3rem;
-              margin: 0.2rem;
-              padding: 0.2rem;
-              width: 19rem;
-              background-color: #fff;
-              box-shadow: 1px 0.5px 0.5px #c0c0c0;
-
-              .top-box {
-                width: 100%;
-                margin-bottom: 0.15rem;
-                display: flex;
-                height: auto;
-                position: relative;
-                flex-direction: row;
-                .writer {
-                  left: 0;
-                  font-weight: bold;
-                  font-size: 1.1rem;
-                  color: #696969;
-                }
-                .element {
-                  width: 10rem;
-                  position: absolute;
-                  overflow: hidden;
-                  right: 5.5rem;
-                }
-                .time {
-                  position: absolute;
-                  width: 5rem;
-                  right: 0;
-                }
-              }
-              .comment-text {
-                font-size: 0.8rem;
-                width: 100%;
-                text-align: left;
-                color: #8f8f8f;
-                word-break: break-all;
-              }
-            }
+            width: 70rem;
+            height: 55rem;
+            overflow: hidden;
           }
         }
       }
@@ -1193,19 +1032,19 @@ export default {
     height: 20rem;
     background-color: #23282b;
   }
-  .loader-bord {
-    cursor: n-resize;
-    height: 7px;
+   .loader-bord {
+     cursor: n-resize;
+    height:7px;
     width: 92%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
-    background-color: #545e66;
+    background-color:#545e66 ;
   }
 
   .layout {
     width: 20rem;
-    z-index: 30;
+    z-index: 11;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -1253,7 +1092,71 @@ export default {
     padding: 0.2rem;
     color: #e7e4e4;
   }
+  .bottom-panel{
+    width:92%;
+  }
+  .fileTitle {
+    font-size: 15px;
+    color:white;
+    font-weight: bold;
+    padding: 7px 14px;
+    vertical-align: bottom;
+    display: inline-block;
+    margin-right: 25%;
+    float: none;
+    border: 2px solid black;
+    background-color:#666666;
+  }
+
+.loadDataPanel{
+      width: 92%;
+      z-index: 10000;
+      position: fixed;
+      bottom: 5%;
+      height: 100%;
+      background-color: #23282b;
+        
+    }
+.showSorce{
+    margin:14px 0px 0px 0px;
+    height:60%;
+    
 }
+.tab-pane{
+  height:145%;
+}
+#pills-home{
+  height:145%;
+}
+#pills-profile{
+  height:145%;
+}
+#pills-contact{
+  height:125%;
+}
+.showCode{
+    height:100%;
+}
+.studio-text-box {
+    height: 7%;
+    justify-content: center;
+    position: relative;
+    .studio-text {
+      padding: 0.2rem;
+      color: #ffffff;
+      font-size: 1.4rem;
+      position: absolute;
+      left: 0.4rem;
+    }
+    .close-btn{
+      width: 1.1rem;
+      right: 0.4rem;
+      top: 0.4rem;
+      cursor:pointer;
+      position: absolute;
+    }
+  }
+
 .editor-component {
   .board {
     width: 100%;
