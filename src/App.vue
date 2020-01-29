@@ -47,12 +47,24 @@
 
     <div class="main-panel">
       <div class="left-panel">
-        <img @click="studioBtn" class="studio-btn" src="./assets/studio.svg" />
+        <img
+          @click="studioBtn"
+          class="studio-btn"
+          src="./assets/studio.svg"
+          title="studio"
+        />
         <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/overview.svg"
-        />C:\Users\anylogic\Desktop\any-editor\src\App.vue
+          title="overview"
+        />
+        <img
+          @click="sitemapBtn"
+          class="sitemap-btn"
+          src="./assets/sitemap.svg"
+          title="sitemap"
+        />
       </div>
       <div class="editor-panel">
         <div class="center-panel">
@@ -92,7 +104,6 @@
           <div class="editor">
             <home
               ref="home"
-              C:\Users\anylogic\Desktop\any-editor\src\App.vue
               @componentSelected="componentSelected"
               @stack-push="stackPush"
               @loadData="loadData"
@@ -130,7 +141,7 @@
         <div class="studio-text-box">
           <span class="studio-text">CodeReview</span>
           <img
-            @click="closeCodeRiview"
+            @click="closeCodeReview"
             src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
             class="close-btn"
           />
@@ -187,9 +198,9 @@
           </div>
         </div>
       </div>
-      <span class="fileTitle" @click="clickSoure" name="html">HTML</span>
-      <span class="fileTitle" @click="clickSoure" name="css">CSS</span>
-      <span class="fileTitle" @click="clickSoure" name="js">JavaScript</span>
+      <span class="fileTitle" @click="clickSource" name="html">HTML</span>
+      <span class="fileTitle" @click="clickSource" name="css">CSS</span>
+      <span class="fileTitle" @click="clickSource" name="js">JavaScript</span>
     </div>
     </div>
 
@@ -242,6 +253,13 @@
       @close-studio="studioBtn"
       class="studio"
     ></studio>
+    <sitemap
+      ref="sitemap"
+      v-show="sitemapOn"
+      @copy-title="copyPage"
+      @close-sitemap="sitemapBtn"
+      class="sitemap"
+    />
     <overview
       v-if="overviewOn"
       ref="overview"
@@ -280,6 +298,7 @@ import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
+import sitemap from "./components/sitemap";
 
 export default {
   components: {
@@ -290,7 +309,8 @@ export default {
     overview,
     spliter,
     Switches,
-    CodeLoader
+    CodeLoader,
+    sitemap
   },
   props: ["selectDomElement"],
   name: "App",
@@ -301,6 +321,7 @@ export default {
       homeLayoutLocation: "",
       tagDescription: false,
       childOFchil: [],
+       sitemapOn: false,
       enabled: false,
       homeDocument: "",
       uiDescription: false,
@@ -445,6 +466,9 @@ export default {
           }
         }
       }
+      if(this.isTitle){
+        this.isTitle = false
+      }
     });
     var h = {};
     h["articleclean"] = "An article layout with a simple and clean design.";
@@ -499,6 +523,56 @@ export default {
     this.hasht = h;
   },
   methods: {
+     clickSource(e){
+      this.isData=true
+      console.log("s")
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
+      if (e.target.getAttribute('name')=='html') {
+          this.tabStep = 1
+          // this.chageContent()
+          console.log("s")
+      } else if (e.target.getAttribute('name')=='css') {
+          this.tabStep = 2
+      } else if (e.target.getAttribute('name')=='js') {
+          this.tabStep = 3
+      }
+    },
+    inputFile(e){
+        alert("저장되었습니다")
+        // console.log(this.message[2])
+        var file = document.querySelector('#getfile');
+        file.onchange = function () { 
+            var fileList = file.files ;
+            
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsText(fileList [0]);
+
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').textContent = reader.result ;
+            }; 
+        }; 
+    },
+    setFile(file){
+      // console.log(file)
+      this.chageContent()
+      this.isData=true
+       if (file=='html') {
+          this.tabStep = 1
+
+      } else if (file=='css') {
+          this.tabStep = 2
+      } else if (file=='js') {
+          this.tabStep = 3
+      }
+    },
+    closeCodeReview(){
+      this.isData=false
+    },
+     loadData(data){
+      this.message = data
+    },
     loaderResize(event){
       let loader = document.querySelector(".loadDataPanel");
       // console.log( document.querySelector(".code-loader"))
@@ -895,6 +969,17 @@ export default {
     background-color: #32373a;
     top: 6%;
   }
+  .sitemap {
+    width: 20rem;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    z-index: 30;
+    top: 6%;
+  }
+
  
   .top-panel {
     height: 6%;
@@ -994,6 +1079,11 @@ export default {
         cursor: pointer;
       }
       .overview-btn {
+        width: 1rem;
+        margin-top: 1.3rem;
+        cursor: pointer;
+      }
+      .sitemap-btn {
         width: 1rem;
         margin-top: 1.3rem;
         cursor: pointer;
