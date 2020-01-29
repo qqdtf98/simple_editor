@@ -43,6 +43,8 @@
         <div @click="redoWork" class="redo-text">Redo</div>
       </div>
     </div>
+
+
     <div class="main-panel">
       <div class="left-panel">
         <img
@@ -77,88 +79,162 @@
                 src="./assets/close.svg"
               />
             </div>
+          
 
-            <img
-              src="./assets/iphone.svg"
-              @click="resizeEditor"
-              class="iphone"
-              title="375 x 667"
-            />
-            <img
-              src="./assets/ipad.svg"
-              @click="resizeEditor"
-              class="ipad"
-              title="768 x 1024"
-            />
-            <img
-              src="./assets/monitor.svg"
-              @click="resizeEditor"
-              class="monitor"
-              title="992 x 687"
-            />
+          <img
+            src="./assets/iphone.svg"
+            @click="resizeEditor"
+            class="iphone"
+            title="375 x 667"
+          />
+          <img
+            src="./assets/ipad.svg"
+            @click="resizeEditor"
+            class="ipad"
+            title="768 x 1024"
+          />
+          <img
+            src="./assets/monitor.svg"
+            @click="resizeEditor"
+            class="monitor"
+            title="992 x 687"
+          />
           </div>
-          <div class="main-menu">
-            <div class="editor">
-              <home
-                ref="home"
-                @componentSelected="componentSelected"
-                @stack-push="stackPush"
-                @comment="commentBtn"
-                class="home"
-              ></home>
+        <div class="main-menu">
+          <div class="editor">
+            <home
+              ref="home"
+              @componentSelected="componentSelected"
+              @stack-push="stackPush"
+              @loadData="loadData"
+              class="home"
+            ></home>
+          </div>
+          <div v-if="isCommentOn" class="comment-board">
+            <div class="add-comment">
+              <textarea class="comment-input" placeholder="comment" />
+              <img
+                @click="addComment"
+                class="add-comment-btn"
+                src="./assets/plus.svg"
+              />
             </div>
-            <div v-if="isCommentOn" class="comment-board">
-              <div class="add-comment">
-                <textarea class="comment-input" placeholder="comment" />
-                <img
-                  @click="addComment"
-                  class="add-comment-btn"
-                  src="./assets/plus.svg"
-                />
+            <div
+              :key="comment.index"
+              v-for="comment in comments"
+              class="comment-wrapper"
+            >
+              <div class="top-box">
+                <div class="writer">{{ comment.writer }}</div>
+                <div class="element">{{ comment.element }}</div>
+                <div class="time">{{ comment.time }}</div>
               </div>
-              <div
-                :key="comment.index"
-                v-for="comment in comments"
-                class="comment-wrapper"
-              >
-                <div class="top-box">
-                  <div class="writer">{{ comment.writer }}</div>
-                  <div class="element">{{ comment.element }}</div>
-                  <div class="time">{{ comment.time }}</div>
-                </div>
-                <div class="comment-text">{{ comment.text }}</div>
-              </div>
+              <div class="comment-text">{{ comment.text }}</div>
             </div>
           </div>
         </div>
-
-        <div class="bottom-panel"></div>
       </div>
-
-      <div class="right-panel">
-        <img
-          @click="layoutBtn"
-          class="layout-btn"
-          src="./assets/layout.svg"
-          title="layout"
-        />
-        <img
-          @click="codeBtn"
-          class="code-btn"
-          src="./assets/code.svg"
-          title="code-editor"
-        />
-        <img
-          @click="commentBtn"
-          class="comment-btn"
-          src="./assets/comment.svg"
-          title="comment"
-        />
+      <!-- <div class="bottom-panel"></div> -->
+      <div class="row bottom-panel">
+      <div v-show="isData" class="loadDataPanel">
+        <div @mousedown="loaderResize" class="loader-bord"></div>
+        <div class="studio-text-box">
+          <span class="studio-text">CodeReview</span>
+          <img
+            @click="closeCodeReview"
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
+            class="close-btn"
+          />
+        </div>
+        <div class="showSorce">
+          <div
+            v-show="tabStep === 1"
+            class="tab-pane"
+            id="pills-home"
+            role="tabpanel"
+            aria-labelledby="pills-home-tab"
+          >
+            <div class="showCode">
+              <pre
+                id="preview1"
+                v-highlightjs
+              ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
+            </div>
+          </div>
+          <div
+            v-show="tabStep === 2"
+            class="tab-pane"
+            id="pills-profile"
+            role="tabpanel"
+            aria-labelledby="pills-profile-tab"
+          >
+            <div class="showCode">
+              <pre
+                v-highlightjs
+                id="preview2"
+              ><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+            </div>
+          </div>
+          <div
+            v-show="tabStep === 3"
+            class="tab-pane"
+            id="pills-contact"
+            role="tabpanel"
+            aria-labelledby="pills-contact-tab"
+          >
+            <div class="showCode">
+              <textarea class="showJS" v-model="js" id="preview3">
+ 불러올 데이터가 없습니다. </textarea
+              >
+              <input
+                style="float:left;"
+                type="submit"
+                value="Apply"
+                @click="inputFile"
+                id="getfile"
+                accept="text/*"
+              />
+            </div>
+          </div>
+        </div>
       </div>
+      <span class="fileTitle" @click="clickSource" name="html">HTML</span>
+      <span class="fileTitle" @click="clickSource" name="css">CSS</span>
+      <span class="fileTitle" @click="clickSource" name="js">JavaScript</span>
+    </div>
     </div>
 
-    <CodeLoader v-if="codeOn" class="code-loader"></CodeLoader>
-    <div @mousedown="loaderResize" v-if="codeOn" class="loader-bord"></div>
+    <div class="right-panel">
+      <img
+        @click="layoutBtn"
+        class="layout-btn"
+        src="./assets/layout.svg"
+        title="layout"
+      />
+      <img
+        @click="codeBtn"
+        class="code-btn"
+        src="./assets/code.svg"
+        title="code-editor"
+      />
+      <img
+        @click="commentBtn"
+        class="comment-btn"
+        src="./assets/comment.svg"
+        title="comment"
+      />
+    </div>
+  </div>
+    
+
+    <CodeLoader
+      @setFile="setFile"
+      :loaderData="message"
+      ref="codeloader"
+      v-show="codeOn"
+      class="code-loader"
+    ></CodeLoader>
+
     <layout
       v-if="layoutOn"
       ref="layouts"
@@ -209,11 +285,12 @@
     <div v-if="isTitle" class="title-copy">
       bb
     </div>
-    <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
-  </div>
+</div>
+  <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
 </template>
 
 <script>
+
 import htmlLoader from "./components/htmlLoader";
 import home from "./components/home";
 import layout from "./components/layout";
@@ -223,7 +300,6 @@ import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
 import sitemap from "./components/sitemap";
-// import UndoRedo from './components/UndoRedo'
 
 export default {
   components: {
@@ -246,6 +322,7 @@ export default {
       homeLayoutLocation: "",
       tagDescription: false,
       childOFchil: [],
+       sitemapOn: false,
       enabled: false,
       homeDocument: "",
       uiDescription: false,
@@ -265,11 +342,15 @@ export default {
       overviewOn: false,
       layoutOn: false,
       codeOn: false,
-      sitemapOn: false,
       resizeLoader: false,
       initialTop: null,
       initialY: null,
       initialHeight: null,
+      isShift : false,
+      message:"",
+      isData:false,
+      tabStep:0,
+      js:" 불러올 데이터가 없습니다.",
       isShift: false,
       isCommentOn: false,
       comments: [
@@ -298,6 +379,12 @@ export default {
       copyTitle: null
     };
   },
+  computed:{
+     testMessage: function (){
+        this.test = document.getElementById("newLoaderHtml").innerHTML
+        return this.test
+     },
+  },
   watch: {
     enabled: function() {
       this.$refs.home.modeSelect(this.enabled);
@@ -311,24 +398,23 @@ export default {
       if (e.which === 17) {
         this.isCtrl = true;
       }
-      if (e.which === 16) {
-        this.isShift = true;
+      if(e.which === 16){
+        this.isShift = true
       }
-      if (e.which === 90 && this.isCtrl && !this.isShift) {
+      if (e.which === 90 && this.isCtrl &&!this.isShift) {
         this.undoWork();
       }
-      if (e.which === 90 && this.isCtrl && this.isShift) {
-        this.redoWork();
+      if(e.which === 90 && this.isCtrl && this.isShift){
+        this.redoWork()
       }
-      if (e.which === 67 && this.isCtrl) {
-        //복사
-      }
-    });
-    document.addEventListener("keyup", e => {
-      if (e.which === 16) {
-        this.isShift = false;
+      if(e.which === 67 && this.isCtrl){
       }
     });
+    document.addEventListener('keyup', e => {
+      if(e.which === 16){
+        this.isShift = false
+      }
+    })
     document.addEventListener("mousemove", e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
@@ -344,17 +430,16 @@ export default {
           // ui.innerHTML = this.hasht[innerText]
         });
       }
-      if (this.resizeLoader) {
-        let loader = document.querySelector(".code-loader");
-        let bord = document.querySelector(".loader-bord");
-        loader.style.height =
-          this.initialHeight - (e.clientY - this.initialY) + "px";
-        console.log(parseInt(getComputedStyle(loader).top));
-        console.log(parseInt(getComputedStyle(bord).height));
-        this.$nextTick(() => {
-          bord.style.top = parseInt(getComputedStyle(loader).top) + "px";
+      if(this.resizeLoader){
+        let loader = document.querySelector(".loadDataPanel");
+        let bord = document.querySelector('.loader-bord')
+        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
+        console.log(parseInt(getComputedStyle(loader).top))
+        console.log(parseInt(getComputedStyle(bord).height))
+        this.$nextTick(()=>{
+          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
         });
-      }
+        }
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
             let copy = document.querySelector(".title-copy");
@@ -366,25 +451,18 @@ export default {
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
-      this.resizeLoader = false;
+      this.resizeLoader = false
       this.viewTemplate = false;
       let tar = e.target;
       if (this.addTag) {
-        // console.log(e.taret)
-        // console.log(tar.parentElement.id)
-        // console.log(tar.parentElement)
-        // let i
         while (1) {
           if (tar.id === "dashboard") {
-            // console.log(tar.className)
-            // console.log('find')
             this.addTag = false;
             this.$refs.home.addContent(this.selectedTag, e.target);
             break;
           } else if (tar.id === "app") {
             break;
           } else {
-            // console.log(tar)
             tar = tar.parentElement;
           }
         }
@@ -446,6 +524,68 @@ export default {
     this.hasht = h;
   },
   methods: {
+     clickSource(e){
+      this.isData=true
+      console.log("s")
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
+      if (e.target.getAttribute('name')=='html') {
+          this.tabStep = 1
+          // this.chageContent()
+          console.log("s")
+      } else if (e.target.getAttribute('name')=='css') {
+          this.tabStep = 2
+      } else if (e.target.getAttribute('name')=='js') {
+          this.tabStep = 3
+      }
+    },
+    inputFile(e){
+        alert("저장되었습니다")
+        // console.log(this.message[2])
+        var file = document.querySelector('#getfile');
+        file.onchange = function () { 
+            var fileList = file.files ;
+            
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsText(fileList [0]);
+
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').textContent = reader.result ;
+            }; 
+        }; 
+    },
+    setFile(file){
+      // console.log(file)
+      this.chageContent()
+      this.isData=true
+       if (file=='html') {
+          this.tabStep = 1
+
+      } else if (file=='css') {
+          this.tabStep = 2
+      } else if (file=='js') {
+          this.tabStep = 3
+      }
+    },
+    closeCodeReview(){
+      this.isData=false
+    },
+     loadData(data){
+      this.message = data
+    },
+    loaderResize(event){
+      let loader = document.querySelector(".loadDataPanel");
+      // console.log( document.querySelector(".code-loader"))
+      // console.log( document.querySelector(".loadDataPanel"))
+      this.resizeLoader = true
+      this.initialY = event.clientY
+      this.initialHeight = parseInt(getComputedStyle(loader).height)
+    },
+    lo(to){
+      let loader = document.querySelector('.loadDataPanel')
+      loader.style.top = to
+    },
     copyPage(payload) {
       this.isTitle = true;
       this.copyTitle = payload.target
@@ -582,16 +722,6 @@ export default {
         editor.style.width = "992px";
         editor.style.height = "687px";
       }
-    },
-    loaderResize(event) {
-      let loader = document.querySelector(".code-loader");
-      this.resizeLoader = true;
-      this.initialY = event.clientY;
-      this.initialHeight = parseInt(getComputedStyle(loader).height);
-    },
-    lo(to) {
-      let loader = document.querySelector(".code-loader");
-      loader.style.top = to;
     },
     codeBtn() {
       if (this.codeOn === true) {
@@ -797,22 +927,26 @@ export default {
     toggleClicked() {
       console.log("aaa");
     }
+  
   }
 };
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
+// @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css'); 
+@import url('https://rsms.me/inter/inter.css');
+
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  // font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  // color: #fff;
   display: flex;
   flex-direction: column;
-  // height: 58rem;
   background-color: #2c3134;
   align-items: center;
   height: 100vh;
@@ -833,7 +967,7 @@ export default {
 
   .overview {
     width: 20rem;
-    z-index: 30;
+    z-index: 11;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -852,6 +986,7 @@ export default {
     top: 6%;
   }
 
+ 
   .top-panel {
     height: 6%;
     background-color: #3c474c;
@@ -876,7 +1011,7 @@ export default {
       margin-left: 1rem;
       font-size: 0.9rem;
       margin-right: 1rem;
-      border-radius: 0.3rem;
+       border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
         z-index: 9;
@@ -889,55 +1024,37 @@ export default {
         cursor: pointer;
         color: #fff;
       }
-      &:hover {
+       &:hover{
         background-color: #616c72;
       }
     }
-    .undo-box,
-    .redo-box,
-    .new-box,
-    .open-box,
-    .save-box,
-    .export-box,
-    .setting-box {
+    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      padding: 0.2rem;
+       padding: 0.2rem;
       margin-right: 1rem;
       font-size: 0.9rem;
       border-radius: 0.3rem;
-      .undo,
-      .redo,
-      .new,
-      .open,
-      .save,
-      .export,
-      .setting {
+      .undo, .redo, .new, .open, .save, .export, .setting  {
         cursor: pointer;
         height: 1.2rem;
         margin-right: 0.5rem;
       }
-      .undo-text,
-      .redo-text,
-      .new-text,
-      .open-text,
-      .save-text,
-      .export-text,
-      .setting-text {
+      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
         cursor: pointer;
         color: #fff;
       }
-      &:hover {
+      &:hover{
         background-color: #616c72;
       }
     }
-    .new-box {
+    .new-box{
       margin-left: 1rem;
     }
-    .undo-box {
-      .undo {
+    .undo-box{
+      .undo{
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
@@ -947,6 +1064,7 @@ export default {
         height: 1.2rem;
       }
     }
+    
   }
   .main-panel {
     width: 100%;
@@ -991,12 +1109,7 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        width: 1rem;
-        z-index: 100;
-        cursor: pointer;
-      }
-      .comment-btn {
-        margin-top: 1.6rem;
+        background-color: #fff;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
@@ -1182,6 +1295,7 @@ export default {
         width: 100%;
         background-color: #3c474c;
         height: 5%;
+        margin: 0;
       }
     }
   }
@@ -1193,19 +1307,19 @@ export default {
     height: 20rem;
     background-color: #23282b;
   }
-  .loader-bord {
-    cursor: n-resize;
-    height: 7px;
+   .loader-bord {
+     cursor: n-resize;
+    height:7px;
     width: 92%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
-    background-color: #545e66;
+    background-color:#545e66 ;
   }
 
   .layout {
     width: 20rem;
-    z-index: 30;
+    z-index: 11;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -1253,11 +1367,75 @@ export default {
     padding: 0.2rem;
     color: #e7e4e4;
   }
+  .bottom-panel{
+    width:92%;
+  }
+  .fileTitle {
+    font-size: 15px;
+    color:white;
+    font-weight: bold;
+    padding: 7px 14px;
+    vertical-align: bottom;
+    display: inline-block;
+    margin-right: 25%;
+    float: none;
+    border: 2px solid black;
+    background-color:#666666;
+  }
+
+.loadDataPanel{
+      width: 92%;
+      z-index: 10000;
+      position: fixed;
+      bottom: 5%;
+      height: 100%;
+      background-color: #23282b;
+        
+    }
+.showSorce{
+    margin:14px 0px 0px 0px;
+    height:60%;
 }
+.tab-pane{
+  height:145%;
+}
+#pills-home{
+  height:145%;
+}
+#pills-profile{
+  height:145%;
+}
+#pills-contact{
+  height:125%;
+}
+.showCode{
+    height:100%;
+}
+.studio-text-box {
+    height: 7%;
+    justify-content: center;
+    position: relative;
+    .studio-text {
+      padding: 0.2rem;
+      color: #ffffff;
+      font-size: 1.4rem;
+      position: absolute;
+      left: 0.4rem;
+    }
+    .close-btn{
+      width: 1.1rem;
+      right: 0.4rem;
+      top: 0.4rem;
+      cursor:pointer;
+      position: absolute;
+    }
+  }
+
 .editor-component {
   .board {
     width: 100%;
     height: 35rem;
   }
+}
 }
 </style>
