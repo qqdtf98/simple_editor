@@ -818,8 +818,8 @@ export default {
         elem: this.clickedElement,
         nth: nChild
       };
-      this.$emit("stack-push", remove);
       this.clickedElement.parentNode.removeChild(this.clickedElement);
+      this.$emit("stack-push", remove);
     },
     addContent(tag, position) {
       // console.log(tag)
@@ -955,8 +955,8 @@ export default {
         nth: nChild
       };
       console.log(copy);
-      this.$emit("stack-push", copy);
       $(elem[0]).after(copyElem);
+      this.$emit("stack-push", copy);
 
       // this.$nextTick(() => {
       //   // console.log(this.clickedElement.parentElement.children)
@@ -1090,12 +1090,18 @@ export default {
     width: 100%;
     height: 80%;
     // display:table
-    overflow: auto;
+    // overflow: auto;
     scroll-behavior: smooth;
-    border: 1px solid #000000;
+    
 
     .editor-component {
       // overflow: auto;
+      height: 100%;
+      .board{
+        overflow: auto;
+        height: 100%;
+        border: 1px solid #000000;
+      }
     }
   }
   .navi {
