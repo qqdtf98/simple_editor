@@ -69,34 +69,34 @@
         <div class="bottom-panel"></div>
       </div>
       <div class="right-panel">
-        <img @click="layoutBtn" class="layout-btn" src="./assets/layout.svg" />
-        <img @click="codeBtn" class="code-btn" src="./assets/code.svg" />
+        <img @click="layoutBtn" id="codeBtnLayout"class="layout-btn" src="./assets/layout.svg" />
+        <img @click="codeBtn" id="codeBtnFileList"class="code-btn" src="./assets/code.svg" />
       </div>
     </div>
     
     <div class="row bottom-panel">
       
-      <div v-if="isData" class="loadDataPanel">
+      <div v-show="isData" class="loadDataPanel">
         <div @mousedown="loaderResize" class="loader-bord"></div>
         <div class="studio-text-box"> 
           <span class="studio-text">CodeReview</span>
-          <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+          <img @click="closeCodeRiview"src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
         </div>
-        <div>
-          <div v-if="tabStep===1"  class="tab-pane "  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-              <div>
-                  <pre v-highlightjs ><code class="HTML" >{{message[0]}}</code></pre>
+        <div class="showSorce">
+          <div v-show="tabStep===1"  class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+              <div class="showCode">
+                  <pre id="preview1" v-highlightjs ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
               </div>
           </div>
           <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-              <div>
+              <div class="showCode">
                   <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
               </div>
           </div>
-          <div v-show="tabStep===3" class="tab-pane " id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-              <div>
-                  <textarea class ="showJS" v-model="this.message[2]" id="preview3"></textarea><pre ><code ref="code" class="syntax-highlight JavaScript"></code></pre>
-                  <input  style="float:left;" type="submit"  value="Apply" @change="inputFile" id="getfile" accept="text/*">
+          <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+              <div class="showCode">
+                  <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
+                  <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
               </div>
           </div>
         </div>
@@ -118,7 +118,7 @@
       class="layout"
     ></layout>
     <studio
-      v-if="studioOn"
+      v-show="studioOn"
       @desc-close="tagNotSelected"
       @ui-select="uiSelected"
       @tag-select="tagSelected"
@@ -127,7 +127,7 @@
       class="studio"
     ></studio>
     <overview
-      v-if="overviewOn"
+      v-show="overviewOn"
       ref="overview"
       @selectDomElement="selectDomElemented"
       @inParentTreeOption="inParentTreeOption"
@@ -206,8 +206,9 @@ export default {
       initialHeight: null,
       isShift : false,
       message:"",
-      isData:true,
+      isData:false,
       tabStep:0,
+      js:" 불러올 데이터가 없습니다.",
     };
   },
   computed:{
@@ -376,12 +377,19 @@ export default {
           this.initialTop = getComputedStyle(loader).top
         });
       }
+      if (this.layoutOn === true) {
+        this.layoutOn = false;
+      }
     },
     layoutBtn() {
       if (this.layoutOn === true) {
         this.layoutOn = false;
       } else {
         this.layoutOn = true;
+      }
+
+      if (this.codeOn === true) {
+        this.codeOn = false;
       }
     },
     studioBtn() {
@@ -465,11 +473,13 @@ export default {
       }
     },
     stackPush(elem) {
-      console.log("sdsa")
+      // console.log("sdsa")
       this.workStack.push(elem);
       if(this.tabStep==1){
             // document.querySelector('#preview').textContent = this.loadData[0]
             this.message[0] = document.getElementById("newLoaderHtml").innerHTML
+            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
+            console.log(document.getElementById("newLoaderHtml").innerHTML)
             console.log(this.message[0])
       }
       else if(this.tabStep==2){
@@ -477,8 +487,8 @@ export default {
           document.querySelector('#preview2').innerHTML = this.message[1]
       }
       else if(this.tabStep==3){
-          console.log(document.querySelector('#preview3'))
-          document.querySelector('#preview3').innerHTML = this.message[2]
+
+          document.querySelector('#preview3').innerText = this.message[2]
       }
 
     },
@@ -590,21 +600,27 @@ export default {
       this.message = data
     },
     chageContent(){
-      // console.log(this.message)
+      console.log(this.message)
+      document.getElementById("newLoaderHtml").innerHTML
         if(this.tabStep==1){
             // document.querySelector('#preview').textContent = this.loadData[0]
             this.test = document.getElementById("newLoaderHtml").innerHTML
+            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
+            console.log("dsd")
         }
         else if(this.tabStep==2){
             document.querySelector('#preview2').innerHTML = this.message[1]
         }
         else if(this.tabStep==3){
             console.log(document.querySelector('#preview3'))
-            document.querySelector('#preview3').innerHTML = this.message[2]
+            console.log(this.message[2])
+            this.js = this.message[2]
+            // document.querySelector('#preview3').innerText = this.message[2]
         }
     },
     inputFile(e){
-        // console.log(e)
+        alert("저장되었습니다")
+        // console.log(this.message[2])
         var file = document.querySelector('#getfile');
         file.onchange = function () { 
             var fileList = file.files ;
@@ -620,8 +636,13 @@ export default {
         }; 
     },
     clickSoure(e){
+      this.isData=true
+      console.log("s")
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
       if (e.target.getAttribute('name')=='html') {
           this.tabStep = 1
+          // this.chageContent()
+          console.log("s")
       } else if (e.target.getAttribute('name')=='css') {
           this.tabStep = 2
       } else if (e.target.getAttribute('name')=='js') {
@@ -634,6 +655,7 @@ export default {
       this.isData=true
        if (file=='html') {
           this.tabStep = 1
+
       } else if (file=='css') {
           this.tabStep = 2
       } else if (file=='js') {
@@ -645,10 +667,11 @@ export default {
 
       $('.syntax-highlight').each(function(i, block) {
         hljs.highlightBlock(block);
-      });
-
-      
+      });      
     },
+    closeCodeRiview(){
+      this.isData=false
+    }
   }
 };
 </script>
@@ -955,13 +978,34 @@ export default {
   }
 }
 .loadDataPanel{
-        width: 92%;
-        z-index: 10000;
-        position: fixed;
-        bottom: 5%;
-        height: 20rem;
-        background-color: #23282b;
+      width: 92%;
+      z-index: 10000;
+      position: fixed;
+      bottom: 5%;
+      height: 100%;
+      background-color: #23282b;
+        
     }
+.showSorce{
+    margin:14px 0px 0px 0px;
+    height:60%;
+    
+}
+.tab-pane{
+  height:145%;
+}
+#pills-home{
+  height:145%;
+}
+#pills-profile{
+  height:145%;
+}
+#pills-contact{
+  height:125%;
+}
+.showCode{
+    height:100%;
+}
 .studio-text-box {
     height: 7%;
     justify-content: center;

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
+import VueHighlightJS from 'vue-highlight.js';
 // import store from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -12,10 +13,11 @@ import hljs from 'highlight.js/lib/highlight';
 import javascript from 'highlight.js/lib/languages/javascript';
  import css from 'highlight.js/lib/languages/css';
  import html from 'highlight.js/lib/languages/xml'; 
- 
+ import 'highlight.js/styles/default.css';
  hljs.registerLanguage('javascript', javascript);
  hljs.registerLanguage('css', css);
 hljs.registerLanguage('html', html);
+
 
 
 Vue.use(VueHighlightJS);

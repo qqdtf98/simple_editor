@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="studio-text-box"> 
+        <span class="studio-text">Layout</span>
+        <img @click="closeLayout"src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
+	</div>
 	<!-- Nav tabs -->
 	<!-- <img @click="closeOverview" class="close-btn" src="../assets/close.svg" /> -->
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
@@ -674,29 +678,7 @@
   </div>
   <div v-if="isData" class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
 </div>
-	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
-		<li class="nav-item">
-			<a class="nav-link active" v-bind:class="{ active:tabStep===4 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Design</a>
-		</li>
-	</ul>
-	<div class="tab-pane  active"  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-      
-<!--
-	  <div v-if="kindOfLoadDate==1">
-	  	<pre>{{testMessage}}</pre>
-	  </div>
-
-	  <div v-if="kindOfLoadDate==2">
-		<pre v-bind:value="this.loadData[1]" id="preview2">불러올 데이터가 없습니다.</pre>
-	  </div>
-
-	  <div v-if="kindOfLoadDate==3">
-		<textarea style="word-break:break-all"  class ="showJS" v-bind:value="this.loadData[2]" id="preview3"></textarea>
-		<input  type="submit"  value="Apply" @change="inputFile" id="getfile" accept="text/*">
-	  </div>
--->  
-	</div>
-  </div>
+</div>
 </template>
 
 <script>
@@ -1405,6 +1387,9 @@ export default {
 		else if(this.kindOfLoadDate==3){
 			document.querySelector('#preview3').textContent = this.loadData[2]
 		}
+	},
+	closeLayout(){
+		$(document.getElementById("codeBtnLayout")).trigger('click')
 	},
 	test(e){
 		console.log(e)

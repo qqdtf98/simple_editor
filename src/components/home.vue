@@ -798,15 +798,15 @@ export default {
           break
         }
       }
-      console.log(nChild)
       var remove = {
         work: "remove",
         position: this.clickedElement.parentNode,
         elem: this.clickedElement,
         nth: nChild
       };
-      this.$emit("stack-push", remove);
       this.clickedElement.parentNode.removeChild(this.clickedElement);
+      this.$emit("stack-push", remove);
+
     },
     addContent(tag, position) {
       // console.log(tag)
