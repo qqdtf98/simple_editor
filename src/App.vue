@@ -57,13 +57,27 @@
           src="./assets/overview.svg"
           title="overview"
         />
+        <img
+          @click="sitemapBtn"
+          class="sitemap-btn"
+          src="./assets/sitemap.svg"
+          title="sitemap"
+        />
       </div>
       <div class="editor-panel">
         <div class="center-panel">
           <div class="top-menu">
-            <div @click="changePage" :key="title.index" v-for="title in titles" class="title">
-              {{ title.text }}
+            <div class="file-name" :key="title.index" v-for="title in titles">
+              <div @click="changePage" class="title">
+                {{ title.text }}
+              </div>
+              <img
+                @click="closePage"
+                class="close-icon"
+                src="./assets/close.svg"
+              />
             </div>
+
             <img
               src="./assets/iphone.svg"
               @click="resizeEditor"
@@ -441,46 +455,91 @@ export default {
         this.sitemapOn = false;
       } else {
         this.sitemapOn = true;
+      }
+    },
+    closePage(e) {
+      let i;
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          console.log(i);
+          break;
         }
       }
-      let j
-      let editor = document.querySelectorAll('.board')
-      console.log(editor)
-      for(j=0;j<editor.length;j++){
-        if(j === i){
-          editor[j].classList.remove('hidden')
-          editor[j].classList.add('display')
-        }else{
-          editor[j].classList.remove('display')
-          editor[j].classList.add('hidden')
+      this.titles.splice(i, 1);
+      let editorCompo = document.querySelector(".editor-component");
+      editorCompo.removeChild(editorCompo.children[i]);
+    },
+    changePage(e) {
+      let i;
+      let num;
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length - 3;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          num = i;
+          e.target.parentElement.style.backgroundColor = "#545e66";
+        } else {
+          e.target.parentElement.parentElement.children[
+            i
+          ].style.backgroundColor = "#2c3134";
+        }
+      }
+      let j;
+      let editor = document.querySelectorAll(".board");
+      console.log(editor);
+      for (j = 0; j < editor.length; j++) {
+        if (j === num) {
+          editor[j].classList.remove("hidden");
+          editor[j].classList.add("display");
+        } else {
+          editor[j].classList.remove("display");
+          editor[j].classList.add("hidden");
         }
       }
     },
-    newPage() {
+    newPage(e) {
       let payload = {
-        text: 'aaa'
-      }
-      this.titles.push(payload)
-      let editor = document.querySelector('.board')
+        text: "aaa"
+      };
+      this.titles.push(payload);
+      let editor = document.querySelector(".board");
       // let copy = editor.cloneNode(true)
-      let newEditorBox = document.createElement('div')
-      let ne = document.createElement('button')
-      newEditorBox.classList.add('board')
-      newEditorBox.classList.add('hidden')
-      newEditorBox.classList.add('board' + this.editorNum)
-      newEditorBox.appendChild(ne)
-      console.log(editor.parentElement)
-      this.editorNum++
-      editor.parentElement.appendChild(newEditorBox)
-      console.log(newEditorBox.classList)
-      // this.titles[this.titles.length-1]
-      // console.log(this.titles[this.titles.length-1])
-      // console.log(getComputedStyle(this.titles[this.titles.length-1]).backgroundColor)
-      // this.titles[this.titles.length-1].style.backgroundColor = "#fff"
-      // let i
-      // for(i=1;i<this.titles.length;i++){
-        
-      // }
+      let newEditorBox = document.createElement("div");
+      let ne = document.createElement("button");
+      newEditorBox.classList.add("board");
+      newEditorBox.classList.add("hidden");
+      newEditorBox.classList.add("board" + this.editorNum);
+      newEditorBox.appendChild(ne);
+      // console.log(editor.parentElement);
+
+      editor.parentElement.appendChild(newEditorBox);
+
+      // console.log(newEditorBox.classList);
+      this.editorNum++;
+
+      let files = document.querySelectorAll(".file-name");
+      let i;
+      // files[files.length-1].style.backgroundColor = '#2c3134'
+      for (i = 0; i < files.length; i++) {
+        if (i === 0) {
+          files[i].style.backgroundColor = "#545e66";
+        } else {
+          files[i].style.backgroundColor = "#2c3134";
+        }
+      }
+      this.$refs.sitemap.loadSitemap(this.titles);
     },
     addComment() {
       let text = document.querySelector(".comment-input");
@@ -768,18 +827,28 @@ export default {
     position: fixed;
     left: 4%;
     background-color: #32373a;
-    z-index: 11;
+    z-index: 30;
     top: 6%;
   }
 
   .overview {
     width: 20rem;
-    z-index: 11;
+    z-index: 30;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
     left: 4%;
     background-color: #32373a;
+    top: 6%;
+  }
+  .sitemap {
+    width: 20rem;
+    height: 30rem;
+    border: 1.5px solid #000000;
+    position: fixed;
+    left: 4%;
+    background-color: #32373a;
+    z-index: 30;
     top: 6%;
   }
 
@@ -948,19 +1017,33 @@ export default {
           display: flex;
           flex-direction: row;
           width: 100%;
-
-          .title {
-            text-align: center;
+          .file-name {
             left: 0;
-            color: #fff;
-            height: auto;
             cursor: pointer;
-            background-color: #545e66;
-            padding: 0.3rem;
-            padding-left: 0.9rem;
-            padding-right: 0.9rem;
+            // background-color: #545e66;
             top: 0;
+            display: flex;
+            flex-direction: row;
+            border-top-left-radius: 0.3rem;
+            border-top-right-radius: 0.3rem;
+            padding-left: 0.15rem;
+            padding-right: 0.15rem;
+
+            .title {
+              text-align: center;
+              padding: 0.1rem;
+              padding-left: 0.4rem;
+              padding-right: 0.3rem;
+              color: #fff;
+              height: auto;
+            }
+            .close-icon {
+              width: 0.7rem;
+              padding-right: 0.1rem;
+              margin-right: 0.2rem;
+            }
           }
+
           .monitor,
           .iphone,
           .ipad {
@@ -969,7 +1052,7 @@ export default {
             top: 0.35rem;
             width: 1.4rem;
             cursor: pointer;
-            z-index: 3333;
+            z-index: 28;
             &:hover {
               border-radius: 0.15rem;
               background-color: #888888;
@@ -988,14 +1071,14 @@ export default {
             width: 1.3rem;
           }
         }
-        
+
         .main-menu {
           width: 100%;
           bottom: 0;
           height: 96%;
           display: flex;
           flex-direction: row;
-          
+
           .editor {
             width: 100%;
             height: 100%;
@@ -1013,10 +1096,10 @@ export default {
               overflow: hidden;
             }
           }
-          .hidden{
+          .hidden {
             display: none;
           }
-          .display{
+          .display {
             display: block;
           }
           .comment-board {
@@ -1122,7 +1205,7 @@ export default {
 
   .layout {
     width: 20rem;
-    z-index: 11;
+    z-index: 30;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
@@ -1161,13 +1244,20 @@ export default {
     float: left;
     filter: blur(0.8px);
   }
+  .title-copy {
+    text-align: left;
+    height: 1.5rem;
+    position: fixed;
+    z-index: 33;
+    background-color: #444444;
+    padding: 0.2rem;
+    color: #e7e4e4;
+  }
 }
-.editor-component{
-  .board{
-  width: 100%;
-  height: 35rem;
-  border: 1px solid white;
+.editor-component {
+  .board {
+    width: 100%;
+    height: 35rem;
+  }
 }
-}
-
 </style>
