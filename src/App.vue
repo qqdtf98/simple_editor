@@ -1109,7 +1109,12 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        background-color: #fff;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
+      }
+      .comment-btn {
+        margin-top: 1.3rem;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
