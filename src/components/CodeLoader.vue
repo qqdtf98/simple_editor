@@ -248,4 +248,3 @@ export default {
         background-color: #23282b;
     }
 </style>
-

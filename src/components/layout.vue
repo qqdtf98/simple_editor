@@ -1301,12 +1301,15 @@ export default {
 	
 	
 	onFileSelected(e){
+		console.log(e)
 		var file = document.querySelector('#getfile');
+		console.log(file.files)
 		var fileList = file.files ;
 
 		// 읽기
 		console.log(fileList)
 		var reader = new FileReader();
+		console.log(reader)
 		reader.readAsDataURL(fileList [0]);
 		// console.log(reader)
 		var submit = this.submitSorce
@@ -1314,12 +1317,12 @@ export default {
 		//로드 한 후
 		var vm =this;
 		reader.onload = function  () {
-
+			console.log("s")
 			submit.payload =data
 			submit.style = 'background-image'
 			submit.value = 'url(' + reader.result+ ')';
 			submit.change = 1,
-			
+			console.log(submit)
 			vm.$emit('userSelected', submit)
 		};
 	},

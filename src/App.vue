@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <spliter class="spliter"/> -->
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/scale.svg" />
       <img class="width" src="./assets/width.svg" /> -->
@@ -134,11 +133,14 @@
           </div>
         </div>
       </div>
+
+      
       <!-- <div class="bottom-panel"></div> -->
       <div class="row bottom-panel">
+      
       <div v-show="isData" class="loadDataPanel">
         <div @mousedown="loaderResize" class="loader-bord"></div>
-        <div class="studio-text-box">
+        <div class="studio-text-box"> 
           <span class="studio-text">CodeReview</span>
           <img
             @click="closeCodeReview"
@@ -147,54 +149,21 @@
           />
         </div>
         <div class="showSorce">
-          <div
-            v-show="tabStep === 1"
-            class="tab-pane"
-            id="pills-home"
-            role="tabpanel"
-            aria-labelledby="pills-home-tab"
-          >
-            <div class="showCode">
-              <pre
-                id="preview1"
-                v-highlightjs
-              ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
-            </div>
+          <div v-show="tabStep===1"  class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+              <div class="showCode">
+                  <pre id="preview1" v-highlightjs ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
+              </div>
           </div>
-          <div
-            v-show="tabStep === 2"
-            class="tab-pane"
-            id="pills-profile"
-            role="tabpanel"
-            aria-labelledby="pills-profile-tab"
-          >
-            <div class="showCode">
-              <pre
-                v-highlightjs
-                id="preview2"
-              ><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
-            </div>
+          <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+              <div class="showCode">
+                  <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+              </div>
           </div>
-          <div
-            v-show="tabStep === 3"
-            class="tab-pane"
-            id="pills-contact"
-            role="tabpanel"
-            aria-labelledby="pills-contact-tab"
-          >
-            <div class="showCode">
-              <textarea class="showJS" v-model="js" id="preview3">
- 불러올 데이터가 없습니다. </textarea
-              >
-              <input
-                style="float:left;"
-                type="submit"
-                value="Apply"
-                @click="inputFile"
-                id="getfile"
-                accept="text/*"
-              />
-            </div>
+          <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+              <div class="showCode">
+                  <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
+                  <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
+              </div>
           </div>
         </div>
       </div>
@@ -207,12 +176,14 @@
     <div class="right-panel">
       <img
         @click="layoutBtn"
+        id="codeBtnLayout"
         class="layout-btn"
         src="./assets/layout.svg"
         title="layout"
       />
       <img
         @click="codeBtn"
+        id="codeBtnFileList"
         class="code-btn"
         src="./assets/code.svg"
         title="code-editor"
@@ -225,8 +196,6 @@
       />
     </div>
   </div>
-    
-
     <CodeLoader
       @setFile="setFile"
       :loaderData="message"
@@ -236,7 +205,7 @@
     ></CodeLoader>
 
     <layout
-      v-if="layoutOn"
+      v-show="layoutOn"
       ref="layouts"
       :payload="payload"
       @userSelected="userSelectedWidth"
@@ -245,7 +214,7 @@
       class="layout"
     ></layout>
     <studio
-      v-if="studioOn"
+      v-show="studioOn"
       @desc-close="tagNotSelected"
       @ui-select="uiSelected"
       @tag-select="tagSelected"
@@ -729,11 +698,14 @@ export default {
       } else {
         this.codeOn = true;
         this.$nextTick(() => {
-          let loader = document.querySelector(".code-loader");
+          let loader = document.querySelector(".loadDataPanel");
           let bord = document.querySelector(".loader-bord");
           bord.style.top = getComputedStyle(loader).top;
           this.initialTop = getComputedStyle(loader).top;
         });
+      }
+      if (this.layoutOn === true) {
+        this.layoutOn = false;
       }
     },
     layoutBtn() {
@@ -749,6 +721,9 @@ export default {
       } else {
         this.overviewOn = false;
         this.studioOn = true;
+      }
+      if (this.codeOn === true) {
+        this.codeOn = false;
       }
     },
     overviewBtn() {
@@ -825,6 +800,21 @@ export default {
     },
     stackPush(elem) {
       this.workStack.push(elem);
+      if(this.tabStep==1){
+            // document.querySelector('#preview').textContent = this.loadData[0]
+            this.message[0] = document.getElementById("newLoaderHtml").innerHTML
+            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
+            console.log(document.getElementById("newLoaderHtml").innerHTML)
+            console.log(this.message[0])
+      }
+      else if(this.tabStep==2){
+          
+          document.querySelector('#preview2').innerHTML = this.message[1]
+      }
+      else if(this.tabStep==3){
+
+          document.querySelector('#preview3').innerText = this.message[2]
+      }
     },
     userSelectedTagComponent(e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
@@ -854,9 +844,11 @@ export default {
         this.isPustHtml = false;
       }
       this.$refs.overview.domSelection(payload.target);
+      this.$refs.layouts.isData = true;
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
+      console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },
@@ -926,8 +918,78 @@ export default {
     },
     toggleClicked() {
       console.log("aaa");
-    }
-  
+    },
+    loadData(data){
+      this.message = data
+    },
+    closeCodeRiview(){
+      this.isData=false
+    },
+    chageContent(){
+      console.log(this.message)
+      document.getElementById("newLoaderHtml").innerHTML
+        if(this.tabStep==1){
+            // document.querySelector('#preview').textContent = this.loadData[0]
+            this.test = document.getElementById("newLoaderHtml").innerHTML
+            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
+            console.log("dsd")
+        }
+        else if(this.tabStep==2){
+            document.querySelector('#preview2').innerHTML = this.message[1]
+        }
+        else if(this.tabStep==3){
+            console.log(document.querySelector('#preview3'))
+            console.log(this.message[2])
+            this.js = this.message[2]
+            // document.querySelector('#preview3').innerText = this.message[2]
+        }
+    },
+    inputFile(e){
+        alert("저장되었습니다")
+        // console.log(this.message[2])
+        var file = document.querySelector('#getfile');
+        file.onchange = function () { 
+            var fileList = file.files ;
+            
+            // 읽기
+            var reader = new FileReader();
+            reader.readAsText(fileList [0]);
+
+            //로드 한 후
+            reader.onload = function  () {
+                document.querySelector('#preview').textContent = reader.result ;
+            }; 
+        }; 
+    },
+    clickSoure(e){
+      this.isData=true
+      console.log("s")
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
+      if (e.target.getAttribute('name')=='html') {
+          this.tabStep = 1
+          // this.chageContent()
+          console.log("s")
+      } else if (e.target.getAttribute('name')=='css') {
+          this.tabStep = 2
+      } else if (e.target.getAttribute('name')=='js') {
+          this.tabStep = 3
+      }
+    },
+    setFile(file){
+      // console.log(file)
+      this.chageContent()
+      this.isData=true
+       if (file=='html') {
+          this.tabStep = 1
+
+      } else if (file=='css') {
+          this.tabStep = 2
+      } else if (file=='js') {
+          this.tabStep = 3
+      }
+    },
+
+
   }
 };
 </script>
@@ -1300,12 +1362,15 @@ export default {
     }
   }
   .code-loader {
-    width: 92%;
-    z-index: 10000;
+    width: 20rem;
+    z-index: 11;
+    height: 30rem;
+    border: 1.5px solid #000000;
     position: fixed;
-    bottom: 5%;
-    height: 20rem;
-    background-color: #23282b;
+    right: 4%;
+    background-color: #32373a;
+    z-index: 12;
+    top: 6%;
   }
    .loader-bord {
      cursor: n-resize;
@@ -1358,6 +1423,9 @@ export default {
     float: left;
     filter: blur(0.8px);
   }
+  .bottom-panel{
+    width:92%;
+  }
   .title-copy {
     text-align: left;
     height: 1.5rem;
@@ -1388,7 +1456,7 @@ export default {
       z-index: 10000;
       position: fixed;
       bottom: 5%;
-      height: 100%;
+      height: 35%;
       background-color: #23282b;
         
     }
