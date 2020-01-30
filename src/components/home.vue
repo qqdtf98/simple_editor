@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <div class="editor-box" @scroll="handleScroll">
+    <div class="editor-box" >
       <div
         @mouseup="onmouserightClick"
         @keydown.enter="isContentNotEditable"
@@ -12,14 +12,13 @@
         @mousemove="onmouseMove"
         @mousedown="mousedown"
       >
-        <div class="board">
+        <div @scroll="handleScroll" class="board">
           <ss />
-        
-        <spliter />
-        <HtmlLoader class="navi" />
-        <Navi class="navi" />
+
+          <spliter />
+          <HtmlLoader class="navi" />
+          <Navi class="navi" />
           <Dashboard /> -->
-         
         </div>
       </div>
     </div>
@@ -226,7 +225,6 @@ export default {
             this.size = size;
           }
         }
-        
       }
       if (this.isContentMovable) {
         let borderElem;
@@ -313,17 +311,29 @@ export default {
           //     classValue += '.' + this.clickedElement.classList[i] + ' '
           //   }
           // }
-          let addComponent = document.getElementsByClassName(
-            this.clickedElement.classList.value
-          );
-          this.$nextTick(() => {
-            console.log(addComponent[0]);
-            // console.log(e)
-
-            // tag가 추가할 element. 자식이 된다.
-            // console.log(position)
-            // position이 추가할 위치에 있는 element. 부모가 된다.
-            // this.movePosition.parentElement
+          if (this.clickedElement.className === "") {
+            console.log("없음");
+             var move = {
+              work: "move",
+              position: this.clickedElement.parentElement,
+              elem: this.clickedElement,
+              afterMovePosition: this.movePosition.target
+            };
+            this.$emit("stack-push", move);
+            this.movePosition.target.appendChild(this.clickedElement);
+          } else {
+            let addComponent = document.getElementsByClassName(
+              this.clickedElement.classList.value
+            );
+            let i;
+            // console.log(addComponent)
+            for (i = 0; i < addComponent.length; i++) {
+              if (addComponent[i] === this.clickedElement) {
+                // console.log(i);
+                // console.log(addComponent[i]);
+                break;
+              }
+            }
             var move = {
               work: "move",
               position: this.clickedElement.parentElement,
@@ -331,22 +341,41 @@ export default {
               afterMovePosition: this.movePosition.target
             };
             this.$emit("stack-push", move);
-            this.movePosition.target.appendChild(addComponent[0]);
-            if (
-              e.target.className === "left-border" ||
-              e.target.className === "right-border" ||
-              e.target.className === "top-border" ||
-              e.target.className === "bottom-border"
-            ) {
-              // let pos = e.target.className.split('-')[0]
-              let addComponent = document.getElementsByClassName(
-                this.clickedElement.classList.value
-              );
-              this.movePosition.target.parentElement.appendChild(
-                addComponent[0]
-              );
-            }
-          });
+            // console.log(addComponent[i])
+            this.movePosition.target.appendChild(addComponent[i]);
+
+            this.$nextTick(() => {
+              // console.log(addComponent);
+              // console.log(e)
+
+              // tag가 추가할 element. 자식이 된다.
+              // console.log(position)
+              // position이 추가할 위치에 있는 element. 부모가 된다.
+              // this.movePosition.parentElement
+
+              if (
+                e.target.className === "left-border" ||
+                e.target.className === "right-border" ||
+                e.target.className === "top-border" ||
+                e.target.className === "bottom-border"
+              ) {
+                // let pos = e.target.className.split('-')[0]
+                let addComponent = document.getElementsByClassName(
+                  this.clickedElement.classList.value
+                );
+                let i;
+                for (i = 0; i < addComponent.length; i++) {
+                  if (addComponent[i] === this.clickedElement) {
+                    console.log(i);
+                    break;
+                  }
+                }
+                this.movePosition.target.parentElement.appendChild(
+                  addComponent[i]
+                );
+              }
+            });
+          }
         }
       }
 
@@ -600,23 +629,28 @@ export default {
       }
       // console.log(classValue)
       this.style = data.style;
-      let element = document.getElementsByClassName(this.target)[0];
-      console.log(element);
-      for (i = 0; i < element.length; i++) {
-        console.log(element[i]);
+      let element = document.getElementsByClassName(this.target);
+      for(i=0;i<element.length;i++){
+        if(element[i] === data.payload){
+          break
+        }
       }
+
+      
       var style = {
         work: "style",
-        elem: element,
+        elem: element[i],
         style: this.style,
         afterValue: data.value,
-        value: getComputedStyle(element)[this.style]
+        value: getComputedStyle(element[i])[this.style]
       };
+      console.log(element[i])
+      this.$emit("stack-push", style);
 
       this.value = data.value;
 
       // console.log(element)
-      element.style[this.style] = this.value
+      element[i].style[this.style] = this.value;
       // console.log("바꼈다")
       // console.log(document.getElementsByClassName(this.target)[0].className)
       // console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
@@ -745,7 +779,9 @@ export default {
       });
     },
     handleScroll(e) {
+      console.log('bbbb')
       if (this.selectedElement != null) {
+        console.log('aaaaaaa')
         this.onelementSelected = false;
       }
       if (this.clickedElement != null) {
@@ -932,27 +968,36 @@ export default {
       let elem = document.getElementsByClassName(
         this.clickedElement.classList.value
       );
-      // console.log(elem[0])
-      let copyElem = elem[0].cloneNode(true);
+      // console.log(elem)
+      for (i = 0; i < elem.length; i++) {
+        if (elem[i] === this.clickedElement) {
+          console.log(i);
+          break;
+        }
+      }
+
+      console.log(elem[i]);
+
+      let copyElem = elem[i].cloneNode(true);
 
       let randomClass =
-        elem[0].parentElement.classList.value.replace(/ /gi, "") +
-        elem[0].classList.value.replace(/ /gi, "") +
+        elem[i].parentElement.classList.value.replace(/ /gi, "") +
+        elem[i].classList.value.replace(/ /gi, "") +
         this.classIndex;
       copyElem.classList.add(randomClass);
       this.classIndex++;
-      console.log(this.clickedElement.parentElement.children);
+      // console.log(this.clickedElement.parentElement.children);
 
       var newparent = document.createElement("div");
       var copy = {
         work: "copy",
         position: this.clickedElement.parentElement,
-        elem: elem[0],
+        elem: elem[i],
         copyElem: copyElem,
         nth: nChild
       };
-      console.log(copy);
-      $(elem[0]).after(copyElem);
+      // console.log(copy);
+      $(elem[i]).after(copyElem);
       this.$emit("stack-push", copy);
 
       // this.$nextTick(() => {
@@ -1075,9 +1120,9 @@ export default {
         });
       }
     },
-    loadData(data){
+    loadData(data) {
       // console.log(data)
-       this.$emit('loadData', data)
+      this.$emit("loadData", data);
     }
   }
 };
@@ -1093,12 +1138,11 @@ export default {
     // display:table
     // overflow: auto;
     scroll-behavior: smooth;
-    
 
     .editor-component {
       // overflow: auto;
       height: 100%;
-      .board{
+      .board {
         overflow: auto;
         height: 100%;
         border: 1px solid #000000;

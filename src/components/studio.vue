@@ -230,7 +230,6 @@ export default {
       }
     },
     onSearchElement (e) {
-      
       let tagBox = document.querySelector('.tag-box')
       let list = document.querySelectorAll('.tag-list')
       let name = document.querySelectorAll('.nested')
@@ -266,6 +265,7 @@ export default {
           }
         } else {
           for (i = 0; i < name.length; i++) {
+            // console.log(name)
             if (name[i].children[0].className !== 'tag-list-box') {
               // if (name[i].children[0].className === 'template') {
               //   break
@@ -277,11 +277,16 @@ export default {
                     .indexOf(e.target.value.toUpperCase()) === -1
                 ) {
                 } else {
+                  
                   var divTag = document.createElement('div')
                   var node = document.createTextNode(name[i].children[j].innerHTML)
+                  // console.log(name[i].children[j].innerHTML)
+                 
                   divTag.appendChild(node)
+                  //  console.log(divTag)
                   tagBox.appendChild(divTag)
                   divTag.classList.add('filter')
+                  // console.log(tagBox)
                 }
               }
             }
@@ -402,10 +407,9 @@ export default {
         }
       }
       .filter{
-        color:white;
+        color:#fff;
         text-align: left;
         margin-left: 1rem;
-
       }
     }
   }

@@ -1171,7 +1171,12 @@ export default {
       }
       .code-btn {
         margin-top: 1.3rem;
-        background-color: #fff;
+        width: 1rem;
+        z-index: 100;
+        cursor: pointer;
+      }
+      .comment-btn {
+        margin-top: 1.3rem;
         width: 1rem;
         z-index: 100;
         cursor: pointer;
@@ -1398,7 +1403,7 @@ export default {
   .description-ui {
     background-color: #000;
     position: fixed;
-    z-index: 15;
+    z-index: 34;
     max-width: 30rem;
     float: left;
     left: 18%;
@@ -1418,7 +1423,7 @@ export default {
   .description-img {
     background-color: #000;
     position: fixed;
-    z-index: 15;
+    z-index: 35;
     max-width: 30rem;
     float: left;
     filter: blur(0.8px);

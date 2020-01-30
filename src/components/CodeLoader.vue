@@ -4,23 +4,23 @@
           <span class="studio-text">FileList</span>
           <img @click="closeFileList" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg==" class="close-btn">
         </div>
-        <div class="tag-box">
-            <div class="tag-list-box">
-            <span class="tag-list">Pages</span>
-            <div class="nested" @click="setFileCodeLoder">
+        <div class="file-box">
+            <div class="file-list-box">
+            <span class="file-list">Pages</span>
+            <div class="nested-file" @click="setFileCodeLoder">
                 <div name = "html" >index.html</div>
             </div>
             </div>
-            <div class="tag-list-box">
-            <span class="tag-list">Style</span>
-            <div class="nested" @click="setFileCodeLoder">
+            <div class="file-list-box">
+            <span class="file-list">Style</span>
+            <div class="nested-file" @click="setFileCodeLoder">
                 <div name = "css" >index.css</div>
             </div>
             </div>
 
-            <div class="tag-list-box">
-            <span class="tag-list">JavaScript</span>
-            <div class="nested" @click="setFileCodeLoder">
+            <div class="file-list-box">
+            <span class="file-list">JavaScript</span>
+            <div class="nested-file" @click="setFileCodeLoder">
                 <div name = "js" >index.js</div>
             </div>
             </div>
@@ -179,15 +179,15 @@ export default {
         border-radius: .5em;
         overflow:auto;
     }
-    .tag-box {
+    .file-box {
       // overflow:scroll;
       align-items: left;
       justify-content: left;
-      .tag-list-box {
+      .file-list-box {
         // float: left;
         text-align: left;
         margin: 0.1rem;
-        .tag-list {
+        .file-list {
           margin-left: 0.4rem;
           color: #e7e4e4;
           cursor: pointer;
@@ -197,22 +197,22 @@ export default {
         }
 
         /* Create the tag-list/arrow with a unicode, and style it */
-        .tag-list::before {
+        .file-list::before {
           content: "\25B6";
           color: #e7e4e4;
           display: inline-block;
           margin-right: 6px;
         }
 
-        /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
-        .tag-list-down::before {
+        /* Rotate the file-list/arrow icon when clicked on (using JavaScript) */
+        .file-list-down::before {
           transform: rotate(90deg);
         }
-        .nested {
+        .nested-file {
           display: none;
         }
 
-        /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
+        /* Show the nested-file list when the user clicks on the tag-list/arrow (with JavaScript) */
         .active {
           display: block;
         }
