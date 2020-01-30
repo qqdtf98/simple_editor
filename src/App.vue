@@ -848,7 +848,7 @@ export default {
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
-      console.log(data)
+      // console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },

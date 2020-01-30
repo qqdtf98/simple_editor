@@ -967,7 +967,7 @@ export default {
       this.isFontPicker = true
     },
     updateBackgroundValue (colorData) {
-      this.backgroundColor.background = colorData.hex
+	  this.backgroundColor.background = colorData.hex
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'background'
       this.submitSorce.value = colorData.hex
