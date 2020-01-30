@@ -12,20 +12,14 @@
         @mousemove="onmouseMove"
         @mousedown="mousedown"
       >
-      <spliter />
-        <HtmlLoader  
-        class="navi"
-        @loadData="loadData"
-
-        />
         <div class="board">
           <ss />
-          <!--       
+        
         <spliter />
         <HtmlLoader class="navi" />
-        <!-- <Navi class="navi" /> -->
-          <!-- <Dashboard /> -->
-          -->
+        <Navi class="navi" />
+          <Dashboard /> -->
+         
         </div>
       </div>
     </div>
