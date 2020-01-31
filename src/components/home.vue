@@ -389,6 +389,7 @@ export default {
     commentMode() {
       this.mouseRightClick = false;
       this.$emit("comment", this.clickedElement);
+      //연결안되어있음
     },
     addComponentTagStudio() {},
     mousedown(e) {
@@ -470,9 +471,11 @@ export default {
           e.target.className !== "home" &&
           e.target.className !== "editor-component"
         ) {
-          this.$emit("componentSelected", e);
+          this.$store.state.counter= e
+          this.$emit("componentSelected", this.$store.state.counter);
 
           this.clickedElement = e.target;
+          
           this.clickedBorder = getComputedStyle(e.target).border;
           this.clickedBorderRadius = getComputedStyle(e.target).borderRadius;
           e.target.style.border = "3px dashed #f75c51";
@@ -534,7 +537,8 @@ export default {
           e.target.className !== "home" &&
           e.target.className !== "editor-component"
         ) {
-          this.$emit("componentSelected", e);
+          this.$store.state.counter= e
+          this.$emit("componentSelected", this.$store.state.counter);
           this.isContentClicked = true;
           this.isContentRemovable = true;
           this.isContentCopied = true;

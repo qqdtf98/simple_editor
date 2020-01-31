@@ -832,7 +832,10 @@ export default {
     },
     componentSelected(payload) {
       this.$refs.layouts.isData = true;
-      this.payload = payload.target;
+      // this.payload = payload.target;
+      this.payload = this.$store.state.counter.target
+      console.log(this.payload)
+
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
