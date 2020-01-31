@@ -2,7 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueHighlightJS from 'vue-highlight.js';
-// import store from './store'
+import Vue from 'vue'
+import App from'./App.vue'
+import {store} from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'bootstrap-css-only/css/bootstrap.min.css'
@@ -25,7 +27,7 @@ Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
 
-export const eventBus = new Vue()
+// export const eventBus = new Vue()
 new Vue({
-  render: h => h(App)
+  render: h => h(App),store
 }).$mount('#app')
