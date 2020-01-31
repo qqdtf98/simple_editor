@@ -1,6 +1,6 @@
 <template>
   <div id="dashboard">
-    <div class="editor-box" >
+    <div class="editor-box">
       <div
         @mouseup="onmouserightClick"
         @keydown.enter="isContentNotEditable"
@@ -13,12 +13,13 @@
         @mousedown="mousedown"
       >
         <div @scroll="handleScroll" class="board">
-          <ss />
+           <Dashboard /> -->
+          <!-- <ss /> -->
 
           <spliter />
           <HtmlLoader class="navi" />
           <Navi class="navi" />
-          <Dashboard /> -->
+         
         </div>
       </div>
     </div>
@@ -313,7 +314,7 @@ export default {
           // }
           if (this.clickedElement.className === "") {
             console.log("없음");
-             var move = {
+            var move = {
               work: "move",
               position: this.clickedElement.parentElement,
               elem: this.clickedElement,
@@ -615,42 +616,58 @@ export default {
       }
     },
     styleChanged(data) {
-      // console.log(data)
-      this.target = data.payload.classList;
-      var classValue = "";
-      let i;
-      // console.log(data.payload.classList.length)
-      for (i = 0; i < data.payload.classList.length; i++) {
-        if (i === data.payload.classList.length - 1) {
-          classValue += "." + data.payload.classList[i];
-        } else {
-          classValue += "." + data.payload.classList[i] + " ";
+      console.log(data)
+      if (data.payload.className === "") {
+        console.log('없')
+        var style = {
+          work: 'style',
+          elem: this.clickedElement,
+          style: this.style,
+          afterValue: data.value,
+          value: getComputedStyle(data.payload)[this.style]
         }
-      }
-      // console.log(classValue)
-      this.style = data.style;
-      let element = document.getElementsByClassName(this.target);
-      for(i=0;i<element.length;i++){
-        if(element[i] === data.payload){
-          break
+        this.$emit("stack-push", style);
+
+        this.value = data.value;
+
+        // console.log(element)
+        data.payload.style[this.style] = this.value;
+      } else {
+        this.target = data.payload.classList;
+        var classValue = "";
+        let i;
+        // console.log(data.payload.classList.length)
+        for (i = 0; i < data.payload.classList.length; i++) {
+          if (i === data.payload.classList.length - 1) {
+            classValue += "." + data.payload.classList[i];
+          } else {
+            classValue += "." + data.payload.classList[i] + " ";
+          }
         }
+        // console.log(classValue)
+        this.style = data.style;
+        let element = document.getElementsByClassName(this.target);
+        for (i = 0; i < element.length; i++) {
+          if (element[i] === data.payload) {
+            break;
+          }
+        }
+
+        var style = {
+          work: "style",
+          elem: element[i],
+          style: this.style,
+          afterValue: data.value,
+          value: getComputedStyle(element[i])[this.style]
+        };
+        this.$emit("stack-push", style);
+
+        this.value = data.value;
+
+        // console.log(element)
+        element[i].style[this.style] = this.value;
       }
 
-      
-      var style = {
-        work: "style",
-        elem: element[i],
-        style: this.style,
-        afterValue: data.value,
-        value: getComputedStyle(element[i])[this.style]
-      };
-      console.log(element[i])
-      this.$emit("stack-push", style);
-
-      this.value = data.value;
-
-      // console.log(element)
-      element[i].style[this.style] = this.value;
       // console.log("바꼈다")
       // console.log(document.getElementsByClassName(this.target)[0].className)
       // console.log((document.getElementsByClassName(document.getElementsByClassName(this.target)[0].className)[0].style.cssText))
@@ -779,9 +796,7 @@ export default {
       });
     },
     handleScroll(e) {
-      console.log('bbbb')
       if (this.selectedElement != null) {
-        console.log('aaaaaaa')
         this.onelementSelected = false;
       }
       if (this.clickedElement != null) {
@@ -965,40 +980,62 @@ export default {
           break;
         }
       }
-      let elem = document.getElementsByClassName(
-        this.clickedElement.classList.value
-      );
-      // console.log(elem)
-      for (i = 0; i < elem.length; i++) {
-        if (elem[i] === this.clickedElement) {
-          console.log(i);
-          break;
+      if (this.clickedElement.className === "") {
+        console.log("없음");
+        let copyElem = this.clickedElement.cloneNode(true);
+        console.log(copyElem);
+        let randomClass =
+          this.clickedElement.parentElement.classList.value.replace(/ /gi, "") +
+          this.clickedElement.classList.value.replace(/ /gi, "") +
+          this.classIndex;
+        copyElem.classList.add(randomClass);
+        this.classIndex++;
+        var copy = {
+          work: "copy",
+          position: this.clickedElement.parentElement,
+          elem: this.clickedElement,
+          copyElem: copyElem,
+          nth: nChild
+        };
+        // console.log(copy);
+        $(this.clickedElement).after(copyElem);
+        this.$emit("stack-push", copy);
+      } else {
+        let elem = document.getElementsByClassName(
+          this.clickedElement.classList.value
+        );
+        // console.log(elem)
+        for (i = 0; i < elem.length; i++) {
+          if (elem[i] === this.clickedElement) {
+            console.log(i);
+            break;
+          }
         }
+
+        console.log(elem[i]);
+
+        let copyElem = elem[i].cloneNode(true);
+
+        let randomClass =
+          elem[i].parentElement.classList.value.replace(/ /gi, "") +
+          elem[i].classList.value.replace(/ /gi, "") +
+          this.classIndex;
+        copyElem.classList.add(randomClass);
+        this.classIndex++;
+        // console.log(this.clickedElement.parentElement.children);
+
+        // var newparent = document.createElement("div");
+        var copy = {
+          work: "copy",
+          position: this.clickedElement.parentElement,
+          elem: elem[i],
+          copyElem: copyElem,
+          nth: nChild
+        };
+        // console.log(copy);
+        $(elem[i]).after(copyElem);
+        this.$emit("stack-push", copy);
       }
-
-      console.log(elem[i]);
-
-      let copyElem = elem[i].cloneNode(true);
-
-      let randomClass =
-        elem[i].parentElement.classList.value.replace(/ /gi, "") +
-        elem[i].classList.value.replace(/ /gi, "") +
-        this.classIndex;
-      copyElem.classList.add(randomClass);
-      this.classIndex++;
-      // console.log(this.clickedElement.parentElement.children);
-
-      var newparent = document.createElement("div");
-      var copy = {
-        work: "copy",
-        position: this.clickedElement.parentElement,
-        elem: elem[i],
-        copyElem: copyElem,
-        nth: nChild
-      };
-      // console.log(copy);
-      $(elem[i]).after(copyElem);
-      this.$emit("stack-push", copy);
 
       // this.$nextTick(() => {
       //   // console.log(this.clickedElement.parentElement.children)
