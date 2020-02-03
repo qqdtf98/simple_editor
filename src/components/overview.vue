@@ -81,7 +81,7 @@ export default {
 
       // 새로 들어온 것
 
-      var child = document.getElementById('newLoaderHtml').children
+      var child = document.getElementById('newLerHtml').children
       // console.log(child)
       // console.log(child.length)
       // console.log(child)
@@ -90,7 +90,6 @@ export default {
         if (typeof (child[i].children) !== 'undefined') {
           // console.log("전")
           // var idOjb = "aa"
-
           // 자식
           var obj = document.getElementById('bodySource')
           var newDIV = document.createElement('li')
@@ -99,11 +98,8 @@ export default {
 
           // newDIV.style.backgroundColor="yellow";
           obj.appendChild(newDIV)
-
           // console.log(this.friendNum)
-
           var obj = document.getElementById(this.childNum)
-
           var newDIV = document.createElement('input')
           // newDIV.innerHTML = child[i].tagName;
           newDIV.setAttribute('class', 'checkbox')

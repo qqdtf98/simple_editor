@@ -142,25 +142,52 @@
         <div @mousedown="loaderResize" class="loader-bord"></div>
         <div class="studio-text-box"> 
           <span class="studio-text">CodeReview</span>
+                
           <img
             @click="closeCodeReview"
             src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
             class="close-btn"
           />
+          
         </div>
         <div class="showSorce">
-          <div v-show="tabStep===1"  class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+          <div   class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
               <div class="showCode">
-                  <pre id="preview1" v-highlightjs ><code class="HTML"> 불러올 데이터가 없습니다. </code></pre>
+                <div class="showCode">
+                  <Ruler 
+                  ref="Ruler"
+                  min="0"
+							    max="100" 
+                  step="0.01"
+                  @onchange="rulerChange"
+                  :range="range"/>
+
+                  <SlideRuler
+                  ref="SlideRuler"
+                  maxValue: "230"
+                  minValue: "100"
+                  currentValue: "180"
+                  handleValue: "handleValue"
+                  precision: "1"
+                  ></SlideRuler>
+                  <h1>dasd</h1>
+                  <vue-ruler type="horizontal" ref="ruler"/>
+                </div>
               </div>
           </div>
           <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
               <div class="showCode">
-                  <pre v-highlightjs id="preview2"><code class="CSS"> 불러올 데이터가 없습니다.</code></pre>
+              <MonacoEditor
+                width="800"
+                height="500"
+                theme="vs-dark"
+                language="javascript"
+                ></MonacoEditor>
               </div>
           </div>
           <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
               <div class="showCode">
+                  
                   <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
                   <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
               </div>
@@ -204,7 +231,7 @@
       class="code-loader"
     ></CodeLoader>
 
-    <layout
+    <layoutCopy
       v-show="layoutOn"
       ref="layouts"
       :payload="payload"
@@ -212,7 +239,7 @@
       @userSelectBorder="userSelectBorder"
       @selectDomElemented="selectDomElemented"
       class="layout"
-    ></layout>
+    ></layoutCopy>
     <studio
       v-show="studioOn"
       @desc-close="tagNotSelected"
@@ -260,32 +287,49 @@
 
 <script>
 
+//자
+import Vue from 'vue'
+import Ruler from 'vue-component-ruler'
+import 'vue-component-ruler/dist/ruler.min.css';
+///
 import htmlLoader from "./components/htmlLoader";
 import home from "./components/home";
-import layout from "./components/layout";
+import layoutCopy from "./components/layout";
 import studio from "./components/studio";
 import overview from "./components/overview";
 import spliter from "./components/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
 import sitemap from "./components/sitemap";
+import SlideRuler from 'slide-ruler';
+
+import MonacoEditor from 'monaco-editor-vue';
 
 export default {
   components: {
     htmlLoader,
     home,
-    layout,
+    layoutCopy,
     studio,
     overview,
     spliter,
     Switches,
     CodeLoader,
-    sitemap
+    sitemap,
+    MonacoEditor,
+    Ruler,
+    SlideRuler,
+    
   },
   props: ["selectDomElement"],
   name: "App",
   data() {
     return {
+      code: '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
+      options: {
+        selectOnLineNumbers: true
+      },
+      range:[0,100],
       payload: "",
       data: "",
       homeLayoutLocation: "",
@@ -530,7 +574,6 @@ export default {
       this.isData=true
        if (file=='html') {
           this.tabStep = 1
-
       } else if (file=='css') {
           this.tabStep = 2
       } else if (file=='js') {
@@ -800,6 +843,7 @@ export default {
     },
     stackPush(elem) {
       this.workStack.push(elem);
+      console.log("s")
       if(this.tabStep==1){
             // document.querySelector('#preview').textContent = this.loadData[0]
             this.message[0] = document.getElementById("newLoaderHtml").innerHTML
@@ -833,6 +877,7 @@ export default {
     componentSelected(payload) {
       this.$refs.layouts.isData = true;
       this.payload = payload.target;
+      this.layoutOn=true
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
@@ -988,6 +1033,9 @@ export default {
           this.tabStep = 3
       }
     },
+    rulerChange(e){
+      console.log(e)
+    }
 
 
   }

@@ -4,10 +4,9 @@
         <span class="studio-text">Layout</span>
         <img @click="closeLayout" src="../assets/close.svg" class="close-btn">
 	</div>
-	<br>
 	<!-- Nav tabs -->
 	<!-- <img @click="closeOverview" class="close-btn" src="../assets/close.svg" /> -->
-	<ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist" @click="chageTab">
+	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
 		<li class="nav-item">
 			<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>
 		</li>
@@ -17,132 +16,668 @@
 		<li class="nav-item">
 			<a class="nav-link" v-bind:class="{ active:tabStep===3 }" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Animation</a>
 		</li>
+	
 	</ul>
+	<div class="tab-content" id="pills-tabContent">
+		<div class="no-text" v-show="!isData">No components selected</div>
+  
 
-	<div class="tab-pane" v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-		<div class="addButtonTree">
+	<!-- Look % Feel-->
+	<div>
+		<div role="tablist">
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Layout</b-button>
+			</b-card-header>
+			<b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+			<b-card-body>
+				<div class="info-option">
+					<div class="margin">
+						<div class="box-row blue">
+							<span class="margin-top" title="Margin Top">{{margin[0].value}}</span>
+						</div>
+						<div class="box-row middle">
+							<div class="box-col blue">
+								<span class="margin-left" title="Margin Left">{{margin[3].value}}</span>
+							</div>
+							<div class="box-col padding">
+								<div class="box-row green">
+									<span class="padding-top" title="Padding Top">{{padding[0]}}</span>
+								</div>
+								<div class="box-row middle">
+									<div class="box-col green">
+										<span class="padding-left" title="Padding Left">{{padding[3]}}</span>
+									</div>
+									<div class="box-col middle empty"></div>
+									<div class="box-col green">
+										<span class="padding-right" title="Padding Right">{{padding[1]}}</span>
+									</div>
+								</div>
+								<div class="box-row green">
+									<span class="padding-bottom" title="Padding Bottom">{{padding[2]}}</span>
+								</div>
+							</div>
+							<div class="box-col blue">
+								<span class="margin-right" title="Margin Right">{{margin[1].value}}</span>
+							</div>
+						</div>
+						<div class="box-row blue">
+							<span class="margin-bottom" title="Margin Bottom">{{margin[2].value}}</span>
+						</div>
+					</div>
+				<div class="dimensions">
+					<span class="size x">
+					<i>X</i>
+					<b>{{componentSorce.x}}</b>
+					</span>
+					<span class="size y">
+					<i>Y</i>
+					<b>{{componentSorce.y}}</b>
+					</span>
+					<span class="size width">
+					<i>W</i>
+					<b>{{componentSorce.width}}</b>
+					</span>
+					<span class="size height">
+					<i>H</i>
+					<b>{{componentSorce.height}}</b>
+					</span>
+				</div>
+				<div class="option textboxoption has-addon collapsed">
+					<label class="option-content">
+					<span :class="{fontActive:onWidth}"title>
+						Width
+						<i class="caret" style="display: inline-block;"></i>
+					</span>
+					<div class="control">
+						<input
+						type
+						name="width"
+						value
+						title
+						placeholder="31.4375px"
+						@keyup.enter="submitSourceWithPX"
+						v-model="componentSorce.width"
+						/>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle"></span>
+					</div>
+					</label>
+					<label class="option-content">
+					<span :class="{fontActive:onHeight}"title>
+						Height
+						<i class="caret" style="display: inline-block;"></i>
+					</span>
+					<div class="control">
+						<input
+						type="text"
+						name="height"
+						value
+						title
+						placeholder="40px"
+						@keyup.enter="submitSourceWithPX"
+						v-model="componentSorce.height"
+						/>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle">
+						<i></i>
+						</span>
+					</div>
+					</label>
+					<label class="option-content">
+					<span :class="{fontActive:onMargin}"title>
+						Margin
+						<i class="caret" style="display: none;"></i>
+					</span>
+					<div class="control">
+						<input
+						type="text"
+						name="margin"
+						value
+						title
+						placeholder="0"
+						@keyup.enter="submitSourceWithPX"
+						v-model="componentSorce.margin"
+						/>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle">
+						<i></i>
+						</span>
+					</div>
+					</label>
+					<label class="option-content">
+					<span :class="{fontActive:onPadding}"title>
+						Padding
+						<i class="caret" style="display: none;"></i>
+					</span>
+					<div class="control">
+						<input
+						type="text"
+						name="padding"
+						value
+						title
+						placeholder="0"
+						@keyup.enter="submitSourceWithPX"
+						v-model="componentSorce.padding"
+						/>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle">
+						<i></i>
+						</span>
+					</div>
+					</label>
+				</div>
+				</div>
+				</v-app>
+			</b-card-body>
+			</b-collapse>
+		</b-card>
+
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-2 variant="info">Background</b-button>
+			</b-card-header>
+			<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+				<div class="option textboxoption has-addon collapsed">
+					<label class="option-content">
+					<span :class="{fontActive:onBackgroundColor}"title>
+						BackgroundColor
+						<i class="caret" style="display: inline-block;"></i>
+					</span>
+					<div class="control">
+						<b-button  @click = "colorBackgroundpicker" @keyup.enter="submitSourceOriginal" style="width:30px; height:30px" :style="backgroundColor"variant="free"></b-button>
+						<input
+						type
+						name="backgroundColor"
+						value
+						title
+						placeholder=""
+						@keyup.enter="submitSourceOriginal"
+						v-model="backgroundColor.backgroundColor.hex"
+						/>
+						<chrome-color
+						class="chrome"
+						v-show="isBackgroundPicker"
+						:value="backgroundColor.backgroundColor"
+						v-model="backgroundColor.backgroundColor"
+						@input="updateBackgroundValue"
+						></chrome-color>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle"></span>
+					</div>
+					</label>
+				</div>
+				<div>
+				 image
+					<input style="display:none"type="file" @change="onFileSelected" id="getfile"ref="fileInput">
+					<button @click="$refs.fileInput.click()">Pick File</button>
+					<button @click="onUpload">Save</button>
+				</div>
+				<div class="row">
+					<span class="col-md-5">image-size</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="imageSizeSelected" :options="imageSize" @change="submitChangeImageSize"></b-form-select>
+					</div>
+				</div>
+			</b-collapse>
+		</b-card>
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-3 variant="info">Font</b-button>
+			</b-card-header>
+			<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+				<div class="option textboxoption has-addon collapsed">
+					<label class="option-content">
+					<span :class="{fontActive:onColor}" title>
+						Color
+						<i class="caret" style="display: inline-block;"></i>
+					</span>
+					<div class="control">
+						<b-button  @click = "colorFontpicker" @keyup.enter="submitSourceOriginal" style="width:30px; height:30px":style="fontColor"variant="free"></b-button>
+						<input
+						type
+						name="color"
+						title
+						placeholder=""
+						@keyup.enter="submitSourceOriginal"
+						v-model= "fontColor.background"
+						/>
+						<chrome-color
+						class="chrome"
+						v-show="isFontPicker"
+						:value="fontColor.backgroundColor"
+						v-model="fontColor.backgroundColor"
+						@input="updateFontValue"
+						></chrome-color>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle"></span>
+					</div>
+					</label>
+					<label class="option-content">
+					<span :class="{fontActive:onFontSize}" title>
+						Font Size
+						<i class="caret" style="display: inline-block;"></i>
+					</span>
+					<div class="control">
+						<input
+						type="text"
+						name="fontSize"
+						title
+						placeholder="40px"
+						@keyup.enter="submitSourceWithPX"
+						v-model="componentSorce.fontSize"
+						/>
+						<span class="warning-badge" style="display: none;"></span>
+						<span class="addon increment-handle">
+						<i></i>
+						</span>
+					</div>
+					</label>
+				</div>
+			</b-collapse>
+		</b-card>
+
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-4 variant="info">Filters</b-button>
+			</b-card-header>
+
+			<b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
+				<div class="row">
+					<div class="col md-4" :class="{fontActive:onOpacity}" style="float:left">
+					Opacity
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="1"
+							step="0.01"
+							name="Opacity"
+							submitSorce.style="Opacity"
+							@input = "submitOpacity"
+							v-model="opacityValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							v-model="opacityValue"
+							placeholder="0"
+							name="Opacity"
+							@keyup.enter="submitOpacity"
+						></input>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col md-4"  :class="{fontActive:onBlur}" style="float:left">
+						Blur
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Blur"
+							submitSorce.style="Blur"
+							@input = "submitBlur"
+							v-model="blurValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0px"
+							name="Blur"
+							@keyup.enter="submitBlur"
+							v-model="blurValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onBrightness}" style="float:left">
+						Brightness
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Brightness"
+							submitSorce.style="Brightness"
+							@input = "submitBrightness"
+							v-model="brightnessValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Brightness"
+							@keyup.enter="submitBrightness"
+							v-model="brightnessValue"
+						></input>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="col md-4" :class="{fontActive:onContrast}" style="float:left">
+						Contrast
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="200"
+							step="1"
+							name="Contrast"
+							submitSorce.style="Contrast"
+							@input = "submitContrast"
+							v-model="contrastValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Contrast"
+							@keyup.enter="submitContrast"
+							v-model="contrastValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onGrayscale}" style="float:left">
+						Grayscale
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Grayscale"
+							submitSorce.style="Grayscale"
+							@input = "submitGrayscale"
+							v-model="grayscaleValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Grayscale"
+							@keyup.enter="submitGrayscale"
+							v-model="grayscaleValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onHue}" style="float:left">
+						Hue
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="360"
+							step="3"
+							name="Hue"
+							submitSorce.style="Hue"
+							@input = "submitHue"
+							v-model="hueValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0deg"
+							name="Hue"
+							@keyup.enter="submitHue"
+							v-model="hueValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onInvert}" style="float:left">
+						Invert
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Invert"
+							submitSorce.style="Invert"
+							@input = "submitInvert"
+							v-model="invertValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="100%"
+							name="Invert"
+							@keyup.enter="submitInvert"
+							v-model="invertValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onSaturate}" style="float:left">
+						Saturate
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="200"
+							step="1"
+							name="Saturate"
+							submitSorce.style="Saturate"
+							@input = "submitSaturate"
+							v-model="saturateValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+						style="width:50px"
+						placeholder="0%"
+						name="Saturate"
+						@keyup.enter="submitSaturate"
+						v-model="saturateValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4" :class="{fontActive:onSepia}" style="float:left">
+						Sepia
+					</div>
+				<div class="col md-4">
+				<range-slider
+					class="slider"
+					min="0"
+					max="100"
+					step="1"
+					name="Sepia"
+					submitSorce.style="Sepia"
+					@input = "submitSepia"
+					v-model="sepiaValue">
+				</range-slider>
+				</div>
+				<div class="col md-4">
+				<input
+					style="width:50px"
+					placeholder="0%"
+					name="Sepia"
+					@keyup.enter="submitSepia"
+					v-model="sepiaValue"
+				></input>
+				</div>
+				</div>
+
+			</b-collapse>
+		</b-card>
 		</div>
-		
-		<div id="accordion" role="tablist">
-			<div class="card">
-				<div class="card-header" role="tab" id="headingOne">
-					<h5 class="mb-0">
-						<a class="title" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							layout
-						</a>
-					</h5>
+	</div>
+</div>
+
+  <!-- Options v-if="isData" -->
+  <div v-show="isData" class="tab-pane "  v-bind:class="{ active:tabStep===2}"id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	<div  role="tablist">
+	<div>
+		<div  role="tablist">
+		<b-card no-body class="mb-1" >
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<div class="parentTreeOption" id="inParentTreeOption" @click="domTrackingWithTree">
+				<button>HTML</button><button>Body</button>
+
+			</div>
+			<b-button block href="#" v-b-toggle.accordion-1 variant="info">Text Option</b-button>
+			</b-card-header>
+			<b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+				<div class="row">
+					<span class="col-md-4" style>Alignment</span>
+					<div class="col-md-7">
+					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<img  name="right" class="fas fa-align-right"></img>
+					</button>
+					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="center" class="fas fa-align-center"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="left" class="fas fa-align-left"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left" type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="left" class="fas fa-align-justify"></i>
+					</button>
+					<button @click="submitChangeAlign" name=""  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="" class="fas fa-times"></i>
+					</button>
+					</div>
 				</div>
-				<div id="collapseOne" class="collapse" v-bind:class="{ show:layoutTab===1 }" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						<div class="margin">
-							<div class="box-row blue">
-								<span class="margin-top" title="Margin Top">0</span>
-							</div>
-							<div class="box-row middle">
-								<div class="box-col blue">
-									<span class="margin-left" title="Margin Left">0</span>
-								</div>
-								<div class="box-col padding">
-									<div class="box-row green">
-										<span class="padding-top" title="Padding Top">0</span>
-									</div>
-									<div class="box-row middle">
-										<div class="box-col green">
-											<span class="padding-left" title="Padding Left">0</span>
-										</div>
-										<div class="box-col middle empty"></div>
-										<div class="box-col green">
-											<span class="padding-right" title="Padding Right">0</span>
-										</div>
-									</div>
-									<div class="box-row green">
-										<span class="padding-bottom" title="Padding Bottom">0</span>
-									</div>
-								</div>
-								<div class="box-col blue">
-									<span class="margin-right" title="Margin Right">0</span>
-								</div>
-							</div>
-							<div class="box-row blue">
-								<span class="margin-top" title="Margin Top">0</span>
-							</div>
+				<div class="row">
+					<span class="col-md-5">Transformantion</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="transformantionSelected" :options="transformantion" @change="submitChangeTextTransform"></b-form-select>
+					</div>
+				</div>
+
+				<div class="row">
+					<span class="col-md-5">Font-family</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="fontFamilySelected" :options="fontFamily" @change="submitChangeTextFontFamily"></b-form-select>
+					</div>
+				</div>
+
+				<div class="row">
+					<span class="col-md-5">Font-style</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="fontStyleSelected" :options="fontStyle" @change="submitChangeTextFontStyle"></b-form-select>
+					</div>
+				</div>
+
+				<div class="row">
+					<span class="col-md-5">Font-weight</span>
+					<div class="col-md-7">
+					<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="fontWeightSelected" :options="fontWeight" @change="submitChangeTextFontWeight"></b-form-select>
+					<input @change="submitChangeTextFontWeight" v-show="fontWeightSelected=='number'"></input>
+					</div>
+				</div>
+
+			</b-collapse>
+		</b-card>
+
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-2 variant="info">Border</b-button>
+			</b-card-header>
+			<b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+				<div class="option textboxoption has-addon collapsed">
+					<div class="row">>
+						<span class="col-md-5">
+							Border
+						</span>
+						<span class="col-md-6 custom-switch">
+							<input v-model="border" @change="submitChangeBorder" type="checkbox" class="custom-control-input" id="customSwitches">
+							<label class="custom-control-label" for="customSwitches" ></label>
+						</span>
+					</div>
+					<div class="row">
+						<span class="col-md-5">border-width</span>
+						<div class="col-md-7">
+						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderWidthSelected" :options="borderWidth" @change="submitChangeBorderWidth"></b-form-select>
 						</div>
-
-						<div class="dimensions">
-							<span class="size x"><i>X</i><b>177</b></span>
-							<span class="size y"><i>Y</i><b>68</b></span>
-							<span class="size width"><i>W</i><b>0</b></span>
-							<span class="size height"><i>H</i><b>0</b></span>
+					</div>
+					<div class="row">
+						<span class="col-md-5">border-style</span>
+						<div class="col-md-7">
+						<b-form-select class=" btn btn-info btn-sm dropdown-toggle" v-model="borderStyleSelected" :options="borderStyle" @change="submitChangeBorderStyle"></b-form-select>
 						</div>
-
-						<div class="row">
-							<a>
-								Width
-							</a>
-							<input
-								type
-								name="width"
-								value
-								title
-								placeholder="31.4375px"
-								@keyup.enter="submitSourceWithPX"
-								v-model="componentSorce.width"
-							/>
-							<span class="addon increment-handle"><i class="fa fa-chevron-up"></i></span>
-							<span class="addon increment-handle"><i class="fa fa-chevron-down"></i></span>
-
-						</div>
-						
 					</div>
 				</div>
-			</div>
-
-			<div class="card">
-				<div class="card-header" role="tab" id="headingOne">
-					<h5 class="mb-0">
-						<a class="title" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							background
-						</a>
-					</h5>
-				</div>
-				<div id="collapseOne" class="collapse" v-bind:class="{ show:layoutTab===0 }" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						...............................................................................#1
+			</b-collapse>
+		</b-card>
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-3 variant="info">Flex box</b-button>
+			</b-card-header>
+			<b-collapse id="accordion-3" accordion="my-accordion" role="tabpanel">
+				<div class="row">
+					<span class="col-md-4" style>Float</span>
+					<div class="col-md-7">
+					<button  @click="submitChangeAlign" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i @click="submitChangeAlign($event)" class="fas fa-align-right" ></i>
+					</button>
+					<button @click="submitChangeAlign" name="center" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-center"></i>
+					</button>
+					<button @click="submitChangeAlign" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-align-left"></i>
+					</button>
+					<button @click="submitChangeAlign" name="no"  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i class="fas fa-times"></i>
+					</button>
 					</div>
 				</div>
-			</div>
+			</b-collapse>
+		</b-card>
 
-			<div class="card">
-				<div class="card-header" role="tab" id="headingOne">
-					<h5 class="mb-0">
-						<a class="title" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							font
-						</a>
-					</h5>
-				</div>
-				<div id="collapseOne" class="collapse" v-bind:class="{ show:layoutTab===0 }" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						...............................................................................#1
+		<b-card no-body class="mb-1">
+			<b-card-header header-tag="header" class="p-1" role="tab">
+			<b-button block href="#" v-b-toggle.accordion-4 variant="info">Display</b-button>
+			</b-card-header>
+
+			<b-collapse id="accordion-4" accordion="my-accordion" role="tabpanel">
+
+				<div class="row">
+					<span class="col-md-4" >Float</span>
+					<div class="col-md-7">
+					<button  @click ="submitChangeFloat" name="right" type="button" class=" col-md-0.8 aling-button" aria-label="Left Align">
+						<i  name="right"  class="fas fa-align-right"></i>
+					</button>
+					<button @click ="submitChangeFloat" name="left"type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="left" class="fas fa-align-left"></i>
+					</button>
+					<button @click ="submitChangeFloat" name=""  type="button" class="col-md-0.8 aling-button" aria-label="Left Align">
+						<i name="" class="fas fa-times"></i>
+					</button>
 					</div>
 				</div>
-			</div>
 
-			<div class="card">
-				<div class="card-header" role="tab" id="headingOne">
-					<h5 class="mb-0">
-						<a class="title" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							filter
-						</a>
-					</h5>
-				</div>
-				<div id="collapseOne" class="collapse" v-bind:class="{ show:layoutTab===0 }" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-					<div class="card-body">
-						...............................................................................#1
-					</div>
-				</div>
-			</div>
+			</b-collapse>
+		</b-card>
 		</div>
-	</div> 
+	</div>
+	</div>
+  </div>
+  <div v-show="isData" class="tab-pane "  v-bind:class="{ active:tabStep===3 }"id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">준비중입니다</div>
+</div>
 </div>
 </template>
 
@@ -150,7 +685,6 @@
 import RangeSlider from 'vue-range-slider'
 import { Chrome } from 'vue-color'
 import { mapGetters, mapMutations } from 'vuex'
-
 // you probably need to import built-in style
 import 'vue-range-slider/dist/vue-range-slider.css'
 
@@ -159,11 +693,6 @@ export default {
   props: ['payload','loadData'],
   data () {
     return {
-	  options: {
-        //Monaco Editor Options
-      },
-	  layoutTab:1,
-
 	  imageSizeSelected: 'none',
       imageSize: [
         { value: 'none', text: 'None' },
@@ -315,8 +844,7 @@ export default {
   },
   components: {
     RangeSlider,
-    ChromeColor: VueColor.Chrome,
-	
+    ChromeColor: VueColor.Chrome
   },
 
   created () {
@@ -869,18 +1397,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
-// @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
-input{
-	background-color: #A4A4A4;
-	border-style: solid;
-	border-width: 0.5px;
-	border-color: #A4A4A4;
-	width:50%
-}
+<style>
+/*
 .close-btn{
       width: 1.1rem;
-	  /* position: fixed; */
+	   position: fixed; 
 	  right: 4%;
 	  cursor:pointer;
     }
@@ -888,132 +1409,79 @@ input{
 .dsadsadsad{
 	color: white !important;
 }
-.nav {
-	font-weight:bold;
-	font-size:14px;
+.no-text{
+	margin-top: 0.5rem;
+	color: #fff;
 }
-.nav-tabs {
-    border-bottom:1px solid #242729;
+.blue {
+  padding: 5px;
+  background-color: #283844;
+  color: #64bfff;
+  line-height: 1;
 }
-.nav-link{
-	color:#868e96;
+.col{
+	color:black;
+	padding: 0.4rem;
 }
-.nav-link.active{
-	background: linear-gradient(#3b4144, #32373a);
-	border-style:none;
+.info-option .box-row {
+  display: flex;
+  flex-direction: column;
 }
-.nav-tabs .nav-link.active {
-    color: #fff;
-}
-
-.card {
-  margin-bottom: 10px;
-  color:black;
-  width: 100%;
-  background: #35373a;
+.info-option {
+  font-size: 12px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  text-align: center;
   border-bottom: 1px solid #242729;
-  box-shadow: 0 1px 0 #34373a;
+  box-shadow: 0 1px 0 #3b4144;
   padding-bottom: 8px;
-    /* padding-top: 1px; */
- margin: 0 15px 10px 0px;
+  margin: 0 10px 10px;
 }
-.card-header h5{
-	text-align:left;
-}
-.card-header .title {
-	color:white;
-	font-weight:bold;
-	font-size:15px
-}
-[data-toggle="collapse"]:after {
-display: inline-block;
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  content: "\f054";
-  transform: rotate(90deg) ;
-  transition: all linear 0.25s;
-  float: right;
-  }   
-[data-toggle="collapse"].collapsed:after {
-  transform: rotate(0deg) ;
-}
-.card-body{
-	width:100%;
-}
-.margin{
-	width:100%;
-}
-.blue{
-	padding:2px;
-	background-color: #2e3743 !important;
-	color: #64BFFF;
-	line-height: 1;
-	/*
-	border-style: solid;
-	border-width: 0.5px;
-	border-color: #64BFFF;
-	*/
-}
-.green{
-	padding:2px;
-	background-color: #333f3a !important;
-	color: #86cf89;
-	line-height: 1;
-	/* 
-	border-style: solid;
-	border-width: 0.5px;
-	border-color: #86cf89;
-	*/
+.info-option .green {
+  padding: 5px;
+  background-color: #2d3f3a;
+  color: #57d88b;
+  line-height: 1;
 }
 
-.middle {
-	width:100%;
-    display: flex;
-    flex-direction: row;
-
+.info-option .middle {
+  display: flex;
+  flex-direction: row;
 }
-.empty{
-	flex-grow: 1;
-	width:100%;
+.info-option .box-col {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+.info-option .empty {
+    flex-grow: 1;
+	flex-direction: column;
     box-shadow: 0 0 3px rgba(0,0,0,0.21) inset;
-}
-.box-col {
-	width:100%;
-    justify-content: center; 
-    display: flex; 
+	user-select: none;
+	justify-content: center;
     flex-direction: column;
-}
-.box-row{
-	.blue{
-		width:14%
-	}
-	.box-col{
-		.middle{
-			.green{
-				width:14%
-			}
-		}
-	}
-
+	width: 70%;
+    margin-right: 240px;
 }
 
-
-/*
-.nav {
-	font-weight:bold;
-	font-size:15px;
-	
+.info-option .padding {
+    width:87%
 }
-.nav-link{
-	color:#dee2e6;
+.fontActive {
+	color:blue;
+	font-Weight:bold;
+ }
+ .aling-button{
+	float:right;
+	margin:0.1rem;
 }
-.active{
-	background: linear-gradient(#3b4144, #32373a);
-	color:#fff;
+.custom-control-label{
+	float:right;
+	margin:0.1rem;
 }
-*/    
+.parentTreeOption{
+	overflow:auto;
+}
+ */   
 </style>
