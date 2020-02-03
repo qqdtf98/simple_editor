@@ -1172,10 +1172,12 @@ export default {
 <style lang="scss">
 #dashboard {
   display: inline-block;
+  height: 100%;
+  width: 100%;
   align-items: center;
   .editor-box {
     width: 100%;
-    height: 80%;
+    height: 100%;
     // display:table
     // overflow: auto;
     scroll-behavior: smooth;
