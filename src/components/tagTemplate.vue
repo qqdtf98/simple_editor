@@ -6,7 +6,7 @@
       @mousedown.stop
         @click="closeTemplate"
         class="close-btn"
-        src="../assets/close.svg"
+        src="../assets/images/close.svg"
       />
     </div>
     <div class="template-box"></div>

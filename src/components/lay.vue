@@ -6,7 +6,7 @@
       @mousedown.stop
         @click="closelayout"
         class="close-btn"
-        src="../assets/close.svg"
+        src="../assets/images/close.svg"
       /> -->
     </div>
     <div class="layout-box"></div>

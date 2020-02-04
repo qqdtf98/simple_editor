@@ -13,13 +13,12 @@
         @mousedown="mousedown"
       >
         <div @scroll="handleScroll" class="board">
-           <Dashboard /> -->
+          <Dashboard /> -->
           <!-- <ss /> -->
 
           <spliter />
           <HtmlLoader class="navi" />
           <Navi class="navi" />
-         
         </div>
       </div>
     </div>
@@ -35,21 +34,21 @@
       @mousedown="moveElement"
       style="cursor:pointer"
       v-show="isContentClicked"
-      src="../assets/move.svg"
+      src="../assets/images/move.svg"
       class="move-icon"
     />
     <img
       @click="copyElement"
       style="cursor:pointer"
       v-show="isContentCopied"
-      src="../assets/copy.svg"
+      src="../assets/images/copy.svg"
       class="copy-icon"
     />
     <img
       @click="removeContent"
       style="cursor:pointer"
       v-show="isContentRemovable"
-      src="../assets/delete.svg"
+      src="../assets/images/delete.svg"
       class="delete-icon"
     />
     <div
@@ -94,12 +93,12 @@
 </template>
 
 <script>
-import Dashboard from "./dashboard.vue";
-import Navi from "./navi.vue";
-import HtmlLoader from "./htmlLoader.vue";
-import spliter from "./spliter.vue";
-import Context from "./Context";
-import ss from "./ss";
+import Dashboard from './dashboard.vue'
+import Navi from './navi.vue'
+import HtmlLoader from './htmlLoader.vue'
+import spliter from './spliter.vue'
+import Context from './Context'
+import ss from './ss'
 
 export default {
   components: { Dashboard, Navi, HtmlLoader, spliter, Context, ss },
@@ -108,21 +107,21 @@ export default {
       selectedElement: null,
       borderstyle: null,
       onelementSelected: false,
-      target: "",
-      style: "",
-      value: "",
+      target: '',
+      style: '',
+      value: '',
       isContentEditable: false,
-      clickedBorder: "",
+      clickedBorder: '',
       clickedElement: null,
-      clickedBorderRadius: "",
+      clickedBorderRadius: '',
       isContentClicked: false,
       elem: null,
-      directionData: "",
-      initialposition: "",
-      resizedirection: "",
-      initialwidth: "",
-      initialheight: "",
-      initialscale: "",
+      directionData: '',
+      initialposition: '',
+      resizedirection: '',
+      initialwidth: '',
+      initialheight: '',
+      initialscale: '',
       isContentRemovable: false,
       add: false,
       isContentResizable: false,
@@ -130,10 +129,10 @@ export default {
       mouseElem: null,
       movePosition: null,
       addComponentTag: null,
-      borderTop: "",
-      borderBottom: "",
-      borderLeft: "",
-      borderRight: "",
+      borderTop: '',
+      borderBottom: '',
+      borderLeft: '',
+      borderRight: '',
       isContentCopied: false,
       classIndex: 0,
       currentTop: 0,
@@ -146,163 +145,161 @@ export default {
       size: null,
       targetText: null,
       editElem: null
-    };
+    }
   },
   mounted() {
     // let b = document.querySelector('.3')
-    document.addEventListener("contextmenu", e => {
-      e.preventDefault();
-    });
+    document.addEventListener('contextmenu', e => {
+      e.preventDefault()
+    })
 
-    let editor = document.querySelector(".editor-box");
+    let editor = document.querySelector('.editor-box')
 
     // let b = document.getElementsByClassName('editor-component')
-    this.borderTop = editor.getBoundingClientRect().top;
+    this.borderTop = editor.getBoundingClientRect().top
     this.borderBottom =
-      editor.getBoundingClientRect().height +
-      editor.getBoundingClientRect().top;
-    this.borderLeft = editor.getBoundingClientRect().left;
+      editor.getBoundingClientRect().height + editor.getBoundingClientRect().top
+    this.borderLeft = editor.getBoundingClientRect().left
     this.borderRight =
-      editor.getBoundingClientRect().left +
-      editor.getBoundingClientRect().width;
+      editor.getBoundingClientRect().left + editor.getBoundingClientRect().width
 
-    window.addEventListener("mousemove", event => {
-      event.preventDefault();
+    window.addEventListener('mousemove', event => {
+      event.preventDefault()
       if (this.isContentResizable) {
-        if (this.resizedirection === "right") {
+        if (this.resizedirection === 'right') {
           if (event.pageX < this.initialposition) {
             const size =
               (this.initialwidth - (this.initialposition - event.pageX) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           } else if (event.pageX > this.initialposition) {
             const size =
               (this.initialwidth + (event.pageX - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           }
-        } else if (this.resizedirection === "left") {
+        } else if (this.resizedirection === 'left') {
           if (event.pageX < this.initialposition) {
             const size =
               (this.initialwidth + (this.initialposition - event.pageX) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           } else if (event.pageX > this.initialposition) {
             const size =
               (this.initialwidth - (event.pageX - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).width)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           }
-        } else if (this.resizedirection === "top") {
+        } else if (this.resizedirection === 'top') {
           if (event.pageY < this.initialposition) {
             const size =
               (this.initialheight + (this.initialposition - event.pageY) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           } else if (event.pageY > this.initialposition) {
             const size =
               (this.initialheight - (event.pageY - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           }
-        } else if (this.resizedirection === "bottom") {
+        } else if (this.resizedirection === 'bottom') {
           if (event.pageY < this.initialposition) {
             const size =
               (this.initialheight - (this.initialposition - event.pageY) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           } else if (event.pageY > this.initialposition) {
             const size =
               (this.initialheight + (event.pageY - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height);
-            this.clickedElement.style.transform = `scale(${size})`;
-            this.size = size;
+              parseInt(getComputedStyle(this.clickedElement).height)
+            this.clickedElement.style.transform = `scale(${size})`
+            this.size = size
           }
         }
       }
       if (this.isContentMovable) {
-        let borderElem;
+        let borderElem
         if (this.mouseElem === null) {
           if (
-            event.target.className === "left-border" ||
-            event.target.className === "right-border" ||
-            event.target.className === "top-border" ||
-            event.target.className === "bottom-border"
+            event.target.className === 'left-border' ||
+            event.target.className === 'right-border' ||
+            event.target.className === 'top-border' ||
+            event.target.className === 'bottom-border'
           ) {
-            borderElem = document.querySelector("." + event.target.className);
-            borderElem.style.backgroundColor = "#0fdc28";
-            this.mouseElem = borderElem;
+            borderElem = document.querySelector('.' + event.target.className)
+            borderElem.style.backgroundColor = '#0fdc28'
+            this.mouseElem = borderElem
           }
         } else {
           if (this.mouseElem !== event.target) {
-            this.mouseElem.style.backgroundColor = "#3e8ce4";
+            this.mouseElem.style.backgroundColor = '#3e8ce4'
             if (
-              event.target.className === "left-border" ||
-              event.target.className === "right-border" ||
-              event.target.className === "top-border" ||
-              event.target.className === "bottom-border"
+              event.target.className === 'left-border' ||
+              event.target.className === 'right-border' ||
+              event.target.className === 'top-border' ||
+              event.target.className === 'bottom-border'
             ) {
-              borderElem = document.querySelector("." + event.target.className);
-              borderElem.style.backgroundColor = "#0fdc28";
-              this.mouseElem = borderElem;
+              borderElem = document.querySelector('.' + event.target.className)
+              borderElem.style.backgroundColor = '#0fdc28'
+              this.mouseElem = borderElem
             }
           }
         }
       }
 
       if (this.clickedElement !== null) {
-        let move = document.querySelector(".move-icon");
+        let move = document.querySelector('.move-icon')
         move.style.left =
-          this.clickedElement.getBoundingClientRect().left + "px";
+          this.clickedElement.getBoundingClientRect().left + 'px'
         move.style.top =
           this.clickedElement.getBoundingClientRect().top -
           move.getBoundingClientRect().height +
-          "px";
-        let deleteIcon = document.querySelector(".delete-icon");
+          'px'
+        let deleteIcon = document.querySelector('.delete-icon')
         deleteIcon.style.left =
           this.clickedElement.getBoundingClientRect().left +
           parseInt(getComputedStyle(move).width) * 2 +
-          "px";
+          'px'
         deleteIcon.style.top =
           this.clickedElement.getBoundingClientRect().top -
           deleteIcon.getBoundingClientRect().height +
-          "px";
-        let copyIcon = document.querySelector(".copy-icon");
+          'px'
+        let copyIcon = document.querySelector('.copy-icon')
         copyIcon.style.left =
           this.clickedElement.getBoundingClientRect().left +
           parseInt(getComputedStyle(move).width) +
-          "px";
+          'px'
         copyIcon.style.top =
           this.clickedElement.getBoundingClientRect().top -
           deleteIcon.getBoundingClientRect().height +
-          "px";
+          'px'
       }
-    });
-    window.addEventListener("mouseup", e => {
+    })
+    window.addEventListener('mouseup', e => {
       // this.clickedElement.style.filter = 'blur(0)'
       if (this.isContentResizable) {
         var style = {
-          work: "style",
+          work: 'style',
           elem: this.clickedElement,
-          style: "transform",
+          style: 'transform',
           afterValue: `scale(${this.size})`,
           value: `scale(${this.initialscale})`
-        };
-        this.$emit("stack-push", style);
-        this.isContentResizable = false;
+        }
+        this.$emit('stack-push', style)
+        this.isContentResizable = false
       }
-      this.resizedirection = null;
+      this.resizedirection = null
       if (this.isContentMovable) {
-        this.clickedElement.style.filter = "blur(0)";
+        this.clickedElement.style.filter = 'blur(0)'
         if (this.mouseElem !== null) {
-          this.mouseElem.style.backgroundColor = "#3e8ce4";
+          this.mouseElem.style.backgroundColor = '#3e8ce4'
           // let i
           // let classValue = ''
           // for (i = 0; i < this.clickedElement.classList.length; i++) {
@@ -312,38 +309,38 @@ export default {
           //     classValue += '.' + this.clickedElement.classList[i] + ' '
           //   }
           // }
-          if (this.clickedElement.className === "") {
-            console.log("없음");
+          if (this.clickedElement.className === '') {
+            console.log('없음')
             var move = {
-              work: "move",
+              work: 'move',
               position: this.clickedElement.parentElement,
               elem: this.clickedElement,
               afterMovePosition: this.movePosition.target
-            };
-            this.$emit("stack-push", move);
-            this.movePosition.target.appendChild(this.clickedElement);
+            }
+            this.$emit('stack-push', move)
+            this.movePosition.target.appendChild(this.clickedElement)
           } else {
             let addComponent = document.getElementsByClassName(
               this.clickedElement.classList.value
-            );
-            let i;
+            )
+            let i
             // console.log(addComponent)
             for (i = 0; i < addComponent.length; i++) {
               if (addComponent[i] === this.clickedElement) {
                 // console.log(i);
                 // console.log(addComponent[i]);
-                break;
+                break
               }
             }
             var move = {
-              work: "move",
+              work: 'move',
               position: this.clickedElement.parentElement,
               elem: this.clickedElement,
               afterMovePosition: this.movePosition.target
-            };
-            this.$emit("stack-push", move);
+            }
+            this.$emit('stack-push', move)
             // console.log(addComponent[i])
-            this.movePosition.target.appendChild(addComponent[i]);
+            this.movePosition.target.appendChild(addComponent[i])
 
             this.$nextTick(() => {
               // console.log(addComponent);
@@ -355,40 +352,40 @@ export default {
               // this.movePosition.parentElement
 
               if (
-                e.target.className === "left-border" ||
-                e.target.className === "right-border" ||
-                e.target.className === "top-border" ||
-                e.target.className === "bottom-border"
+                e.target.className === 'left-border' ||
+                e.target.className === 'right-border' ||
+                e.target.className === 'top-border' ||
+                e.target.className === 'bottom-border'
               ) {
                 // let pos = e.target.className.split('-')[0]
                 let addComponent = document.getElementsByClassName(
                   this.clickedElement.classList.value
-                );
-                let i;
+                )
+                let i
                 for (i = 0; i < addComponent.length; i++) {
                   if (addComponent[i] === this.clickedElement) {
-                    console.log(i);
-                    break;
+                    console.log(i)
+                    break
                   }
                 }
                 this.movePosition.target.parentElement.appendChild(
                   addComponent[i]
-                );
+                )
               }
-            });
+            })
           }
         }
       }
 
-      this.isContentMovable = false;
+      this.isContentMovable = false
 
-      this.$emit("elementresize", this.clickedElement);
-    });
+      this.$emit('elementresize', this.clickedElement)
+    })
   },
   methods: {
     commentMode() {
-      this.mouseRightClick = false;
-      this.$emit("comment", this.clickedElement);
+      this.mouseRightClick = false
+      this.$emit('comment', this.clickedElement)
       //연결안되어있음
     },
     addComponentTagStudio() {},
@@ -406,222 +403,220 @@ export default {
     onmouseMove(e) {
       // console.log(this.addComponentTag)
       // let dashboardElem = document.querySelector('.editor')
-      this.onelementSelected = true;
+      this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
-          e.target.className !== "tagname" &&
-          e.target.className !== "home" &&
-          e.target.className !== "editor-component"
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
-          this.onelementSelected = true;
-          this.selectedElement = e.target.getBoundingClientRect();
-          this.movePosition = e;
+          this.onelementSelected = true
+          this.selectedElement = e.target.getBoundingClientRect()
+          this.movePosition = e
         }
       } else {
         if (this.selectedElement !== e.target) {
           if (
-            e.target.className !== "tagname" &&
-            e.target.className !== "home" &&
-            e.target.className !== "editor-component"
+            e.target.className !== 'tagname' &&
+            e.target.className !== 'home' &&
+            e.target.className !== 'editor-component'
           ) {
-            this.selectedElement = e.target.getBoundingClientRect();
-            this.movePosition = e;
+            this.selectedElement = e.target.getBoundingClientRect()
+            this.movePosition = e
 
-            let tag = document.querySelector(".tagname");
+            let tag = document.querySelector('.tagname')
 
-            tag.textContent = e.target.tagName;
-            tag.style.left = this.selectedElement.left + "px";
+            tag.textContent = e.target.tagName
+            tag.style.left = this.selectedElement.left + 'px'
 
             tag.style.top =
               this.selectedElement.top -
               tag.getBoundingClientRect().height +
-              "px";
-            let bottomBord = document.querySelector(".bottom-border");
-            let topBord = document.querySelector(".top-border");
-            let rightBord = document.querySelector(".right-border");
-            let leftBord = document.querySelector(".left-border");
+              'px'
+            let bottomBord = document.querySelector('.bottom-border')
+            let topBord = document.querySelector('.top-border')
+            let rightBord = document.querySelector('.right-border')
+            let leftBord = document.querySelector('.left-border')
             // let dashWrapper = document.querySelector('.navi')
             // let scrollBottomHeight =
             //   dashboardElem.getBoundingClientRect().height -
             //   dashWrapper.getBoundingClientRect().height
-            topBord.style.left = this.selectedElement.left + "px";
-            topBord.style.top = this.selectedElement.top + "px";
-            topBord.style.width = this.selectedElement.width + "px";
+            topBord.style.left = this.selectedElement.left + 'px'
+            topBord.style.top = this.selectedElement.top + 'px'
+            topBord.style.width = this.selectedElement.width + 'px'
             // bottomBord.style.display = 'none'?
-            leftBord.style.left = this.selectedElement.left + "px";
-            leftBord.style.top = this.selectedElement.top + "px";
-            leftBord.style.height = this.selectedElement.height + "px";
+            leftBord.style.left = this.selectedElement.left + 'px'
+            leftBord.style.top = this.selectedElement.top + 'px'
+            leftBord.style.height = this.selectedElement.height + 'px'
             rightBord.style.left =
-              this.selectedElement.left + this.selectedElement.width - 2 + "px";
-            rightBord.style.top = this.selectedElement.top + "px";
-            rightBord.style.height = this.selectedElement.height + "px";
-            bottomBord.style.left = this.selectedElement.left + "px";
+              this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+            rightBord.style.top = this.selectedElement.top + 'px'
+            rightBord.style.height = this.selectedElement.height + 'px'
+            bottomBord.style.left = this.selectedElement.left + 'px'
             bottomBord.style.top =
-              this.selectedElement.top + this.selectedElement.height - 2 + "px";
-            bottomBord.style.width = this.selectedElement.width + "px";
+              this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+            bottomBord.style.width = this.selectedElement.width + 'px'
           }
         }
       }
     },
     onmouseClick(e) {
-      this.mouseRightClick = false;
+      this.mouseRightClick = false
       if (this.clickedElement === null) {
         if (
-          e.target.className !== "tagname" &&
-          e.target.className !== "home" &&
-          e.target.className !== "editor-component"
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
-          this.$store.state.counter= e
-          this.$emit("componentSelected", this.$store.state.counter);
+          this.$store.state.counter = e
+          this.$emit('componentSelected', this.$store.state.counter)
 
-          this.clickedElement = e.target;
-          
-          this.clickedBorder = getComputedStyle(e.target).border;
-          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius;
-          e.target.style.border = "3px dashed #f75c51";
-          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius;
+          this.clickedElement = e.target
 
-          this.isContentClicked = true;
-          this.isContentRemovable = true;
-          this.isContentCopied = true;
+          this.clickedBorder = getComputedStyle(e.target).border
+          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+          e.target.style.border = '3px dashed #f75c51'
+          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
+
+          this.isContentClicked = true
+          this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.$nextTick(() => {
             // eslint-disable-next-line camelcase
-            let left_line = document.querySelector(".boundary-line-left");
+            let left_line = document.querySelector('.boundary-line-left')
             // eslint-disable-next-line camelcase
-            let right_line = document.querySelector(".boundary-line-right");
+            let right_line = document.querySelector('.boundary-line-right')
             // eslint-disable-next-line camelcase
-            let top_line = document.querySelector(".boundary-line-top");
+            let top_line = document.querySelector('.boundary-line-top')
             // eslint-disable-next-line camelcase
-            let bottom_line = document.querySelector(".boundary-line-bottom");
-            this.elem = e.target.getBoundingClientRect();
+            let bottom_line = document.querySelector('.boundary-line-bottom')
+            this.elem = e.target.getBoundingClientRect()
 
             this.$nextTick(() => {
-              bottom_line.style.left = this.elem.left + "px";
+              bottom_line.style.left = this.elem.left + 'px'
               bottom_line.style.top =
-                this.elem.top + this.elem.height - 1 + "px";
-              bottom_line.style.width = this.elem.width + "px";
-              top_line.style.left = this.elem.left + "px";
-              top_line.style.top = this.elem.top + 1 + "px";
-              top_line.style.width = this.elem.width + "px";
-              left_line.style.left = this.elem.left - 1 + "px";
-              left_line.style.top = this.elem.top + "px";
-              left_line.style.height = this.elem.width + "px";
+                this.elem.top + this.elem.height - 1 + 'px'
+              bottom_line.style.width = this.elem.width + 'px'
+              top_line.style.left = this.elem.left + 'px'
+              top_line.style.top = this.elem.top + 1 + 'px'
+              top_line.style.width = this.elem.width + 'px'
+              left_line.style.left = this.elem.left - 1 + 'px'
+              left_line.style.top = this.elem.top + 'px'
+              left_line.style.height = this.elem.width + 'px'
               right_line.style.left =
-                this.elem.left + this.elem.width - 1 + "px";
-              right_line.style.top = this.elem.top + "px";
-              right_line.style.height = this.elem.width + "px";
-            });
-          });
+                this.elem.left + this.elem.width - 1 + 'px'
+              right_line.style.top = this.elem.top + 'px'
+              right_line.style.height = this.elem.width + 'px'
+            })
+          })
 
           this.$nextTick(() => {
-            let move = document.querySelector(".move-icon");
-            move.style.left = this.elem.left + "px";
+            let move = document.querySelector('.move-icon')
+            move.style.left = this.elem.left + 'px'
             move.style.top =
-              this.elem.top - move.getBoundingClientRect().height + "px";
-            let deleteIcon = document.querySelector(".delete-icon");
+              this.elem.top - move.getBoundingClientRect().height + 'px'
+            let deleteIcon = document.querySelector('.delete-icon')
             deleteIcon.style.left =
-              this.elem.left + move.getBoundingClientRect().width * 2 + "px";
+              this.elem.left + move.getBoundingClientRect().width * 2 + 'px'
             deleteIcon.style.top =
-              this.elem.top - deleteIcon.getBoundingClientRect().height + "px";
-            let copyIcon = document.querySelector(".copy-icon");
+              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+            let copyIcon = document.querySelector('.copy-icon')
             copyIcon.style.left =
-              this.elem.left + move.getBoundingClientRect().width + "px";
+              this.elem.left + move.getBoundingClientRect().width + 'px'
             copyIcon.style.left =
-              this.elem.top - copyIcon.getBoundingClientRect().height + "px";
-          });
+              this.elem.top - copyIcon.getBoundingClientRect().height + 'px'
+          })
         }
       } else if (this.clickedElement !== e.target) {
         if (
-          e.target.className !== "tagname" &&
-          e.target.className !== "home" &&
-          e.target.className !== "editor-component"
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
-          this.$store.state.counter= e
-          this.$emit("componentSelected", this.$store.state.counter);
-          this.isContentClicked = true;
-          this.isContentRemovable = true;
-          this.isContentCopied = true;
+          this.$store.state.counter = e
+          this.$emit('componentSelected', this.$store.state.counter)
+          this.isContentClicked = true
+          this.isContentRemovable = true
+          this.isContentCopied = true
 
-          this.clickedElement.style.border = this.clickedBorder;
-          this.clickedElement.style.borderRadius = this.clickedBorderRadius;
-          this.clickedElement = e.target;
-          this.clickedBorder = getComputedStyle(e.target).border;
-          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius;
-          e.target.style.border = "3px dashed #f75c51";
-          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius;
+          this.clickedElement.style.border = this.clickedBorder
+          this.clickedElement.style.borderRadius = this.clickedBorderRadius
+          this.clickedElement = e.target
+          this.clickedBorder = getComputedStyle(e.target).border
+          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+          e.target.style.border = '3px dashed #f75c51'
+          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
 
           // eslint-disable-next-line camelcase
-          let left_line = document.querySelector(".boundary-line-left");
+          let left_line = document.querySelector('.boundary-line-left')
           // eslint-disable-next-line camelcase
-          let right_line = document.querySelector(".boundary-line-right");
+          let right_line = document.querySelector('.boundary-line-right')
           // eslint-disable-next-line camelcase
-          let top_line = document.querySelector(".boundary-line-top");
+          let top_line = document.querySelector('.boundary-line-top')
           // eslint-disable-next-line camelcase
-          let bottom_line = document.querySelector(".boundary-line-bottom");
+          let bottom_line = document.querySelector('.boundary-line-bottom')
           // eslint-disable-next-line camelcase
 
-          this.elem = e.target.getBoundingClientRect();
-          top_line.style.left = this.elem.left + "px";
-          top_line.style.top = this.elem.top + 1 + "px";
-          top_line.style.width = this.elem.width + "px";
-          bottom_line.style.left = this.elem.left + "px";
-          bottom_line.style.top = this.elem.top + this.elem.height - 1 + "px";
-          bottom_line.style.width = this.elem.width + "px";
-          left_line.style.left = this.elem.left - 1 + "px";
-          left_line.style.top = this.elem.top + "px";
-          left_line.style.height = this.elem.width + "px";
-          right_line.style.left = this.elem.left + this.elem.width - 1 + "px";
-          right_line.style.top = this.elem.top + "px";
-          right_line.style.height = this.elem.width + "px";
+          this.elem = e.target.getBoundingClientRect()
+          top_line.style.left = this.elem.left + 'px'
+          top_line.style.top = this.elem.top + 1 + 'px'
+          top_line.style.width = this.elem.width + 'px'
+          bottom_line.style.left = this.elem.left + 'px'
+          bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
+          bottom_line.style.width = this.elem.width + 'px'
+          left_line.style.left = this.elem.left - 1 + 'px'
+          left_line.style.top = this.elem.top + 'px'
+          left_line.style.height = this.elem.width + 'px'
+          right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
+          right_line.style.top = this.elem.top + 'px'
+          right_line.style.height = this.elem.width + 'px'
 
-          this.isContentClicked = true;
-          this.isContentRemovable = true;
-          this.isContentCopied = true;
+          this.isContentClicked = true
+          this.isContentRemovable = true
+          this.isContentCopied = true
 
           this.$nextTick(() => {
-            this.elem = e.target.getBoundingClientRect();
-            let moveIcon = document.querySelector(".move-icon");
-            moveIcon.style.left = this.elem.left + "px";
+            this.elem = e.target.getBoundingClientRect()
+            let moveIcon = document.querySelector('.move-icon')
+            moveIcon.style.left = this.elem.left + 'px'
             moveIcon.style.top =
-              this.elem.top - moveIcon.getBoundingClientRect().height + "px";
+              this.elem.top - moveIcon.getBoundingClientRect().height + 'px'
 
-            let deleteIcon = document.querySelector(".delete-icon");
+            let deleteIcon = document.querySelector('.delete-icon')
             deleteIcon.style.left =
               this.elem.left +
               parseInt(getComputedStyle(moveIcon).width) * 2 +
-              "px";
+              'px'
             deleteIcon.style.top =
-              this.elem.top - deleteIcon.getBoundingClientRect().height + "px";
+              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
 
-            let copyIcon = document.querySelector(".copy-icon");
+            let copyIcon = document.querySelector('.copy-icon')
             copyIcon.style.left =
-              this.elem.left +
-              parseInt(getComputedStyle(moveIcon).widht) +
-              "px";
+              this.elem.left + parseInt(getComputedStyle(moveIcon).widht) + 'px'
             copyIcon.style.top =
-              this.elem.top - deleteIcon.getBoundingClientRect().height + "px";
-          });
+              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+          })
         }
       } else {
         if (
-          e.target.className !== "tagname" &&
-          e.target.className !== "home" &&
-          e.target.className !== "editor-component"
+          e.target.className !== 'tagname' &&
+          e.target.className !== 'home' &&
+          e.target.className !== 'editor-component'
         ) {
-          this.$emit("componentSelected", e);
+          this.$emit('componentSelected', e)
         }
       }
       if (this.mode) {
         // console.log(getComputedStyle(this.clickedElement).flexWrap)
-        this.clickedElement.style.display = "flex";
-        this.clickedElement.style.flexWrap = "wrap";
+        this.clickedElement.style.display = 'flex'
+        this.clickedElement.style.flexWrap = 'wrap'
         // console.log(getComputedStyle(this.clickedElement).flexWrap)
       }
     },
     styleChanged(data) {
       console.log(data)
-      if (data.payload.className === "") {
+      if (data.payload.className === '') {
         console.log('없')
         var style = {
           work: 'style',
@@ -630,46 +625,46 @@ export default {
           afterValue: data.value,
           value: getComputedStyle(data.payload)[this.style]
         }
-        this.$emit("stack-push", style);
+        this.$emit('stack-push', style)
 
-        this.value = data.value;
+        this.value = data.value
 
         // console.log(element)
-        data.payload.style[this.style] = this.value;
+        data.payload.style[this.style] = this.value
       } else {
-        this.target = data.payload.classList;
-        var classValue = "";
-        let i;
+        this.target = data.payload.classList
+        var classValue = ''
+        let i
         // console.log(data.payload.classList.length)
         for (i = 0; i < data.payload.classList.length; i++) {
           if (i === data.payload.classList.length - 1) {
-            classValue += "." + data.payload.classList[i];
+            classValue += '.' + data.payload.classList[i]
           } else {
-            classValue += "." + data.payload.classList[i] + " ";
+            classValue += '.' + data.payload.classList[i] + ' '
           }
         }
         // console.log(classValue)
-        this.style = data.style;
-        let element = document.getElementsByClassName(this.target);
+        this.style = data.style
+        let element = document.getElementsByClassName(this.target)
         for (i = 0; i < element.length; i++) {
           if (element[i] === data.payload) {
-            break;
+            break
           }
         }
 
         var style = {
-          work: "style",
+          work: 'style',
           elem: element[i],
           style: this.style,
           afterValue: data.value,
           value: getComputedStyle(element[i])[this.style]
-        };
-        this.$emit("stack-push", style);
+        }
+        this.$emit('stack-push', style)
 
-        this.value = data.value;
+        this.value = data.value
 
         // console.log(element)
-        element[i].style[this.style] = this.value;
+        element[i].style[this.style] = this.value
       }
 
       // console.log("바꼈다")
@@ -678,367 +673,367 @@ export default {
     },
     borderStyleChanged(data) {
       // console.log(data)
-      this.target = data.payload.classList;
-      this.style = data.style;
-      this.value = data.value;
+      this.target = data.payload.classList
+      this.style = data.style
+      this.value = data.value
       // console.log(this.clickedBorder)
-      if (this.clickedBorder === "0px none rgb(44, 62, 80)") {
-        this.clickedBorder = "1px solid rgb(0, 0, 0)";
+      if (this.clickedBorder === '0px none rgb(44, 62, 80)') {
+        this.clickedBorder = '1px solid rgb(0, 0, 0)'
         // console.log("click")
       }
-      let prevBorder = this.clickedBorder.split(" ");
-      let element = document.getElementsByClassName(this.target)[0];
+      let prevBorder = this.clickedBorder.split(' ')
+      let element = document.getElementsByClassName(this.target)[0]
       // console.log(element)
       // console.log(this.style)
       this.value =
         prevBorder[0] +
-        " " +
+        ' ' +
         data.value +
-        " " +
+        ' ' +
         prevBorder[2] +
-        " " +
+        ' ' +
         prevBorder[3] +
-        " " +
-        prevBorder[4];
-      element.style[this.style] = this.value;
-      this.clickedBorder = this.value;
+        ' ' +
+        prevBorder[4]
+      element.style[this.style] = this.value
+      this.clickedBorder = this.value
     },
     focusInput(e) {
       if (
-        e.target.className !== "tagname" &&
-        e.target.className !== "home" &&
-        e.target.className !== "editor-component"
+        e.target.className !== 'tagname' &&
+        e.target.className !== 'home' &&
+        e.target.className !== 'editor-component'
       ) {
-        this.isContentEditable = true;
-        this.targetText = e.target.textContent;
-        console.log(this.targetText);
+        this.isContentEditable = true
+        this.targetText = e.target.textContent
+        console.log(this.targetText)
         this.$nextTick(() => {
-          const sel = window.getSelection();
-          sel.removeAllRanges();
-          const range = new Range();
-          range.setStart(this.$refs.dash, 0);
-          range.setEnd(this.$refs.dash, 0);
-          sel.addRange(range);
-          this.placeCaretAtEnd(this.$refs.dash);
-        });
+          const sel = window.getSelection()
+          sel.removeAllRanges()
+          const range = new Range()
+          range.setStart(this.$refs.dash, 0)
+          range.setEnd(this.$refs.dash, 0)
+          sel.addRange(range)
+          this.placeCaretAtEnd(this.$refs.dash)
+        })
       }
     },
     onmouseDoubleClick(e) {
       if (
-        e.target.className !== "tagname" &&
-        e.target.className !== "home" &&
-        e.target.className !== "editor-component"
+        e.target.className !== 'tagname' &&
+        e.target.className !== 'home' &&
+        e.target.className !== 'editor-component'
       ) {
-        this.focusInput(e);
-        this.editElem = e.target;
+        this.focusInput(e)
+        this.editElem = e.target
       }
     },
     placeCaretAtEnd(el) {
-      el.focus();
+      el.focus()
       if (
-        typeof window.getSelection !== "undefined" &&
-        typeof document.createRange !== "undefined"
+        typeof window.getSelection !== 'undefined' &&
+        typeof document.createRange !== 'undefined'
       ) {
-        const range = document.createRange();
-        range.selectNodeContents(el);
-        range.collapse(false);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-      } else if (typeof document.body.createTextRange !== "undefined") {
-        const textRange = document.body.createTextRange();
-        textRange.moveToElementText(el);
-        textRange.collapse(false);
-        textRange.select();
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        range.collapse(false)
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        sel.addRange(range)
+      } else if (typeof document.body.createTextRange !== 'undefined') {
+        const textRange = document.body.createTextRange()
+        textRange.moveToElementText(el)
+        textRange.collapse(false)
+        textRange.select()
       }
     },
     isContentNotEditable(e) {
-      e.preventDefault();
-      console.log("abc");
-      console.log(this.editElem);
-      console.log("bcd");
+      e.preventDefault()
+      console.log('abc')
+      console.log(this.editElem)
+      console.log('bcd')
       var edit = {
-        work: "edit",
+        work: 'edit',
         elem: this.editElem,
         beforeEdit: this.targetText,
         afterEdit: this.editElem.textContent
-      };
-      this.$emit("stack-push", edit);
-      this.isContentEditable = false;
+      }
+      this.$emit('stack-push', edit)
+      this.isContentEditable = false
     },
     mouseDownBoundary(e) {
       this.$nextTick(() => {
         if (!this.isContentMovable) {
-          this.isContentResizable = true;
-          this.directionData = e.target.getAttribute("data-pos");
-          if (this.directionData === "left") {
-            this.initialposition = this.clickedElement.getBoundingClientRect().left;
-            this.resizedirection = "left";
-          } else if (this.directionData === "top") {
-            this.initialposition = this.clickedElement.getBoundingClientRect().top;
-            this.resizedirection = "top";
-          } else if (this.directionData === "bottom") {
-            this.initialposition = this.clickedElement.getBoundingClientRect().bottom;
-            this.resizedirection = "bottom";
-          } else if (this.directionData === "right") {
-            this.initialposition = this.clickedElement.getBoundingClientRect().right;
-            this.resizedirection = "right";
+          this.isContentResizable = true
+          this.directionData = e.target.getAttribute('data-pos')
+          if (this.directionData === 'left') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().left
+            this.resizedirection = 'left'
+          } else if (this.directionData === 'top') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().top
+            this.resizedirection = 'top'
+          } else if (this.directionData === 'bottom') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().bottom
+            this.resizedirection = 'bottom'
+          } else if (this.directionData === 'right') {
+            this.initialposition = this.clickedElement.getBoundingClientRect().right
+            this.resizedirection = 'right'
           }
 
-          this.initialwidth = this.clickedElement.getBoundingClientRect().width;
-          this.initialheight = this.clickedElement.getBoundingClientRect().height;
-          const scale = this.clickedElement.style.transform;
-          const regExp = /[+-]?\d+(?:\.\d+)?/g;
-          const regExpResult = regExp.exec(scale);
-          let scaleVal = 1;
+          this.initialwidth = this.clickedElement.getBoundingClientRect().width
+          this.initialheight = this.clickedElement.getBoundingClientRect().height
+          const scale = this.clickedElement.style.transform
+          const regExp = /[+-]?\d+(?:\.\d+)?/g
+          const regExpResult = regExp.exec(scale)
+          let scaleVal = 1
           if (regExpResult) {
-            scaleVal = Number(regExpResult[0]);
+            scaleVal = Number(regExpResult[0])
           }
-          this.initialscale = scaleVal;
-          console.log(this.initialscale);
+          this.initialscale = scaleVal
+          console.log(this.initialscale)
         }
-      });
+      })
     },
     handleScroll(e) {
       if (this.selectedElement != null) {
-        this.onelementSelected = false;
+        this.onelementSelected = false
       }
       if (this.clickedElement != null) {
         this.$nextTick(() => {
-          let move = document.querySelector(".move-icon");
-          let moveHeight = getComputedStyle(move).height;
-          let deleteIcon = document.querySelector(".delete-icon");
-          let copyIcon = document.querySelector(".copy-icon");
+          let move = document.querySelector('.move-icon')
+          let moveHeight = getComputedStyle(move).height
+          let deleteIcon = document.querySelector('.delete-icon')
+          let copyIcon = document.querySelector('.copy-icon')
           // move.style.left =
           //   this.clickedElement.getBoundingClientRect().left + 'px'
           let moveTop =
             this.clickedElement.getBoundingClientRect().top -
-            parseInt(moveHeight);
-          let moveLeft = this.clickedElement.getBoundingClientRect().left;
-          let moveBottom = this.clickedElement.getBoundingClientRect().bottom;
+            parseInt(moveHeight)
+          let moveLeft = this.clickedElement.getBoundingClientRect().left
+          let moveBottom = this.clickedElement.getBoundingClientRect().bottom
           // let moveRight = this.clickedElement.getBoundingClientRect().right
           if (
             (moveTop < 210 && moveBottom < 800) ||
             (moveTop > 210 && moveBottom > 810)
           ) {
             this.$nextTick(() => {
-              this.isContentClicked = false;
-              this.isContentRemovable = false;
-              this.isContentCopied = false;
-            });
+              this.isContentClicked = false
+              this.isContentRemovable = false
+              this.isContentCopied = false
+            })
           } else {
-            this.isContentClicked = true;
-            this.isContentRemovable = true;
-            this.isContentCopied = true;
-            move.style.top = moveTop + "px";
-            deleteIcon.style.top = moveTop + "px";
-            copyIcon.style.top = moveTop + "px";
+            this.isContentClicked = true
+            this.isContentRemovable = true
+            this.isContentCopied = true
+            move.style.top = moveTop + 'px'
+            deleteIcon.style.top = moveTop + 'px'
+            copyIcon.style.top = moveTop + 'px'
           }
           if (moveLeft > 300) {
-            this.isContentClicked = true;
-            this.isContentRemovable = true;
-            this.isContentCopied = true;
-            move.style.left = moveLeft + "px";
+            this.isContentClicked = true
+            this.isContentRemovable = true
+            this.isContentCopied = true
+            move.style.left = moveLeft + 'px'
             deleteIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) * 2 + "px";
+              moveLeft + parseInt(getComputedStyle(move).width) * 2 + 'px'
             copyIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) + "px";
+              moveLeft + parseInt(getComputedStyle(move).width) + 'px'
           } else {
             this.$nextTick(() => {
-              this.isContentClicked = false;
-              this.isContentRemovable = false;
-              this.isContentCopied = false;
-            });
+              this.isContentClicked = false
+              this.isContentRemovable = false
+              this.isContentCopied = false
+            })
           }
-        });
+        })
       }
     },
     removeContent() {
-      let i;
-      let nChild;
+      let i
+      let nChild
       for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
         if (
           this.clickedElement.parentElement.children[i] === this.clickedElement
         ) {
-          nChild = i;
-          break;
+          nChild = i
+          break
         }
       }
       var remove = {
-        work: "remove",
+        work: 'remove',
         position: this.clickedElement.parentNode,
         elem: this.clickedElement,
         nth: nChild
-      };
-      this.clickedElement.parentNode.removeChild(this.clickedElement);
-      this.$emit("stack-push", remove);
+      }
+      this.clickedElement.parentNode.removeChild(this.clickedElement)
+      this.$emit('stack-push', remove)
     },
     addContent(tag, position) {
       // console.log(tag)
       // console.log(position)
-      let addTag = document.querySelector("#add");
+      let addTag = document.querySelector('#add')
       // console.log(tag)
       // tag가 추가할 element. 자식이 된다.
       // console.log(position)
       // position이 추가할 위치에 있는 element. 부모가 된다.
       if (
-        position.className !== "right-border" &&
-        position.className !== "left-border" &&
-        position.className !== "top-border" &&
-        position.className !== "bottom-border"
+        position.className !== 'right-border' &&
+        position.className !== 'left-border' &&
+        position.className !== 'top-border' &&
+        position.className !== 'bottom-border'
       ) {
-        position.appendChild(tag);
+        position.appendChild(tag)
       }
 
       var add = {
-        work: "add",
+        work: 'add',
         position: position,
         elem: tag
-      };
-      this.$emit("stack-push", add);
+      }
+      this.$emit('stack-push', add)
     },
     selectOverview(payload) {
-      let dashboardElem = document.querySelector(".editor");
-      this.selectedElement = payload.getBoundingClientRect();
+      let dashboardElem = document.querySelector('.editor')
+      this.selectedElement = payload.getBoundingClientRect()
 
-      let tag = document.querySelector(".tagname");
+      let tag = document.querySelector('.tagname')
 
-      tag.textContent = payload.tagName;
-      tag.style.left = this.selectedElement.left + "px";
+      tag.textContent = payload.tagName
+      tag.style.left = this.selectedElement.left + 'px'
 
       tag.style.top =
-        this.selectedElement.top - tag.getBoundingClientRect().height + "px";
-      let bottomBord = document.querySelector(".bottom-border");
-      let topBord = document.querySelector(".top-border");
-      let rightBord = document.querySelector(".right-border");
-      let leftBord = document.querySelector(".left-border");
-      let dashWrapper = document.querySelector(".dashboard-wrapper");
+        this.selectedElement.top - tag.getBoundingClientRect().height + 'px'
+      let bottomBord = document.querySelector('.bottom-border')
+      let topBord = document.querySelector('.top-border')
+      let rightBord = document.querySelector('.right-border')
+      let leftBord = document.querySelector('.left-border')
+      let dashWrapper = document.querySelector('.dashboard-wrapper')
       let scrollBottomHeight =
         dashboardElem.getBoundingClientRect().height -
-        dashWrapper.getBoundingClientRect().height;
-      topBord.style.left = this.selectedElement.left + "px";
-      topBord.style.top = this.selectedElement.top + "px";
-      topBord.style.width = this.selectedElement.width + "px";
+        dashWrapper.getBoundingClientRect().height
+      topBord.style.left = this.selectedElement.left + 'px'
+      topBord.style.top = this.selectedElement.top + 'px'
+      topBord.style.width = this.selectedElement.width + 'px'
       if (
         this.selectedElement.bottom >
         dashboardElem.getBoundingClientRect().bottom
       ) {
-        bottomBord.style.display = "none";
-        leftBord.style.left = this.selectedElement.left + "px";
-        leftBord.style.top = this.selectedElement.top + "px";
+        bottomBord.style.display = 'none'
+        leftBord.style.left = this.selectedElement.left + 'px'
+        leftBord.style.top = this.selectedElement.top + 'px'
         leftBord.style.height =
           this.selectedElement.height -
           (this.selectedElement.bottom -
             dashboardElem.getBoundingClientRect().bottom) -
           scrollBottomHeight +
-          "px";
+          'px'
         rightBord.style.left =
-          this.selectedElement.left + this.selectedElement.width - 2 + "px";
-        rightBord.style.top = this.selectedElement.top + "px";
+          this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.top = this.selectedElement.top + 'px'
         rightBord.style.height =
           this.selectedElement.height -
           (this.selectedElement.bottom -
             dashboardElem.getBoundingClientRect().bottom) -
           scrollBottomHeight +
-          "px";
+          'px'
       } else {
-        bottomBord.style.display = "";
-        bottomBord.style.left = this.selectedElement.left + "px";
+        bottomBord.style.display = ''
+        bottomBord.style.left = this.selectedElement.left + 'px'
         bottomBord.style.top =
-          this.selectedElement.top + this.selectedElement.height - 2 + "px";
-        bottomBord.style.width = this.selectedElement.width + "px";
-        leftBord.style.left = this.selectedElement.left + "px";
-        leftBord.style.top = this.selectedElement.top + "px";
-        leftBord.style.height = this.selectedElement.height + "px";
+          this.selectedElement.top + this.selectedElement.height - 2 + 'px'
+        bottomBord.style.width = this.selectedElement.width + 'px'
+        leftBord.style.left = this.selectedElement.left + 'px'
+        leftBord.style.top = this.selectedElement.top + 'px'
+        leftBord.style.height = this.selectedElement.height + 'px'
         rightBord.style.left =
-          this.selectedElement.left + this.selectedElement.width - 2 + "px";
-        rightBord.style.top = this.selectedElement.top + "px";
-        rightBord.style.height = this.selectedElement.height + "px";
+          this.selectedElement.left + this.selectedElement.width - 2 + 'px'
+        rightBord.style.top = this.selectedElement.top + 'px'
+        rightBord.style.height = this.selectedElement.height + 'px'
       }
     },
     moveElement(e) {
-      this.clickedElement.style.filter = "blur(0.8px)";
-      this.isContentMovable = true;
+      this.clickedElement.style.filter = 'blur(0.8px)'
+      this.isContentMovable = true
     },
     windowResized() {
-      this.onmouseMove(this.movePosition);
+      this.onmouseMove(this.movePosition)
     },
     copyElement() {
-      let classValue = "";
-      let i;
+      let classValue = ''
+      let i
       // console.log(this.clickedElement.classList.length)
       for (i = 0; i < this.clickedElement.classList.length; i++) {
         if (i === this.clickedElement.classList.length - 1) {
-          classValue += "." + this.clickedElement.classList[i];
+          classValue += '.' + this.clickedElement.classList[i]
         } else {
-          classValue += "." + this.clickedElement.classList[i] + " ";
+          classValue += '.' + this.clickedElement.classList[i] + ' '
         }
       }
       // console.log(classValue)
-      let nChild;
+      let nChild
       for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
         if (
           this.clickedElement.parentElement.children[i] === this.clickedElement
         ) {
-          nChild = i;
-          break;
+          nChild = i
+          break
         }
       }
-      if (this.clickedElement.className === "") {
-        console.log("없음");
-        let copyElem = this.clickedElement.cloneNode(true);
-        console.log(copyElem);
+      if (this.clickedElement.className === '') {
+        console.log('없음')
+        let copyElem = this.clickedElement.cloneNode(true)
+        console.log(copyElem)
         let randomClass =
-          this.clickedElement.parentElement.classList.value.replace(/ /gi, "") +
-          this.clickedElement.classList.value.replace(/ /gi, "") +
-          this.classIndex;
-        copyElem.classList.add(randomClass);
-        this.classIndex++;
+          this.clickedElement.parentElement.classList.value.replace(/ /gi, '') +
+          this.clickedElement.classList.value.replace(/ /gi, '') +
+          this.classIndex
+        copyElem.classList.add(randomClass)
+        this.classIndex++
         var copy = {
-          work: "copy",
+          work: 'copy',
           position: this.clickedElement.parentElement,
           elem: this.clickedElement,
           copyElem: copyElem,
           nth: nChild
-        };
+        }
         // console.log(copy);
-        $(this.clickedElement).after(copyElem);
-        this.$emit("stack-push", copy);
+        $(this.clickedElement).after(copyElem)
+        this.$emit('stack-push', copy)
       } else {
         let elem = document.getElementsByClassName(
           this.clickedElement.classList.value
-        );
+        )
         // console.log(elem)
         for (i = 0; i < elem.length; i++) {
           if (elem[i] === this.clickedElement) {
-            console.log(i);
-            break;
+            console.log(i)
+            break
           }
         }
 
-        console.log(elem[i]);
+        console.log(elem[i])
 
-        let copyElem = elem[i].cloneNode(true);
+        let copyElem = elem[i].cloneNode(true)
 
         let randomClass =
-          elem[i].parentElement.classList.value.replace(/ /gi, "") +
-          elem[i].classList.value.replace(/ /gi, "") +
-          this.classIndex;
-        copyElem.classList.add(randomClass);
-        this.classIndex++;
+          elem[i].parentElement.classList.value.replace(/ /gi, '') +
+          elem[i].classList.value.replace(/ /gi, '') +
+          this.classIndex
+        copyElem.classList.add(randomClass)
+        this.classIndex++
         // console.log(this.clickedElement.parentElement.children);
 
         // var newparent = document.createElement("div");
         var copy = {
-          work: "copy",
+          work: 'copy',
           position: this.clickedElement.parentElement,
           elem: elem[i],
           copyElem: copyElem,
           nth: nChild
-        };
+        }
         // console.log(copy);
-        $(elem[i]).after(copyElem);
-        this.$emit("stack-push", copy);
+        $(elem[i]).after(copyElem)
+        this.$emit('stack-push', copy)
       }
 
       // this.$nextTick(() => {
@@ -1076,7 +1071,7 @@ export default {
       // });
     },
     splitBorder(e) {
-      this.borderClicked = true;
+      this.borderClicked = true
       // let bottomBord = document.querySelector('.bottom-border')
       // let topBord = document.querySelector('.top-border')
       // let rightBord = document.querySelector('.right-border')
@@ -1085,88 +1080,88 @@ export default {
       // topBord.style.backgroundColor = '#34d6c1'
       // bottomBord.style.backgroundColor = '#34d6c1'
 
-      let elemWidth = getComputedStyle(this.clickedElement).width;
-      let elemHeight = getComputedStyle(this.clickedElement).height;
-      let elemLeft = getComputedStyle(this.clickedElement).left;
-      let initialX = e.clientX;
-      let initialY = e.clientY;
-      this.borderElem = e.target;
+      let elemWidth = getComputedStyle(this.clickedElement).width
+      let elemHeight = getComputedStyle(this.clickedElement).height
+      let elemLeft = getComputedStyle(this.clickedElement).left
+      let initialX = e.clientX
+      let initialY = e.clientY
+      this.borderElem = e.target
       // let initialLeft = getComputedStyle(this.clickedElement).left
 
-      let edit = document.querySelector(".editor");
+      let edit = document.querySelector('.editor')
 
-      edit.addEventListener("mousemove", event => {
+      edit.addEventListener('mousemove', event => {
         if (this.borderClicked) {
-          if (this.borderElem.className === "boundary-line-right") {
+          if (this.borderElem.className === 'boundary-line-right') {
             this.clickedElement.style.width =
-              parseInt(elemWidth) - (initialX - event.clientX) * 2 + "px";
-          } else if (this.borderElem.className === "boundary-line-left") {
+              parseInt(elemWidth) - (initialX - event.clientX) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-left') {
             this.clickedElement.style.width =
-              parseInt(elemWidth) - (event.clientX - initialX) * 2 + "px";
-          } else if (this.borderElem.className === "boundary-line-top") {
+              parseInt(elemWidth) - (event.clientX - initialX) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-top') {
             this.clickedElement.style.height =
-              parseInt(elemHeight) - (event.clientY - initialY) * 2 + "px";
-          } else if (this.borderElem.className === "boundary-line-bottom") {
+              parseInt(elemHeight) - (event.clientY - initialY) * 2 + 'px'
+          } else if (this.borderElem.className === 'boundary-line-bottom') {
             this.clickedElement.style.height =
-              parseInt(elemHeight) - (initialY - event.clientY) * 2 + "px";
+              parseInt(elemHeight) - (initialY - event.clientY) * 2 + 'px'
           }
         }
-      });
-      edit.addEventListener("mouseup", () => {
+      })
+      edit.addEventListener('mouseup', () => {
         if (
-          this.borderElem.className === "boundary-line-right" ||
-          this.borderElem.className === "boundary-line-left"
+          this.borderElem.className === 'boundary-line-right' ||
+          this.borderElem.className === 'boundary-line-left'
         ) {
           var resize = {
-            work: "width",
+            work: 'width',
             elem: this.clickedElement,
             beforeSize: elemWidth,
             afterSize: getComputedStyle(this.clickedElement).width
-          };
+          }
         } else if (
-          this.borderElem.className === "boundary-line-top" ||
-          this.borderElem.className === "boundary-line-bottom"
+          this.borderElem.className === 'boundary-line-top' ||
+          this.borderElem.className === 'boundary-line-bottom'
         ) {
           var resize = {
-            work: "height",
+            work: 'height',
             elem: this.clickedElement,
             beforeSize: elemHeight,
             afterSize: getComputedStyle(this.clickedElement).height
-          };
+          }
         }
-        this.$emit("stack-push", resize);
-        this.borderClicked = false;
-      });
+        this.$emit('stack-push', resize)
+        this.borderClicked = false
+      })
     },
     mousedownMode(e) {
       if (this.mode) {
-        this.splitBorder(e);
+        this.splitBorder(e)
       } else {
-        this.mouseDownBoundary(e);
+        this.mouseDownBoundary(e)
       }
     },
     modeSelect(mode) {
       // console.log(mode)
-      this.mode = mode;
+      this.mode = mode
     },
     onmouserightClick(e) {
       if (e.button === 2) {
-        this.mouseRightClick = true;
+        this.mouseRightClick = true
         this.$nextTick(() => {
-          let context = document.querySelector(".context");
-          context.style.left = e.clientX + "px";
-          context.style.top = e.clientY + "px";
-          this.$refs.context.clickedElement(e.target);
+          let context = document.querySelector('.context')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+          this.$refs.context.clickedElement(e.target)
           // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
-        });
+        })
       }
     },
     loadData(data) {
       // console.log(data)
-      this.$emit("loadData", data);
+      this.$emit('loadData', data)
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

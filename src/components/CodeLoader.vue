@@ -37,7 +37,7 @@
                 <li class="nav-item">
                     <a class="nav-link" name='js' v-bind:class="{ active:tabStep===3 }" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">JavaScript</a>
                 </li>
-                <!--<img @click="closeCoderLoader" class="close-btn" src="../assets/close.svg" />
+                <!--<img @click="closeCoderLoader" class="close-btn" src="../assets/images/close.svg" />
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div v-if="isData"  class="tab-pane " v-bind:class="{ active:tabStep===1 }" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
