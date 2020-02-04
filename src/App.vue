@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="editorPage">
     <div class="top-panel">
       <!-- <img class="scale" src="./assets/images/scale.svg" />
       <img class="width" src="./assets/images/width.svg" /> -->
@@ -296,7 +296,7 @@ import home from "./components/home";
 import layoutCopy from "./components/layout";
 import studio from "./components/studio";
 import overview from "./components/overview";
-import spliter from "./components/spliter";
+import spliter from "./sample/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
 import sitemap from "./components/sitemap";
@@ -1046,7 +1046,7 @@ export default {
 @import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css'); 
 @import url('https://rsms.me/inter/inter.css');
 
-#app {
+#editorPage {
   // font-family: "Avenir", Helvetica, Arial, sans-serif;
   font-family: 'Noto Sans KR', sans-serif;
   font-family: 'Inter', sans-serif;

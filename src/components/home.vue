@@ -93,12 +93,12 @@
 </template>
 
 <script>
-import Dashboard from './dashboard.vue'
-import Navi from './navi.vue'
+import Dashboard from '../sample/dashboard.vue'
+import Navi from '../sample/navi.vue'
 import HtmlLoader from './htmlLoader.vue'
-import spliter from './spliter.vue'
-import Context from './Context'
-import ss from './ss'
+import spliter from '../sample/spliter.vue'
+import Context from '../sample/Context'
+import ss from '../sample/ss'
 
 export default {
   components: { Dashboard, Navi, HtmlLoader, spliter, Context, ss },
