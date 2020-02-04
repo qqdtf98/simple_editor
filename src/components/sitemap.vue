@@ -2,7 +2,7 @@
   <div id="sitemap">
     <div class="sitemap-text-box">
       <span class="sitemap-text">Sitemap</span>
-      <img @click="closeSitemap" class="close-btn" src="../assets/close.svg" />
+      <img @click="closeSitemap" class="close-btn" src="../assets/images/close.svg" />
     </div>
     <div @mousedown="refineSitemap" class="title-map">
       <div :key="title.index" class="titles" v-for="title in titles">

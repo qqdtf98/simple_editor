@@ -10,6 +10,11 @@
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
   },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  },
   "dependencies": {
     "@caohenghu/vue-colorpicker": "^1.2.2",
     "bootstrap": "^4.4.1",

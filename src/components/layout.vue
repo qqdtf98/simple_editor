@@ -2,10 +2,10 @@
   <div>
     <div class="studio-text-box"> 
         <span class="studio-text">Layout</span>
-        <img @click="closeLayout" src="../assets/close.svg" class="close-btn">
+        <img @click="closeLayout" src="../assets/images/close.svg" class="close-btn">
 	</div>
 	<!-- Nav tabs -->
-	<!-- <img @click="closeOverview" class="close-btn" src="../assets/close.svg" /> -->
+	<!-- <img @click="closeOverview" class="close-btn" src="../assets/images/close.svg" /> -->
 	<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" @click="chageTab">
 		<li class="nav-item">
 			<a class="nav-link " v-bind:class="{ active:tabStep===1 }" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="false">Look & Feel</a>

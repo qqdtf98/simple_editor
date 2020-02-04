@@ -6,7 +6,7 @@
         @mousedown.stop
         @click="closeStudio"
         class="close-btn"
-        src="../assets/close.svg"
+        src="../assets/images/close.svg"
       />
     </div>
     <div class="tag-studio">
@@ -17,7 +17,7 @@
           type="text"
           placeholder="Search components"
         />
-        <img class="search-icon" src="../assets/search.svg" />
+        <img class="search-icon" src="../assets/images/search.svg" />
       </div>
       <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
         <div class="tag-list-box">
