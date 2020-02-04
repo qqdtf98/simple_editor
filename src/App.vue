@@ -1,26 +1,26 @@
 <template>
   <div id="app">
     <div class="top-panel">
-      <!-- <img class="scale" src="./assets/scale.svg" />
-      <img class="width" src="./assets/width.svg" /> -->
+      <!-- <img class="scale" src="./assets/images/scale.svg" />
+      <img class="width" src="./assets/images/width.svg" /> -->
       <div @click="newPage" class="new-box">
-        <img class="new" src="./assets/new.svg" />
+        <img class="new" src="./assets/images/new.svg" />
         <div class="new-text">New</div>
       </div>
       <div class="open-box">
-        <img class="open" src="./assets/open.svg" />
+        <img class="open" src="./assets/images/open.svg" />
         <div class="open-text">Open</div>
       </div>
       <div class="save-box">
-        <img class="save" src="./assets/save.svg" />
+        <img class="save" src="./assets/images/save.svg" />
         <div class="save-text">Save</div>
       </div>
       <div class="export-box">
-        <img class="export" src="./assets/export.svg" />
+        <img class="export" src="./assets/images/export.svg" />
         <div class="export-text">Export</div>
       </div>
       <div class="setting-box">
-        <img class="setting" src="./assets/settings.svg" />
+        <img class="setting" src="./assets/images/settings.svg" />
         <div class="setting-text">Setting</div>
       </div>
       <div class="switch-box">
@@ -34,11 +34,11 @@
         <div class="switch-text">Switch</div>
       </div>
       <div class="undo-box">
-        <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+        <img @click="undoWork" class="undo" src="./assets/images/undo.svg" />
         <div @click="undoWork" class="undo-text">Undo</div>
       </div>
       <div class="redo-box">
-        <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+        <img @click="redoWork" class="redo" src="./assets/images/undo.svg" />
         <div @click="redoWork" class="redo-text">Redo</div>
       </div>
     </div>
@@ -49,19 +49,18 @@
         <img
           @click="studioBtn"
           class="studio-btn"
-          src="./assets/studio.svg"
           title="studio"
         />
         <img
           @click="overviewBtn"
           class="overview-btn"
-          src="./assets/overview.svg"
+          src="./assets/images/overview.svg"
           title="overview"
         />
         <img
           @click="sitemapBtn"
           class="sitemap-btn"
-          src="./assets/sitemap.svg"
+          src="./assets/images/sitemap.svg"
           title="sitemap"
         />
       </div>
@@ -75,25 +74,25 @@
               <img
                 @click="closePage"
                 class="close-icon"
-                src="./assets/close.svg"
+                src="./assets/images/close.svg"
               />
             </div>
           
 
           <img
-            src="./assets/iphone.svg"
+            src="./assets/images/iphone.svg"
             @click="resizeEditor"
             class="iphone"
             title="375 x 667"
           />
           <img
-            src="./assets/ipad.svg"
+            src="./assets/images/ipad.svg"
             @click="resizeEditor"
             class="ipad"
             title="768 x 1024"
           />
           <img
-            src="./assets/monitor.svg"
+            src="./assets/images/monitor.svg"
             @click="resizeEditor"
             class="monitor"
             title="992 x 687"
@@ -115,7 +114,7 @@
               <img
                 @click="addComment"
                 class="add-comment-btn"
-                src="./assets/plus.svg"
+                src="./assets/images/plus.svg"
               />
             </div>
             <div
@@ -205,20 +204,20 @@
         @click="layoutBtn"
         id="codeBtnLayout"
         class="layout-btn"
-        src="./assets/layout.svg"
+        src="./assets/images/layout.svg"
         title="layout"
       />
       <img
         @click="codeBtn"
         id="codeBtnFileList"
         class="code-btn"
-        src="./assets/code.svg"
+        src="./assets/images/code.svg"
         title="code-editor"
       />
       <img
         @click="commentBtn"
         class="comment-btn"
-        src="./assets/comment.svg"
+        src="./assets/images/comment.svg"
         title="comment"
       />
     </div>
@@ -893,7 +892,7 @@ export default {
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
-      console.log(data)
+      // console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },

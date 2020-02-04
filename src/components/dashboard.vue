@@ -40,7 +40,7 @@
         </div>
       </div>
       <div class="img-wrapper">
-        <img class="img1" src="../assets/logo.png" />
+        <img class="img1" src="../assets/images/logo.png" />
       </div>
     </div>
   </div>

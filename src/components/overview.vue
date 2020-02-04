@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="overview-text">Overview</div>
-    <img @click="closeOverview" class="close-btn" src="../assets/close.svg" />
+    <img @click="closeOverview" class="close-btn" src="../assets/images/close.svg" />
     <ul class="acol" >
       <li>
         <input class="checkbox" type="checkbox" id="root" />
