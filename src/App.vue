@@ -1,26 +1,24 @@
 <template>
   <div id="app">
     <div class="top-panel">
-      <!-- <img class="scale" src="./assets/scale.svg" />
-      <img class="width" src="./assets/width.svg" /> -->
-      <div @click="newPage" class="new-box">
-        <img class="new" src="./assets/new.svg" />
+      <!-- <div @click="newPage" class="new-box">
+        <img class="new" src="./assets/images/new.svg" />
         <div class="new-text">New</div>
       </div>
       <div class="open-box">
-        <img class="open" src="./assets/open.svg" />
+        <img class="open" src="./assets/images/open.svg" />
         <div class="open-text">Open</div>
       </div>
       <div class="save-box">
-        <img class="save" src="./assets/save.svg" />
+        <img class="save" src="./assets/images/save.svg" />
         <div class="save-text">Save</div>
       </div>
       <div class="export-box">
-        <img class="export" src="./assets/export.svg" />
+        <img class="export" src="./assets/images/export.svg" />
         <div class="export-text">Export</div>
       </div>
       <div class="setting-box">
-        <img class="setting" src="./assets/settings.svg" />
+        <img class="setting" src="./assets/images/settings.svg" />
         <div class="setting-text">Setting</div>
       </div>
       <div class="switch-box">
@@ -34,40 +32,38 @@
         <div class="switch-text">Switch</div>
       </div>
       <div class="undo-box">
-        <img @click="undoWork" class="undo" src="./assets/undo.svg" />
+        <img @click="undoWork" class="undo" src="./assets/images/undo.svg" />
         <div @click="undoWork" class="undo-text">Undo</div>
       </div>
       <div class="redo-box">
-        <img @click="redoWork" class="redo" src="./assets/undo.svg" />
+        <img @click="redoWork" class="redo" src="./assets/images/undo.svg" />
         <div @click="redoWork" class="redo-text">Redo</div>
-      </div>
+      </div> -->
     </div>
-
-
     <div class="main-panel">
       <div class="left-panel">
         <img
           @click="studioBtn"
           class="studio-btn"
-          src="./assets/studio.svg"
+          src="./assets/images/studio.svg"
           title="studio"
         />
         <img
           @click="overviewBtn"
           class="overview-btn"
-          src="./assets/overview.svg"
+          src="./assets/images/overview.svg"
           title="overview"
         />
         <img
           @click="sitemapBtn"
           class="sitemap-btn"
-          src="./assets/sitemap.svg"
+          src="./assets/images/sitemap.svg"
           title="sitemap"
         />
       </div>
-      <div class="editor-panel">
-        <div class="center-panel">
-          <div class="top-menu">
+       <div class="center-panel">
+        <div class="main-top-panel">
+           <div class="top-menu">
             <div class="file-name" :key="title.index" v-for="title in titles">
               <div @click="changePage" class="title">
                 {{ title.text }}
@@ -75,32 +71,33 @@
               <img
                 @click="closePage"
                 class="close-icon"
-                src="./assets/close.svg"
+                src="./assets/images/close.svg"
               />
             </div>
           
 
           <img
-            src="./assets/iphone.svg"
+            src="./assets/images/iphone.svg"
             @click="resizeEditor"
             class="iphone"
             title="375 x 667"
           />
           <img
-            src="./assets/ipad.svg"
+            src="./assets/images/ipad.svg"
             @click="resizeEditor"
             class="ipad"
             title="768 x 1024"
           />
           <img
-            src="./assets/monitor.svg"
+            src="./assets/images/monitor.svg"
             @click="resizeEditor"
             class="monitor"
             title="992 x 687"
           />
           </div>
-        <div class="main-menu">
-          <div class="editor">
+        </div>
+        <div class="main-center-panel">
+          <div class="main-menu">
             <home
               ref="home"
               @componentSelected="componentSelected"
@@ -108,14 +105,13 @@
               @loadData="loadData"
               class="home"
             ></home>
-          </div>
           <div v-if="isCommentOn" class="comment-board">
             <div class="add-comment">
               <textarea class="comment-input" placeholder="comment" />
               <img
                 @click="addComment"
                 class="add-comment-btn"
-                src="./assets/plus.svg"
+                src="./assets/images/plus.svg"
               />
             </div>
             <div
@@ -132,11 +128,8 @@
             </div>
           </div>
         </div>
-      </div>
-
-      
-      <!-- <div class="bottom-panel"></div> -->
-      <div class="row bottom-panel">
+        </div>
+         <div class="row bottom-panel">
       
       <div v-show="isData" class="loadDataPanel">
         <div @mousedown="loaderResize" class="loader-bord"></div>
@@ -198,30 +191,126 @@
       <span class="fileTitle" @click="clickSource" name="css">CSS</span>
       <span class="fileTitle" @click="clickSource" name="js">JavaScript</span>
     </div>
-    </div>
+        <!-- <div class="a-panel">
+          <div class="top-menu">
+            <div class="file-name" :key="title.index" v-for="title in titles">
+              <div @click="changePage" class="title">
+                {{ title.text }}
+              </div>
+              <img
+                @click="closePage"
+                class="close-icon"
+                src="./assets/images/close.svg"
+              />
+            </div>
+          
 
+          <img
+            src="./assets/images/iphone.svg"
+            @click="resizeEditor"
+            class="iphone"
+            title="375 x 667"
+          />
+          <img
+            src="./assets/images/ipad.svg"
+            @click="resizeEditor"
+            class="ipad"
+            title="768 x 1024"
+          />
+          <img
+            src="./assets/images/monitor.svg"
+            @click="resizeEditor"
+            class="monitor"
+            title="992 x 687"
+          />
+          </div>
+        <div class="main-menu">
+          <div class="editor">
+            <home
+              ref="home"
+              @componentSelected="componentSelected"
+              @stack-push="stackPush"
+              @loadData="loadData"
+              class="home"
+            ></home>
+          </div>
+          <div v-if="isCommentOn" class="comment-board">
+            <div class="add-comment">
+              <textarea class="comment-input" placeholder="comment" />
+              <img
+                @click="addComment"
+                class="add-comment-btn"
+                src="./assets/images/plus.svg"
+              />
+            </div>
+            <div
+              :key="comment.index"
+              v-for="comment in comments"
+              class="comment-wrapper"
+            >
+              <div class="top-box">
+                <div class="writer">{{ comment.writer }}</div>
+                <div class="element">{{ comment.element }}</div>
+                <div class="time">{{ comment.time }}</div>
+              </div>
+              <div class="comment-text">{{ comment.text }}</div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      
+    
+     
+
+      
+      <!-- <div class="bottom-panel"></div> -->
+     
+    </div>
     <div class="right-panel">
-      <img
+      <div class="right-top-panel">
+          <layout ref="layout" @stick="layoutStick" class="layout" />
+      </div>
+      <div class="right-bottom-panel">
+          <div class="tree-name-wrapper">
+            <div @mousedown="moveTree" class="tree-name-box">
+              <div
+                @mousedown.stop
+                @click="changeTab"
+                class="tree-name"
+                :key="tree.index"
+                v-for="tree in trees"
+              >
+                <div @mousedown.stop  class="tree">
+                  {{ tree.text }}
+                </div>
+              </div>
+            </div>
+            <div v-if="showhtml" class="htmlcontent" />
+            <div v-if="!showhtml" class="filecontent" />
+          </div>
+        </div>
+      <!-- <img
         @click="layoutBtn"
         id="codeBtnLayout"
         class="layout-btn"
-        src="./assets/layout.svg"
+        src="./assets/images/layout.svg"
         title="layout"
       />
       <img
         @click="codeBtn"
         id="codeBtnFileList"
         class="code-btn"
-        src="./assets/code.svg"
+        src="./assets/images/code.svg"
         title="code-editor"
       />
       <img
         @click="commentBtn"
         class="comment-btn"
-        src="./assets/comment.svg"
+        src="./assets/images/comment.svg"
         title="comment"
-      />
+      /> -->
     </div>
+
   </div>
     <CodeLoader
       @setFile="setFile"
@@ -231,7 +320,7 @@
       class="code-loader"
     ></CodeLoader>
 
-    <layoutCopy
+    <!-- <layout
       v-show="layoutOn"
       ref="layouts"
       :payload="payload"
@@ -239,7 +328,7 @@
       @userSelectBorder="userSelectBorder"
       @selectDomElemented="selectDomElemented"
       class="layout"
-    ></layoutCopy>
+    ></layout> -->
     <studio
       v-show="studioOn"
       @desc-close="tagNotSelected"
@@ -266,6 +355,8 @@
       :getDocument="homeDocument"
       class="overview"
     ></overview>
+
+    <div class="right-panel-border"></div>
 
     <span v-if="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
@@ -294,10 +385,10 @@ import 'vue-component-ruler/dist/ruler.min.css';
 ///
 import htmlLoader from "./components/htmlLoader";
 import home from "./components/home";
-import layoutCopy from "./components/layout";
+import layout from "./components/layout";
 import studio from "./components/studio";
 import overview from "./components/overview";
-import spliter from "./components/spliter";
+import spliter from "./sample/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
 import sitemap from "./components/sitemap";
@@ -309,7 +400,7 @@ export default {
   components: {
     htmlLoader,
     home,
-    layoutCopy,
+    layout,
     studio,
     overview,
     spliter,
@@ -333,6 +424,7 @@ export default {
       payload: "",
       data: "",
       homeLayoutLocation: "",
+      isSticklayout: true,
       tagDescription: false,
       childOFchil: [],
        sitemapOn: false,
@@ -348,6 +440,7 @@ export default {
       mouseOverTarget: null,
       viewTemplate: false,
       isCtrl: false,
+      moveTarget: null,
       i: 0,
       workStack: [],
       reworkStack: [],
@@ -360,6 +453,8 @@ export default {
       initialY: null,
       initialHeight: null,
       isShift : false,
+      xInter: null,
+      yInter: null,
       message:"",
       isData:false,
       tabStep:0,
@@ -389,7 +484,18 @@ export default {
       ],
       editorNum: 1,
       isTitle: false,
-      copyTitle: null
+      copyTitle: null,
+      trees: [
+        {
+          text: "HTML"
+        },
+        {
+          text: "Files"
+        }
+      ],
+      showhtml: true,
+      layoutSticky: true,
+      treeMove: false
     };
   },
   computed:{
@@ -404,6 +510,9 @@ export default {
     }
   },
   mounted() {
+    let htmltree = document.querySelector(".tree-name")
+    console.log(htmltree)
+    htmltree.style.backgroundColor = "#4e4e5c"
     $(window).resize(() => {
       this.$refs.home.windowResized();
     });
@@ -461,6 +570,30 @@ export default {
             copy.style.left = e.clientX + 10 + "px";
             copy.style.top = e.clientY + 10 + "px";
       }
+      if(this.treeMove){
+        this.moveTarget.style.width = "-webkit-calc(100% - 83.5%)"
+        this.moveTarget.style.height = "25rem"
+        // this.moveTarget.style.right= e.clientX - this.xInter + "px";
+        this.moveTarget.style.right =
+          window.innerWidth -
+          e.clientX -
+          (parseInt(getComputedStyle(this.moveTarget).width) - this.xInter) +
+          "px"
+        this.moveTarget.style.top = e.clientY - this.yInter + "px"
+        let rightBorder = document.querySelector(".right-panel-border")
+        if (parseInt(getComputedStyle(this.moveTarget).right) < 30) {
+          rightBorder.style.opacity = "1"
+          rightBorder.style.backgroundImage =
+            "linear-gradient(to right, #00000000, #68869250)"
+          // rightBorder.style.backgroundColor = "#3a3a50"
+
+          this.isSticklayout = true
+        } else {
+          rightBorder.style.opacity = "0"
+          // rightBorder.style.backgroundColor = "#292931";
+          this.isSticklayout = false
+        }
+      }
     });
     this.homeDocument = document.getElementById("dashboard");
     document.addEventListener("mouseup", e => {
@@ -482,6 +615,43 @@ export default {
       }
       if(this.isTitle){
         this.isTitle = false
+      }
+    
+      
+       if (this.treeMove) {
+        let rightBorder = document.querySelector(".right-panel-border")
+        let rightTopPanel = document.querySelector(".right-top-panel")
+        let rightBottomPanel = document.querySelector(".right-bottom-panel")
+        // rightBorder.style.backgroundColor = "#292931";
+        if (this.isSticklayout) {
+          rightBorder.style.opacity = "0"
+          this.moveTarget.style.width = "-webkit-calc(100% - 83.5%)"
+          this.moveTarget.style.right = "0"
+          this.moveTarget.style.top = "calc(30rem + 3.5%)"
+          this.moveTarget.style.height = "25rem"
+          rightTopPanel.style.height = "30rem"
+          rightBottomPanel.style.height = "25rem"
+          let rightPanel = document.querySelector(".right-panel")
+          let centerPanel = document.querySelector(".center-panel")
+          rightPanel.style.width = "16.5%"
+          centerPanel.style.width = "80%"
+          this.$refs.layout.treeStick(0)
+        } else {
+          if (this.layoutSticky === false) {
+            let rightPanel = document.querySelector(".right-panel")
+            let centerPanel = document.querySelector(".center-panel")
+            this.moveTarget.style.borderTop = "1px solid black"
+            rightPanel.style.width = "0"
+            centerPanel.style.width = "96.5%"
+          } else {
+            let rightPanel = document.querySelector(".right-panel")
+            let centerPanel = document.querySelector(".center-panel")
+            rightPanel.style.width = "16.5%"
+            centerPanel.style.width = "80%"
+          }
+          this.$refs.layout.treeStick(1)
+        }
+        this.treeMove = false
       }
     });
     var h = {};
@@ -537,6 +707,41 @@ export default {
     this.hasht = h;
   },
   methods: {
+    changeTab(e) {
+      let trees = document.querySelectorAll(".tree-name")
+      console.log(trees)
+      //  e.target.parentElement.style.backgroundColor = '#4e4e5c'
+      if (e.target.textContent.trim() === "HTML") {
+        trees[1].style.backgroundColor = "#292931"
+        trees[0].style.backgroundColor = "#4e4e5c"
+        this.showhtml = true
+      } else if (e.target.textContent.trim() === "Files") {
+        trees[0].style.backgroundColor = "#292931"
+        trees[1].style.backgroundColor = "#4e4e5c"
+        this.showhtml = false
+      }
+    },
+    moveTree(e) {
+      e.target.parentElement.style.position = "fixed"
+      let initX = e.clientX
+      let initY = e.clientY
+      let initLeft = parseInt(getComputedStyle(e.target.parentElement).left)
+      let initTop = parseInt(getComputedStyle(e.target.parentElement).top)
+      this.xInter = initX - initLeft
+      this.yInter = initY - initTop
+      this.treeMove = true
+      console.log(e.target)
+      this.moveTarget = e.target.parentElement
+      this.moveTarget.style.height = "25rem"
+    },
+    layoutStick(payload) {
+      console.log(payload)
+      if (payload === 0) {
+        this.layoutSticky = true
+      } else if (payload === 1) {
+        this.layoutSticky = false
+      }
+    },
      clickSource(e){
       this.isData=true
       console.log("s")
@@ -893,7 +1098,7 @@ export default {
       this.$refs.layouts.makeTreeParent(this.payload);
     },
     userSelectedWidth(data) {
-      console.log(data)
+      // console.log(data)
       this.data = data;
       this.$refs.home.styleChanged(this.data);
     },
@@ -1057,7 +1262,7 @@ export default {
   color: #2c3e50;
   display: flex;
   flex-direction: column;
-  background-color: #2c3134;
+  background-color: #34343c;
   align-items: center;
   height: 100vh;
 
@@ -1069,10 +1274,10 @@ export default {
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
-    left: 4%;
+    left: 3.5%;
     background-color: #32373a;
     z-index: 33;
-    top: 6%;
+    top: 3.5%;
   }
 
   .overview {
@@ -1081,37 +1286,33 @@ export default {
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
-    left: 4%;
+    left: 3.5%;
     background-color: #32373a;
-    top: 6%;
+    top: 3.5%;
   }
   .sitemap {
     width: 20rem;
     height: 30rem;
     border: 1.5px solid #000000;
     position: fixed;
-    left: 4%;
+    left: 3.5%;
     background-color: #32373a;
     z-index: 30;
-    top: 6%;
+    top: 3.5%;
   }
 
  
   .top-panel {
-    height: 6%;
-    background-color: #3c474c;
-    background-image: linear-gradient(to bottom, #48545a, #3d484d);
+     height: 3.5%;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: left;
-
-    // .scale {
-    //   width: 2rem;
-    // }
-    // .width {
-    //   width: 2rem;
-    // }
+    background-color: #292931;
+    // height: 6%;
+    // background-color: #3c474c;
+    // background-image: linear-gradient(to bottom, #48545a, #3d484d);
+    // width: 100%;
+    // display: flex;
+    // align-items: center;
+    // justify-content: left;
     .switch-box {
       display: flex;
       flex-direction: row;
@@ -1178,69 +1379,140 @@ export default {
   }
   .main-panel {
     width: 100%;
-    height: 94%;
+    height: 96.5%;
     display: flex;
     flex-direction: row;
 
     .left-panel {
-      width: 4%;
+      width: 3.5%;
       height: 100%;
-      background-color: #2c3134;
       display: flex;
       flex-direction: column;
       align-items: center;
+      background-color: #292931;
       .studio-btn {
-        width: 1.3rem;
+         width: 1.4rem;
         margin-top: 1rem;
         cursor: pointer;
       }
       .overview-btn {
-        width: 1rem;
-        margin-top: 1.3rem;
+        width: 1.1rem;
+        margin-top: 1.5rem;
         cursor: pointer;
       }
       .sitemap-btn {
-        width: 1rem;
-        margin-top: 1.3rem;
+        width: 1.1rem;
+        margin-top: 1.5rem;
         cursor: pointer;
       }
     }
     .right-panel {
-      width: 4%;
-      background-color: #2c3134;
+      width: 16.5%;
+      background-color: #292931;
+
+      // background-color: #2c3134;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      .layout-btn {
-        margin-top: 1rem;
-        width: 1rem;
-        cursor: pointer;
+      // display: flex;
+      // flex-direction: column;
+      // align-items: center;
+      // .layout-btn {
+      //   margin-top: 1rem;
+      //   width: 1rem;
+      //   cursor: pointer;
+      // }
+      // .code-btn {
+      //   margin-top: 1.3rem;
+      //   width: 1rem;
+      //   z-index: 100;
+      //   cursor: pointer;
+      // }
+      // .comment-btn {
+      //   margin-top: 1.3rem;
+      //   width: 1rem;
+      //   z-index: 100;
+      //   cursor: pointer;
+      // }
+      .right-top-panel{
+        background-color: #292931;
+        width: 100%;
+        height: 30rem;
+        .layout {
+          overflow: auto;
+          border: 1px solid black;
+          width: 100%;
+          height: 100%;
+          background-color: #292931;
+          z-index: 33;
+        }
       }
-      .code-btn {
-        margin-top: 1.3rem;
-        width: 1rem;
-        z-index: 100;
-        cursor: pointer;
-      }
-      .comment-btn {
-        margin-top: 1.3rem;
-        width: 1rem;
-        z-index: 100;
-        cursor: pointer;
+      .right-bottom-panel {
+        background-color: #292931;
+        width: 100%;
+        // height: 25rem;
+        display: flex;
+        flex-direction: column;
+        .tree-name-wrapper {
+          width: 100%;
+          height: 24.8rem;
+          border: 1px solid black;
+          // border-top : none;
+          .tree-name-box {
+            background-color: #292931;
+            display: flex;
+            //  border: 1px solid black;
+            cursor: move;
+            flex-direction: row;
+            .tree-name {
+              left: 0;
+              height: 2rem;
+              cursor: pointer;
+              // background-color: #545e66;
+              top: 0;
+              width: 3.5rem;
+
+              display: flex;
+              // background-color: #4e4e5c;
+              // border: 1px solid black;
+              align-items: center;
+              justify-content: center;
+              flex-direction: row;
+              border-top-left-radius: 0.3rem;
+              border-top-right-radius: 0.3rem;
+              padding-left: 0.15rem;
+              padding-right: 0.15rem;
+
+              .tree {
+                text-align: center;
+                padding: 0.1rem;
+                padding-left: 0.4rem;
+                padding-right: 0.3rem;
+                color: #fff;
+                width: 3.5rem;
+                height: auto;
+              }
+            }
+          }
+          .htmlcontent {
+            overflow: auto;
+            background-color: red;
+            width: 100%;
+            height: 22.8rem;
+          }
+          .filecontent {
+            overflow: auto;
+            width: 100%;
+            height: 22.8rem;
+            background-color: yellow;
+          }
+        }
       }
     }
-    .editor-panel {
-      width: 92%;
+    .center-panel {
+      width: 80%;
       height: 100%;
-      .center-panel {
+      .main-top-panel{
+        height: 6.5%;
         width: 100%;
-        height: 95%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
         .top-menu {
           display: flex;
           flex-direction: row;
@@ -1299,30 +1571,31 @@ export default {
             width: 1.3rem;
           }
         }
-
+      }
+      .main-center-panel{
+        height: 90.5%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        // border: 1px solid blue;
+        overflow: auto;
         .main-menu {
-          width: 100%;
+          width: 1200px;
           bottom: 0;
-          height: 96%;
+          height: 781px;
           display: flex;
           flex-direction: row;
+          overflow: hidden;
 
-          .editor {
+          .home{
             width: 100%;
             height: 100%;
             border: 3px solid #545e66;
             display: flex;
             align-items: center;
+            overflow: auto;
             justify-content: center;
-            // overflow: hidden;
-            .home {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 70rem;
-              height: 100%;
-              overflow: hidden;
-            }
           }
           .hidden {
             display: none;
@@ -1330,86 +1603,13 @@ export default {
           .display {
             display: block;
           }
-          .comment-board {
-            // position: absolute;
-            right: 0;
-            width: 25rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #dddddd;
-            .add-comment {
-              border-radius: 0.3rem;
-              margin: 0.2rem;
-              padding: 0.2rem;
-              display: flex;
-              flex-direction: row;
-              width: 19rem;
-              background-color: #ca8f8f;
-              cursor: pointer;
-              box-shadow: 1px 0.5px 0.5px #c0c0c0;
-              .comment-input {
-                background-color: inherit;
-                // border:1px solid #646464;
-                border: none;
-                width: 15rem;
-                border-radius: 0.3rem;
-              }
-              .add-comment-btn {
-                width: 1rem;
-                margin-left: 0.5rem;
-                right: 0;
-              }
-            }
-            .comment-wrapper {
-              border-radius: 0.3rem;
-              margin: 0.2rem;
-              padding: 0.2rem;
-              width: 19rem;
-              background-color: #fff;
-              box-shadow: 1px 0.5px 0.5px #c0c0c0;
-
-              .top-box {
-                width: 100%;
-                margin-bottom: 0.15rem;
-                display: flex;
-                height: auto;
-                position: relative;
-                flex-direction: row;
-                .writer {
-                  left: 0;
-                  font-weight: bold;
-                  font-size: 1.1rem;
-                  color: #696969;
-                }
-                .element {
-                  width: 10rem;
-                  position: absolute;
-                  overflow: hidden;
-                  right: 5.5rem;
-                }
-                .time {
-                  position: absolute;
-                  width: 5rem;
-                  right: 0;
-                }
-              }
-              .comment-text {
-                font-size: 0.8rem;
-                width: 100%;
-                text-align: left;
-                color: #8f8f8f;
-                word-break: break-all;
-              }
-            }
-          }
         }
       }
       .bottom-panel {
         z-index: 10000;
         width: 100%;
         background-color: #3c474c;
-        height: 5%;
+        height: 3%;
         margin: 0;
       }
     }
@@ -1435,17 +1635,17 @@ export default {
     background-color:#545e66 ;
   }
 
-  .layout {
-    width: 20rem;
-    z-index: 33;
-    height: 30rem;
-    border: 1.5px solid #000000;
-    position: fixed;
-    right: 4%;
-    background-color: #32373a;
-    z-index: 12;
-    top: 6%;
-  }
+  // .layout {
+  //   width: 20rem;
+  //   z-index: 33;
+  //   height: 30rem;
+  //   border: 1.5px solid #000000;
+  //   position: fixed;
+  //   right: 4%;
+  //   background-color: #32373a;
+  //   z-index: 12;
+  //   top: 6%;
+  // }
 
   .description-tag,
   .description-ui {
@@ -1476,8 +1676,15 @@ export default {
     float: left;
     filter: blur(0.8px);
   }
-  .bottom-panel{
-    width:92%;
+  .right-panel-border {
+    position: fixed;
+    width: 56px;
+    height: 94%;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    // background-image: linear-gradient(to right, #00000000, #68869250);
+    // background-color: red;
   }
   .title-copy {
     text-align: left;
@@ -1491,16 +1698,20 @@ export default {
   .bottom-panel{
     width:92%;
   }
+  
   .fileTitle {
-    font-size: 15px;
+    // font-size: 15px;
     color:white;
     font-weight: bold;
-    padding: 7px 14px;
+    // padding: 7px 14px;
     vertical-align: bottom;
     display: inline-block;
-    margin-right: 25%;
+    // mar
+    // margin-right: 25%;
     float: none;
-    border: 2px solid black;
+    margin: 0;
+    border: none;
+    height: 100%;
     background-color:#666666;
   }
 

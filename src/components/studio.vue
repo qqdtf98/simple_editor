@@ -1,9 +1,13 @@
 <template>
   <div id="studio">
-    <div class="studio-text-box">
-      <span class="studio-text">Studio</span>
-     <img @click="closeStudio" class="close-btn" src="../assets/close.svg" />
-
+    <div @mousedown="moveStudio" class="studio-text-box">
+      <span @mousedown.stop class="studio-text">Studio</span>
+      <img
+        @mousedown.stop
+        @click="closeStudio"
+        class="close-btn"
+        src="../assets/images/close.svg"
+      />
     </div>
     <div class="tag-studio">
       <div class="search">
@@ -13,7 +17,7 @@
           type="text"
           placeholder="Search components"
         />
-        <img class="search-icon" src="../assets/search.svg" />
+        <img class="search-icon" src="../assets/images/search.svg" />
       </div>
       <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
         <div class="tag-list-box">
@@ -146,20 +150,50 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       tagTarget: null,
-      addComponetUserPick: null
+      addComponetUserPick: null,
+      studioMove: false,
+      moveTarget: null,
+      xInter: 0,
+      yInter: 0,
+      isStickStudio: false
     }
   },
-  mounted () {
+  mounted() {
+    document.addEventListener('mousemove', e => {
+      if (this.studioMove) {
+        this.moveTarget.style.left = e.clientX - this.xInter + 'px'
+        this.moveTarget.style.top = e.clientY - this.yInter + 'px'
+        let leftPanel = document.querySelector('.left-panel')
+        if (parseInt(getComputedStyle(this.moveTarget).left) < 25) {
+          leftPanel.style.backgroundColor = '#3a3a50'
+          this.isStickStudio = true
+        } else {
+          leftPanel.style.backgroundColor = '#292931'
+          this.isStickStudio = false
+        }
+      }
+    })
+    document.addEventListener('mouseup', () => {
+      if (this.studioMove) {
+        let leftPanel = document.querySelector('.left-panel')
+        leftPanel.style.backgroundColor = '#292931'
+        if (this.isStickStudio) {
+          this.moveTarget.style.left = '3.5%'
+          this.moveTarget.style.top = '3.5%'
+        }
+        this.studioMove = false
+      }
+    })
     var toggler = document.getElementsByClassName('tag-list')
     var i
     var j
     var k
 
     for (i = 0; i < toggler.length; i++) {
-      toggler[i].addEventListener('click', function () {
+      toggler[i].addEventListener('click', function() {
         let nest = this.parentElement.querySelector('.nested')
         nest.style.transition = 'all 300ms ease'
         this.parentElement.querySelector('.nested').classList.toggle('active')
@@ -180,10 +214,21 @@ export default {
     }
   },
   methods: {
-    closeStudio(){
+    moveStudio(e) {
+      e.target.parentElement.style.position = 'fixed'
+      let initX = e.clientX
+      let initY = e.clientY
+      let initLeft = parseInt(getComputedStyle(e.target.parentElement).left)
+      let initTop = parseInt(getComputedStyle(e.target.parentElement).top)
+      this.xInter = initX - initLeft
+      this.yInter = initY - initTop
+      this.studioMove = true
+      this.moveTarget = e.target.parentElement
+    },
+    closeStudio() {
       this.$emit('close-studio')
     },
-    mouseOver (e) {
+    mouseOver(e) {
       if (e.target.className === 'template') {
         this.$emit('tag-select', e)
       } else if (e.target.className === 'ui-tag template') {
@@ -192,7 +237,7 @@ export default {
         this.$emit('desc-close')
       }
     },
-    addElement (e) {
+    addElement(e) {
       if (
         e.target.className === 'template' ||
         e.target.className === 'ui-tag template'
@@ -205,8 +250,7 @@ export default {
         var docFrag = document.createDocumentFragment()
         docFrag.appendChild(document.createElement('div'))
 
-        docFrag.querySelector('div').innerHTML =
-        `<button class="2 dsadsadsa"
+        docFrag.querySelector('div').innerHTML = `<button class="2 dsadsadsa"
         type="button"
         >도움말</button>`
 
@@ -229,7 +273,7 @@ export default {
         this.$emit('userSelectedTagComponent', e, this.addComponetUserPick)
       }
     },
-    onSearchElement (e) {
+    onSearchElement(e) {
       let tagBox = document.querySelector('.tag-box')
       let list = document.querySelectorAll('.tag-list')
       let name = document.querySelectorAll('.nested')
@@ -277,11 +321,12 @@ export default {
                     .indexOf(e.target.value.toUpperCase()) === -1
                 ) {
                 } else {
-                  
                   var divTag = document.createElement('div')
-                  var node = document.createTextNode(name[i].children[j].innerHTML)
+                  var node = document.createTextNode(
+                    name[i].children[j].innerHTML
+                  )
                   // console.log(name[i].children[j].innerHTML)
-                 
+
                   divTag.appendChild(node)
                   //  console.log(divTag)
                   tagBox.appendChild(divTag)
@@ -303,24 +348,28 @@ export default {
   // overflow:hidden;
   .studio-text-box {
     height: 7%;
+    background-color: #292931;
     justify-content: center;
+    cursor: move;
     position: relative;
     .studio-text {
       padding: 0.2rem;
       color: #ffffff;
       font-size: 1.4rem;
+      cursor: default;
       position: absolute;
       left: 0.4rem;
     }
-    .close-btn{
+    .close-btn {
       width: 1.1rem;
       right: 0.4rem;
       top: 0.4rem;
-      cursor:pointer;
+      cursor: pointer;
       position: absolute;
     }
   }
   .tag-studio {
+    background-color: #292931;
     height: 93%;
     // display: flex;
     // flex-direction: column;
@@ -372,7 +421,7 @@ export default {
 
         /* Create the tag-list/arrow with a unicode, and style it */
         .tag-list::before {
-          content: "\25B6";
+          content: '\25B6';
           color: #e7e4e4;
           display: inline-block;
           margin-right: 6px;
@@ -399,15 +448,15 @@ export default {
           }
         }
         .template::before {
-          content: "\2B1A";
+          content: '\2B1A';
           margin-right: 0.2rem;
         }
         .ui {
           margin-left: 1.2rem;
         }
       }
-      .filter{
-        color:#fff;
+      .filter {
+        color: #fff;
         text-align: left;
         margin-left: 1rem;
       }
