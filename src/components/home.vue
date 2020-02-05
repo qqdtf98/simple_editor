@@ -1,6 +1,7 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
+      <vue-custom-scrollbar class="scroll-area">
       <div
         @mouseup="onmouserightClick"
         @keydown.enter="isContentNotEditable"
@@ -21,6 +22,7 @@
           <Navi class="navi" />
         </div>
       </div>
+      </vue-custom-scrollbar>
     </div>
 
     <div class="selector-box">
@@ -99,9 +101,18 @@ import HtmlLoader from './htmlLoader.vue'
 import spliter from '../sample/spliter.vue'
 import Context from '../sample/Context'
 import ss from '../sample/ss'
+import vueCustomScrollbar from 'vue-custom-scrollbar'
 
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter, Context, ss },
+  components: {
+    Dashboard,
+    Navi,
+    HtmlLoader,
+    spliter,
+    Context,
+    ss,
+    vueCustomScrollbar
+  },
   data() {
     return {
       selectedElement: null,
