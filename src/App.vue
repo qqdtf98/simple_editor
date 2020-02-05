@@ -2,7 +2,7 @@
   <div id="app">
     <div class="top-panel">
       <div class="Logo">Logo</div>
-      <div class="File">File</div>
+      <div @click="fileTab" class="File">File</div>
       <div class="Edit">Edit</div>
       <div class="Save">Save</div>
       <div class="Setting">Setting</div>
@@ -364,6 +364,8 @@
 
     <div class="right-panel-border"></div>
 
+    <fileList v-show="isFileTab" class="filelist-tab" />
+
     <span v-if="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
     </span>
@@ -399,6 +401,7 @@ import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
 import sitemap from "./components/sitemap";
 import SlideRuler from 'slide-ruler';
+import fileList from './components/fileList'
 
 import MonacoEditor from 'monaco-editor-vue';
 
@@ -416,6 +419,7 @@ export default {
     MonacoEditor,
     Ruler,
     SlideRuler,
+    fileList
     
   },
   props: ["selectDomElement"],
@@ -501,7 +505,8 @@ export default {
       ],
       showhtml: true,
       layoutSticky: true,
-      treeMove: false
+      treeMove: false,
+      isFileTab: false
     };
   },
   computed:{
@@ -528,6 +533,7 @@ export default {
     document.addEventListener("keydown", e => {
       if (e.which === 17) {
         this.isCtrl = true;
+        this.$refs.home.multiChoice(true)
       }
       if(e.which === 16){
         this.isShift = true
@@ -716,6 +722,9 @@ export default {
     this.hasht = h;
   },
   methods: {
+    fileTab(e){
+      this.isFileTab = true
+    },
     changeTab(e) {
       let trees = document.querySelectorAll(".tree-name")
       console.log(trees)
@@ -1321,7 +1330,16 @@ export default {
     color: #fff;
     .Logo, .File, .Edit, .Save, .Setting, .Help{
       margin-right: 0.6rem;
+      padding-right: 0.2rem;
+      padding-left: 0.2rem;
+      cursor: default;
       margin-left: 0.6rem;
+    }
+    .File, .Edit, .Save, .Setting, .Help{
+      &:hover{
+        
+        background-color: #535363;
+      }
     }
     // height: 6%;
     // background-color: #3c474c;
@@ -1454,7 +1472,7 @@ export default {
         width: 100%;
         height: 30rem;
         .layout {
-          overflow: auto;
+          // overflow: auto;
           border: 1px solid black;
           width: 100%;
           height: 100%;
@@ -1604,14 +1622,13 @@ export default {
           display: flex;
           flex-direction: row;
           overflow: hidden;
-
           .home{
             width: 100%;
             height: 100%;
             border: 3px solid #545e66;
             display: flex;
             align-items: center;
-            overflow: auto;
+            // overflow: auto;
             justify-content: center;
           }
           .hidden {
@@ -1663,7 +1680,11 @@ export default {
   //   z-index: 12;
   //   top: 6%;
   // }
-
+  .filelist-tab{
+    position: fixed;
+    top: 10rem;
+    left: 10rem;
+  }
   .description-tag,
   .description-ui {
     background-color: #000;
@@ -1780,11 +1801,6 @@ export default {
     }
   }
 
-.editor-component {
-  .board {
-    width: 100%;
-    height: 35rem;
-  }
-}
+
 }
 </style>
