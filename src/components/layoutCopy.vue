@@ -498,27 +498,27 @@
 					<div class="col md-4" :class="{fontActive:onSepia}" style="float:left">
 						Sepia
 					</div>
-				<div class="col md-4">
-				<range-slider
-					class="slider"
-					min="0"
-					max="100"
-					step="1"
-					name="Sepia"
-					submitSorce.style="Sepia"
-					@input = "submitSepia"
-					v-model="sepiaValue">
-				</range-slider>
-				</div>
-				<div class="col md-4">
-				<input
-					style="width:50px"
-					placeholder="0%"
-					name="Sepia"
-					@keyup.enter="submitSepia"
-					v-model="sepiaValue"
-				></input>
-				</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Sepia"
+							submitSorce.style="Sepia"
+							@input = "submitSepia"
+							v-model="sepiaValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Sepia"
+							@keyup.enter="submitSepia"
+							v-model="sepiaValue"
+						></input>
+					</div>
 				</div>
 
 			</b-collapse>

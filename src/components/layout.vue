@@ -405,7 +405,42 @@
               data-parent="#accordion"
             >
               <div class="card-body">
-                ...............................................................................#1
+                <div class="row">
+                  <img
+                    @mousedown.stop
+                    class="left AlignBtn"
+                    src="../assets/images/icon (2).svg"
+                  />
+                  <img
+                    @mousedown.stop
+                    class="center AlignBtn"
+                    src="../assets/images/centerAlign.svg"
+                  />
+                  <img
+                    @mousedown.stop
+                    class="right AlignBtn"
+                    src="../assets/images/icon (1).svg"
+                  />
+                </div>
+                <a> Link </a>
+
+                <div class="row">
+                  <a class="property">
+                    Style
+                  </a>
+                </div>
+                <br />
+                <div class="row">
+                  <a class="property">
+                    Font
+                  </a>
+                </div>
+                <br />
+                <div class="row">
+                  <a class="property">
+                    Size
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -438,7 +473,243 @@
               data-parent="#accordion"
             >
               <div class="card-body">
-                ...............................................................................#1
+                <div class="row">
+					<div class="col md-4" :class="{fontActive:onOpacity}" style="float:left">
+					Opacity
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="1"
+							step="0.01"
+							name="Opacity"
+							submitSorce.style="Opacity"
+							@input = "submitOpacity"
+							v-model="opacityValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							v-model="opacityValue"
+							placeholder="0"
+							name="Opacity"
+							@keyup.enter="submitOpacity"
+						></input>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col md-4"  :class="{fontActive:onBlur}" style="float:left">
+						Blur
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Blur"
+							submitSorce.style="Blur"
+							@input = "submitBlur"
+							v-model="blurValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0px"
+							name="Blur"
+							@keyup.enter="submitBlur"
+							v-model="blurValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onBrightness}" style="float:left">
+						Brightness
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Brightness"
+							submitSorce.style="Brightness"
+							@input = "submitBrightness"
+							v-model="brightnessValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Brightness"
+							@keyup.enter="submitBrightness"
+							v-model="brightnessValue"
+						></input>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="col md-4" :class="{fontActive:onContrast}" style="float:left">
+						Contrast
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="200"
+							step="1"
+							name="Contrast"
+							submitSorce.style="Contrast"
+							@input = "submitContrast"
+							v-model="contrastValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Contrast"
+							@keyup.enter="submitContrast"
+							v-model="contrastValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onGrayscale}" style="float:left">
+						Grayscale
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Grayscale"
+							submitSorce.style="Grayscale"
+							@input = "submitGrayscale"
+							v-model="grayscaleValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Grayscale"
+							@keyup.enter="submitGrayscale"
+							v-model="grayscaleValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onHue}" style="float:left">
+						Hue
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="360"
+							step="3"
+							name="Hue"
+							submitSorce.style="Hue"
+							@input = "submitHue"
+							v-model="hueValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0deg"
+							name="Hue"
+							@keyup.enter="submitHue"
+							v-model="hueValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onInvert}" style="float:left">
+						Invert
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Invert"
+							submitSorce.style="Invert"
+							@input = "submitInvert"
+							v-model="invertValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="100%"
+							name="Invert"
+							@keyup.enter="submitInvert"
+							v-model="invertValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4":class="{fontActive:onSaturate}" style="float:left">
+						Saturate
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="200"
+							step="1"
+							name="Saturate"
+							submitSorce.style="Saturate"
+							@input = "submitSaturate"
+							v-model="saturateValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+						style="width:50px"
+						placeholder="0%"
+						name="Saturate"
+						@keyup.enter="submitSaturate"
+						v-model="saturateValue"
+						></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col md-4" :class="{fontActive:onSepia}" style="float:left">
+						Sepia
+					</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Sepia"
+							submitSorce.style="Sepia"
+							@input = "submitSepia"
+							v-model="sepiaValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Sepia"
+							@keyup.enter="submitSepia"
+							v-model="sepiaValue"
+						></input>
+					</div>
+				</div>
               </div>
             </div>
           </div>
@@ -1105,7 +1376,19 @@ export default {
     },
     closelayout() {
       this.$emit('close-layout')
-    }
+    },
+    //filter 변화 메소드
+    submitOpacity (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'opacity'
+      if (typeof (e.target) !== 'undefined') {
+        this.submitSorce.value = e.target.value
+        // this.submitSorce.value=e
+      } else { this.submitSorce.value = e }
+      this.onOpacity = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelected', this.submitSorce)
+    },
   }
 }
 </script>
@@ -1334,5 +1617,11 @@ b {
     padding: 0.4rem;
     overflow: auto;
   }
+}
+//font 속성
+.AlignBtn {
+  width: 34px;
+  height: 34px;
+  fill: gray;
 }
 </style>

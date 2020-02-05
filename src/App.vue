@@ -102,6 +102,13 @@
           />
           </div>
         </div>
+
+
+        <!--자 넣는 곳-->
+        <SlideRuler/>
+
+
+
         <div class="main-center-panel">
           <div class="main-menu">
             <home
@@ -387,6 +394,8 @@
 //자
 import Vue from 'vue'
 import Ruler from 'vue-component-ruler'
+// import Ruler from "@scena/vue-ruler";
+import SlideRuler from 'slide-ruler';
 import 'vue-component-ruler/dist/ruler.min.css';
 ///
 import htmlLoader from "./components/htmlLoader";
@@ -398,7 +407,7 @@ import spliter from "./sample/spliter";
 import Switches from "vue-switches";
 import CodeLoader from "./components/CodeLoader";
 import sitemap from "./components/sitemap";
-import SlideRuler from 'slide-ruler';
+// import SlideRuler from 'slide-ruler';
 
 import MonacoEditor from 'monaco-editor-vue';
 
@@ -414,8 +423,9 @@ export default {
     CodeLoader,
     sitemap,
     MonacoEditor,
-    Ruler,
+    // Ruler,
     SlideRuler,
+    "vue-ruler": Ruler,
     
   },
   props: ["selectDomElement"],
