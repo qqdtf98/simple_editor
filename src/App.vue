@@ -1,6 +1,12 @@
 <template>
   <div id="app">
     <div class="top-panel">
+      <div class="Logo">Logo</div>
+      <div class="File">File</div>
+      <div class="Edit">Edit</div>
+      <div class="Save">Save</div>
+      <div class="Setting">Setting</div>
+      <div class="Help">Help</div>
       <!-- <div @click="newPage" class="new-box">
         <img class="new" src="./assets/images/new.svg" />
         <div class="new-text">New</div>
@@ -510,6 +516,9 @@ export default {
     }
   },
   mounted() {
+    let title = document.querySelector('.file-name')
+    console.log(title)
+    title.style.backgroundColor = "rgb(78, 78, 92)"
     let htmltree = document.querySelector(".tree-name")
     console.log(htmltree)
     htmltree.style.backgroundColor = "#4e4e5c"
@@ -1306,6 +1315,14 @@ export default {
      height: 3.5%;
     width: 100%;
     background-color: #292931;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: #fff;
+    .Logo, .File, .Edit, .Save, .Setting, .Help{
+      margin-right: 0.6rem;
+      margin-left: 0.6rem;
+    }
     // height: 6%;
     // background-color: #3c474c;
     // background-image: linear-gradient(to bottom, #48545a, #3d484d);
