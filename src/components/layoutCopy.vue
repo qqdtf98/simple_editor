@@ -1392,7 +1392,6 @@ export default {
 		console.log(e)
 		console.log("adsaD")
 	}
-
   }
 }
 </script>
