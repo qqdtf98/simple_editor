@@ -383,7 +383,7 @@ li{
   padding: 0.4rem;
 }
 .acol label:before{
-  content:'\f107';
+  content:'\f107 ';
   font-family:FontAwesome;
   // font-family: "fontello";
 }
@@ -401,7 +401,7 @@ li{
   color:red;
 }
 .acol .checkbox:checked+label:before{
-  content:'\f105';
+  content:'\f105 ';
   font-family: FontAwesome;
 }
 </style>
