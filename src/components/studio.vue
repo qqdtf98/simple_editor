@@ -1,7 +1,7 @@
 <template>
   <div id="studio">
     <div @mousedown="moveStudio" class="studio-text-box">
-      <span class="studio-text">Studio</span>
+      <span @mousedown.stop class="studio-text">Studio</span>
       <img
         @mousedown.stop
         @click="closeStudio"
@@ -159,104 +159,106 @@ export default {
       xInter: 0,
       yInter: 0,
       isStickStudio: false
-    };
+    }
   },
   mounted() {
-    document.addEventListener("mousemove", e => {
+    document.addEventListener('mousemove', e => {
       if (this.studioMove) {
-        this.moveTarget.style.left = e.clientX - this.xInter + "px";
-        this.moveTarget.style.top = e.clientY - this.yInter + "px";
+        this.moveTarget.style.left = e.clientX - this.xInter + 'px'
+        this.moveTarget.style.top = e.clientY - this.yInter + 'px'
+        let leftPanel = document.querySelector('.left-panel')
         if (parseInt(getComputedStyle(this.moveTarget).left) < 25) {
-          this.moveTarget.style.backgroundColor = "red";
-          this.isStickStudio = true;
+          leftPanel.style.backgroundColor = '#3a3a50'
+          this.isStickStudio = true
         } else {
-          this.moveTarget.style.backgroundColor = "#32373a";
-          this.isStickStudio = false;
+          leftPanel.style.backgroundColor = '#292931'
+          this.isStickStudio = false
         }
       }
-    });
-    document.addEventListener("mouseup", () => {
+    })
+    document.addEventListener('mouseup', () => {
       if (this.studioMove) {
-        this.moveTarget.style.backgroundColor = "#32373a";
+        let leftPanel = document.querySelector('.left-panel')
+        leftPanel.style.backgroundColor = '#292931'
         if (this.isStickStudio) {
-          this.moveTarget.style.left = "55px";
-          this.moveTarget.style.top = "58px";
+          this.moveTarget.style.left = '3.5%'
+          this.moveTarget.style.top = '3.5%'
         }
-        this.studioMove = false;
+        this.studioMove = false
       }
-    });
-    var toggler = document.getElementsByClassName("tag-list");
-    var i;
-    var j;
-    var k;
+    })
+    var toggler = document.getElementsByClassName('tag-list')
+    var i
+    var j
+    var k
 
     for (i = 0; i < toggler.length; i++) {
-      toggler[i].addEventListener("click", function() {
-        let nest = this.parentElement.querySelector(".nested");
-        nest.style.transition = "all 300ms ease";
-        this.parentElement.querySelector(".nested").classList.toggle("active");
-        this.classList.toggle("caret-down");
-        if (nest.children[0].className !== "tag-list-box") {
+      toggler[i].addEventListener('click', function() {
+        let nest = this.parentElement.querySelector('.nested')
+        nest.style.transition = 'all 300ms ease'
+        this.parentElement.querySelector('.nested').classList.toggle('active')
+        this.classList.toggle('caret-down')
+        if (nest.children[0].className !== 'tag-list-box') {
           for (j = 0; j < nest.children.length; j++) {
             // wa
-            nest.children[j].classList.add("template");
+            nest.children[j].classList.add('template')
           }
         } else {
           for (k = 0; k < nest.children[0].children[1].children.length; k++) {
-            nest.children[0].children[1].children[k].classList.add("ui-tag");
-            nest.children[1].children[1].children[k].classList.add("ui-tag");
-            nest.children[2].children[1].children[k].classList.add("ui-tag");
+            nest.children[0].children[1].children[k].classList.add('ui-tag')
+            nest.children[1].children[1].children[k].classList.add('ui-tag')
+            nest.children[2].children[1].children[k].classList.add('ui-tag')
           }
         }
-      });
+      })
     }
   },
   methods: {
     moveStudio(e) {
-      e.target.parentElement.style.position = "fixed";
-      let initX = e.clientX;
-      let initY = e.clientY;
-      let initLeft = parseInt(getComputedStyle(e.target.parentElement).left);
-      let initTop = parseInt(getComputedStyle(e.target.parentElement).top);
-      this.xInter = initX - initLeft;
-      this.yInter = initY - initTop;
-      this.studioMove = true;
-      this.moveTarget = e.target.parentElement;
+      e.target.parentElement.style.position = 'fixed'
+      let initX = e.clientX
+      let initY = e.clientY
+      let initLeft = parseInt(getComputedStyle(e.target.parentElement).left)
+      let initTop = parseInt(getComputedStyle(e.target.parentElement).top)
+      this.xInter = initX - initLeft
+      this.yInter = initY - initTop
+      this.studioMove = true
+      this.moveTarget = e.target.parentElement
     },
     closeStudio() {
-      this.$emit("close-studio");
+      this.$emit('close-studio')
     },
     mouseOver(e) {
-      if (e.target.className === "template") {
-        this.$emit("tag-select", e);
-      } else if (e.target.className === "ui-tag template") {
-        this.$emit("ui-select", e);
+      if (e.target.className === 'template') {
+        this.$emit('tag-select', e)
+      } else if (e.target.className === 'ui-tag template') {
+        this.$emit('ui-select', e)
       } else {
-        this.$emit("desc-close");
+        this.$emit('desc-close')
       }
     },
     addElement(e) {
       if (
-        e.target.className === "template" ||
-        e.target.className === "ui-tag template"
+        e.target.className === 'template' ||
+        e.target.className === 'ui-tag template'
       ) {
         // console.log(e.target)
         // this.$emit('addelement', e)
 
         // e.target이 사용자가 선택한 템플릿
         // target 정보를 가지고 DB에서 불러온다.
-        var docFrag = document.createDocumentFragment();
-        docFrag.appendChild(document.createElement("div"));
+        var docFrag = document.createDocumentFragment()
+        docFrag.appendChild(document.createElement('div'))
 
-        docFrag.querySelector("div").innerHTML = `<button class="2 dsadsadsa"
+        docFrag.querySelector('div').innerHTML = `<button class="2 dsadsadsa"
         type="button"
-        >도움말</button>`;
+        >도움말</button>`
 
-        this.addComponetUserPick = docFrag.firstChild;
+        this.addComponetUserPick = docFrag.firstChild
 
         /// ///////////통신///////////////////////
-        var oScript = document.createElement("style");
-        oScript.type = "text/css";
+        var oScript = document.createElement('style')
+        oScript.type = 'text/css'
         oScript.innerHTML = `
       .dsadsadsa{
         color: #fff; 
@@ -265,50 +267,50 @@ export default {
         border-radius:0.5em;
         padding:5px 20px;
       }
-      `;
-        document.getElementsByTagName("head")[0].appendChild(oScript);
+      `
+        document.getElementsByTagName('head')[0].appendChild(oScript)
         /// ///////////통신///////////////////////
-        this.$emit("userSelectedTagComponent", e, this.addComponetUserPick);
+        this.$emit('userSelectedTagComponent', e, this.addComponetUserPick)
       }
     },
     onSearchElement(e) {
-      let tagBox = document.querySelector(".tag-box");
-      let list = document.querySelectorAll(".tag-list");
-      let name = document.querySelectorAll(".nested");
+      let tagBox = document.querySelector('.tag-box')
+      let list = document.querySelectorAll('.tag-list')
+      let name = document.querySelectorAll('.nested')
 
-      let i;
-      let j;
+      let i
+      let j
       for (i = 0; i < list.length; i++) {
-        list[i].style.display = "none";
+        list[i].style.display = 'none'
       }
       for (i = 0; i < name.length; i++) {
         for (j = 0; j < name[i].children.length; j++) {
-          name[i].children[j].style.display = "none";
+          name[i].children[j].style.display = 'none'
         }
       }
 
-      let filterList = document.getElementsByClassName("filter");
-      let leng = filterList.length;
+      let filterList = document.getElementsByClassName('filter')
+      let leng = filterList.length
       for (i = 0; i < leng; i++) {
-        let filter = filterList[filterList.length - 1];
-        tagBox.removeChild(filter);
+        let filter = filterList[filterList.length - 1]
+        tagBox.removeChild(filter)
       }
       this.$nextTick(() => {
-        if (e.target.value === "") {
-          let i;
-          let j;
+        if (e.target.value === '') {
+          let i
+          let j
           for (i = 0; i < list.length; i++) {
-            list[i].style.display = "block";
+            list[i].style.display = 'block'
           }
           for (i = 0; i < name.length; i++) {
             for (j = 0; j < name[i].children.length; j++) {
-              name[i].children[j].style.display = "block";
+              name[i].children[j].style.display = 'block'
             }
           }
         } else {
           for (i = 0; i < name.length; i++) {
             // console.log(name)
-            if (name[i].children[0].className !== "tag-list-box") {
+            if (name[i].children[0].className !== 'tag-list-box') {
               // if (name[i].children[0].className === 'template') {
               //   break
               // }
@@ -319,26 +321,26 @@ export default {
                     .indexOf(e.target.value.toUpperCase()) === -1
                 ) {
                 } else {
-                  var divTag = document.createElement("div");
+                  var divTag = document.createElement('div')
                   var node = document.createTextNode(
                     name[i].children[j].innerHTML
-                  );
+                  )
                   // console.log(name[i].children[j].innerHTML)
 
-                  divTag.appendChild(node);
+                  divTag.appendChild(node)
                   //  console.log(divTag)
-                  tagBox.appendChild(divTag);
-                  divTag.classList.add("filter");
+                  tagBox.appendChild(divTag)
+                  divTag.classList.add('filter')
                   // console.log(tagBox)
                 }
               }
             }
           }
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -346,6 +348,7 @@ export default {
   // overflow:hidden;
   .studio-text-box {
     height: 7%;
+    background-color: #292931;
     justify-content: center;
     cursor: move;
     position: relative;
@@ -353,6 +356,7 @@ export default {
       padding: 0.2rem;
       color: #ffffff;
       font-size: 1.4rem;
+      cursor: default;
       position: absolute;
       left: 0.4rem;
     }
@@ -365,6 +369,7 @@ export default {
     }
   }
   .tag-studio {
+    background-color: #292931;
     height: 93%;
     // display: flex;
     // flex-direction: column;
@@ -416,7 +421,7 @@ export default {
 
         /* Create the tag-list/arrow with a unicode, and style it */
         .tag-list::before {
-          content: "\25B6";
+          content: '\25B6';
           color: #e7e4e4;
           display: inline-block;
           margin-right: 6px;
@@ -443,7 +448,7 @@ export default {
           }
         }
         .template::before {
-          content: "\2B1A";
+          content: '\2B1A';
           margin-right: 0.2rem;
         }
         .ui {
