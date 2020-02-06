@@ -1,12 +1,21 @@
 <template>
   <div id="editlist">
-    <div class="undo list-tab">Undo</div>
-    <div class="redo list-tab">Redo</div>
+    <div @click="undo" class="undo list-tab">Undo</div>
+    <div @click="redo" class="redo list-tab">Redo</div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    undo() {
+      this.$emit('undo')
+    },
+    redo() {
+      this.$emit('redo')
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -20,6 +29,7 @@ export default {}
     margin-top: 0.15rem;
     margin-bottom: 0.15rem;
     width: 8rem;
+    cursor: default;
     font-size: 0.9rem;
     text-align: left;
     padding-left: 0.5rem;

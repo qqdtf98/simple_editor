@@ -20,6 +20,7 @@ export default {}
   .save-as,
   .save-all {
     margin-top: 0.15rem;
+    cursor: default;
     margin-bottom: 0.15rem;
     width: 8rem;
     font-size: 0.9rem;

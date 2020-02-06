@@ -20,6 +20,7 @@ export default {}
     margin-top: 0.15rem;
     margin-bottom: 0.15rem;
     width: 8rem;
+    cursor: default;
     font-size: 0.9rem;
     text-align: left;
     padding-left: 0.5rem;

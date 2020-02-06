@@ -22,6 +22,7 @@ export default {}
     width: 8rem;
     font-size: 0.9rem;
     text-align: left;
+    cursor: default;
     padding-left: 0.5rem;
   }
 }
