@@ -693,6 +693,45 @@ export default {
   props: ['payload','loadData'],
   data () {
     return {
+	  //selction 된 component 속성
+	  componentSorce: {
+        x: 228,
+        y: 500,
+        width: 960,
+        height: 614,
+        padding: '0px',
+        margin: '0px',
+        backgroundColor: '',
+        fontColor: '',
+        fontSize: ''
+	  },
+	  //margin 값 
+	  margin: [
+		  {
+          value: 0
+		  },
+		  {
+          value: 0
+		  },
+		  {
+          value: 0
+		  },
+		  {
+          value: 0
+		  }
+	  ],
+	  //paddoing 값
+	  padding: [0, 0, 0, 0],
+	  
+
+
+
+
+
+
+
+
+	  
 	  imageSizeSelected: 'none',
       imageSize: [
         { value: 'none', text: 'None' },
@@ -780,33 +819,9 @@ export default {
         value: '',
 		change:'',
       },
-      componentSorce: {
-        x: 228,
-        y: 500,
-        width: 960,
-        height: 614,
-        padding: '0px',
-        margin: '0px',
-        backgroundColor: '',
-        fontColor: '',
-        fontSize: ''
-	  },
-	  margin: [
-		  {
-          value: 0
-		  },
-		  {
-          value: 0
-		  },
-		  {
-          value: 0
-		  },
-		  {
-          value: 0
-		  }
-	  ],
+      
+	  
 
-	  padding: [0, 0, 0, 0],
 
       compo: null,
       borderstyle: null,
