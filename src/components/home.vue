@@ -1,7 +1,11 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
-      <vue-custom-scrollbar class="scroll-area">
+      <vue-custom-scrollbar
+        @ps-scroll-y="handleScroll"
+        @ps-scroll-x="handleScroll"
+        class="scroll-area"
+      >
         <div
           @mouseup="onmouserightClick"
           @keydown.enter="isContentNotEditable"
@@ -13,8 +17,10 @@
           @mousemove="onmouseMove"
           @mousedown="mousedown"
         >
-          <div @scroll="handleScroll" class="board">
-            <Dashboard /> -->
+          <div class="board">
+            <Dashboard />
+            <Dashboard />
+            <Dashboard />
             <!-- <ss /> -->
 
             <spliter />
@@ -905,27 +911,28 @@ export default {
               topBord.style.display = 'block'
               rightBord.style.display = 'block'
               bottomBord.style.display = 'block'
-            topBord.style.left = this.selectedElement.left + 'px'
-            topBord.style.top = this.selectedElement.top + 'px'
-            topBord.style.width = this.selectedElement.width + 'px'
-            // bottomBord.style.display = 'none'?
-            leftBord.style.left = this.selectedElement.left + 'px'
-            leftBord.style.top = this.selectedElement.top + 'px'
-            leftBord.style.height = this.selectedElement.height + 'px'
-            rightBord.style.left =
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width = this.selectedElement.width + 'px'
+              // bottomBord.style.display = 'none'?
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+              rightBord.style.left =
                 this.selectedElement.left +
                 this.selectedElement.width -
                 2 +
                 'px'
-            rightBord.style.top = this.selectedElement.top + 'px'
-            rightBord.style.height = this.selectedElement.height + 'px'
-            bottomBord.style.left = this.selectedElement.left + 'px'
-            bottomBord.style.top =
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
                 this.selectedElement.top +
                 this.selectedElement.height -
                 2 +
                 'px'
-            bottomBord.style.width = this.selectedElement.width + 'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+            }
           }
         }
       }
@@ -1654,6 +1661,7 @@ export default {
   .editor-box {
     width: 100%;
     height: 100%;
+    border: 3px solid #545e66;
     // display:table
     // overflow: auto;
     scroll-behavior: smooth;
@@ -1666,8 +1674,8 @@ export default {
 
         .board {
           // overflow: auto;
-          height: 120%;
-          border: 1px solid #000000;
+          // height: 120%;
+          // border: 1px solid #000000;
         }
       }
     }
@@ -1704,7 +1712,7 @@ export default {
       padding: 0.2rem;
       position: fixed;
       z-index: 10;
-      background-color: #3e8ce4;
+      background-color: #27e460;
       border-radius: 0.4rem;
       font-size: 0.8rem;
     }
@@ -1715,18 +1723,18 @@ export default {
     .bottom-border,
     .top-border {
       width: 100%;
-      height: 4px;
+      height: 3px;
       position: fixed;
       // z-index:
-      background-color: #3e8ce4;
+      background-color: #27e460;
       // overflow: auto !important;
     }
     .right-border,
     .left-border {
       height: 100%;
-      width: 4px;
+      width: 3px;
       position: fixed;
-      background-color: #3e8ce4;
+      background-color: #27e460;
     }
   }
   .move-icon {

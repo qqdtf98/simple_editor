@@ -291,8 +291,17 @@
 
     <div class="right-panel-border"></div>
 
-    <fileList v-show="isFileTab" class="filelist-tab list-tab" />
-    <editList v-show="isEditTab" class="editlist-tab list-tab" />
+    <fileList
+      @newpage="newPage"
+      v-show="isFileTab"
+      class="filelist-tab list-tab"
+    />
+    <editList
+      @undo="undoWork"
+      @redo="redoWork"
+      v-show="isEditTab"
+      class="editlist-tab list-tab"
+    />
     <saveList v-show="isSaveTab" class="savelist-tab list-tab" />
     <settingList v-show="isSettingTab" class="settinglist-tab list-tab" />
     <helpList v-show="isHelpTab" class="helplist-tab list-tab" />
@@ -614,7 +623,7 @@ export default {
           if (this.layoutSticky === false) {
             let rightPanel = document.querySelector('.right-panel')
             let centerPanel = document.querySelector('.center-panel')
-            this.moveTarget.style.borderTop = '1px solid black'
+            // this.moveTarget.style.borderTop = '1px solid black'
             rightPanel.style.width = '0'
             centerPanel.style.width = '96.5%'
           } else {
@@ -1682,7 +1691,7 @@ export default {
           .home {
             width: 100%;
             height: 100%;
-            border: 3px solid #545e66;
+            // border: 3px solid #545e66;
             display: flex;
             align-items: center;
             // overflow: auto;
