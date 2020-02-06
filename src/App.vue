@@ -2,11 +2,13 @@
   <div id="app">
     <div class="top-panel">
       <div class="Logo">Logo</div>
-      <div @click="fileTab" class="File">File</div>
-      <div class="Edit">Edit</div>
-      <div class="Save">Save</div>
-      <div class="Setting">Setting</div>
-      <div class="Help">Help</div>
+      <div @mouseover="fileTab" class="File menu-tab">
+        File
+      </div>
+      <div @mouseover="editTab" class="Edit menu-tab">Edit</div>
+      <div @mouseover="saveTab" class="Save menu-tab">Save</div>
+      <div @mouseover="settingTab" class="Setting menu-tab">Setting</div>
+      <div @mouseover="helpTab" class="Help menu-tab">Help</div>
       <!-- <div @click="newPage" class="new-box">
         <img class="new" src="./assets/images/new.svg" />
         <div class="new-text">New</div>
@@ -67,137 +69,8 @@
           title="sitemap"
         />
       </div>
-       <div class="center-panel">
+      <div class="center-panel">
         <div class="main-top-panel">
-           <div class="top-menu">
-            <div class="file-name" :key="title.index" v-for="title in titles">
-              <div @click="changePage" class="title">
-                {{ title.text }}
-              </div>
-              <img
-                @click="closePage"
-                class="close-icon"
-                src="./assets/images/close.svg"
-              />
-            </div>
-          
-
-          <img
-            src="./assets/images/iphone.svg"
-            @click="resizeEditor"
-            class="iphone"
-            title="375 x 667"
-          />
-          <img
-            src="./assets/images/ipad.svg"
-            @click="resizeEditor"
-            class="ipad"
-            title="768 x 1024"
-          />
-          <img
-            src="./assets/images/monitor.svg"
-            @click="resizeEditor"
-            class="monitor"
-            title="992 x 687"
-          />
-          </div>
-        </div>
-        <div class="main-center-panel">
-          <div class="main-menu">
-            <home
-              ref="home"
-              @componentSelected="componentSelected"
-              @stack-push="stackPush"
-              @loadData="loadData"
-              class="home"
-            ></home>
-          <div v-if="isCommentOn" class="comment-board">
-            <div class="add-comment">
-              <textarea class="comment-input" placeholder="comment" />
-              <img
-                @click="addComment"
-                class="add-comment-btn"
-                src="./assets/images/plus.svg"
-              />
-            </div>
-            <div
-              :key="comment.index"
-              v-for="comment in comments"
-              class="comment-wrapper"
-            >
-              <div class="top-box">
-                <div class="writer">{{ comment.writer }}</div>
-                <div class="element">{{ comment.element }}</div>
-                <div class="time">{{ comment.time }}</div>
-              </div>
-              <div class="comment-text">{{ comment.text }}</div>
-            </div>
-          </div>
-        </div>
-        </div>
-         <div class="row bottom-panel">
-      
-      <div v-show="isData" class="loadDataPanel">
-        <div @mousedown="loaderResize" class="loader-bord"></div>
-        <div class="studio-text-box"> 
-          <span class="studio-text">CodeReview</span>
-                
-          <img
-            @click="closeCodeReview"
-            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
-            class="close-btn"
-          />
-          
-        </div>
-        <div class="showSorce">
-          <div   class="tab-pane"  id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-              <div class="showCode">
-                <div class="showCode">
-                  <Ruler 
-                  ref="Ruler"
-                  min="0"
-							    max="100" 
-                  step="0.01"
-                  @onchange="rulerChange"
-                  :range="range"/>
-
-                  <SlideRuler
-                  ref="SlideRuler"
-                  maxValue: "230"
-                  minValue: "100"
-                  currentValue: "180"
-                  handleValue: "handleValue"
-                  precision: "1"
-                  ></SlideRuler>
-                  <h1>dasd</h1>
-                  <vue-ruler type="horizontal" ref="ruler"/>
-                </div>
-              </div>
-          </div>
-          <div v-show="tabStep===2" class="tab-pane" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-              <div class="showCode">
-              <MonacoEditor
-                width="800"
-                height="500"
-                theme="vs-dark"
-                language="javascript"
-                ></MonacoEditor>
-              </div>
-          </div>
-          <div v-show="tabStep===3" class="tab-pane" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-              <div class="showCode">
-                  
-                  <textarea class ="showJS" v-model="js" id="preview3"> 불러올 데이터가 없습니다. </textarea>
-                  <input  style="float:left;" type="submit"  value="Apply" @click="inputFile" id="getfile" accept="text/*">
-              </div>
-          </div>
-        </div>
-      </div>
-      <span class="fileTitle" @click="clickSource" name="html">HTML</span>
-      <span class="fileTitle" @click="clickSource" name="css">CSS</span>
-      <span class="fileTitle" @click="clickSource" name="js">JavaScript</span>
-    </div>
-        <!-- <div class="a-panel">
           <div class="top-menu">
             <div class="file-name" :key="title.index" v-for="title in titles">
               <div @click="changePage" class="title">
@@ -209,29 +82,29 @@
                 src="./assets/images/close.svg"
               />
             </div>
-          
 
-          <img
-            src="./assets/images/iphone.svg"
-            @click="resizeEditor"
-            class="iphone"
-            title="375 x 667"
-          />
-          <img
-            src="./assets/images/ipad.svg"
-            @click="resizeEditor"
-            class="ipad"
-            title="768 x 1024"
-          />
-          <img
-            src="./assets/images/monitor.svg"
-            @click="resizeEditor"
-            class="monitor"
-            title="992 x 687"
-          />
+            <img
+              src="./assets/images/iphone.svg"
+              @click="resizeEditor"
+              class="iphone"
+              title="375 x 667"
+            />
+            <img
+              src="./assets/images/ipad.svg"
+              @click="resizeEditor"
+              class="ipad"
+              title="768 x 1024"
+            />
+            <img
+              src="./assets/images/monitor.svg"
+              @click="resizeEditor"
+              class="monitor"
+              title="992 x 687"
+            />
           </div>
-        <div class="main-menu">
-          <div class="editor">
+        </div>
+        <div class="main-center-panel">
+          <div class="main-menu">
             <home
               ref="home"
               @componentSelected="componentSelected"
@@ -239,44 +112,119 @@
               @loadData="loadData"
               class="home"
             ></home>
-          </div>
-          <div v-if="isCommentOn" class="comment-board">
-            <div class="add-comment">
-              <textarea class="comment-input" placeholder="comment" />
-              <img
-                @click="addComment"
-                class="add-comment-btn"
-                src="./assets/images/plus.svg"
-              />
-            </div>
-            <div
-              :key="comment.index"
-              v-for="comment in comments"
-              class="comment-wrapper"
-            >
-              <div class="top-box">
-                <div class="writer">{{ comment.writer }}</div>
-                <div class="element">{{ comment.element }}</div>
-                <div class="time">{{ comment.time }}</div>
+            <div v-if="isCommentOn" class="comment-board">
+              <div class="add-comment">
+                <textarea class="comment-input" placeholder="comment" />
+                <img
+                  @click="addComment"
+                  class="add-comment-btn"
+                  src="./assets/images/plus.svg"
+                />
               </div>
-              <div class="comment-text">{{ comment.text }}</div>
+              <div
+                :key="comment.index"
+                v-for="comment in comments"
+                class="comment-wrapper"
+              >
+                <div class="top-box">
+                  <div class="writer">{{ comment.writer }}</div>
+                  <div class="element">{{ comment.element }}</div>
+                  <div class="time">{{ comment.time }}</div>
+                </div>
+                <div class="comment-text">{{ comment.text }}</div>
+              </div>
             </div>
           </div>
         </div>
-      </div> -->
-      
-    
-     
+        <div class="row bottom-panel">
+          <div v-show="isData" class="loadDataPanel">
+            <div @mousedown="loaderResize" class="loader-bord"></div>
+            <div class="studio-text-box">
+              <span class="studio-text">CodeReview</span>
 
-      
-      <!-- <div class="bottom-panel"></div> -->
-     
-    </div>
-    <div class="right-panel">
-      <div class="right-top-panel">
-          <layout ref="layout" @stick="layoutStick" class="layout" />
+              <img
+                @click="closeCodeReview"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
+                class="close-btn"
+              />
+            </div>
+            <div class="showSorce">
+              <div
+                class="tab-pane"
+                id="pills-home"
+                role="tabpanel"
+                aria-labelledby="pills-home-tab"
+              >
+                <div class="showCode">
+                  <div class="showCode">
+                    <Ruler
+                      ref="Ruler"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                      @onchange="rulerChange"
+                      :range="range"
+                    />
+
+                    <SlideRuler ref="SlideRuler" maxValue: "230" minValue: "100"
+                    currentValue: "180" handleValue: "handleValue" precision:
+                    "1" />
+                    <h1>dasd</h1>
+                    <vue-ruler type="horizontal" ref="ruler" />
+                  </div>
+                </div>
+              </div>
+              <div
+                v-show="tabStep === 2"
+                class="tab-pane"
+                id="pills-profile"
+                role="tabpanel"
+                aria-labelledby="pills-profile-tab"
+              >
+                <div class="showCode">
+                  <MonacoEditor
+                    width="800"
+                    height="500"
+                    theme="vs-dark"
+                    language="javascript"
+                  ></MonacoEditor>
+                </div>
+              </div>
+              <div
+                v-show="tabStep === 3"
+                class="tab-pane"
+                id="pills-contact"
+                role="tabpanel"
+                aria-labelledby="pills-contact-tab"
+              >
+                <div class="showCode">
+                  <textarea class="showJS" v-model="js" id="preview3">
+ 불러올 데이터가 없습니다. </textarea
+                  >
+                  <input
+                    style="float:left;"
+                    type="submit"
+                    value="Apply"
+                    @click="inputFile"
+                    id="getfile"
+                    accept="text/*"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="fileTitle" @click="clickSource" name="html">HTML</span>
+          <span class="fileTitle" @click="clickSource" name="css">CSS</span>
+          <span class="fileTitle" @click="clickSource" name="js"
+            >JavaScript</span
+          >
+        </div>
       </div>
-      <div class="right-bottom-panel">
+      <div class="right-panel">
+        <div class="right-top-panel">
+          <layout ref="layout" @stick="layoutStick" class="layout" />
+        </div>
+        <div class="right-bottom-panel">
           <div class="tree-name-wrapper">
             <div @mousedown="moveTree" class="tree-name-box">
               <div
@@ -286,7 +234,7 @@
                 :key="tree.index"
                 v-for="tree in trees"
               >
-                <div @mousedown.stop  class="tree">
+                <div @mousedown.stop class="tree">
                   {{ tree.text }}
                 </div>
               </div>
@@ -295,29 +243,8 @@
             <div v-if="!showhtml" class="filecontent" />
           </div>
         </div>
-      <!-- <img
-        @click="layoutBtn"
-        id="codeBtnLayout"
-        class="layout-btn"
-        src="./assets/images/layout.svg"
-        title="layout"
-      />
-      <img
-        @click="codeBtn"
-        id="codeBtnFileList"
-        class="code-btn"
-        src="./assets/images/code.svg"
-        title="code-editor"
-      />
-      <img
-        @click="commentBtn"
-        class="comment-btn"
-        src="./assets/images/comment.svg"
-        title="comment"
-      /> -->
+      </div>
     </div>
-
-  </div>
     <CodeLoader
       @setFile="setFile"
       :loaderData="message"
@@ -326,15 +253,6 @@
       class="code-loader"
     ></CodeLoader>
 
-    <!-- <layout
-      v-show="layoutOn"
-      ref="layouts"
-      :payload="payload"
-      @userSelected="userSelectedWidth"
-      @userSelectBorder="userSelectBorder"
-      @selectDomElemented="selectDomElemented"
-      class="layout"
-    ></layout> -->
     <studio
       v-show="studioOn"
       @desc-close="tagNotSelected"
@@ -364,7 +282,11 @@
 
     <div class="right-panel-border"></div>
 
-    <fileList v-show="isFileTab" class="filelist-tab" />
+    <fileList v-show="isFileTab" class="filelist-tab list-tab" />
+    <editList v-show="isEditTab" class="editlist-tab list-tab" />
+    <saveList v-show="isSaveTab" class="savelist-tab list-tab" />
+    <settingList v-show="isSettingTab" class="settinglist-tab list-tab" />
+    <helpList v-show="isHelpTab" class="helplist-tab list-tab" />
 
     <span v-if="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
@@ -380,30 +302,33 @@
     <div v-if="isTitle" class="title-copy">
       bb
     </div>
-</div>
+  </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
 </template>
 
 <script>
-
 //자
 import Vue from 'vue'
 import Ruler from 'vue-component-ruler'
-import 'vue-component-ruler/dist/ruler.min.css';
+import 'vue-component-ruler/dist/ruler.min.css'
 ///
-import htmlLoader from "./components/htmlLoader";
-import home from "./components/home";
-import layout from "./components/layout";
-import studio from "./components/studio";
-import overview from "./components/overview";
-import spliter from "./sample/spliter";
-import Switches from "vue-switches";
-import CodeLoader from "./components/CodeLoader";
-import sitemap from "./components/sitemap";
-import SlideRuler from 'slide-ruler';
-import fileList from './components/fileList'
+import htmlLoader from './components/htmlLoader'
+import home from './components/home'
+import layout from './components/layout'
+import studio from './components/studio'
+import overview from './components/overview'
+import spliter from './sample/spliter'
+import Switches from 'vue-switches'
+import CodeLoader from './components/CodeLoader'
+import sitemap from './components/sitemap'
+import SlideRuler from 'slide-ruler'
+import fileList from './components/tabComponent/fileList'
+import editList from './components/tabComponent/editList'
+import saveList from './components/tabComponent/saveList'
+import settingList from './components/tabComponent/settingList'
+import helpList from './components/tabComponent/helpList'
 
-import MonacoEditor from 'monaco-editor-vue';
+import MonacoEditor from 'monaco-editor-vue'
 
 export default {
   components: {
@@ -419,29 +344,33 @@ export default {
     MonacoEditor,
     Ruler,
     SlideRuler,
-    fileList
-    
+    fileList,
+    editList,
+    saveList,
+    settingList,
+    helpList
   },
-  props: ["selectDomElement"],
-  name: "App",
+  props: ['selectDomElement'],
+  name: 'App',
   data() {
     return {
-      code: '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
+      code:
+        '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
       options: {
         selectOnLineNumbers: true
       },
-      range:[0,100],
-      payload: "",
-      data: "",
-      homeLayoutLocation: "",
+      range: [0, 100],
+      payload: '',
+      data: '',
+      homeLayoutLocation: '',
       isSticklayout: true,
       tagDescription: false,
       childOFchil: [],
-       sitemapOn: false,
+      sitemapOn: false,
       enabled: false,
-      homeDocument: "",
+      homeDocument: '',
       uiDescription: false,
-      dom: "",
+      dom: '',
       addTag: false,
       selectedTemplate: null,
       selectedTag: null,
@@ -462,34 +391,34 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
-      isShift : false,
+      isShift: false,
       xInter: null,
       yInter: null,
-      message:"",
-      isData:false,
-      tabStep:0,
-      js:" 불러올 데이터가 없습니다.",
+      message: '',
+      isData: false,
+      tabStep: 0,
+      js: ' 불러올 데이터가 없습니다.',
       isShift: false,
       isCommentOn: false,
       comments: [
         {
-          writer: "이성민",
-          element: "aaa",
-          time: "2020/01/28",
-          text: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          writer: '이성민',
+          element: 'aaa',
+          time: '2020/01/28',
+          text: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         },
         {
-          writer: "이성민",
-          element: "adsfsdf",
-          time: "2020/01/27",
+          writer: '이성민',
+          element: 'adsfsdf',
+          time: '2020/01/27',
           text:
-            "annnnnnnnnnnnnnnaaaaaaaaaaerggggggggggsdddddddddddssssssssssssssssssssssssssssdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsssssssssssssssssg"
+            'annnnnnnnnnnnnnnaaaaaaaaaaerggggggggggsdddddddddddssssssssssssssssssssssssssssdfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffsssssssssssssssssg'
         }
       ],
       commentTarget: null,
       titles: [
         {
-          text: "Untitled"
+          text: 'Untitled'
         }
       ],
       editorNum: 1,
@@ -497,250 +426,343 @@ export default {
       copyTitle: null,
       trees: [
         {
-          text: "HTML"
+          text: 'HTML'
         },
         {
-          text: "Files"
+          text: 'Files'
         }
       ],
       showhtml: true,
       layoutSticky: true,
       treeMove: false,
-      isFileTab: false
-    };
+      isFileTab: false,
+      isEditTab: false,
+      isSaveTab: false,
+      isSettingTab: false,
+      isHelpTab: false
+    }
   },
-  computed:{
-     testMessage: function (){
-        this.test = document.getElementById("newLoaderHtml").innerHTML
-        return this.test
-     },
+  computed: {
+    testMessage: function() {
+      this.test = document.getElementById('newLoaderHtml').innerHTML
+      return this.test
+    }
   },
   watch: {
     enabled: function() {
-      this.$refs.home.modeSelect(this.enabled);
+      this.$refs.home.modeSelect(this.enabled)
     }
   },
   mounted() {
     let title = document.querySelector('.file-name')
-    console.log(title)
-    title.style.backgroundColor = "rgb(78, 78, 92)"
-    let htmltree = document.querySelector(".tree-name")
-    console.log(htmltree)
-    htmltree.style.backgroundColor = "#4e4e5c"
+    // console.log(title)
+    title.style.backgroundColor = 'rgb(78, 78, 92)'
+    let htmltree = document.querySelector('.tree-name')
+    // console.log(htmltree)
+    htmltree.style.backgroundColor = '#4e4e5c'
     $(window).resize(() => {
-      this.$refs.home.windowResized();
-    });
-    document.addEventListener("keydown", e => {
+      this.$refs.home.windowResized()
+    })
+    document.addEventListener('mouseover', e => {
+      // console.log(e.target.classList[1])
+      let mouseoverTab = false
+      if (
+        e.target.classList[1] === 'menu-tab' ||
+        e.target.classList[1] === 'list-tab'
+      ) {
+        mouseoverTab = true
+      }
+      if (!mouseoverTab) {
+        this.isHelpTab = false
+        this.isFileTab = false
+        this.isEditTab = false
+        this.isSettingTab = false
+        this.isSaveTab = false
+      }
+    })
+    document.addEventListener('keydown', e => {
       if (e.which === 17) {
-        this.isCtrl = true;
+        this.isCtrl = true
         this.$refs.home.multiChoice(true)
       }
-      if(e.which === 16){
+      if (e.which === 16) {
         this.isShift = true
       }
-      if (e.which === 90 && this.isCtrl &&!this.isShift) {
-        this.undoWork();
+      if (e.which === 90 && this.isCtrl && !this.isShift) {
+        this.undoWork()
       }
-      if(e.which === 90 && this.isCtrl && this.isShift){
+      if (e.which === 90 && this.isCtrl && this.isShift) {
         this.redoWork()
       }
-      if(e.which === 67 && this.isCtrl){
+      if (e.which === 67 && this.isCtrl) {
       }
-    });
+    })
     document.addEventListener('keyup', e => {
-      if(e.which === 16){
+      if (e.which === 16) {
         this.isShift = false
       }
     })
-    document.addEventListener("mousemove", e => {
+    document.addEventListener('mousemove', e => {
       if (this.viewTemplate) {
         this.$nextTick(() => {
-          let img = document.querySelector(".description-img");
-          let stu = document.querySelector(".studio");
+          let img = document.querySelector('.description-img')
+          let stu = document.querySelector('.studio')
 
-          let name = this.selectedTemplate.target.innerHTML.replace(/ /gi, "");
+          let name = this.selectedTemplate.target.innerHTML.replace(/ /gi, '')
           // ui 말고 나머지 템플릿의 사진을 추가하거나 예외처리해줘야함.
           // name은 ui와 tag구분없이 들어온다.
-          img.children[0].src = "./static/studioImage/" + name + ".png";
-          img.style.left = e.clientX + 10 + "px";
-          img.style.top = e.clientY + 10 + "px";
+          img.children[0].src = './static/studioImage/' + name + '.png'
+          img.style.left = e.clientX + 10 + 'px'
+          img.style.top = e.clientY + 10 + 'px'
           // ui.innerHTML = this.hasht[innerText]
-        });
+        })
       }
-      if(this.resizeLoader){
-        let loader = document.querySelector(".loadDataPanel");
+      if (this.resizeLoader) {
+        let loader = document.querySelector('.loadDataPanel')
         let bord = document.querySelector('.loader-bord')
-        loader.style.height = this.initialHeight - (e.clientY - this.initialY) + 'px'
+        loader.style.height =
+          this.initialHeight - (e.clientY - this.initialY) + 'px'
         console.log(parseInt(getComputedStyle(loader).top))
         console.log(parseInt(getComputedStyle(bord).height))
-        this.$nextTick(()=>{
-          bord.style.top = parseInt(getComputedStyle(loader).top)  + 'px'
-        });
-        }
+        this.$nextTick(() => {
+          bord.style.top = parseInt(getComputedStyle(loader).top) + 'px'
+        })
+      }
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
-            let copy = document.querySelector(".title-copy");
-            // console.log(this.copyTitle)
-            copy.textContent = this.copyTitle.textContent;
-            copy.style.left = e.clientX + 10 + "px";
-            copy.style.top = e.clientY + 10 + "px";
+        let copy = document.querySelector('.title-copy')
+        // console.log(this.copyTitle)
+        copy.textContent = this.copyTitle.textContent
+        copy.style.left = e.clientX + 10 + 'px'
+        copy.style.top = e.clientY + 10 + 'px'
       }
-      if(this.treeMove){
-        this.moveTarget.style.width = "-webkit-calc(100% - 83.5%)"
-        this.moveTarget.style.height = "25rem"
+      if (this.treeMove) {
+        this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
+        this.moveTarget.style.height = '25rem'
         // this.moveTarget.style.right= e.clientX - this.xInter + "px";
         this.moveTarget.style.right =
           window.innerWidth -
           e.clientX -
           (parseInt(getComputedStyle(this.moveTarget).width) - this.xInter) +
-          "px"
-        this.moveTarget.style.top = e.clientY - this.yInter + "px"
-        let rightBorder = document.querySelector(".right-panel-border")
+          'px'
+        this.moveTarget.style.top = e.clientY - this.yInter + 'px'
+        let rightBorder = document.querySelector('.right-panel-border')
         if (parseInt(getComputedStyle(this.moveTarget).right) < 30) {
-          rightBorder.style.opacity = "1"
+          rightBorder.style.opacity = '1'
           rightBorder.style.backgroundImage =
-            "linear-gradient(to right, #00000000, #68869250)"
+            'linear-gradient(to right, #00000000, #68869250)'
           // rightBorder.style.backgroundColor = "#3a3a50"
 
           this.isSticklayout = true
         } else {
-          rightBorder.style.opacity = "0"
+          rightBorder.style.opacity = '0'
           // rightBorder.style.backgroundColor = "#292931";
           this.isSticklayout = false
         }
       }
-    });
-    this.homeDocument = document.getElementById("dashboard");
-    document.addEventListener("mouseup", e => {
+    })
+    this.homeDocument = document.getElementById('dashboard')
+    document.addEventListener('mouseup', e => {
       this.resizeLoader = false
-      this.viewTemplate = false;
-      let tar = e.target;
+      this.viewTemplate = false
+      let tar = e.target
       if (this.addTag) {
         while (1) {
-          if (tar.id === "dashboard") {
-            this.addTag = false;
-            this.$refs.home.addContent(this.selectedTag, e.target);
-            break;
-          } else if (tar.id === "app") {
-            break;
+          if (tar.id === 'dashboard') {
+            this.addTag = false
+            this.$refs.home.addContent(this.selectedTag, e.target)
+            break
+          } else if (tar.id === 'app') {
+            break
           } else {
-            tar = tar.parentElement;
+            tar = tar.parentElement
           }
         }
       }
-      if(this.isTitle){
+      if (this.isTitle) {
         this.isTitle = false
       }
-    
-      
-       if (this.treeMove) {
-        let rightBorder = document.querySelector(".right-panel-border")
-        let rightTopPanel = document.querySelector(".right-top-panel")
-        let rightBottomPanel = document.querySelector(".right-bottom-panel")
+
+      if (this.treeMove) {
+        let rightBorder = document.querySelector('.right-panel-border')
+        let rightTopPanel = document.querySelector('.right-top-panel')
+        let rightBottomPanel = document.querySelector('.right-bottom-panel')
         // rightBorder.style.backgroundColor = "#292931";
         if (this.isSticklayout) {
-          rightBorder.style.opacity = "0"
-          this.moveTarget.style.width = "-webkit-calc(100% - 83.5%)"
-          this.moveTarget.style.right = "0"
-          this.moveTarget.style.top = "calc(30rem + 3.5%)"
-          this.moveTarget.style.height = "25rem"
-          rightTopPanel.style.height = "30rem"
-          rightBottomPanel.style.height = "25rem"
-          let rightPanel = document.querySelector(".right-panel")
-          let centerPanel = document.querySelector(".center-panel")
-          rightPanel.style.width = "16.5%"
-          centerPanel.style.width = "80%"
+          rightBorder.style.opacity = '0'
+          this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
+          this.moveTarget.style.right = '0'
+          this.moveTarget.style.top = 'calc(30rem + 3.5%)'
+          this.moveTarget.style.height = '25rem'
+          rightTopPanel.style.height = '30rem'
+          rightBottomPanel.style.height = '25rem'
+          let rightPanel = document.querySelector('.right-panel')
+          let centerPanel = document.querySelector('.center-panel')
+          rightPanel.style.width = '16.5%'
+          centerPanel.style.width = '80%'
           this.$refs.layout.treeStick(0)
         } else {
           if (this.layoutSticky === false) {
-            let rightPanel = document.querySelector(".right-panel")
-            let centerPanel = document.querySelector(".center-panel")
-            this.moveTarget.style.borderTop = "1px solid black"
-            rightPanel.style.width = "0"
-            centerPanel.style.width = "96.5%"
+            let rightPanel = document.querySelector('.right-panel')
+            let centerPanel = document.querySelector('.center-panel')
+            this.moveTarget.style.borderTop = '1px solid black'
+            rightPanel.style.width = '0'
+            centerPanel.style.width = '96.5%'
           } else {
-            let rightPanel = document.querySelector(".right-panel")
-            let centerPanel = document.querySelector(".center-panel")
-            rightPanel.style.width = "16.5%"
-            centerPanel.style.width = "80%"
+            let rightPanel = document.querySelector('.right-panel')
+            let centerPanel = document.querySelector('.center-panel')
+            rightPanel.style.width = '16.5%'
+            centerPanel.style.width = '80%'
           }
           this.$refs.layout.treeStick(1)
         }
         this.treeMove = false
       }
-    });
-    var h = {};
-    h["articleclean"] = "An article layout with a simple and clean design.";
-    h["articledualcolumn"] = "An article layout which consists of two columns.";
-    h["articlelist"] = "A list of articles with thumbnails and descriptions.";
-    h["featuresblue"] = "This is a feature grid with a beautiful blue design.";
-    h["featuresboxed"] = "A feature grid with a subtle white on blue design.";
-    h["featuresclean"] =
-      "A feature grid with a clean design with lots of white space.";
-    h["footerbasic"] = "This is a basic footer with links and social buttons.";
-    h["footerclean"] =
-      "A complete footer design with link categories, social icons and a copyright line.";
-    h["footerdark"] =
-      "A dark footer design with link categories, social icons and a copyright line.";
-    h["heading"] =
-      "This is the HTML heading component. You can choose which HTML tag is used - from &lth1&gt to &lth6&gt.";
-    h["paragraph"] =
-      "This is the standard &ltp&gt  HTML element. Use it for writing body text. It is enhanced by Bootstrap's rich styling classes, available in the Options panel.";
-    h["alert"] =
-      "Use this component to show a message to users of your web app. Usually it is displayed near the top of your page. It can have an optional dismiss button and you can choose one of several color themes.";
-    h["image"] =
-      "This is the &ltimage&gt  HTML element. You can control its size, source, style and responsiveness from the Options panel.";
-    h["icon"] =
-      "This is the Icon component. You can choose from a number of available icon fonts. You can modify the icon's size and color by changing its CSS font-size and color properties.";
-    h["carousel"] =
-      "This is Bootstrap's versatile Carousel component. It can display and animate text and photos. You have to enable the slides' captions in order to place non-image elements inside them.";
-    h["button"] =
-      "This is the multi-functional Bootstrap Button component. You have a choice of possible themes, button types and sizes. Search for the related Dropdown and Split Button components if you need your button to trigger dropdown menus.";
-    h["splitbutton"] =
-      "This is the Bootstrap Split Button component. It consists of two buttons, the second of which triggers a dropdown menu. Look for the Dropdown component if you need only a single button.";
-    h["buttongroup"] =
-      "A Button Group is a Bootstrap component for grouping together buttons. If you need more than one group, check out the Button Toolbar component.";
-    h["row"] =
-      "This is the Bootstrap Row component. This is a fundamental building block of the responsive grid. Place Rows inside Containers, and drop Columns inside them to build a responsive page.";
-    h["column"] =
-      "This is the Bootstrap Column component. This is the fundamental building block of the responsive grid. Place columns inside Rows and control their width with the col-* responsive classes. There are lots of responsive options available in the Column's Option panel.";
-    h["columnhelper"] =
-      "This is the Bootstrap Column component. This is the fundamental building block of the responsive grid. Place columns inside Rows and control their width with the col-* responsive classes. There are lots of responsive options available in the Column's Option panel.";
-    h["container"] =
-      "Containers are Bootstrap components which limit the width of the page. Usually you would place a single Container as an element that wraps around all of your content. You can switch between fluid and fixed width containers from the Option panel.";
-    h["tabs"] =
-      "This is Bootstrap's Tabs component. Each tab has an associated Tab Pane which is displayed when the tab is active.";
-    h["accordion"] =
-      "This is a Bootstrap component for displaying content in vertical groups. Only one group is expanded at a time. This is a great way to organize FAQ pages and other layouts where vertical content is at a premium.";
-    h["card"] =
-      "Cards are flexible and extensible Bootstrap 4 containers. They can include headers, footers, a wide variety of content, contextual background colors, and powerful display options.";
-    h["panel"] =
-      "Panels are a variation of the Bootstrap 4 Card component. They can include headers, footers and multiple color styles.";
-    h["thumbnail"] =
-      "Thumbnails are a variation of the Bootstrap 4 Card component. They can include a header image, title, description and action buttons or links.";
+    })
+    var h = {}
+    h['articleclean'] = 'An article layout with a simple and clean design.'
+    h['articledualcolumn'] = 'An article layout which consists of two columns.'
+    h['articlelist'] = 'A list of articles with thumbnails and descriptions.'
+    h['featuresblue'] = 'This is a feature grid with a beautiful blue design.'
+    h['featuresboxed'] = 'A feature grid with a subtle white on blue design.'
+    h['featuresclean'] =
+      'A feature grid with a clean design with lots of white space.'
+    h['footerbasic'] = 'This is a basic footer with links and social buttons.'
+    h['footerclean'] =
+      'A complete footer design with link categories, social icons and a copyright line.'
+    h['footerdark'] =
+      'A dark footer design with link categories, social icons and a copyright line.'
+    h['heading'] =
+      'This is the HTML heading component. You can choose which HTML tag is used - from &lth1&gt to &lth6&gt.'
+    h['paragraph'] =
+      "This is the standard &ltp&gt  HTML element. Use it for writing body text. It is enhanced by Bootstrap's rich styling classes, available in the Options panel."
+    h['alert'] =
+      'Use this component to show a message to users of your web app. Usually it is displayed near the top of your page. It can have an optional dismiss button and you can choose one of several color themes.'
+    h['image'] =
+      'This is the &ltimage&gt  HTML element. You can control its size, source, style and responsiveness from the Options panel.'
+    h['icon'] =
+      "This is the Icon component. You can choose from a number of available icon fonts. You can modify the icon's size and color by changing its CSS font-size and color properties."
+    h['carousel'] =
+      "This is Bootstrap's versatile Carousel component. It can display and animate text and photos. You have to enable the slides' captions in order to place non-image elements inside them."
+    h['button'] =
+      'This is the multi-functional Bootstrap Button component. You have a choice of possible themes, button types and sizes. Search for the related Dropdown and Split Button components if you need your button to trigger dropdown menus.'
+    h['splitbutton'] =
+      'This is the Bootstrap Split Button component. It consists of two buttons, the second of which triggers a dropdown menu. Look for the Dropdown component if you need only a single button.'
+    h['buttongroup'] =
+      'A Button Group is a Bootstrap component for grouping together buttons. If you need more than one group, check out the Button Toolbar component.'
+    h['row'] =
+      'This is the Bootstrap Row component. This is a fundamental building block of the responsive grid. Place Rows inside Containers, and drop Columns inside them to build a responsive page.'
+    h['column'] =
+      "This is the Bootstrap Column component. This is the fundamental building block of the responsive grid. Place columns inside Rows and control their width with the col-* responsive classes. There are lots of responsive options available in the Column's Option panel."
+    h['columnhelper'] =
+      "This is the Bootstrap Column component. This is the fundamental building block of the responsive grid. Place columns inside Rows and control their width with the col-* responsive classes. There are lots of responsive options available in the Column's Option panel."
+    h['container'] =
+      'Containers are Bootstrap components which limit the width of the page. Usually you would place a single Container as an element that wraps around all of your content. You can switch between fluid and fixed width containers from the Option panel.'
+    h['tabs'] =
+      "This is Bootstrap's Tabs component. Each tab has an associated Tab Pane which is displayed when the tab is active."
+    h['accordion'] =
+      'This is a Bootstrap component for displaying content in vertical groups. Only one group is expanded at a time. This is a great way to organize FAQ pages and other layouts where vertical content is at a premium.'
+    h['card'] =
+      'Cards are flexible and extensible Bootstrap 4 containers. They can include headers, footers, a wide variety of content, contextual background colors, and powerful display options.'
+    h['panel'] =
+      'Panels are a variation of the Bootstrap 4 Card component. They can include headers, footers and multiple color styles.'
+    h['thumbnail'] =
+      'Thumbnails are a variation of the Bootstrap 4 Card component. They can include a header image, title, description and action buttons or links.'
 
-    this.hasht = h;
+    this.hasht = h
   },
   methods: {
-    fileTab(e){
+    helpTab(e) {
+      this.isHelpTab = true
+      this.isFileTab = false
+      this.isEditTab = false
+      this.isSettingTab = false
+      this.isSaveTab = false
+      this.$nextTick(() => {
+        let helptab = document.querySelector('.helplist-tab')
+        helptab.style.left = e.target.getBoundingClientRect().left + 'px'
+        helptab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    settingTab(e) {
+      this.isSettingTab = true
+      this.isFileTab = false
+      this.isEditTab = false
+      this.isSaveTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let settingtab = document.querySelector('.settinglist-tab')
+        settingtab.style.left = e.target.getBoundingClientRect().left + 'px'
+        settingtab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    saveTab(e) {
+      this.isSaveTab = true
+      this.isFileTab = false
+      this.isEditTab = false
+      this.isSettingTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let savetab = document.querySelector('.savelist-tab')
+        savetab.style.left = e.target.getBoundingClientRect().left + 'px'
+        savetab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    editTab(e) {
+      this.isEditTab = true
+      this.isFileTab = false
+      this.isSaveTab = false
+      this.isSettingTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let edittab = document.querySelector('.editlist-tab')
+        edittab.style.left = e.target.getBoundingClientRect().left + 'px'
+        edittab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    fileTab(e) {
       this.isFileTab = true
+      this.isEditTab = false
+      this.isSaveTab = false
+      this.isSettingTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let filetab = document.querySelector('.filelist-tab')
+        filetab.style.left = e.target.getBoundingClientRect().left + 'px'
+        filetab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
     },
     changeTab(e) {
-      let trees = document.querySelectorAll(".tree-name")
+      let trees = document.querySelectorAll('.tree-name')
       console.log(trees)
       //  e.target.parentElement.style.backgroundColor = '#4e4e5c'
-      if (e.target.textContent.trim() === "HTML") {
-        trees[1].style.backgroundColor = "#292931"
-        trees[0].style.backgroundColor = "#4e4e5c"
+      if (e.target.textContent.trim() === 'HTML') {
+        trees[1].style.backgroundColor = '#292931'
+        trees[0].style.backgroundColor = '#4e4e5c'
         this.showhtml = true
-      } else if (e.target.textContent.trim() === "Files") {
-        trees[0].style.backgroundColor = "#292931"
-        trees[1].style.backgroundColor = "#4e4e5c"
+      } else if (e.target.textContent.trim() === 'Files') {
+        trees[0].style.backgroundColor = '#292931'
+        trees[1].style.backgroundColor = '#4e4e5c'
         this.showhtml = false
       }
     },
     moveTree(e) {
-      e.target.parentElement.style.position = "fixed"
+      e.target.parentElement.style.position = 'fixed'
       let initX = e.clientX
       let initY = e.clientY
       let initLeft = parseInt(getComputedStyle(e.target.parentElement).left)
@@ -750,7 +772,7 @@ export default {
       this.treeMove = true
       console.log(e.target)
       this.moveTarget = e.target.parentElement
-      this.moveTarget.style.height = "25rem"
+      this.moveTarget.style.height = '25rem'
     },
     layoutStick(payload) {
       console.log(payload)
@@ -760,80 +782,80 @@ export default {
         this.layoutSticky = false
       }
     },
-     clickSource(e){
-      this.isData=true
-      console.log("s")
+    clickSource(e) {
+      this.isData = true
+      console.log('s')
       // console.log(document.getElementById("newLoaderHtml").innerHTML)
-      if (e.target.getAttribute('name')=='html') {
-          this.tabStep = 1
-          // this.chageContent()
-          console.log("s")
-      } else if (e.target.getAttribute('name')=='css') {
-          this.tabStep = 2
-      } else if (e.target.getAttribute('name')=='js') {
-          this.tabStep = 3
+      if (e.target.getAttribute('name') == 'html') {
+        this.tabStep = 1
+        // this.chageContent()
+        console.log('s')
+      } else if (e.target.getAttribute('name') == 'css') {
+        this.tabStep = 2
+      } else if (e.target.getAttribute('name') == 'js') {
+        this.tabStep = 3
       }
     },
-    inputFile(e){
-        alert("저장되었습니다")
-        // console.log(this.message[2])
-        var file = document.querySelector('#getfile');
-        file.onchange = function () { 
-            var fileList = file.files ;
-            
-            // 읽기
-            var reader = new FileReader();
-            reader.readAsText(fileList [0]);
+    inputFile(e) {
+      alert('저장되었습니다')
+      // console.log(this.message[2])
+      var file = document.querySelector('#getfile')
+      file.onchange = function() {
+        var fileList = file.files
 
-            //로드 한 후
-            reader.onload = function  () {
-                document.querySelector('#preview').textContent = reader.result ;
-            }; 
-        }; 
+        // 읽기
+        var reader = new FileReader()
+        reader.readAsText(fileList[0])
+
+        //로드 한 후
+        reader.onload = function() {
+          document.querySelector('#preview').textContent = reader.result
+        }
+      }
     },
-    setFile(file){
+    setFile(file) {
       // console.log(file)
       this.chageContent()
-      this.isData=true
-       if (file=='html') {
-          this.tabStep = 1
-      } else if (file=='css') {
-          this.tabStep = 2
-      } else if (file=='js') {
-          this.tabStep = 3
+      this.isData = true
+      if (file == 'html') {
+        this.tabStep = 1
+      } else if (file == 'css') {
+        this.tabStep = 2
+      } else if (file == 'js') {
+        this.tabStep = 3
       }
     },
-    closeCodeReview(){
-      this.isData=false
+    closeCodeReview() {
+      this.isData = false
     },
-     loadData(data){
+    loadData(data) {
       this.message = data
     },
-    loaderResize(event){
-      let loader = document.querySelector(".loadDataPanel");
+    loaderResize(event) {
+      let loader = document.querySelector('.loadDataPanel')
       // console.log( document.querySelector(".code-loader"))
       // console.log( document.querySelector(".loadDataPanel"))
       this.resizeLoader = true
       this.initialY = event.clientY
       this.initialHeight = parseInt(getComputedStyle(loader).height)
     },
-    lo(to){
+    lo(to) {
       let loader = document.querySelector('.loadDataPanel')
       loader.style.top = to
     },
     copyPage(payload) {
-      this.isTitle = true;
+      this.isTitle = true
       this.copyTitle = payload.target
     },
     sitemapBtn() {
       if (this.sitemapOn === true) {
-        this.sitemapOn = false;
+        this.sitemapOn = false
       } else {
-        this.sitemapOn = true;
+        this.sitemapOn = true
       }
     },
     closePage(e) {
-      let i;
+      let i
       for (
         i = 0;
         i < e.target.parentElement.parentElement.children.length;
@@ -843,17 +865,17 @@ export default {
           e.target.parentElement.parentElement.children[i] ===
           e.target.parentElement
         ) {
-          console.log(i);
-          break;
+          console.log(i)
+          break
         }
       }
-      this.titles.splice(i, 1);
-      let editorCompo = document.querySelector(".editor-component");
-      editorCompo.removeChild(editorCompo.children[i]);
+      this.titles.splice(i, 1)
+      let editorCompo = document.querySelector('.editor-component')
+      editorCompo.removeChild(editorCompo.children[i])
     },
     changePage(e) {
-      let i;
-      let num;
+      let i
+      let num
       for (
         i = 0;
         i < e.target.parentElement.parentElement.children.length - 3;
@@ -863,306 +885,303 @@ export default {
           e.target.parentElement.parentElement.children[i] ===
           e.target.parentElement
         ) {
-          num = i;
-          e.target.parentElement.style.backgroundColor = "#545e66";
+          num = i
+          e.target.parentElement.style.backgroundColor = '#545e66'
         } else {
           e.target.parentElement.parentElement.children[
             i
-          ].style.backgroundColor = "#2c3134";
+          ].style.backgroundColor = '#2c3134'
         }
       }
-      let j;
-      let editor = document.querySelectorAll(".board");
-      console.log(editor);
+      let j
+      let editor = document.querySelectorAll('.board')
+      console.log(editor)
       for (j = 0; j < editor.length; j++) {
         if (j === num) {
-          editor[j].classList.remove("hidden");
-          editor[j].classList.add("display");
+          editor[j].classList.remove('hidden')
+          editor[j].classList.add('display')
         } else {
-          editor[j].classList.remove("display");
-          editor[j].classList.add("hidden");
+          editor[j].classList.remove('display')
+          editor[j].classList.add('hidden')
         }
       }
     },
     newPage(e) {
       let payload = {
-        text: "aaa"
-      };
-      this.titles.push(payload);
-      let editor = document.querySelector(".board");
+        text: 'aaa'
+      }
+      this.titles.push(payload)
+      let editor = document.querySelector('.board')
       // let copy = editor.cloneNode(true)
-      let newEditorBox = document.createElement("div");
-      let ne = document.createElement("button");
-      newEditorBox.classList.add("board");
-      newEditorBox.classList.add("hidden");
-      newEditorBox.classList.add("board" + this.editorNum);
-      newEditorBox.appendChild(ne);
+      let newEditorBox = document.createElement('div')
+      let ne = document.createElement('button')
+      newEditorBox.classList.add('board')
+      newEditorBox.classList.add('hidden')
+      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.appendChild(ne)
       // console.log(editor.parentElement);
 
-      editor.parentElement.appendChild(newEditorBox);
+      editor.parentElement.appendChild(newEditorBox)
 
       // console.log(newEditorBox.classList);
-      this.editorNum++;
+      this.editorNum++
 
-      let files = document.querySelectorAll(".file-name");
-      let i;
+      let files = document.querySelectorAll('.file-name')
+      let i
       // files[files.length-1].style.backgroundColor = '#2c3134'
       for (i = 0; i < files.length; i++) {
         if (i === 0) {
-          files[i].style.backgroundColor = "#545e66";
+          files[i].style.backgroundColor = '#545e66'
         } else {
-          files[i].style.backgroundColor = "#2c3134";
+          files[i].style.backgroundColor = '#2c3134'
         }
       }
-      this.$refs.sitemap.loadSitemap(this.titles);
+      this.$refs.sitemap.loadSitemap(this.titles)
     },
     addComment() {
-      let text = document.querySelector(".comment-input");
+      let text = document.querySelector('.comment-input')
       let payload = {
-        writer: "이성민",
+        writer: '이성민',
         element: this.commentTarget.className,
-        time: "",
+        time: '',
         text: text.value
-      };
+      }
       //writer는 유저의 이름으로 element는 선택한 element 또는 빈칸
-      var date = new Date();
+      var date = new Date()
       payload.time =
-        date.getFullYear() + "/" + date.getMonth() + 1 + "/" + date.getDate();
-      this.comments.unshift(payload);
-      text.value = "";
+        date.getFullYear() + '/' + date.getMonth() + 1 + '/' + date.getDate()
+      this.comments.unshift(payload)
+      text.value = ''
       // this.comments[this.comments.length-1]
     },
     commentBtn(target) {
       if (this.isCommentOn === false) {
-        this.isCommentOn = true;
+        this.isCommentOn = true
       } else {
-        this.isCommentOn = false;
+        this.isCommentOn = false
       }
-      this.commentTarget = target;
-      console.log(this.commentTarget.className);
+      this.commentTarget = target
+      console.log(this.commentTarget.className)
     },
     resizeEditor(e) {
-      let editor = document.querySelector(".editor-box");
-      if (e.target.className === "iphone") {
-        console.log("aad");
-        editor.style.transform = "scale(1)";
-        editor.style.width = "375px";
-        editor.style.height = "667px";
-      } else if (e.target.className === "ipad") {
-        editor.style.transform = "scale(0.7)";
-        editor.style.width = "768px";
-        editor.style.height = "1024px";
-      } else if (e.target.className === "monitor") {
-        editor.style.transform = "scale(1)";
-        editor.style.width = "992px";
-        editor.style.height = "687px";
+      let editor = document.querySelector('.editor-box')
+      if (e.target.className === 'iphone') {
+        console.log('aad')
+        editor.style.transform = 'scale(1)'
+        editor.style.width = '375px'
+        editor.style.height = '667px'
+      } else if (e.target.className === 'ipad') {
+        editor.style.transform = 'scale(0.7)'
+        editor.style.width = '768px'
+        editor.style.height = '1024px'
+      } else if (e.target.className === 'monitor') {
+        editor.style.transform = 'scale(1)'
+        editor.style.width = '992px'
+        editor.style.height = '687px'
       }
     },
     codeBtn() {
       if (this.codeOn === true) {
-        this.codeOn = false;
+        this.codeOn = false
       } else {
-        this.codeOn = true;
+        this.codeOn = true
         this.$nextTick(() => {
-          let loader = document.querySelector(".loadDataPanel");
-          let bord = document.querySelector(".loader-bord");
-          bord.style.top = getComputedStyle(loader).top;
-          this.initialTop = getComputedStyle(loader).top;
-        });
+          let loader = document.querySelector('.loadDataPanel')
+          let bord = document.querySelector('.loader-bord')
+          bord.style.top = getComputedStyle(loader).top
+          this.initialTop = getComputedStyle(loader).top
+        })
       }
       if (this.layoutOn === true) {
-        this.layoutOn = false;
+        this.layoutOn = false
       }
     },
     layoutBtn() {
       if (this.layoutOn === true) {
-        this.layoutOn = false;
+        this.layoutOn = false
       } else {
-        this.layoutOn = true;
+        this.layoutOn = true
       }
     },
     studioBtn() {
       if (this.studioOn === true) {
-        this.studioOn = false;
+        this.studioOn = false
       } else {
-        this.overviewOn = false;
-        this.studioOn = true;
+        this.overviewOn = false
+        this.studioOn = true
       }
       if (this.codeOn === true) {
-        this.codeOn = false;
+        this.codeOn = false
       }
     },
     overviewBtn() {
       if (this.overviewOn === true) {
-        this.overviewOn = false;
+        this.overviewOn = false
       } else {
-        this.studioOn = false;
-        this.overviewOn = true;
+        this.studioOn = false
+        this.overviewOn = true
       }
     },
     redoWork() {
-      let i;
-      console.log("redo");
+      let i
+      console.log('redo')
       if (this.reworkStack.length !== 0) {
         for (i = 0; i < this.reworkStack.length; i++) {
-          console.log(this.reworkStack[i]);
+          console.log(this.reworkStack[i])
         }
-        let rework = this.reworkStack.pop();
-        let work = rework;
-        if (rework.work === "style") {
-          rework.elem.style[rework.style] = rework.afterValue;
-        } else if (rework.work === "move") {
-          rework.afterMovePosition.appendChild(rework.elem);
-        } else if (rework.work === "remove") {
-          let parent = rework.position;
-          parent.removeChild(rework.elem);
-        } else if (rework.work === "add") {
-          rework.position.appendChild(rework.elem);
-        } else if (rework.work === "copy") {
-          $(rework.elem).after(rework.copyElem);
-        } else if (rework.work === "width") {
-          rework.elem.style.width = rework.afterSize;
-        } else if (rework.work === "height") {
-          rework.elem.style.height = rework.afterSize;
-        } else if (rework.work === "edit") {
-          rework.elem.textContent = rework.afterEdit;
+        let rework = this.reworkStack.pop()
+        let work = rework
+        if (rework.work === 'style') {
+          rework.elem.style[rework.style] = rework.afterValue
+        } else if (rework.work === 'move') {
+          rework.afterMovePosition.appendChild(rework.elem)
+        } else if (rework.work === 'remove') {
+          let parent = rework.position
+          parent.removeChild(rework.elem)
+        } else if (rework.work === 'add') {
+          rework.position.appendChild(rework.elem)
+        } else if (rework.work === 'copy') {
+          $(rework.elem).after(rework.copyElem)
+        } else if (rework.work === 'width') {
+          rework.elem.style.width = rework.afterSize
+        } else if (rework.work === 'height') {
+          rework.elem.style.height = rework.afterSize
+        } else if (rework.work === 'edit') {
+          rework.elem.textContent = rework.afterEdit
         }
-        this.stackPush(work);
+        this.stackPush(work)
       }
     },
     undoWork() {
       // console.log('aaa')
-      let i;
-      console.log("undo");
+      let i
+      console.log('undo')
       if (this.workStack.length !== 0) {
         for (i = 0; i < this.workStack.length; i++) {
-          console.log(this.workStack[i]);
+          console.log(this.workStack[i])
         }
-        let work = this.workStack.pop();
-        let rework = work;
-        this.reworkStack.push(rework);
-        if (work.work === "style") {
-          work.elem.style[work.style] = work.value;
-        } else if (work.work === "remove") {
-          let parent = work.position;
-          $(work.elem).insertBefore(parent.children[work.nth]);
-        } else if (work.work === "add") {
-          let parent = work.position;
-          parent.removeChild(work.elem);
-        } else if (work.work === "copy") {
-          work.position.removeChild(work.copyElem);
-        } else if (work.work === "move") {
-          work.afterMovePosition.removeChild(work.elem);
-          work.position.appendChild(work.elem);
-        } else if (work.work === "width") {
-          console.log("aaa");
-          work.elem.style.width = work.beforeSize;
-        } else if (work.work === "height") {
-          work.elem.style.height = work.beforeSize;
-        } else if (work.work === "edit") {
-          work.elem.textContent = work.beforeEdit;
+        let work = this.workStack.pop()
+        let rework = work
+        this.reworkStack.push(rework)
+        if (work.work === 'style') {
+          work.elem.style[work.style] = work.value
+        } else if (work.work === 'remove') {
+          let parent = work.position
+          $(work.elem).insertBefore(parent.children[work.nth])
+        } else if (work.work === 'add') {
+          let parent = work.position
+          parent.removeChild(work.elem)
+        } else if (work.work === 'copy') {
+          work.position.removeChild(work.copyElem)
+        } else if (work.work === 'move') {
+          work.afterMovePosition.removeChild(work.elem)
+          work.position.appendChild(work.elem)
+        } else if (work.work === 'width') {
+          console.log('aaa')
+          work.elem.style.width = work.beforeSize
+        } else if (work.work === 'height') {
+          work.elem.style.height = work.beforeSize
+        } else if (work.work === 'edit') {
+          work.elem.textContent = work.beforeEdit
         }
       }
     },
     stackPush(elem) {
-      this.workStack.push(elem);
-      console.log("s")
-      if(this.tabStep==1){
-            // document.querySelector('#preview').textContent = this.loadData[0]
-            this.message[0] = document.getElementById("newLoaderHtml").innerHTML
-            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
-            console.log(document.getElementById("newLoaderHtml").innerHTML)
-            console.log(this.message[0])
-      }
-      else if(this.tabStep==2){
-          
-          document.querySelector('#preview2').innerHTML = this.message[1]
-      }
-      else if(this.tabStep==3){
-
-          document.querySelector('#preview3').innerText = this.message[2]
+      this.workStack.push(elem)
+      console.log('s')
+      if (this.tabStep == 1) {
+        // document.querySelector('#preview').textContent = this.loadData[0]
+        this.message[0] = document.getElementById('newLoaderHtml').innerHTML
+        document.querySelector('#preview1').innerText = document.getElementById(
+          'newLoaderHtml'
+        ).innerHTML
+        console.log(document.getElementById('newLoaderHtml').innerHTML)
+        console.log(this.message[0])
+      } else if (this.tabStep == 2) {
+        document.querySelector('#preview2').innerHTML = this.message[1]
+      } else if (this.tabStep == 3) {
+        document.querySelector('#preview3').innerText = this.message[2]
       }
     },
     userSelectedTagComponent(e, tagComponent) {
       // this.$refs.home.addComponentTag = tagComponent
-      this.addTag = true;
-      this.viewTemplate = true;
-      this.tagDescription = false;
-      this.uiDescription = false;
-      this.selectedTemplate = e;
-      this.selectedTag = tagComponent;
+      this.addTag = true
+      this.viewTemplate = true
+      this.tagDescription = false
+      this.uiDescription = false
+      this.selectedTemplate = e
+      this.selectedTag = tagComponent
       this.$nextTick(() => {
-        let img = document.querySelector(".description-img");
-        img.style.left = e.clientX + 10 + "px";
-        img.style.top = e.clientY + 10 + "px";
-      });
+        let img = document.querySelector('.description-img')
+        img.style.left = e.clientX + 10 + 'px'
+        img.style.top = e.clientY + 10 + 'px'
+      })
     },
     componentSelected(payload) {
-      this.$refs.layouts.isData = true;
-      this.payload = payload.target;
-      this.layoutOn=true
+      this.$refs.layouts.isData = true
+      this.payload = payload.target
+      this.layoutOn = true
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
-        .getElementById("dashboard")
-        .getBoundingClientRect();
-      this.$refs.layouts.getData(payload, this.homeLayoutLocation);
+        .getElementById('dashboard')
+        .getBoundingClientRect()
+      this.$refs.layouts.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
-        this.$refs.overview.printHomeDocument();
-        this.isPustHtml = false;
+        this.$refs.overview.printHomeDocument()
+        this.isPustHtml = false
       }
-      this.$refs.overview.domSelection(payload.target);
-      this.$refs.layouts.isData = true;
-      this.$refs.layouts.makeTreeParent(this.payload);
+      this.$refs.overview.domSelection(payload.target)
+      this.$refs.layouts.isData = true
+      this.$refs.layouts.makeTreeParent(this.payload)
     },
     userSelectedWidth(data) {
       // console.log(data)
-      this.data = data;
-      this.$refs.home.styleChanged(this.data);
+      this.data = data
+      this.$refs.home.styleChanged(this.data)
     },
     tagSelected(payload) {
       if (!this.viewTemplate) {
-        this.tagDescription = true;
-        this.uiDescription = false;
+        this.tagDescription = true
+        this.uiDescription = false
         this.$nextTick(() => {
-          let text = document.querySelector(".description-tag");
-          let stu = document.querySelector(".studio");
+          let text = document.querySelector('.description-tag')
+          let stu = document.querySelector('.studio')
           let innerText = payload.target.innerHTML
             .toLowerCase()
-            .replace(/ /gi, "");
-          text.innerHTML = this.hasht[innerText];
+            .replace(/ /gi, '')
+          text.innerHTML = this.hasht[innerText]
 
-          text.style.left = stu.getBoundingClientRect().right - 25 + "px";
-          text.style.top =
-            payload.target.getBoundingClientRect().top - 8 + "px";
-        });
+          text.style.left = stu.getBoundingClientRect().right - 25 + 'px'
+          text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+        })
       }
     },
     tagNotSelected() {
-      this.tagDescription = false;
-      this.uiDescription = false;
+      this.tagDescription = false
+      this.uiDescription = false
     },
     uiSelected(payload) {
       if (!this.viewTemplate) {
-        this.uiDescription = true;
-        this.tagDescription = false;
+        this.uiDescription = true
+        this.tagDescription = false
         this.$nextTick(() => {
-          let ui = document.querySelector(".description-ui");
-          let stu = document.querySelector(".studio");
+          let ui = document.querySelector('.description-ui')
+          let stu = document.querySelector('.studio')
           let innerText = payload.target.innerHTML
             .toLowerCase()
-            .replace(/ /gi, "");
+            .replace(/ /gi, '')
 
-          let name = payload.target.innerHTML.replace(/ /gi, "");
-          ui.children[0].src = "./static/studioImage/" + name + ".png";
-          ui.children[1].innerHTML = payload.target.innerHTML;
-          ui.children[2].innerHTML = this.hasht[innerText];
+          let name = payload.target.innerHTML.replace(/ /gi, '')
+          ui.children[0].src = './static/studioImage/' + name + '.png'
+          ui.children[1].innerHTML = payload.target.innerHTML
+          ui.children[2].innerHTML = this.hasht[innerText]
 
-          ui.style.left = stu.getBoundingClientRect().right - 25 + "px";
-          ui.style.top = payload.target.getBoundingClientRect().top - 8 + "px";
+          ui.style.left = stu.getBoundingClientRect().right - 25 + 'px'
+          ui.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
 
           // ui.innerHTML = this.hasht[innerText]
-        });
+        })
       }
     },
     // addElement (e) {
@@ -1171,103 +1190,100 @@ export default {
     //   this.selectedTag = e.target
     // },
     selectDomElemented(domElement) {
-      this.dom = domElement;
+      this.dom = domElement
       // console.log(this.dom)
-      this.$refs.home.selectOverview(this.dom);
+      this.$refs.home.selectOverview(this.dom)
     },
     inParentTreeOption(dom) {
-      this.$refs.layouts.parentDom = dom;
+      this.$refs.layouts.parentDom = dom
     },
     domPushWithTree(dom) {
-      this.$refs.layouts.domWithTree = dom;
+      this.$refs.layouts.domWithTree = dom
     },
     userSelectBorder(e) {
-      this.$refs.home.borderStyleChanged(e);
+      this.$refs.home.borderStyleChanged(e)
     },
     toggleClicked() {
-      console.log("aaa");
+      console.log('aaa')
     },
-    loadData(data){
+    loadData(data) {
       this.message = data
     },
-    closeCodeRiview(){
-      this.isData=false
+    closeCodeRiview() {
+      this.isData = false
     },
-    chageContent(){
+    chageContent() {
       console.log(this.message)
-      document.getElementById("newLoaderHtml").innerHTML
-        if(this.tabStep==1){
-            // document.querySelector('#preview').textContent = this.loadData[0]
-            this.test = document.getElementById("newLoaderHtml").innerHTML
-            document.querySelector('#preview1').innerText = document.getElementById("newLoaderHtml").innerHTML
-            console.log("dsd")
-        }
-        else if(this.tabStep==2){
-            document.querySelector('#preview2').innerHTML = this.message[1]
-        }
-        else if(this.tabStep==3){
-            console.log(document.querySelector('#preview3'))
-            console.log(this.message[2])
-            this.js = this.message[2]
-            // document.querySelector('#preview3').innerText = this.message[2]
-        }
-    },
-    inputFile(e){
-        alert("저장되었습니다")
-        // console.log(this.message[2])
-        var file = document.querySelector('#getfile');
-        file.onchange = function () { 
-            var fileList = file.files ;
-            
-            // 읽기
-            var reader = new FileReader();
-            reader.readAsText(fileList [0]);
-
-            //로드 한 후
-            reader.onload = function  () {
-                document.querySelector('#preview').textContent = reader.result ;
-            }; 
-        }; 
-    },
-    clickSoure(e){
-      this.isData=true
-      console.log("s")
-      // console.log(document.getElementById("newLoaderHtml").innerHTML)
-      if (e.target.getAttribute('name')=='html') {
-          this.tabStep = 1
-          // this.chageContent()
-          console.log("s")
-      } else if (e.target.getAttribute('name')=='css') {
-          this.tabStep = 2
-      } else if (e.target.getAttribute('name')=='js') {
-          this.tabStep = 3
+      document.getElementById('newLoaderHtml').innerHTML
+      if (this.tabStep == 1) {
+        // document.querySelector('#preview').textContent = this.loadData[0]
+        this.test = document.getElementById('newLoaderHtml').innerHTML
+        document.querySelector('#preview1').innerText = document.getElementById(
+          'newLoaderHtml'
+        ).innerHTML
+        console.log('dsd')
+      } else if (this.tabStep == 2) {
+        document.querySelector('#preview2').innerHTML = this.message[1]
+      } else if (this.tabStep == 3) {
+        console.log(document.querySelector('#preview3'))
+        console.log(this.message[2])
+        this.js = this.message[2]
+        // document.querySelector('#preview3').innerText = this.message[2]
       }
     },
-    setFile(file){
+    inputFile(e) {
+      alert('저장되었습니다')
+      // console.log(this.message[2])
+      var file = document.querySelector('#getfile')
+      file.onchange = function() {
+        var fileList = file.files
+
+        // 읽기
+        var reader = new FileReader()
+        reader.readAsText(fileList[0])
+
+        //로드 한 후
+        reader.onload = function() {
+          document.querySelector('#preview').textContent = reader.result
+        }
+      }
+    },
+    clickSoure(e) {
+      this.isData = true
+      console.log('s')
+      // console.log(document.getElementById("newLoaderHtml").innerHTML)
+      if (e.target.getAttribute('name') == 'html') {
+        this.tabStep = 1
+        // this.chageContent()
+        console.log('s')
+      } else if (e.target.getAttribute('name') == 'css') {
+        this.tabStep = 2
+      } else if (e.target.getAttribute('name') == 'js') {
+        this.tabStep = 3
+      }
+    },
+    setFile(file) {
       // console.log(file)
       this.chageContent()
-      this.isData=true
-       if (file=='html') {
-          this.tabStep = 1
-
-      } else if (file=='css') {
-          this.tabStep = 2
-      } else if (file=='js') {
-          this.tabStep = 3
+      this.isData = true
+      if (file == 'html') {
+        this.tabStep = 1
+      } else if (file == 'css') {
+        this.tabStep = 2
+      } else if (file == 'js') {
+        this.tabStep = 3
       }
     },
-    rulerChange(e){
+    rulerChange(e) {
       console.log(e)
     }
-
-
   }
-};
+}
 </script>
 
 <style lang="scss">
 // @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap");
-@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css'); 
+@import url('http://fonts.googleapis.com/earlyaccess/notosanskr.css');
 @import url('https://rsms.me/inter/inter.css');
 
 #app {
@@ -1319,25 +1335,35 @@ export default {
     top: 3.5%;
   }
 
- 
   .top-panel {
-     height: 3.5%;
+    height: 3.5%;
     width: 100%;
     background-color: #292931;
     display: flex;
     align-items: center;
     flex-direction: row;
-    color: #fff;
-    .Logo, .File, .Edit, .Save, .Setting, .Help{
-      margin-right: 0.6rem;
-      padding-right: 0.2rem;
-      padding-left: 0.2rem;
+    color: #d6d5d5;
+    .Logo,
+    .File,
+    .Edit,
+    .Save,
+    .Setting,
+    .Help {
+      // margin-right: 0.6rem;
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
       cursor: default;
-      margin-left: 0.6rem;
+      // margin-left: 0.6rem;
+      // width: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
     }
-    .File, .Edit, .Save, .Setting, .Help{
-      &:hover{
-        
+    .File,
+    .Edit,
+    .Save,
+    .Setting,
+    .Help {
+      &:hover {
         background-color: #535363;
       }
     }
@@ -1357,7 +1383,7 @@ export default {
       margin-left: 1rem;
       font-size: 0.9rem;
       margin-right: 1rem;
-       border-radius: 0.3rem;
+      border-radius: 0.3rem;
       .vue-switcher {
         // transform: scale(1);
         z-index: 9;
@@ -1370,37 +1396,55 @@ export default {
         cursor: pointer;
         color: #fff;
       }
-       &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .undo-box, .redo-box, .new-box, .open-box, .save-box, .export-box, .setting-box {
+    .undo-box,
+    .redo-box,
+    .new-box,
+    .open-box,
+    .save-box,
+    .export-box,
+    .setting-box {
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-       padding: 0.2rem;
+      padding: 0.2rem;
       margin-right: 1rem;
       font-size: 0.9rem;
       border-radius: 0.3rem;
-      .undo, .redo, .new, .open, .save, .export, .setting  {
+      .undo,
+      .redo,
+      .new,
+      .open,
+      .save,
+      .export,
+      .setting {
         cursor: pointer;
         height: 1.2rem;
         margin-right: 0.5rem;
       }
-      .undo-text, .redo-text, .new-text, .open-text, .save-text, .export-text, .setting-text{
+      .undo-text,
+      .redo-text,
+      .new-text,
+      .open-text,
+      .save-text,
+      .export-text,
+      .setting-text {
         cursor: pointer;
         color: #fff;
       }
-      &:hover{
+      &:hover {
         background-color: #616c72;
       }
     }
-    .new-box{
+    .new-box {
       margin-left: 1rem;
     }
-    .undo-box{
-      .undo{
+    .undo-box {
+      .undo {
         -moz-transform: scaleX(-1);
         -o-transform: scaleX(-1);
         -webkit-transform: scaleX(-1);
@@ -1410,7 +1454,6 @@ export default {
         height: 1.2rem;
       }
     }
-    
   }
   .main-panel {
     width: 100%;
@@ -1426,7 +1469,7 @@ export default {
       align-items: center;
       background-color: #292931;
       .studio-btn {
-         width: 1.4rem;
+        width: 1.4rem;
         margin-top: 1rem;
         cursor: pointer;
       }
@@ -1467,7 +1510,7 @@ export default {
       //   z-index: 100;
       //   cursor: pointer;
       // }
-      .right-top-panel{
+      .right-top-panel {
         background-color: #292931;
         width: 100%;
         height: 30rem;
@@ -1545,7 +1588,7 @@ export default {
     .center-panel {
       width: 80%;
       height: 100%;
-      .main-top-panel{
+      .main-top-panel {
         height: 6.5%;
         width: 100%;
         .top-menu {
@@ -1607,7 +1650,7 @@ export default {
           }
         }
       }
-      .main-center-panel{
+      .main-center-panel {
         height: 90.5%;
         display: flex;
         align-items: center;
@@ -1622,7 +1665,7 @@ export default {
           display: flex;
           flex-direction: row;
           overflow: hidden;
-          .home{
+          .home {
             width: 100%;
             height: 100%;
             border: 3px solid #545e66;
@@ -1659,14 +1702,14 @@ export default {
     z-index: 12;
     top: 6%;
   }
-   .loader-bord {
-     cursor: n-resize;
-    height:7px;
+  .loader-bord {
+    cursor: n-resize;
+    height: 7px;
     width: 92%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
-    background-color:#545e66 ;
+    background-color: #545e66;
   }
 
   // .layout {
@@ -1680,12 +1723,37 @@ export default {
   //   z-index: 12;
   //   top: 6%;
   // }
-  .filelist-tab{
+  .filelist-tab {
     position: fixed;
-    top: 10rem;
-    left: 10rem;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
   }
-  .description-tag,
+  .editlist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .savelist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .settinglist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .helplist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  ription-tag,
   .description-ui {
     background-color: #000;
     position: fixed;
@@ -1733,13 +1801,13 @@ export default {
     padding: 0.2rem;
     color: #e7e4e4;
   }
-  .bottom-panel{
-    width:92%;
+  .bottom-panel {
+    width: 92%;
   }
-  
+
   .fileTitle {
     // font-size: 15px;
-    color:white;
+    color: white;
     font-weight: bold;
     // padding: 7px 14px;
     vertical-align: bottom;
@@ -1750,38 +1818,37 @@ export default {
     margin: 0;
     border: none;
     height: 100%;
-    background-color:#666666;
+    background-color: #666666;
   }
 
-.loadDataPanel{
-      width: 92%;
-      z-index: 10000;
-      position: fixed;
-      bottom: 5%;
-      height: 35%;
-      background-color: #23282b;
-        
-    }
-.showSorce{
-    margin:14px 0px 0px 0px;
-    height:60%;
-}
-.tab-pane{
-  height:145%;
-}
-#pills-home{
-  height:145%;
-}
-#pills-profile{
-  height:145%;
-}
-#pills-contact{
-  height:125%;
-}
-.showCode{
-    height:100%;
-}
-.studio-text-box {
+  .loadDataPanel {
+    width: 92%;
+    z-index: 10000;
+    position: fixed;
+    bottom: 5%;
+    height: 35%;
+    background-color: #23282b;
+  }
+  .showSorce {
+    margin: 14px 0px 0px 0px;
+    height: 60%;
+  }
+  .tab-pane {
+    height: 145%;
+  }
+  #pills-home {
+    height: 145%;
+  }
+  #pills-profile {
+    height: 145%;
+  }
+  #pills-contact {
+    height: 125%;
+  }
+  .showCode {
+    height: 100%;
+  }
+  .studio-text-box {
     height: 7%;
     justify-content: center;
     position: relative;
@@ -1792,15 +1859,13 @@ export default {
       position: absolute;
       left: 0.4rem;
     }
-    .close-btn{
+    .close-btn {
       width: 1.1rem;
       right: 0.4rem;
       top: 0.4rem;
-      cursor:pointer;
+      cursor: pointer;
       position: absolute;
     }
   }
-
-
 }
 </style>
