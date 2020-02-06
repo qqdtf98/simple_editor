@@ -56,12 +56,12 @@
           src="./assets/images/studio.svg"
           title="studio"
         />
-        <img
+        <!-- <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/images/overview.svg"
           title="overview"
-        />
+        /> -->
         <img
           @click="sitemapBtn"
           class="sitemap-btn"
@@ -239,7 +239,16 @@
                 </div>
               </div>
             </div>
-            <div v-if="showhtml" class="htmlcontent" />
+            <overview
+              v-if="showhtml"
+              ref="overview"
+              @selectDomElement="selectDomElemented"
+              @inParentTreeOption="inParentTreeOption"
+              @domWithTree="domPushWithTree"
+              @close-overview="overviewBtn"
+              :getDocument="homeDocument"
+              class="htmlcontent"
+            />
             <div v-if="!showhtml" class="filecontent" />
           </div>
         </div>
@@ -269,7 +278,7 @@
       @close-sitemap="sitemapBtn"
       class="sitemap"
     />
-    <overview
+    <!-- <overview
       v-if="overviewOn"
       ref="overview"
       @selectDomElement="selectDomElemented"
@@ -278,7 +287,7 @@
       @close-overview="overviewBtn"
       :getDocument="homeDocument"
       class="overview"
-    ></overview>
+    ></overview> -->
 
     <div class="right-panel-border"></div>
 
@@ -1321,6 +1330,7 @@ export default {
     border: 1.5px solid #000000;
     position: fixed;
     left: 3.5%;
+    padding: 0;
     background-color: #32373a;
     top: 3.5%;
   }
@@ -1516,7 +1526,7 @@ export default {
         height: 30rem;
         .layout {
           // overflow: auto;
-          border: 1px solid black;
+          border: 1px solid #525252;
           width: 100%;
           height: 100%;
           background-color: #292931;
@@ -1531,8 +1541,8 @@ export default {
         flex-direction: column;
         .tree-name-wrapper {
           width: 100%;
-          height: 24.8rem;
-          border: 1px solid black;
+          height: 100%;
+          border: 1px solid #525252;
           // border-top : none;
           .tree-name-box {
             background-color: #292931;
@@ -1571,9 +1581,13 @@ export default {
             }
           }
           .htmlcontent {
-            overflow: auto;
-            background-color: red;
+            // background-color: red;
+            padding: 0;
+            overflow: auto; // custom 바꾸기
+
             width: 100%;
+            border-top: 1px solid #525252;
+            border-bottom: 1px solid #525252;
             height: 22.8rem;
           }
           .filecontent {
