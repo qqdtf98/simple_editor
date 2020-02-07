@@ -18,7 +18,6 @@
         {{ title.text }}
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -31,6 +30,11 @@ export default {
       xInter: 0,
       yInter: 0,
       moveTarget: null,
+      target: null,
+      targetId: null,
+      position: null,
+      positionId: null
+    }
   },
   mounted() {
     document.addEventListener('mousemove', e => {
@@ -60,6 +64,26 @@ export default {
     })
   },
   methods: {
+    movePosition(payload) {
+      this.position = payload
+      let i
+      let titles = document.querySelectorAll('.titles')
+      for (i = 0; i < titles.length; i++) {
+        if (titles[i] === payload) {
+          this.positionId = i
+          break
+        }
+      }
+      let target = this.titles.splice(this.targetId, 1)
+      console.log(target[0])
+      this.titles.splice(this.positionId, 0, target[0])
+    },
+    mouseRightClick(e) {
+      if (e.button === 2) {
+        console.log('rightclick')
+        this.$emit('right-click', e)
+      }
+    },
     moveSitemap(e) {
       e.target.parentElement.style.position = 'fixed'
       let initX = e.clientX
@@ -72,17 +96,27 @@ export default {
       this.moveTarget = e.target.parentElement
     },
     refineSitemap(e) {
-        this.$emit('copy-title',e)
+      if (e.button === 0) {
+        this.target = e.target
+        let i
+        let titles = document.querySelectorAll('.titles')
+        for (i = 0; i < titles.length; i++) {
+          if (titles[i] === e.target) {
+            this.targetId = i
+            break
+          }
+        }
+        this.$emit('copy-title', e)
+      }
     },
     closeSitemap() {
-      this.$emit("close-sitemap");
+      this.$emit('close-sitemap')
     },
     loadSitemap(titles) {
-      console.log(titles);
-      this.titles = titles;
+      this.titles = titles
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -122,6 +156,5 @@ export default {
       }
     }
   }
-  
 }
 </style>
