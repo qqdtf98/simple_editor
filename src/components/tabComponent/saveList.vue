@@ -26,6 +26,9 @@ export default {}
     font-size: 0.9rem;
     padding-left: 0.5rem;
     text-align: left;
+    &:hover {
+      background-color: #39394e;
+    }
   }
 }
 </style>

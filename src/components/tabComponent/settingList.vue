@@ -24,6 +24,9 @@ export default {}
     text-align: left;
     cursor: default;
     padding-left: 0.5rem;
+    &:hover {
+      background-color: #39394e;
+    }
   }
 }
 </style>

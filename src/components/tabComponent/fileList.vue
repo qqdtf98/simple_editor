@@ -30,6 +30,9 @@ export default {
     font-size: 0.9rem;
     text-align: left;
     padding-left: 0.5rem;
+    &:hover {
+      background-color: #39394e;
+    }
   }
 }
 </style>
