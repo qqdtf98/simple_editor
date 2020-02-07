@@ -1,7 +1,11 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
-      <vue-custom-scrollbar class="scroll-area">
+      <vue-custom-scrollbar
+        @ps-scroll-y="handleScroll"
+        @ps-scroll-x="handleScroll"
+        class="scroll-area"
+      >
         <div
           @mouseup="onmouserightClick"
           @keydown.enter="isContentNotEditable"
@@ -13,8 +17,10 @@
           @mousemove="onmouseMove"
           @mousedown="mousedown"
         >
-          <div @scroll="handleScroll" class="board">
-            <Dashboard /> -->
+          <div class="board">
+            <Dashboard />
+            <Dashboard />
+            <Dashboard />
             <!-- <ss /> -->
 
             <spliter />
@@ -452,25 +458,481 @@ export default {
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            // let dashWrapper = document.querySelector('.navi')
-            // let scrollBottomHeight =
-            //   dashboardElem.getBoundingClientRect().height -
-            //   dashWrapper.getBoundingClientRect().height
-            topBord.style.left = this.selectedElement.left + 'px'
-            topBord.style.top = this.selectedElement.top + 'px'
-            topBord.style.width = this.selectedElement.width + 'px'
-            // bottomBord.style.display = 'none'?
-            leftBord.style.left = this.selectedElement.left + 'px'
-            leftBord.style.top = this.selectedElement.top + 'px'
-            leftBord.style.height = this.selectedElement.height + 'px'
-            rightBord.style.left =
-              this.selectedElement.left + this.selectedElement.width - 2 + 'px'
-            rightBord.style.top = this.selectedElement.top + 'px'
-            rightBord.style.height = this.selectedElement.height + 'px'
-            bottomBord.style.left = this.selectedElement.left + 'px'
-            bottomBord.style.top =
-              this.selectedElement.top + this.selectedElement.height - 2 + 'px'
-            bottomBord.style.width = this.selectedElement.width + 'px'
+            let editorBox = document.querySelector('.editor-box')
+
+            let leftOver = false
+            let rightOver = false
+            let bottomOver = false
+            let topOver = false
+
+            if (
+              e.target.getBoundingClientRect().left <
+              editorBox.getBoundingClientRect().left
+            ) {
+              leftOver = true
+            }
+            if (
+              e.target.getBoundingClientRect().right >
+              editorBox.getBoundingClientRect().right
+            ) {
+              rightOver = true
+            }
+            if (
+              e.target.getBoundingClientRect().top <
+              editorBox.getBoundingClientRect().top
+            ) {
+              topOver = true
+            }
+            if (
+              e.target.getBoundingClientRect().bottom >
+              editorBox.getBoundingClientRect().bottom
+            ) {
+              bottomOver = true
+            }
+            if (leftOver && topOver && !rightOver && !bottomOver) {
+              // left, top 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              topBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              rightBord.style.left =
+                this.selectedElement.left +
+                this.selectedElement.width -
+                2 +
+                'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                2 +
+                'px'
+              // 1
+            } else if (!leftOver && topOver && !rightOver && !bottomOver) {
+              // top 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'block'
+              topBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              rightBord.style.left =
+                this.selectedElement.left +
+                this.selectedElement.width -
+                2 +
+                'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+              // 2
+            } else if (!leftOver && topOver && rightOver && !bottomOver) {
+              // right, top 벗어날 때
+              tag.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              leftBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+              // 3
+            } else if (!leftOver && !topOver && rightOver && !bottomOver) {
+              // right 벗어날 때
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+              // 4
+            } else if (!leftOver && !topOver && rightOver && bottomOver) {
+              // right, bottom 벗어날 때
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+              // 5
+            } else if (!leftOver && !topOver && !rightOver && bottomOver) {
+              // bottom 벗어날 때
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width = this.selectedElement.width + 2 + 'px'
+              // 6
+            } else if (leftOver && !topOver && !rightOver && bottomOver) {
+              // left, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              topBord.style.left = editorBox.getBoundingClientRect().left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) +
+                2 +
+                'px'
+              // 7
+            } else if (leftOver && !topOver && !rightOver && !bottomOver) {
+              // left, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+
+              topBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) +
+                1 +
+                'px'
+
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top + this.selectedElement.height + 'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) +
+                1 +
+                'px'
+              // 8
+            } else if (leftOver && !topOver && rightOver && !bottomOver) {
+              // left, right 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              topBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                6 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+              // 9
+            } else if (!leftOver && topOver && !rightOver && bottomOver) {
+              // top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+              // 10
+            } else if (leftOver && topOver && !rightOver && bottomOver) {
+              // left, top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+              // 11
+            } else if (leftOver && topOver && rightOver && !bottomOver) {
+              // left, top, right 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'block'
+
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top + this.selectedElement.height + 'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+              // 12
+            } else if (!leftOver && topOver && rightOver && bottomOver) {
+              // right, top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+              // 13
+            } else if (leftOver && !topOver && rightOver && bottomOver) {
+              // right, top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              topBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+              // 14
+            } else if (leftOver && topOver && rightOver && bottomOver) {
+              // 사방 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+              // 14
+            } else {
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              topBord.style.display = 'block'
+              rightBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width = this.selectedElement.width + 'px'
+              // bottomBord.style.display = 'none'?
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+              rightBord.style.left =
+                this.selectedElement.left +
+                this.selectedElement.width -
+                2 +
+                'px'
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+            }
           }
         }
       }
@@ -1199,6 +1661,7 @@ export default {
   .editor-box {
     width: 100%;
     height: 100%;
+    border: 3px solid #545e66;
     // display:table
     // overflow: auto;
     scroll-behavior: smooth;
@@ -1211,8 +1674,8 @@ export default {
 
         .board {
           // overflow: auto;
-          height: 120%;
-          border: 1px solid #000000;
+          // height: 120%;
+          // border: 1px solid #000000;
         }
       }
     }
@@ -1249,7 +1712,7 @@ export default {
       padding: 0.2rem;
       position: fixed;
       z-index: 10;
-      background-color: #3e8ce4;
+      background-color: #27e460;
       border-radius: 0.4rem;
       font-size: 0.8rem;
     }
@@ -1260,18 +1723,18 @@ export default {
     .bottom-border,
     .top-border {
       width: 100%;
-      height: 4px;
+      height: 3px;
       position: fixed;
       // z-index:
-      background-color: #3e8ce4;
+      background-color: #27e460;
       // overflow: auto !important;
     }
     .right-border,
     .left-border {
       height: 100%;
-      width: 4px;
+      width: 3px;
       position: fixed;
-      background-color: #3e8ce4;
+      background-color: #27e460;
     }
   }
   .move-icon {
