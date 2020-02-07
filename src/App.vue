@@ -276,6 +276,7 @@
       v-show="sitemapOn"
       @copy-title="copyPage"
       @close-sitemap="sitemapBtn"
+      @right-click="openSitemapContext"
       class="sitemap"
     />
     <!-- <overview
@@ -317,8 +318,13 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
-    <div v-if="isTitle" class="title-copy">
-      bb
+    <div v-if="isTitle" class="title-copy"></div>
+    <div v-if="isContextMenu" class="sitemapContext">
+      <div class="open">Open</div>
+      <div class="cut">Cut</div>
+      <div class="copy">Copy</div>
+      <div @click="renameTitle" class="rename">Rename</div>
+      <div class="delete">Delete</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -480,6 +486,11 @@ export default {
     htmltree.style.backgroundColor = '#4e4e5c'
     $(window).resize(() => {
       this.$refs.home.windowResized()
+    })
+    document.addEventListener('click', e => {
+      if (e.button === 0) {
+        this.isContextMenu = false
+      }
     })
     document.addEventListener('mouseover', e => {
       // console.log(e.target.classList[1])
@@ -690,6 +701,20 @@ export default {
     this.hasht = h
   },
   methods: {
+    renameTitle() {},
+    openSitemapContext(e) {
+      if (this.isContextMenu) {
+        this.isContextMenu = false
+      } else {
+        this.isContextMenu = true
+        this.$nextTick(() => {
+          let context = document.querySelector('.sitemapContext')
+          console.log(context)
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+        })
+      }
+    },
     helpTab(e) {
       this.isHelpTab = true
       this.isFileTab = false
@@ -864,12 +889,20 @@ export default {
     copyPage(payload) {
       this.isTitle = true
       this.copyTitle = payload.target
+      this.$nextTick(() => {
+        let copy = document.querySelector('.title-copy')
+        // console.log(this.copyTitle)
+        copy.textContent = this.copyTitle.textContent
+        copy.style.left = payload.clientX + 10 + 'px'
+        copy.style.top = payload.clientY + 10 + 'px'
+      })
     },
     sitemapBtn() {
       if (this.sitemapOn === true) {
         this.sitemapOn = false
       } else {
         this.sitemapOn = true
+        this.studioOn = false
       }
     },
     closePage(e) {
