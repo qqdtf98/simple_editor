@@ -298,7 +298,7 @@
       </div>
       <div class="right-panel">
         <div class="right-top-panel">
-          <layout ref="layout" @stick="layoutStick" class="layout" />
+          <layout ref="layout" @manualSelet="manualSelet" @stick="layoutStick" class="layout" />
         </div>
         <div class="right-bottom-panel">
           <div class="tree-name-wrapper">
@@ -1270,6 +1270,30 @@ export default {
     },
     rulerChange(e) {
       console.log(e)
+    },
+    //menual hover
+    manualSelet(payload){
+      console.log(payload)
+      if(payload!='SPAN'){
+        // this.viewTemplate=true;
+      
+        console.log("sdsad")
+      }
+      else if (payload=='SPAN'&&!this.viewTemplate) {
+        this.tagDescription = true
+        this.uiDescription = false
+        this.$nextTick(() => {
+          let text = document.querySelector('.description-tag')
+          let stu = document.querySelector('#layout')
+          let innerText = payload.target.innerHTML
+            .toLowerCase()
+            .replace(/ /gi, '')
+          text.innerHTML = this.hasht[innerText]
+
+          text.style.left = stu.getBoundingClientRect().left - 80 + 'px'
+          text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+        })
+      }
     }
   }
 }

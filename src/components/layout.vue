@@ -1,13 +1,18 @@
 <template>
   <div id="layout">
     <div @mousedown="movelayout" class="layout-text-box">
-      <div @mousedown.stop class="layout-text">Layout</div>
-      <!-- <img
-      @mousedown.stop
-        @click="closelayout"
-        class="close-btn"
-        src="../assets/clTose.svg"
-      /> -->
+      <div @mousedown.stop class="layout-text">
+        Layout
+        <div class="manual">
+          <a style="font-size:12px">manual</a>
+          <switches
+            class="toggleSwitch"
+            theme="bootstrap"
+            color="info"
+            v-model="enabled"
+          />
+        </div>
+      </div>
     </div>
     <div class="layout-box">
       <ul
@@ -39,11 +44,13 @@
             role="tab"
             aria-controls="pills-profile"
             aria-selected="false"
-            >Animation</a
-          >
+            >Animation</a>
         </li>
       </ul>
+      <!--options-->
       <div
+        @mouseover="mouseOver"
+        v-show="tabStep === 1"
         class="tab-pane"
         v-bind:class="{ active: tabStep === 1 }"
         id="pills-home"
@@ -83,56 +90,74 @@
               <div class="card-body">
                 <div class="margin">
                   <div class="box-row blue">
-                    <span class="margin-top" title="Margin Top">{{margin[0].value}}</span>
+                    <a class="margin-top" title="Margin Top">{{
+                      margin[0].value
+                    }}</a>
                   </div>
                   <div class="box-row middle">
                     <div class="box-col blue">
-                      <span class="margin-left" title="Margin Left">{{margin[3].value}}</span>
+                      <a class="margin-left" title="Margin Left">{{
+                        margin[3].value
+                      }}</a>
                     </div>
                     <div class="box-col padding">
                       <div class="box-row green">
-                        <span class="padding-top" title="Padding Top">{{padding[0]}}</span>
+                        <a class="padding-top" title="Padding Top">{{
+                          padding[0]
+                        }}</a>
                       </div>
                       <div class="box-row middle">
                         <div class="box-col green">
-                          <span class="padding-left" title="Padding Left"
-                            >{{padding[3]}}</span
-                          >
+                          <a class="padding-left" title="Padding Left">{{
+                            padding[3]
+                          }}</a>
                         </div>
                         <div class="box-col middle empty"></div>
                         <div class="box-col green">
-                          <span class="padding-right" title="Padding Right"
-                            >{{padding[1]}}</span
-                          >
+                          <a class="padding-right" title="Padding Right">{{
+                            padding[1]
+                          }}</a>
                         </div>
                       </div>
                       <div class="box-row green">
-                        <span class="padding-bottom" title="Padding Bottom"
-                          >{{padding[2]}}</span
-                        >
+                        <a class="padding-bottom" title="Padding Bottom">{{
+                          padding[2]
+                        }}</a>
                       </div>
                     </div>
                     <div class="box-col blue">
-                      <span class="margin-right" title="Margin Right">{{margin[1].value}}</span>
+                      <a class="margin-right" title="Margin Right">{{
+                        margin[1].value
+                      }}</a>
                     </div>
                   </div>
                   <div class="box-row blue">
-                    <span class="margin-top" title="Margin Top">{{margin[2].value}}</span>
+                    <a class="margin-top" title="Margin Top">{{
+                      margin[2].value
+                    }}</a>
                   </div>
                 </div>
 
                 <div class="row dimensions">
-                  <span class="size x"><i>X</i><b>{{componentSorce.x}}</b></span>
-                  <span class="size y"><i>Y</i><b>{{componentSorce.y}}</b></span>
-                  <span class="size width"><i>W</i><b>{{componentSorce.width}}</b></span>
-                  <span class="size height"><i>H</i><b>{{componentSorce.height}}</b></span>
+                  <a class="size x"
+                    ><i>X</i><b>{{ componentSorce.x }}</b></a
+                  >
+                  <a class="size y"
+                    ><i>Y</i><b>{{ componentSorce.y }}</b></a
+                  >
+                  <a class="size width"
+                    ><i>W</i><b>{{ componentSorce.width }}</b></a
+                  >
+                  <a class="size height"
+                    ><i>H</i><b>{{ componentSorce.height }}</b></a
+                  >
                 </div>
                 <br />
                 <!--글자-->
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Width
-                  </a>
+                  </span>
                   <input
                     class="propertyChange "
                     type
@@ -146,9 +171,9 @@
                 </div>
                 <br />
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Height
-                  </a>
+                  </span>
                   <input
                     class="propertyChange"
                     type="text"
@@ -158,13 +183,13 @@
                     placeholder="40px"
                     @keyup.enter="submitSourceWithPX"
                     v-model="componentSorce.height"
-                    />
+                  />
                 </div>
                 <br />
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Margin
-                  </a>
+                  </span>
                   <input
                     class="propertyChange"
                     type="text"
@@ -174,13 +199,13 @@
                     placeholder="0"
                     @keyup.enter="submitSourceWithPX"
                     v-model="componentSorce.margin"
-                    />
+                  />
                 </div>
                 <br />
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Padding
-                  </a>
+                  </span>
                   <input
                     class="propertyChange"
                     type="text"
@@ -190,7 +215,7 @@
                     placeholder="0"
                     @keyup.enter="submitSourceWithPX"
                     v-model="componentSorce.padding"
-                    />
+                  />
                 </div>
               </div>
             </div>
@@ -412,9 +437,9 @@
                 </div>
 
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Style
-                  </a>
+                  </span>
                   <b-form-select
                     class="btn btn-info btn-sm dropdown-toggle"
                     id="dropdown-toggle"
@@ -425,9 +450,9 @@
                 </div>
                 <br />
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Font
-                  </a>
+                  </span>
                   <b-form-select
                     class="btn btn-info btn-sm dropdown-toggle"
                     id="dropdown-toggle"
@@ -438,9 +463,9 @@
                 </div>
                 <br />
                 <div class="row">
-                  <a class="property">
+                  <span class="property">
                     Size
-                  </a>
+                  </span>
                   <input
                     class="propertyChange "
                     type
@@ -551,13 +576,13 @@
             >
               <div class="card-body">
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onOpacity }"
                     style="float:left"
                   >
                     Opacity
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -579,13 +604,13 @@
                 </div>
 
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onBlur }"
                     style="float:left"
                   >
                     Blur
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -606,13 +631,13 @@
                   />
                 </div>
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onBrightness }"
                     style="float:left"
                   >
                     Brightness
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -634,13 +659,13 @@
                 </div>
 
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onContrast }"
                     style="float:left"
                   >
                     Contrast
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -661,13 +686,13 @@
                   />
                 </div>
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onGrayscale }"
                     style="float:left"
                   >
                     Grayscale
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -688,13 +713,13 @@
                   />
                 </div>
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onHue }"
                     style="float:left"
                   >
                     Hue
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -715,13 +740,13 @@
                   />
                 </div>
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onInvert }"
                     style="float:left"
                   >
                     Invert
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -742,13 +767,13 @@
                   />
                 </div>
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onSaturate }"
                     style="float:left"
                   >
                     Saturate
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -769,13 +794,13 @@
                   />
                 </div>
                 <div class="row filter">
-                  <div
+                  <span
                     class="filterSpan"
                     :class="{ fontActive: onSepia }"
                     style="float:left"
                   >
                     Sepia
-                  </div>
+                  </span>
                   <range-slider
                     class="slider"
                     min="0"
@@ -800,6 +825,140 @@
           </div>
         </div>
       </div>
+
+      <!--Animation-->
+      <div
+        @mouseover="mouseOver"
+        v-show="tabStep === 2"
+        class="tab-pane"
+        v-bind:class="{ active: tabStep === 2 }"
+        id="pills-animation"
+        role="tabpane2"
+        aria-labelledby="pills-animation-tab"
+      >
+        <div id="accordion" role="tablist">
+          <div class="card">
+            <div
+              class="card-header"
+              @click="clickAnimationTab"
+              role="tab"
+              id="headingOne"
+            >
+              <h5 class="mb-0">
+                <a
+                  class="title"
+                  data-toggle="collapse"
+                  href="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Animation
+                </a>
+              </h5>
+            </div>
+            <div
+              id="collapseOne"
+              class="collapse"
+              v-bind:class="{ show: AnimationTab === 1 }"
+              role="tabpanel"
+              aria-labelledby="headingOne"
+              data-parent="#accordion"
+            >
+              <div class="row animation">
+                <span class="aniText">
+                  Animation
+                </span>
+                <b-form-select
+                  class=" btn btn-info btn-sm dropdownAnimation"
+                  v-model="imageSizeSelected"
+                  :options="animationStyle"
+                  @change="submitChangeImageSize"
+                ></b-form-select>
+              </div>
+
+              <div>
+                <div class="row animation">
+                  <span class="aniText">
+                    Time
+                  </span>
+                  <input
+                    class="propertyChange aniTimeChange"
+                    type
+                    name="width"
+                    value
+                    title
+                    placeholder="31.4375px"
+                    v-model="componentSorce.width"
+                  />
+                </div>
+
+                <div class="row animation">
+                  <span class="aniText">
+                    Delay
+                  </span>
+                  <input
+                    class="propertyChange aniTimeChange"
+                    type
+                    name="width"
+                    value
+                    title
+                    placeholder="31.4375px"
+                    v-model="componentSorce.width"
+                  />
+                </div>
+
+                <div class="row animation">
+                  <span class="aniText">
+                    Repeat
+                  </span>
+                  <b-form-select
+                    class=" btn btn-info btn-sm dropdownAnimation"
+                    v-model="imageSizeSelected"
+                    :options="repeatTime"
+                    @change="submitChangeImageSize"
+                  ></b-form-select>
+                </div>
+
+                <div class="row animation">
+                  <span class="aniText">
+                    Function
+                  </span>
+                  <b-form-select
+                    class="btn btn-info btn-sm dropdownAnimation"
+                    v-model="imageSizeSelected"
+                    :options="timingFunction"
+                    @change="submitChangeImageSize"
+                  ></b-form-select>
+                </div>
+
+                <div class="row animation">
+                  <span class="aniText">
+                    Direction
+                  </span>
+                  <b-form-select
+                    class=" btn btn-info btn-sm dropdownAnimation"
+                    v-model="imageSizeSelected"
+                    :options="direction"
+                    @change="submitChangeImageSize"
+                  ></b-form-select>
+                </div>
+
+                <b-button
+                  class="deleteAM"
+                  id="deleteAM"
+                  @click="testAnimation"
+                ></b-button>
+
+                <b-button
+                  class="testApplyAM"
+                  id="ApplyAM"
+                  @click="testAnimation"
+                ></b-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -808,35 +967,36 @@
 import RangeSlider from 'vue-range-slider'
 import { Chrome } from 'vue-color'
 import { mapGetters, mapMutations } from 'vuex'
+import Switches from 'vue-switches'
 import 'vue-range-slider/dist/vue-range-slider.css'
 export default {
   data() {
     return {
       //selction 된 component 속성
       componentSorce: {
-          x: 228,
-          y: 500,
-          width: 960,
-          height: 614,
-          padding: '0px',
-          margin: '0px',
-          backgroundColor: '',
-          fontColor: '',
-          fontSize: ''
+        x: 228,
+        y: 500,
+        width: 960,
+        height: 614,
+        padding: '0px',
+        margin: '0px',
+        backgroundColor: '',
+        fontColor: '',
+        fontSize: ''
       },
-      //margin 값 
+      //margin 값
       margin: [
         {
-            value: 0
+          value: 0
         },
         {
-            value: 0
+          value: 0
         },
         {
-            value: 0
+          value: 0
         },
         {
-            value: 0
+          value: 0
         }
       ],
       //paddoing 값
@@ -844,10 +1004,40 @@ export default {
       options: {
         //Monaco Editor Options
       },
-      layoutTab: 1,
+
+      //Tab value
+      layoutTab: 0,
       backgroundTab: 0,
       fontTab: 0,
       filterTab: 0,
+      AnimationTab: 0,
+
+      //Animation
+      enabled: false,
+      animationStyle: [
+        { text: 'none' },
+        { text: 'bounce' },
+        { text: 'fadeIn' },
+        { text: 'moveRight' },
+        { text: 'slidein' },
+        { text: 'rotate' },
+        { text: 'custom' }
+      ],
+      timingFunction: [
+        { text: 'ease' },
+        { text: 'ease-in' },
+        { text: 'ease-out' },
+        { text: 'ease-in-out' },
+        { text: 'linear' }
+      ],
+      direction: [
+        { text: 'nomal' },
+        { text: 'alternate' },
+        { text: 'reverse' },
+        { name: 'alterne-reverse', text: 'alt-reverse' }
+      ],
+
+      repeatTime: [{ text: 'custom' }, { text: 'infinite' }],
 
       imageSizeSelected: 'none',
       imageSize: [
@@ -1043,7 +1233,8 @@ export default {
   },
   components: {
     RangeSlider,
-    ChromeColor: VueColor.Chrome
+    ChromeColor: VueColor.Chrome,
+    Switches
   },
   created() {},
   computed: {
@@ -1067,19 +1258,19 @@ export default {
       this.onHeight = false
       this.onMargin = false
       this.onPadding = false
-      this.onBackgroundColor = false,
-      this.onColor = false,
-      this.onFontSize = false,
-      this.onOpacity = false,
-      this.onBlur = false,
-      this.onBrightness = false,
-      this.onContrast = false,
-      this.onGrayscale = false,
-      this.onHue = false,
-      this.onInvert = false,
-      this.onSaturate = false,
-      this.onSepia = false,
-      this.selected = 'none'
+      ;(this.onBackgroundColor = false),
+        (this.onColor = false),
+        (this.onFontSize = false),
+        (this.onOpacity = false),
+        (this.onBlur = false),
+        (this.onBrightness = false),
+        (this.onContrast = false),
+        (this.onGrayscale = false),
+        (this.onHue = false),
+        (this.onInvert = false),
+        (this.onSaturate = false),
+        (this.onSepia = false),
+        (this.selected = 'none')
 
       if (!this.isData) {
         this.isData = true
@@ -1118,9 +1309,7 @@ export default {
       }
       //사용자가 사용하는 화면에 맞춘 좌표
       this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
-      this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y),
-   
-
+      ;(this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y)),
         (this.componentSorce.width = Math.floor(
           payload.target.getBoundingClientRect().width
         ))
@@ -1144,7 +1333,6 @@ export default {
       this.opacityValue = getComputedStyle(payload.target).opacity
       // console.log(this.opacity)
 
-      
       // console.log(margin)
       // console.log(this.margin[3])
     },
@@ -1444,6 +1632,13 @@ export default {
         this.filterTab = 1
       }
     },
+    clickAnimationTab(e) {
+      if (this.AnimationTab == 1) {
+        this.AnimationTab = 0
+      } else {
+        this.AnimationTab = 1
+      }
+    },
     movelayout(e) {
       // console.log(e.target.parentElement.parentElement)
       console.log(e.target.parentElement)
@@ -1474,6 +1669,31 @@ export default {
       this.onOpacity = true
       ;(this.submitSorce.change = 1),
         this.$emit('userSelected', this.submitSorce)
+    },
+    //Animation 테스트
+    testAnimation(e) {
+      console.log(e)
+      var oScript = document.createElement('style')
+      oScript.type = 'text/css'
+      oScript.innerHTML = `@keyframes a {
+                0%   {background-color:red; width:200px; height:200px}
+                25%  {background-color:yellow; left:200px; top:0px;}
+                50%  {background-color:blue; left:200px; top:200px;}
+                75%  {background-color:green; left:0px; top:200px;}
+                100% {background-color:red; left:0px; top:0px;}
+              }`
+      console.log(oScript)
+      document.getElementsByTagName('head')[0].appendChild(oScript)
+    },
+    //mouseover 
+    mouseOver(e){
+      // console.log(e.target.tagName)
+      if(e.target.tagName=='SPAN'){
+        this.$emit('manualSelet',e.target.tagName)
+      }
+      else{
+        this.$emit('manualSelet', e.target.tagName)
+      }
     }
   }
 }
@@ -1607,8 +1827,8 @@ export default {
     }
   }
 }
-.dimensions{
-  margin:-90px 0px 0px -10px;
+.dimensions {
+  margin: -90px 0px 0px -10px;
 }
 .property {
   margin: 0px 0px 0px 20px;
@@ -1631,12 +1851,12 @@ export default {
   i {
     margin: 0px 10px 0px 10px;
     font-size: 14px;
-    width:5%;
+    width: 5%;
   }
 }
 b {
   color: #b1aeae;
-  width:15%;
+  width: 15%;
 }
 //background Layout 속성
 #bgSpan {
@@ -1703,6 +1923,9 @@ b {
   background-color: #292931;
   .layout-text-box {
     // background-color: #2c?2c46;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
     height: 7%;
     justify-content: center;
     cursor: move;
@@ -1749,28 +1972,28 @@ b {
 //font 속성
 .row {
   .left {
-    width:40px !important
+    width: 40px !important;
   }
-  .right{
-    width:40px !important;
-    transform:rotate(180deg);
+  .right {
+    width: 40px !important;
+    transform: rotate(180deg);
   }
-  .linkA{
-    font-size:25px;
-    color:blue !important;
-    text-decoration:underline !important;
+  .linkA {
+    font-size: 25px;
+    color: blue !important;
+    text-decoration: underline !important;
   }
-  .thick{
-    width:40px !important;
+  .thick {
+    width: 40px !important;
   }
-  .line-font{
-    width:53px !important;
+  .line-font {
+    width: 53px !important;
   }
-  .italic{
-    width:40px !important;
+  .italic {
+    width: 40px !important;
   }
-  .bigAndSmall{
-    width:48px !important;
+  .bigAndSmall {
+    width: 48px !important;
   }
 }
 .font {
@@ -1811,4 +2034,83 @@ b {
   width: 13px !important;
   height: 13px !important;
 }
+//Animation
+.dropdownAnimation {
+  margin: 0px -20px 0px 10px;
+  width: 40% !important;
+  background-color: #35373a !important;
+  justify-content: center;
+  vertical-align: middle;
+}
+.animation {
+  margin: 15px 0px 0px 0px;
+}
+.aniText {
+  color: grey !important;
+  margin: 15px 10px 0px 13px;
+  width: 40%;
+}
+.testApplyAM {
+  animation: slidein 4s 1s infinite linear alternate;
+  // animation-name: a;
+  // animation-duration: 5s;
+  // animation-timing-function: linear;
+  // animation-delay: 2s;
+  // animation-iteration-count: infinite;
+  // animation-direction:  ;
+}
+.aniTimeChange {
+  margin: 0px 0px 0px 40px;
+}
+.manual {
+  margin: -32px -214px -1px 194px;
+}
+.toggleSwitch {
+  margin: 0px 10px 0px 0px !important;
+  height: 10px !important;
+}
+.vue-switcher div:after {
+  width: 16px !important;
+  height: 16px !important;
+}
+.vue-switcher-theme--bootstrap.vue-switcher-color--info.vue-switcher--unchecked
+  div:after {
+  margin: 1.5px 0px -8px -15px;
+}
+.vue-switcher-theme--bootstrap.vue-switcher-color--info div:after {
+  margin: 1.5px 0px -8px -15px;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes moveRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100px);
+  }
+}
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+  }
+  to {
+    margin-left: 0%;
+  }
+}
+@keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
 </style>
+`
