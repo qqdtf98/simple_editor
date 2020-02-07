@@ -276,6 +276,7 @@
       v-show="sitemapOn"
       @copy-title="copyPage"
       @close-sitemap="sitemapBtn"
+      @right-click="openSitemapContext"
       class="sitemap"
     />
     <!-- <overview
@@ -317,8 +318,13 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
-    <div v-if="isTitle" class="title-copy">
-      bb
+    <div v-if="isTitle" class="title-copy"></div>
+    <div v-if="isContextMenu" class="sitemapContext">
+      <div class="open">Open</div>
+      <div class="cut">Cut</div>
+      <div class="copy">Copy</div>
+      <div @click="renameTitle" class="rename">Rename</div>
+      <div class="delete">Delete</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -436,7 +442,9 @@ export default {
       commentTarget: null,
       titles: [
         {
-          text: 'Untitled'
+          text: 'Untitled',
+          id: '0',
+          parent_id: null
         }
       ],
       editorNum: 1,
@@ -457,7 +465,9 @@ export default {
       isEditTab: false,
       isSaveTab: false,
       isSettingTab: false,
-      isHelpTab: false
+      isHelpTab: false,
+      isContextMenu: false,
+      titleId: 0
     }
   },
   computed: {
@@ -472,6 +482,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.sitemap.loadSitemap(this.titles)
     let title = document.querySelector('.file-name')
     // console.log(title)
     title.style.backgroundColor = 'rgb(78, 78, 92)'
@@ -480,6 +491,11 @@ export default {
     htmltree.style.backgroundColor = '#4e4e5c'
     $(window).resize(() => {
       this.$refs.home.windowResized()
+    })
+    document.addEventListener('click', e => {
+      if (e.button === 0) {
+        this.isContextMenu = false
+      }
     })
     document.addEventListener('mouseover', e => {
       // console.log(e.target.classList[1])
@@ -599,6 +615,8 @@ export default {
       }
       if (this.isTitle) {
         this.isTitle = false
+        // console.log(e.target)
+        this.$refs.sitemap.movePosition(e.target)
       }
 
       if (this.treeMove) {
@@ -690,6 +708,20 @@ export default {
     this.hasht = h
   },
   methods: {
+    renameTitle() {},
+    openSitemapContext(e) {
+      if (this.isContextMenu) {
+        this.isContextMenu = false
+      } else {
+        this.isContextMenu = true
+        this.$nextTick(() => {
+          let context = document.querySelector('.sitemapContext')
+          console.log(context)
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+        })
+      }
+    },
     helpTab(e) {
       this.isHelpTab = true
       this.isFileTab = false
@@ -864,12 +896,20 @@ export default {
     copyPage(payload) {
       this.isTitle = true
       this.copyTitle = payload.target
+      this.$nextTick(() => {
+        let copy = document.querySelector('.title-copy')
+        // console.log(this.copyTitle)
+        copy.textContent = this.copyTitle.textContent
+        copy.style.left = payload.clientX + 10 + 'px'
+        copy.style.top = payload.clientY + 10 + 'px'
+      })
     },
     sitemapBtn() {
       if (this.sitemapOn === true) {
         this.sitemapOn = false
       } else {
         this.sitemapOn = true
+        this.studioOn = false
       }
     },
     closePage(e) {
@@ -926,7 +966,9 @@ export default {
     },
     newPage(e) {
       let payload = {
-        text: 'aaa'
+        text: `${this.titleId}`,
+        id: `${++this.titleId}`,
+        parentID: null
       }
       this.titles.push(payload)
       let editor = document.querySelector('.board')
@@ -1349,7 +1391,7 @@ export default {
     border: 1.5px solid #000000;
     position: fixed;
     left: 3.5%;
-    background-color: #32373a;
+    background-color: #292931;
     z-index: 30;
     top: 3.5%;
   }
@@ -1419,60 +1461,60 @@ export default {
         background-color: #616c72;
       }
     }
-    .undo-box,
-    .redo-box,
-    .new-box,
-    .open-box,
-    .save-box,
-    .export-box,
-    .setting-box {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 0.2rem;
-      margin-right: 1rem;
-      font-size: 0.9rem;
-      border-radius: 0.3rem;
-      .undo,
-      .redo,
-      .new,
-      .open,
-      .save,
-      .export,
-      .setting {
-        cursor: pointer;
-        height: 1.2rem;
-        margin-right: 0.5rem;
-      }
-      .undo-text,
-      .redo-text,
-      .new-text,
-      .open-text,
-      .save-text,
-      .export-text,
-      .setting-text {
-        cursor: pointer;
-        color: #fff;
-      }
-      &:hover {
-        background-color: #616c72;
-      }
-    }
-    .new-box {
-      margin-left: 1rem;
-    }
-    .undo-box {
-      .undo {
-        -moz-transform: scaleX(-1);
-        -o-transform: scaleX(-1);
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-        cursor: pointer;
-        margin-right: 0.5rem;
-        height: 1.2rem;
-      }
-    }
+    // .undo-box,
+    // .redo-box,
+    // .new-box,
+    // .open-box,
+    // .save-box,
+    // .export-box,
+    // .setting-box {
+    //   display: flex;
+    //   flex-direction: row;
+    //   justify-content: center;
+    //   align-items: center;
+    //   padding: 0.2rem;
+    //   margin-right: 1rem;
+    //   font-size: 0.9rem;
+    //   border-radius: 0.3rem;
+    //   .undo,
+    //   .redo,
+    //   .new,
+    //   .open,
+    //   .save,
+    //   .export,
+    //   .setting {
+    //     cursor: pointer;
+    //     height: 1.2rem;
+    //     margin-right: 0.5rem;
+    //   }
+    //   .undo-text,
+    //   .redo-text,
+    //   .new-text,
+    //   .open-text,
+    //   .save-text,
+    //   .export-text,
+    //   .setting-text {
+    //     cursor: pointer;
+    //     color: #fff;
+    //   }
+    //   &:hover {
+    //     background-color: #616c72;
+    //   }
+    // }
+    // .new-box {
+    //   margin-left: 1rem;
+    // }
+    // .undo-box {
+    //   .undo {
+    //     -moz-transform: scaleX(-1);
+    //     -o-transform: scaleX(-1);
+    //     -webkit-transform: scaleX(-1);
+    //     transform: scaleX(-1);
+    //     cursor: pointer;
+    //     margin-right: 0.5rem;
+    //     height: 1.2rem;
+    //   }
+    // }
   }
   .main-panel {
     width: 100%;
@@ -1826,6 +1868,27 @@ export default {
   }
   .bottom-panel {
     width: 92%;
+  }
+  .sitemapContext {
+    position: fixed;
+    width: 10rem;
+    background-color: #34343c;
+    box-shadow: 5px 5px 5px 1px #000000;
+    z-index: 100;
+    .open,
+    .cut,
+    .copy,
+    .rename,
+    .delete {
+      width: 100%;
+      padding-top: 0.2rem;
+      color: #fff;
+      padding-bottom: 0.2rem;
+      &:hover {
+        cursor: pointer;
+        background-color: #4b4b57;
+      }
+    }
   }
 
   .fileTitle {
