@@ -9,7 +9,9 @@
         src="../assets/images/close.svg"
       />
     </div>
+    <vue-custom-scrollbar class="scroll-area">
     <div
+        ref="dash"
       @mousedown="refineSitemap"
       @mouseup="mouseRightClick"
       class="title-map"
@@ -24,11 +26,15 @@
         {{ title.text }}
       </div>
     </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
+  components: { vueCustomScrollbar },
   data() {
     return {
       titles: [],
@@ -39,7 +45,9 @@ export default {
       target: null,
       targetId: null,
       position: null,
-      positionId: null
+      positionId: null,
+      contextTarget: null,
+      isContentEditable: false
     }
   },
   mounted() {

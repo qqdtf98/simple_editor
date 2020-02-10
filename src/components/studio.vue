@@ -19,6 +19,7 @@
         />
         <img class="search-icon" src="../assets/images/search.svg" />
       </div>
+      <vue-custom-scrollbar class="scroll-area">
       <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
         <div class="tag-list-box">
           <span class="tag-list">UI</span>
@@ -144,12 +145,16 @@
           </div>
         </div>
       </div>
+      </vue-custom-scrollbar>
     </div>
   </div>
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
+  components: { vueCustomScrollbar },
   data() {
     return {
       tagTarget: null,
