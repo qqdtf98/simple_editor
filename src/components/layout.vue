@@ -3,15 +3,15 @@
     <div @mousedown="movelayout" class="layout-text-box">
       <div @mousedown.stop class="layout-text">
         Layout
-        <div class="manual">
-          <a style="font-size:12px">manual</a>
-          <switches
-            class="toggleSwitch"
-            theme="bootstrap"
-            color="info"
-            v-model="enabled"
-          />
-        </div>
+      </div>
+      <div @mousedown.stop class="manual">
+        <a style="font-size:12px">manual</a>
+        <switches
+          class="toggleSwitch"
+          theme="bootstrap"
+          color="info"
+          v-model="enabled"
+        />
       </div>
     </div>
     <div class="layout-box">
@@ -548,6 +548,7 @@
             </div>
           </div>
 
+          <!--
           <div class="card">
             <div
               class="card-header"
@@ -824,6 +825,7 @@
               </div>
             </div>
           </div>
+          -->
         </div>
       </div>
 
@@ -2027,7 +2029,9 @@ b {
   margin: 0px 0px 0px 40px;
 }
 .manual {
-  margin: -32px -214px -1px 194px;
+  margin: 0px 12px 0px 0px;
+  position: absolute;
+  right: 0;
 }
 .toggleSwitch {
   margin: 0px 10px 0px 0px !important;
@@ -2039,10 +2043,10 @@ b {
 }
 .vue-switcher-theme--bootstrap.vue-switcher-color--info.vue-switcher--unchecked
   div:after {
-  margin: 1.5px 0px -8px -15px;
+  margin: 2.5px 0px -8px -15px;
 }
 .vue-switcher-theme--bootstrap.vue-switcher-color--info div:after {
-  margin: 1.5px 0px -8px -15px;
+  margin: 2.5px 0px -8px -15px;
 }
 @keyframes fadeIn {
   from {
