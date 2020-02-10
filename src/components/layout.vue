@@ -3,15 +3,15 @@
     <div @mousedown="movelayout" class="layout-text-box">
       <div @mousedown.stop class="layout-text">
         Layout
-        <div class="manual">
-          <a style="font-size:12px">manual</a>
-          <switches
-            class="toggleSwitch"
-            theme="bootstrap"
-            color="info"
-            v-model="enabled"
-          />
-        </div>
+      </div>
+      <div @mousedown.stop class="manual">
+        <a style="font-size:12px">manual</a>
+        <switches
+          class="toggleSwitch"
+          theme="bootstrap"
+          color="info"
+          v-model="enabled"
+        />
       </div>
     </div>
     <vue-custom-scrollbar class="scroll-area">
@@ -552,20 +552,41 @@
               </div>
             </div>
 
-            <div class="card">
-              <div
-                class="card-header"
-                @click="clickFilterTab"
-                role="tab"
-                id="headingOne"
-              >
-                <h5 class="mb-0">
-                  <a
-                    class="title"
-                    data-toggle="collapse"
-                    href="#collapseOne"
-                    aria-expanded="true"
-                    aria-controls="collapseOne"
+          <!--
+          <div class="card">
+            <div
+              class="card-header"
+              @click="clickFilterTab"
+              role="tab"
+              id="headingOne"
+            >
+              <h5 class="mb-0">
+                <a
+                  class="title"
+                  data-toggle="collapse"
+                  href="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  filter
+                </a>
+              </h5>
+            </div>
+            <div
+              id="collapseOne"
+              class="collapse"
+              v-bind:class="{ show: filterTab === 1 }"
+              role="tabpanel"
+              aria-labelledby="headingOne"
+              data-parent="#accordion"
+            >
+              <div class="card-body">
+                <div class="row filter">
+                  <span
+                    class="filterSpan"
+                    :class="{ fontActive: onOpacity }"
+                    style="float:left"
+
                   >
                     filter
                   </a>
@@ -829,6 +850,7 @@
               </div>
             </div>
           </div>
+          -->
         </div>
 
         <!--Animation-->
@@ -2040,7 +2062,9 @@ b {
   margin: 0px 0px 0px 40px;
 }
 .manual {
-  margin: -32px -214px -1px 194px;
+  margin: 0px 12px 0px 0px;
+  position: absolute;
+  right: 0;
 }
 .toggleSwitch {
   margin: 0px 10px 0px 0px !important;
@@ -2052,10 +2076,10 @@ b {
 }
 .vue-switcher-theme--bootstrap.vue-switcher-color--info.vue-switcher--unchecked
   div:after {
-  margin: 1.5px 0px -8px -15px;
+  margin: 2.5px 0px -8px -15px;
 }
 .vue-switcher-theme--bootstrap.vue-switcher-color--info div:after {
-  margin: 1.5px 0px -8px -15px;
+  margin: 2.5px 0px -8px -15px;
 }
 @keyframes fadeIn {
   from {

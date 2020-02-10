@@ -1,25 +1,23 @@
 <template>
-    <div id="app">
-        <div>
-            <div id="newLoaderHtml" ref="mydiv" v-html="html"></div>
-            <button id="test4" >test</button>
-        </div>
+  <div id="app">
+    <div>
+      <div id="newLoaderHtml" ref="mydiv" v-html="html"></div>
     </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'App',
-  data () {
+  data() {
     return {
       // yuri: 's',
-      html: 
-`<div class="dsa">
+      html: `<div class="dsa">
   <button class="dsadsadsa" id="dsadsadsa"
   type="button"
   >도움말
   <div> dfdsfdsfds 
-    <div> dfdsfdsfds </div>
+    <div class="fdsfsd fds fdsfds" id="zzsdfsdfdsfdsfdsfz"> dfdsfdsfds </div>
     <div> dfdsfdsfds </div>
   </div>
   </button>
@@ -27,9 +25,7 @@ export default {
   <div> dfdsfdsfds </div>
 </div>`,
       test: '2',
-      loadJavaScript:
-
-`var file = document.querySelector('#getfile');
+      loadJavaScript: `var file = document.querySelector('#getfile');
 
 file.onchange = function () { 
     var fileList = file.files ;
@@ -43,14 +39,13 @@ file.onchange = function () {
         document.querySelector('#preview').textContent = reader.result ;
     }; 
 };`,
-      loadDate:[]
+      loadDate: []
     }
   },
-  created () {
+  created() {
     var oScript = document.createElement('style')
     oScript.type = 'text/css'
-    oScript.innerHTML = 
-      `#dsadsadsa{
+    oScript.innerHTML = `#dsadsadsa{
         color: #fff; 
         background:blue;
         font-size:2em; 
@@ -72,18 +67,18 @@ file.onchange = function () {
     this.loadDate.push(this.loadJavaScript)
 
     this.$emit('loadData', this.loadDate)
-    
+
     // console.log(this.loadDate)
   },
   methods: {
-    onFileChange (file) {
+    onFileChange(file) {
       // console.log(file)
       // //   console.log(file.srcElement.value)
       // console.log(file.target.files[0].name)
       //   var rawFile = new XMLHttpRequest();
       rawFile.open('GET', file.target.files[0].name)
       // console.log(rawFile)
-      rawFile.onreadystatechange = function () {
+      rawFile.onreadystatechange = function() {
         if (rawFile.readyState === 4) {
           if (rawFile.status === 200 || rawFile.status == 0) {
             // var allText = ;
@@ -94,7 +89,7 @@ file.onchange = function () {
       }
       rawFile.send(null)
     },
-    testLoaderScript () {
+    testLoaderScript() {
       // var oScript = document.createElement('script');
       // oScript.type ='text/javascript';
       // oScript.charset ='utf-8';
@@ -102,22 +97,18 @@ file.onchange = function () {
       // console.log(oScript)
       // alert("s")
       // document.getElementsByTagName('head')[0].appendChild(oScript);
-
     }
   },
-  mounted () {
+  mounted() {
     console.log(this.$refs['mydiv'].firstChild)
     // $('.layout-btn').trigger('click')
-    this.$refs['mydiv'].firstChild.addEventListener('click', function (event) {
+    this.$refs['mydiv'].firstChild.addEventListener('click', function(event) {
       event.preventDefault()
       console.log('clicked: ', event.target)
       // alert('눌렀습니다')
     })
   }
-
 }
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

@@ -199,7 +199,7 @@
               >
                 <div class="showCode">
                   <textarea class="showJS" v-model="js" id="preview3">
- 불러올 데이터가 없습니다. </textarea
+불러올 데이터가 없습니다. </textarea
                   >
                   <input
                     style="float:left;"
@@ -679,7 +679,7 @@ export default {
     h['tabs'] =
       "This is Bootstrap's Tabs component. Each tab has an associated Tab Pane which is displayed when the tab is active."
     h['accordion'] =
-      'This is a Bootstrap component for displaying content in vertical groups. Only one group is expanded at a time. This is a great way to organize FAQ pages and other layouts where vertical content is at a premium.'
+      'This is a Bootstrap component for displaying content in vertical groups. Only one group is expanded at a time. This is a great way to organize FAQ pages and other layout where vertical content is at a premium.'
     h['card'] =
       'Cards are flexible and extensible Bootstrap 4 containers. They can include headers, footers, a wide variety of content, contextual background colors, and powerful display options.'
     h['panel'] =
@@ -1215,21 +1215,21 @@ export default {
       })
     },
     componentSelected(payload) {
-      this.$refs.layouts.isData = true
+      this.$refs.layout.isData = true
       this.payload = payload.target
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
         .getElementById('dashboard')
         .getBoundingClientRect()
-      this.$refs.layouts.getData(payload, this.homeLayoutLocation)
+      this.$refs.layout.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
-        this.$refs.overview.printHomeDocument()
         this.isPustHtml = false
+        this.$refs.overview.printHomeDocument()
       }
       this.$refs.overview.domSelection(payload.target)
-      this.$refs.layouts.isData = true
-      this.$refs.layouts.makeTreeParent(this.payload)
+      this.$refs.layout.isData = true
+      this.$refs.layout.makeTreeParent(this.payload)
     },
     userSelectedWidth(data) {
       // console.log(data)
@@ -1291,10 +1291,10 @@ export default {
       this.$refs.home.selectOverview(this.dom)
     },
     inParentTreeOption(dom) {
-      this.$refs.layouts.parentDom = dom
+      this.$refs.layout.parentDom = dom
     },
     domPushWithTree(dom) {
-      this.$refs.layouts.domWithTree = dom
+      this.$refs.layout.domWithTree = dom
     },
     userSelectBorder(e) {
       this.$refs.home.borderStyleChanged(e)
