@@ -2,11 +2,13 @@
   <div id="app">
     <div class="top-panel">
       <div class="Logo">Logo</div>
-      <div class="File">File</div>
-      <div class="Edit">Edit</div>
-      <div class="Save">Save</div>
-      <div class="Setting">Setting</div>
-      <div class="Help">Help</div>
+      <div @mouseover="fileTab" class="File menu-tab">
+        File
+      </div>
+      <div @mouseover="editTab" class="Edit menu-tab">Edit</div>
+      <div @mouseover="saveTab" class="Save menu-tab">Save</div>
+      <div @mouseover="settingTab" class="Setting menu-tab">Setting</div>
+      <div @mouseover="helpTab" class="Help menu-tab">Help</div>
       <!-- <div @click="newPage" class="new-box">
         <img class="new" src="./assets/images/new.svg" />
         <div class="new-text">New</div>
@@ -54,12 +56,12 @@
           src="./assets/images/studio.svg"
           title="studio"
         />
-        <img
+        <!-- <img
           @click="overviewBtn"
           class="overview-btn"
           src="./assets/images/overview.svg"
           title="overview"
-        />
+        /> -->
         <img
           @click="sitemapBtn"
           class="sitemap-btn"
@@ -114,28 +116,7 @@
               @loadData="loadData"
               class="home"
             ></home>
-            <div v-if="isCommentOn" class="comment-board">
-              <div class="add-comment">
-                <textarea class="comment-input" placeholder="comment" />
-                <img
-                  @click="addComment"
-                  class="add-comment-btn"
-                  src="./assets/images/plus.svg"
-                />
-              </div>
-              <div
-                :key="comment.index"
-                v-for="comment in comments"
-                class="comment-wrapper"
-              >
-                <div class="top-box">
-                  <div class="writer">{{ comment.writer }}</div>
-                  <div class="element">{{ comment.element }}</div>
-                  <div class="time">{{ comment.time }}</div>
-                </div>
-                <div class="comment-text">{{ comment.text }}</div>
-              </div>
-            </div>
+        
           </div>
         </div>
         <div class="row bottom-panel">
@@ -179,7 +160,9 @@
                   <h1>dasd</h1>
                   <vue-ruler type="horizontal" ref="ruler"/>
                   --></div>
+
                 </div>
+                <div class="comment-text">{{ comment.text }}</div>
               </div>
               <div
                 v-show="tabStep === 2"
@@ -226,79 +209,16 @@
             >JavaScript</span
           >
         </div>
-        <!-- <div class="a-panel">
-          <div class="top-menu">
-            <div class="file-name" :key="title.index" v-for="title in titles">
-              <div @click="changePage" class="title">
-                {{ title.text }}
-              </div>
-              <img
-                @click="closePage"
-                class="close-icon"
-                src="./assets/images/close.svg"
-              />
-            </div>
-          
+        <div class="row bottom-panel">
+          <div v-show="isData" class="loadDataPanel">
+            <div @mousedown="loaderResize" class="loader-bord"></div>
+            <div class="studio-text-box">
+              <span class="studio-text">CodeReview</span>
 
-          <img
-            src="./assets/images/iphone.svg"
-            @click="resizeEditor"
-            class="iphone"
-            title="375 x 667"
-          />
-          <img
-            src="./assets/images/ipad.svg"
-            @click="resizeEditor"
-            class="ipad"
-            title="768 x 1024"
-          />
-          <img
-            src="./assets/images/monitor.svg"
-            @click="resizeEditor"
-            class="monitor"
-            title="992 x 687"
-          />
-          </div>
-        <div class="main-menu">
-          <div class="editor">
-            <home
-              ref="home"
-              @componentSelected="componentSelected"
-              @stack-push="stackPush"
-              @loadData="loadData"
-              class="home"
-            ></home>
-          </div>
-          <div v-if="isCommentOn" class="comment-board">
-            <div class="add-comment">
-              <textarea class="comment-input" placeholder="comment" />
-              <img
-                @click="addComment"
-                class="add-comment-btn"
-                src="./assets/images/plus.svg"
-              />
-            </div>
-            <div
-              :key="comment.index"
-              v-for="comment in comments"
-              class="comment-wrapper"
-            >
-              <div class="top-box">
-                <div class="writer">{{ comment.writer }}</div>
-                <div class="element">{{ comment.element }}</div>
-                <div class="time">{{ comment.time }}</div>
-              </div>
-              <div class="comment-text">{{ comment.text }}</div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-        <!-- <div class="bottom-panel"></div> -->
       </div>
       <div class="right-panel">
         <div class="right-top-panel">
-          <layout ref="layout" @manualSelet="manualSelet" @stick="layoutStick" class="layout" />
+          <layout ref="layout" @stick="layoutStick" class="layout" />
         </div>
         <div class="right-bottom-panel">
           <div class="tree-name-wrapper">
@@ -315,30 +235,20 @@
                 </div>
               </div>
             </div>
-            <div v-if="showhtml" class="htmlcontent" />
+            <overview
+              v-if="showhtml"
+              ref="overview"
+              @selectDomElement="selectDomElemented"
+              @inParentTreeOption="inParentTreeOption"
+              @domWithTree="domPushWithTree"
+              @close-overview="overviewBtn"
+              :getDocument="homeDocument"
+              class="htmlcontent"
+            />
             <div v-if="!showhtml" class="filecontent" />
           </div>
         </div>
-        <!-- <img
-        @click="layoutBtn"
-        id="codeBtnLayout"
-        class="layout-btn"
-        src="./assets/images/layout.svg"
-        title="layout"
-      />
-      <img
-        @click="codeBtn"
-        id="codeBtnFileList"
-        class="code-btn"
-        src="./assets/images/code.svg"
-        title="code-editor"
-      />
-      <img
-        @click="commentBtn"
-        class="comment-btn"
-        src="./assets/images/comment.svg"
-        title="comment"
-      /> -->
+
       </div>
     </div>
     <CodeLoader
@@ -349,15 +259,6 @@
       class="code-loader"
     ></CodeLoader>
 
-    <!-- <layout
-      v-show="layoutOn"
-      ref="layouts"
-      :payload="payload"
-      @userSelected="userSelectedWidth"
-      @userSelectBorder="userSelectBorder"
-      @selectDomElemented="selectDomElemented"
-      class="layout"
-    ></layout> -->
     <studio
       v-show="studioOn"
       @desc-close="tagNotSelected"
@@ -372,9 +273,11 @@
       v-show="sitemapOn"
       @copy-title="copyPage"
       @close-sitemap="sitemapBtn"
+      @reset-title="resetTitle"
+      @right-click="openSitemapContext"
       class="sitemap"
     />
-    <overview
+    <!-- <overview
       v-if="overviewOn"
       ref="overview"
       @selectDomElement="selectDomElemented"
@@ -383,9 +286,24 @@
       @close-overview="overviewBtn"
       :getDocument="homeDocument"
       class="overview"
-    ></overview>
+    ></overview> -->
 
     <div class="right-panel-border"></div>
+
+    <fileList
+      @newpage="newPage"
+      v-show="isFileTab"
+      class="filelist-tab list-tab"
+    />
+    <editList
+      @undo="undoWork"
+      @redo="redoWork"
+      v-show="isEditTab"
+      class="editlist-tab list-tab"
+    />
+    <saveList v-show="isSaveTab" class="savelist-tab list-tab" />
+    <settingList v-show="isSettingTab" class="settinglist-tab list-tab" />
+    <helpList v-show="isHelpTab" class="helplist-tab list-tab" />
 
     <span v-if="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
@@ -398,8 +316,13 @@
     <div v-if="viewTemplate" class="description-img">
       <img />
     </div>
-    <div v-if="isTitle" class="title-copy">
-      bb
+    <div v-if="isTitle" class="title-copy"></div>
+    <div v-if="isContextMenu" class="sitemapContext">
+      <div class="open">Open</div>
+      <div class="cut">Cut</div>
+      <div class="copy">Copy</div>
+      <div @click="rename" class="rename">Rename</div>
+      <div @click="deleteList" class="delete">Delete</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -408,9 +331,7 @@
 <script>
 //자
 import Vue from 'vue'
-// import Ruler from 'vue-component-ruler'
-// import Ruler from "@scena/vue-ruler";
-// import SlideRuler from 'slide-ruler';
+import Ruler from 'vue-component-ruler'
 import 'vue-component-ruler/dist/ruler.min.css'
 ///
 import htmlLoader from './components/htmlLoader'
@@ -422,7 +343,12 @@ import spliter from './sample/spliter'
 import Switches from 'vue-switches'
 import CodeLoader from './components/CodeLoader'
 import sitemap from './components/sitemap'
-// import SlideRuler from 'slide-ruler';
+import SlideRuler from 'slide-ruler'
+import fileList from './components/tabComponent/fileList'
+import editList from './components/tabComponent/editList'
+import saveList from './components/tabComponent/saveList'
+import settingList from './components/tabComponent/settingList'
+import helpList from './components/tabComponent/helpList'
 
 import MonacoEditor from 'monaco-editor-vue'
 
@@ -437,10 +363,14 @@ export default {
     Switches,
     CodeLoader,
     sitemap,
-    MonacoEditor
-    // Ruler,
-    // SlideRuler,
-    // 'vue-ruler': Ruler
+    MonacoEditor,
+    Ruler,
+    SlideRuler,
+    fileList,
+    editList,
+    saveList,
+    settingList,
+    helpList
   },
   props: ['selectDomElement'],
   name: 'App',
@@ -510,7 +440,9 @@ export default {
       commentTarget: null,
       titles: [
         {
-          text: 'Untitled'
+          text: 'Untitled',
+          id: '0',
+          parent_id: null
         }
       ],
       editorNum: 1,
@@ -526,7 +458,14 @@ export default {
       ],
       showhtml: true,
       layoutSticky: true,
-      treeMove: false
+      treeMove: false,
+      isFileTab: false,
+      isEditTab: false,
+      isSaveTab: false,
+      isSettingTab: false,
+      isHelpTab: false,
+      isContextMenu: false,
+      titleId: 0
     }
   },
   computed: {
@@ -541,6 +480,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.sitemap.loadSitemap(this.titles)
     let title = document.querySelector('.file-name')
     console.log(title)
     title.style.backgroundColor = 'rgb(78, 78, 92)'
@@ -550,9 +490,32 @@ export default {
     $(window).resize(() => {
       this.$refs.home.windowResized()
     })
+    document.addEventListener('click', e => {
+      if (e.button === 0) {
+        this.isContextMenu = false
+      }
+    })
+    document.addEventListener('mouseover', e => {
+      // console.log(e.target.classList[1])
+      let mouseoverTab = false
+      if (
+        e.target.classList[1] === 'menu-tab' ||
+        e.target.classList[1] === 'list-tab'
+      ) {
+        mouseoverTab = true
+      }
+      if (!mouseoverTab) {
+        this.isHelpTab = false
+        this.isFileTab = false
+        this.isEditTab = false
+        this.isSettingTab = false
+        this.isSaveTab = false
+      }
+    })
     document.addEventListener('keydown', e => {
       if (e.which === 17) {
         this.isCtrl = true
+        this.$refs.home.multiChoice(true)
       }
       if (e.which === 16) {
         this.isShift = true
@@ -650,6 +613,8 @@ export default {
       }
       if (this.isTitle) {
         this.isTitle = false
+        // console.log(e.target)
+        this.$refs.sitemap.movePosition(e.target)
       }
 
       if (this.treeMove) {
@@ -741,6 +706,107 @@ export default {
     this.hasht = h
   },
   methods: {
+    deleteList() {
+      this.$refs.sitemap.deleteTitle()
+      // this.closePage()
+    },
+    resetTitle(titles) {
+      console.log('reset')
+      this.titles = titles
+      // console.log(this.titles)
+      let topMenu = document.querySelector('.top-menu')
+    },
+    rename() {
+      this.$refs.sitemap.renameTitle()
+    },
+    openSitemapContext(e) {
+      if (this.isContextMenu) {
+        this.isContextMenu = false
+      } else {
+        this.isContextMenu = true
+        this.$nextTick(() => {
+          let context = document.querySelector('.sitemapContext')
+          console.log(context)
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+        })
+      }
+    },
+    helpTab(e) {
+      this.isHelpTab = true
+      this.isFileTab = false
+      this.isEditTab = false
+      this.isSettingTab = false
+      this.isSaveTab = false
+      this.$nextTick(() => {
+        let helptab = document.querySelector('.helplist-tab')
+        helptab.style.left = e.target.getBoundingClientRect().left + 'px'
+        helptab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    settingTab(e) {
+      this.isSettingTab = true
+      this.isFileTab = false
+      this.isEditTab = false
+      this.isSaveTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let settingtab = document.querySelector('.settinglist-tab')
+        settingtab.style.left = e.target.getBoundingClientRect().left + 'px'
+        settingtab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    saveTab(e) {
+      this.isSaveTab = true
+      this.isFileTab = false
+      this.isEditTab = false
+      this.isSettingTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let savetab = document.querySelector('.savelist-tab')
+        savetab.style.left = e.target.getBoundingClientRect().left + 'px'
+        savetab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    editTab(e) {
+      this.isEditTab = true
+      this.isFileTab = false
+      this.isSaveTab = false
+      this.isSettingTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let edittab = document.querySelector('.editlist-tab')
+        edittab.style.left = e.target.getBoundingClientRect().left + 'px'
+        edittab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
+    fileTab(e) {
+      this.isFileTab = true
+      this.isEditTab = false
+      this.isSaveTab = false
+      this.isSettingTab = false
+      this.isHelpTab = false
+      this.$nextTick(() => {
+        let filetab = document.querySelector('.filelist-tab')
+        filetab.style.left = e.target.getBoundingClientRect().left + 'px'
+        filetab.style.top =
+          e.target.getBoundingClientRect().top +
+          e.target.getBoundingClientRect().height +
+          'px'
+      })
+    },
     changeTab(e) {
       let trees = document.querySelectorAll('.tree-name')
       console.log(trees)
@@ -840,12 +906,20 @@ export default {
     copyPage(payload) {
       this.isTitle = true
       this.copyTitle = payload.target
+      this.$nextTick(() => {
+        let copy = document.querySelector('.title-copy')
+        // console.log(this.copyTitle)
+        copy.textContent = this.copyTitle.textContent
+        copy.style.left = payload.clientX + 10 + 'px'
+        copy.style.top = payload.clientY + 10 + 'px'
+      })
     },
     sitemapBtn() {
       if (this.sitemapOn === true) {
         this.sitemapOn = false
       } else {
         this.sitemapOn = true
+        this.studioOn = false
       }
     },
     closePage(e) {
@@ -902,7 +976,9 @@ export default {
     },
     newPage(e) {
       let payload = {
-        text: 'aaa'
+        text: `${this.titleId}`,
+        id: `${++this.titleId}`,
+        parentID: null
       }
       this.titles.push(payload)
       let editor = document.querySelector('.board')
@@ -1235,7 +1311,6 @@ export default {
         // 읽기
         var reader = new FileReader()
         reader.readAsText(fileList[0])
-
         //로드 한 후
         reader.onload = function() {
           document.querySelector('#preview').textContent = reader.result
@@ -1324,7 +1399,8 @@ export default {
   .studio {
     width: 20rem;
     height: 30rem;
-    border: 1.5px solid #000000;
+    // border: 1.5px solid #000000;
+    box-shadow: 5px 5px 5px 1px #000000;
     position: fixed;
     left: 3.5%;
     background-color: #32373a;
@@ -1339,6 +1415,7 @@ export default {
     border: 1.5px solid #000000;
     position: fixed;
     left: 3.5%;
+    padding: 0;
     background-color: #32373a;
     top: 3.5%;
   }
@@ -1348,7 +1425,7 @@ export default {
     border: 1.5px solid #000000;
     position: fixed;
     left: 3.5%;
-    background-color: #32373a;
+    background-color: #292931;
     z-index: 30;
     top: 3.5%;
   }
@@ -1360,15 +1437,30 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: row;
-    color: #fff;
+    color: #d6d5d5;
     .Logo,
     .File,
     .Edit,
     .Save,
     .Setting,
     .Help {
-      margin-right: 0.6rem;
-      margin-left: 0.6rem;
+      // margin-right: 0.6rem;
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+      cursor: default;
+      // margin-left: 0.6rem;
+      // width: 4rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .File,
+    .Edit,
+    .Save,
+    .Setting,
+    .Help {
+      &:hover {
+        background-color: #535363;
+      }
     }
     // height: 6%;
     // background-color: #3c474c;
@@ -1403,60 +1495,60 @@ export default {
         background-color: #616c72;
       }
     }
-    .undo-box,
-    .redo-box,
-    .new-box,
-    .open-box,
-    .save-box,
-    .export-box,
-    .setting-box {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 0.2rem;
-      margin-right: 1rem;
-      font-size: 0.9rem;
-      border-radius: 0.3rem;
-      .undo,
-      .redo,
-      .new,
-      .open,
-      .save,
-      .export,
-      .setting {
-        cursor: pointer;
-        height: 1.2rem;
-        margin-right: 0.5rem;
-      }
-      .undo-text,
-      .redo-text,
-      .new-text,
-      .open-text,
-      .save-text,
-      .export-text,
-      .setting-text {
-        cursor: pointer;
-        color: #fff;
-      }
-      &:hover {
-        background-color: #616c72;
-      }
-    }
-    .new-box {
-      margin-left: 1rem;
-    }
-    .undo-box {
-      .undo {
-        -moz-transform: scaleX(-1);
-        -o-transform: scaleX(-1);
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-        cursor: pointer;
-        margin-right: 0.5rem;
-        height: 1.2rem;
-      }
-    }
+    // .undo-box,
+    // .redo-box,
+    // .new-box,
+    // .open-box,
+    // .save-box,
+    // .export-box,
+    // .setting-box {
+    //   display: flex;
+    //   flex-direction: row;
+    //   justify-content: center;
+    //   align-items: center;
+    //   padding: 0.2rem;
+    //   margin-right: 1rem;
+    //   font-size: 0.9rem;
+    //   border-radius: 0.3rem;
+    //   .undo,
+    //   .redo,
+    //   .new,
+    //   .open,
+    //   .save,
+    //   .export,
+    //   .setting {
+    //     cursor: pointer;
+    //     height: 1.2rem;
+    //     margin-right: 0.5rem;
+    //   }
+    //   .undo-text,
+    //   .redo-text,
+    //   .new-text,
+    //   .open-text,
+    //   .save-text,
+    //   .export-text,
+    //   .setting-text {
+    //     cursor: pointer;
+    //     color: #fff;
+    //   }
+    //   &:hover {
+    //     background-color: #616c72;
+    //   }
+    // }
+    // .new-box {
+    //   margin-left: 1rem;
+    // }
+    // .undo-box {
+    //   .undo {
+    //     -moz-transform: scaleX(-1);
+    //     -o-transform: scaleX(-1);
+    //     -webkit-transform: scaleX(-1);
+    //     transform: scaleX(-1);
+    //     cursor: pointer;
+    //     margin-right: 0.5rem;
+    //     height: 1.2rem;
+    //   }
+    // }
   }
   .main-panel {
     width: 100%;
@@ -1518,8 +1610,8 @@ export default {
         width: 100%;
         height: 30rem;
         .layout {
-          overflow: auto;
-          border: 1px solid black;
+          // overflow: auto;
+          border: 1px solid #525252;
           width: 100%;
           height: 100%;
           background-color: #292931;
@@ -1534,8 +1626,8 @@ export default {
         flex-direction: column;
         .tree-name-wrapper {
           width: 100%;
-          height: 24.8rem;
-          border: 1px solid black;
+          height: 100%;
+          border: 1px solid #525252;
           // border-top : none;
           .tree-name-box {
             background-color: #292931;
@@ -1574,9 +1666,13 @@ export default {
             }
           }
           .htmlcontent {
-            overflow: auto;
-            background-color: red;
+            // background-color: red;
+            padding: 0;
+            overflow: auto; // custom 바꾸기
+
             width: 100%;
+            border-top: 1px solid #525252;
+            border-bottom: 1px solid #525252;
             height: 22.8rem;
           }
           .filecontent {
@@ -1668,14 +1764,13 @@ export default {
           display: flex;
           flex-direction: row;
           overflow: hidden;
-
           .home {
             width: 100%;
             height: 100%;
-            border: 3px solid #545e66;
+            // border: 3px solid #545e66;
             display: flex;
             align-items: center;
-            overflow: auto;
+            // overflow: auto;
             justify-content: center;
           }
           .hidden {
@@ -1727,7 +1822,36 @@ export default {
   //   z-index: 12;
   //   top: 6%;
   // }
-
+  .filelist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .editlist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .savelist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .settinglist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
+  .helplist-tab {
+    position: fixed;
+    top: 3.5%;
+    z-index: 50;
+    // left: 10rem;
+  }
   .description-tag,
   .description-ui {
     background-color: #000;
@@ -1778,6 +1902,27 @@ export default {
   }
   .bottom-panel {
     width: 92%;
+  }
+  .sitemapContext {
+    position: fixed;
+    width: 10rem;
+    background-color: #34343c;
+    box-shadow: 5px 5px 5px 1px #000000;
+    z-index: 100;
+    .open,
+    .cut,
+    .copy,
+    .rename,
+    .delete {
+      width: 100%;
+      padding-top: 0.2rem;
+      color: #fff;
+      padding-bottom: 0.2rem;
+      &:hover {
+        cursor: pointer;
+        background-color: #4b4b57;
+      }
+    }
   }
 
   .fileTitle {
@@ -1840,13 +1985,6 @@ export default {
       top: 0.4rem;
       cursor: pointer;
       position: absolute;
-    }
-  }
-
-  .editor-component {
-    .board {
-      width: 100%;
-      height: 35rem;
     }
   }
 }

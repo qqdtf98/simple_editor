@@ -1,26 +1,34 @@
 <template>
   <div id="dashboard">
     <div class="editor-box">
-      <div
-        @mouseup="onmouserightClick"
-        @keydown.enter="isContentNotEditable"
-        ref="dash"
-        class="editor-component"
-        :contenteditable="isContentEditable"
-        @dblclick="onmouseDoubleClick"
-        @click="onmouseClick"
-        @mousemove="onmouseMove"
-        @mousedown="mousedown"
+      <vue-custom-scrollbar
+        @ps-scroll-y="handleScroll"
+        @ps-scroll-x="handleScroll"
+        class="scroll-area"
       >
-        <div @scroll="handleScroll" class="board">
-          <Dashboard /> -->
-          <!-- <ss /> -->
+        <div
+          @mouseup="onmouserightClick"
+          @keydown.enter="isContentNotEditable"
+          ref="dash"
+          class="editor-component"
+          :contenteditable="isContentEditable"
+          @dblclick="onmouseDoubleClick"
+          @click="onmouseClick"
+          @mousemove="onmouseMove"
+          @mousedown="mousedown"
+        >
+          <div class="board">
+            <Dashboard />
+            <Dashboard />
+            <Dashboard />
+            <!-- <ss /> -->
 
-          <spliter />
-          <HtmlLoader class="navi" />
-          <Navi class="navi" />
+            <spliter />
+            <HtmlLoader class="navi" />
+            <Navi class="navi" />
+          </div>
         </div>
-      </div>
+      </vue-custom-scrollbar>
     </div>
 
     <div class="selector-box">
@@ -99,9 +107,18 @@ import HtmlLoader from './htmlLoader.vue'
 import spliter from '../sample/spliter.vue'
 import Context from '../sample/Context'
 import ss from '../sample/ss'
+import vueCustomScrollbar from 'vue-custom-scrollbar'
 
 export default {
-  components: { Dashboard, Navi, HtmlLoader, spliter, Context, ss },
+  components: {
+    Dashboard,
+    Navi,
+    HtmlLoader,
+    spliter,
+    Context,
+    ss,
+    vueCustomScrollbar
+  },
   data() {
     return {
       selectedElement: null,
@@ -144,7 +161,8 @@ export default {
       mouseRightClick: false,
       size: null,
       targetText: null,
-      editElem: null
+      editElem: null,
+      multiSelect: null
     }
   },
   mounted() {
@@ -383,6 +401,9 @@ export default {
     })
   },
   methods: {
+    multiChoice(mode) {
+      this.multiSelect = true
+    },
     commentMode() {
       this.mouseRightClick = false
       this.$emit('comment', this.clickedElement)
@@ -437,52 +458,581 @@ export default {
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            // let dashWrapper = document.querySelector('.navi')
-            // let scrollBottomHeight =
-            //   dashboardElem.getBoundingClientRect().height -
-            //   dashWrapper.getBoundingClientRect().height
-            topBord.style.left = this.selectedElement.left + 'px'
-            topBord.style.top = this.selectedElement.top + 'px'
-            topBord.style.width = this.selectedElement.width + 'px'
-            // bottomBord.style.display = 'none'?
-            leftBord.style.left = this.selectedElement.left + 'px'
-            leftBord.style.top = this.selectedElement.top + 'px'
-            leftBord.style.height = this.selectedElement.height + 'px'
-            rightBord.style.left =
-              this.selectedElement.left + this.selectedElement.width - 2 + 'px'
-            rightBord.style.top = this.selectedElement.top + 'px'
-            rightBord.style.height = this.selectedElement.height + 'px'
-            bottomBord.style.left = this.selectedElement.left + 'px'
-            bottomBord.style.top =
-              this.selectedElement.top + this.selectedElement.height - 2 + 'px'
-            bottomBord.style.width = this.selectedElement.width + 'px'
+            let editorBox = document.querySelector('.editor-box')
+
+            let leftOver = false
+            let rightOver = false
+            let bottomOver = false
+            let topOver = false
+
+            if (
+              e.target.getBoundingClientRect().left <
+              editorBox.getBoundingClientRect().left
+            ) {
+              leftOver = true
+            }
+            if (
+              e.target.getBoundingClientRect().right >
+              editorBox.getBoundingClientRect().right
+            ) {
+              rightOver = true
+            }
+            if (
+              e.target.getBoundingClientRect().top <
+              editorBox.getBoundingClientRect().top
+            ) {
+              topOver = true
+            }
+            if (
+              e.target.getBoundingClientRect().bottom >
+              editorBox.getBoundingClientRect().bottom
+            ) {
+              bottomOver = true
+            }
+            if (leftOver && topOver && !rightOver && !bottomOver) {
+              // left, top 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              topBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              rightBord.style.left =
+                this.selectedElement.left +
+                this.selectedElement.width -
+                2 +
+                'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                2 +
+                'px'
+              // 1
+            } else if (!leftOver && topOver && !rightOver && !bottomOver) {
+              // top 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'block'
+              topBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              rightBord.style.left =
+                this.selectedElement.left +
+                this.selectedElement.width -
+                2 +
+                'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+              // 2
+            } else if (!leftOver && topOver && rightOver && !bottomOver) {
+              // right, top 벗어날 때
+              tag.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              leftBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                2 +
+                'px'
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+              // 3
+            } else if (!leftOver && !topOver && rightOver && !bottomOver) {
+              // right 벗어날 때
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+              // 4
+            } else if (!leftOver && !topOver && rightOver && bottomOver) {
+              // right, bottom 벗어날 때
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                2 +
+                'px'
+              // 5
+            } else if (!leftOver && !topOver && !rightOver && bottomOver) {
+              // bottom 벗어날 때
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width = this.selectedElement.width + 2 + 'px'
+              // 6
+            } else if (leftOver && !topOver && !rightOver && bottomOver) {
+              // left, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                2 +
+                'px'
+
+              topBord.style.left = editorBox.getBoundingClientRect().left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) +
+                2 +
+                'px'
+              // 7
+            } else if (leftOver && !topOver && !rightOver && !bottomOver) {
+              // left, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+
+              topBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) +
+                1 +
+                'px'
+
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top + this.selectedElement.height + 'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) +
+                1 +
+                'px'
+              // 8
+            } else if (leftOver && !topOver && rightOver && !bottomOver) {
+              // left, right 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+
+              topBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                6 +
+                'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+              // 9
+            } else if (!leftOver && topOver && !rightOver && bottomOver) {
+              // top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+              // 10
+            } else if (leftOver && topOver && !rightOver && bottomOver) {
+              // left, top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'block'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+
+              rightBord.style.left =
+                this.selectedElement.left + this.selectedElement.width + 'px'
+              rightBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+              // 11
+            } else if (leftOver && topOver && rightOver && !bottomOver) {
+              // left, top, right 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'block'
+
+              bottomBord.style.left =
+                editorBox.getBoundingClientRect().left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top + this.selectedElement.height + 'px'
+              bottomBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+              // 12
+            } else if (!leftOver && topOver && rightOver && bottomOver) {
+              // right, top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'block'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top =
+                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.height =
+                this.selectedElement.height -
+                (editorBox.getBoundingClientRect().top -
+                  this.selectedElement.top) -
+                (this.selectedElement.bottom -
+                  editorBox.getBoundingClientRect().bottom) -
+                4 +
+                'px'
+              // 13
+            } else if (leftOver && !topOver && rightOver && bottomOver) {
+              // right, top, bottom 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'block'
+              bottomBord.style.display = 'none'
+
+              topBord.style.left =
+                editorBox.getBoundingClientRect().left + 2 + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width =
+                this.selectedElement.width -
+                (editorBox.getBoundingClientRect().left -
+                  this.selectedElement.left) -
+                (this.selectedElement.right -
+                  editorBox.getBoundingClientRect().right) -
+                4 +
+                'px'
+              // 14
+            } else if (leftOver && topOver && rightOver && bottomOver) {
+              // 사방 벗어날 때
+              tag.style.display = 'none'
+              leftBord.style.display = 'none'
+              rightBord.style.display = 'none'
+              topBord.style.display = 'none'
+              bottomBord.style.display = 'none'
+              // 14
+            } else {
+              tag.style.display = 'block'
+              leftBord.style.display = 'block'
+              topBord.style.display = 'block'
+              rightBord.style.display = 'block'
+              bottomBord.style.display = 'block'
+              topBord.style.left = this.selectedElement.left + 'px'
+              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.width = this.selectedElement.width + 'px'
+              // bottomBord.style.display = 'none'?
+              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.height = this.selectedElement.height + 'px'
+              rightBord.style.left =
+                this.selectedElement.left +
+                this.selectedElement.width -
+                2 +
+                'px'
+              rightBord.style.top = this.selectedElement.top + 'px'
+              rightBord.style.height = this.selectedElement.height + 'px'
+              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.top =
+                this.selectedElement.top +
+                this.selectedElement.height -
+                2 +
+                'px'
+              bottomBord.style.width = this.selectedElement.width + 'px'
+            }
           }
         }
       }
     },
     onmouseClick(e) {
-      this.mouseRightClick = false
-      if (this.clickedElement === null) {
-        if (
-          e.target.className !== 'tagname' &&
-          e.target.className !== 'home' &&
-          e.target.className !== 'editor-component'
-        ) {
-          this.$store.state.counter = e
-          this.$emit('componentSelected', this.$store.state.counter)
+      if (this.multiSelect) {
+        console.log(e.target)
+        console.log('multi')
+      } else {
+        this.mouseRightClick = false
+        if (this.clickedElement === null) {
+          if (
+            e.target.className !== 'tagname' &&
+            e.target.className !== 'home' &&
+            e.target.className !== 'editor-component'
+          ) {
+            this.$store.state.counter = e
+            this.$emit('componentSelected', this.$store.state.counter)
 
-          this.clickedElement = e.target
+            this.clickedElement = e.target
 
-          this.clickedBorder = getComputedStyle(e.target).border
-          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-          e.target.style.border = '3px dashed #f75c51'
-          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
+            this.clickedBorder = getComputedStyle(e.target).border
+            this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+            e.target.style.border = '3px dashed #f75c51'
+            e.target.style.borderRadius = getComputedStyle(
+              e.target
+            ).borderRadius
 
-          this.isContentClicked = true
-          this.isContentRemovable = true
-          this.isContentCopied = true
+            this.isContentClicked = true
+            this.isContentRemovable = true
+            this.isContentCopied = true
 
-          this.$nextTick(() => {
+            this.$nextTick(() => {
+              // eslint-disable-next-line camelcase
+              let left_line = document.querySelector('.boundary-line-left')
+              // eslint-disable-next-line camelcase
+              let right_line = document.querySelector('.boundary-line-right')
+              // eslint-disable-next-line camelcase
+              let top_line = document.querySelector('.boundary-line-top')
+              // eslint-disable-next-line camelcase
+              let bottom_line = document.querySelector('.boundary-line-bottom')
+              this.elem = e.target.getBoundingClientRect()
+
+              this.$nextTick(() => {
+                bottom_line.style.left = this.elem.left + 'px'
+                bottom_line.style.top =
+                  this.elem.top + this.elem.height - 1 + 'px'
+                bottom_line.style.width = this.elem.width + 'px'
+                top_line.style.left = this.elem.left + 'px'
+                top_line.style.top = this.elem.top + 1 + 'px'
+                top_line.style.width = this.elem.width + 'px'
+                left_line.style.left = this.elem.left - 1 + 'px'
+                left_line.style.top = this.elem.top + 'px'
+                left_line.style.height = this.elem.width + 'px'
+                right_line.style.left =
+                  this.elem.left + this.elem.width - 1 + 'px'
+                right_line.style.top = this.elem.top + 'px'
+                right_line.style.height = this.elem.width + 'px'
+              })
+            })
+
+            this.$nextTick(() => {
+              let move = document.querySelector('.move-icon')
+              move.style.left = this.elem.left + 'px'
+              move.style.top =
+                this.elem.top - move.getBoundingClientRect().height + 'px'
+              let deleteIcon = document.querySelector('.delete-icon')
+              deleteIcon.style.left =
+                this.elem.left + move.getBoundingClientRect().width * 2 + 'px'
+              deleteIcon.style.top =
+                this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+              let copyIcon = document.querySelector('.copy-icon')
+              copyIcon.style.left =
+                this.elem.left + move.getBoundingClientRect().width + 'px'
+              copyIcon.style.left =
+                this.elem.top - copyIcon.getBoundingClientRect().height + 'px'
+            })
+          }
+        } else if (this.clickedElement !== e.target) {
+          if (
+            e.target.className !== 'tagname' &&
+            e.target.className !== 'home' &&
+            e.target.className !== 'editor-component'
+          ) {
+            this.$store.state.counter = e
+            this.$emit('componentSelected', this.$store.state.counter)
+            this.isContentClicked = true
+            this.isContentRemovable = true
+            this.isContentCopied = true
+
+            this.clickedElement.style.border = this.clickedBorder
+            this.clickedElement.style.borderRadius = this.clickedBorderRadius
+            this.clickedElement = e.target
+            this.clickedBorder = getComputedStyle(e.target).border
+            this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
+            e.target.style.border = '3px dashed #f75c51'
+            e.target.style.borderRadius = getComputedStyle(
+              e.target
+            ).borderRadius
+
             // eslint-disable-next-line camelcase
             let left_line = document.querySelector('.boundary-line-left')
             // eslint-disable-next-line camelcase
@@ -491,127 +1041,65 @@ export default {
             let top_line = document.querySelector('.boundary-line-top')
             // eslint-disable-next-line camelcase
             let bottom_line = document.querySelector('.boundary-line-bottom')
+            // eslint-disable-next-line camelcase
+
             this.elem = e.target.getBoundingClientRect()
+            top_line.style.left = this.elem.left + 'px'
+            top_line.style.top = this.elem.top + 1 + 'px'
+            top_line.style.width = this.elem.width + 'px'
+            bottom_line.style.left = this.elem.left + 'px'
+            bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
+            bottom_line.style.width = this.elem.width + 'px'
+            left_line.style.left = this.elem.left - 1 + 'px'
+            left_line.style.top = this.elem.top + 'px'
+            left_line.style.height = this.elem.width + 'px'
+            right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
+            right_line.style.top = this.elem.top + 'px'
+            right_line.style.height = this.elem.width + 'px'
+
+            this.isContentClicked = true
+            this.isContentRemovable = true
+            this.isContentCopied = true
 
             this.$nextTick(() => {
-              bottom_line.style.left = this.elem.left + 'px'
-              bottom_line.style.top =
-                this.elem.top + this.elem.height - 1 + 'px'
-              bottom_line.style.width = this.elem.width + 'px'
-              top_line.style.left = this.elem.left + 'px'
-              top_line.style.top = this.elem.top + 1 + 'px'
-              top_line.style.width = this.elem.width + 'px'
-              left_line.style.left = this.elem.left - 1 + 'px'
-              left_line.style.top = this.elem.top + 'px'
-              left_line.style.height = this.elem.width + 'px'
-              right_line.style.left =
-                this.elem.left + this.elem.width - 1 + 'px'
-              right_line.style.top = this.elem.top + 'px'
-              right_line.style.height = this.elem.width + 'px'
+              this.elem = e.target.getBoundingClientRect()
+              let moveIcon = document.querySelector('.move-icon')
+              moveIcon.style.left = this.elem.left + 'px'
+              moveIcon.style.top =
+                this.elem.top - moveIcon.getBoundingClientRect().height + 'px'
+
+              let deleteIcon = document.querySelector('.delete-icon')
+              deleteIcon.style.left =
+                this.elem.left +
+                parseInt(getComputedStyle(moveIcon).width) * 2 +
+                'px'
+              deleteIcon.style.top =
+                this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+
+              let copyIcon = document.querySelector('.copy-icon')
+              copyIcon.style.left =
+                this.elem.left +
+                parseInt(getComputedStyle(moveIcon).widht) +
+                'px'
+              copyIcon.style.top =
+                this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
             })
-          })
-
-          this.$nextTick(() => {
-            let move = document.querySelector('.move-icon')
-            move.style.left = this.elem.left + 'px'
-            move.style.top =
-              this.elem.top - move.getBoundingClientRect().height + 'px'
-            let deleteIcon = document.querySelector('.delete-icon')
-            deleteIcon.style.left =
-              this.elem.left + move.getBoundingClientRect().width * 2 + 'px'
-            deleteIcon.style.top =
-              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
-            let copyIcon = document.querySelector('.copy-icon')
-            copyIcon.style.left =
-              this.elem.left + move.getBoundingClientRect().width + 'px'
-            copyIcon.style.left =
-              this.elem.top - copyIcon.getBoundingClientRect().height + 'px'
-          })
+          }
+        } else {
+          if (
+            e.target.className !== 'tagname' &&
+            e.target.className !== 'home' &&
+            e.target.className !== 'editor-component'
+          ) {
+            this.$emit('componentSelected', e)
+          }
         }
-      } else if (this.clickedElement !== e.target) {
-        if (
-          e.target.className !== 'tagname' &&
-          e.target.className !== 'home' &&
-          e.target.className !== 'editor-component'
-        ) {
-          this.$store.state.counter = e
-          this.$emit('componentSelected', this.$store.state.counter)
-          this.isContentClicked = true
-          this.isContentRemovable = true
-          this.isContentCopied = true
-
-          this.clickedElement.style.border = this.clickedBorder
-          this.clickedElement.style.borderRadius = this.clickedBorderRadius
-          this.clickedElement = e.target
-          this.clickedBorder = getComputedStyle(e.target).border
-          this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-          e.target.style.border = '3px dashed #f75c51'
-          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
-
-          // eslint-disable-next-line camelcase
-          let left_line = document.querySelector('.boundary-line-left')
-          // eslint-disable-next-line camelcase
-          let right_line = document.querySelector('.boundary-line-right')
-          // eslint-disable-next-line camelcase
-          let top_line = document.querySelector('.boundary-line-top')
-          // eslint-disable-next-line camelcase
-          let bottom_line = document.querySelector('.boundary-line-bottom')
-          // eslint-disable-next-line camelcase
-
-          this.elem = e.target.getBoundingClientRect()
-          top_line.style.left = this.elem.left + 'px'
-          top_line.style.top = this.elem.top + 1 + 'px'
-          top_line.style.width = this.elem.width + 'px'
-          bottom_line.style.left = this.elem.left + 'px'
-          bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
-          bottom_line.style.width = this.elem.width + 'px'
-          left_line.style.left = this.elem.left - 1 + 'px'
-          left_line.style.top = this.elem.top + 'px'
-          left_line.style.height = this.elem.width + 'px'
-          right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
-          right_line.style.top = this.elem.top + 'px'
-          right_line.style.height = this.elem.width + 'px'
-
-          this.isContentClicked = true
-          this.isContentRemovable = true
-          this.isContentCopied = true
-
-          this.$nextTick(() => {
-            this.elem = e.target.getBoundingClientRect()
-            let moveIcon = document.querySelector('.move-icon')
-            moveIcon.style.left = this.elem.left + 'px'
-            moveIcon.style.top =
-              this.elem.top - moveIcon.getBoundingClientRect().height + 'px'
-
-            let deleteIcon = document.querySelector('.delete-icon')
-            deleteIcon.style.left =
-              this.elem.left +
-              parseInt(getComputedStyle(moveIcon).width) * 2 +
-              'px'
-            deleteIcon.style.top =
-              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
-
-            let copyIcon = document.querySelector('.copy-icon')
-            copyIcon.style.left =
-              this.elem.left + parseInt(getComputedStyle(moveIcon).widht) + 'px'
-            copyIcon.style.top =
-              this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
-          })
+        if (this.mode) {
+          // console.log(getComputedStyle(this.clickedElement).flexWrap)
+          this.clickedElement.style.display = 'flex'
+          this.clickedElement.style.flexWrap = 'wrap'
+          // console.log(getComputedStyle(this.clickedElement).flexWrap)
         }
-      } else {
-        if (
-          e.target.className !== 'tagname' &&
-          e.target.className !== 'home' &&
-          e.target.className !== 'editor-component'
-        ) {
-          this.$emit('componentSelected', e)
-        }
-      }
-      if (this.mode) {
-        // console.log(getComputedStyle(this.clickedElement).flexWrap)
-        this.clickedElement.style.display = 'flex'
-        this.clickedElement.style.flexWrap = 'wrap'
-        // console.log(getComputedStyle(this.clickedElement).flexWrap)
       }
     },
     styleChanged(data) {
@@ -1173,17 +1661,22 @@ export default {
   .editor-box {
     width: 100%;
     height: 100%;
+    border: 3px solid #545e66;
     // display:table
     // overflow: auto;
     scroll-behavior: smooth;
-
-    .editor-component {
-      // overflow: auto;
+    .scroll-area {
+      width: 100%;
       height: 100%;
-      .board {
-        overflow: auto;
+      .editor-component {
+        // overflow: auto;
         height: 100%;
-        border: 1px solid #000000;
+
+        .board {
+          // overflow: auto;
+          // height: 120%;
+          // border: 1px solid #000000;
+        }
       }
     }
   }
@@ -1219,7 +1712,7 @@ export default {
       padding: 0.2rem;
       position: fixed;
       z-index: 10;
-      background-color: #3e8ce4;
+      background-color: #27e460;
       border-radius: 0.4rem;
       font-size: 0.8rem;
     }
@@ -1230,18 +1723,18 @@ export default {
     .bottom-border,
     .top-border {
       width: 100%;
-      height: 4px;
+      height: 3px;
       position: fixed;
       // z-index:
-      background-color: #3e8ce4;
+      background-color: #27e460;
       // overflow: auto !important;
     }
     .right-border,
     .left-border {
       height: 100%;
-      width: 4px;
+      width: 3px;
       position: fixed;
-      background-color: #3e8ce4;
+      background-color: #27e460;
     }
   }
   .move-icon {

@@ -14,6 +14,7 @@
         </div>
       </div>
     </div>
+     <vue-custom-scrollbar class="scroll-area">
     <div class="layout-box">
       <ul
         class="nav nav-tabs mb-3"
@@ -65,27 +66,22 @@
               class="card-header"
               @click="clickLayoutTab"
               role="tab"
-              id="headingOne"
+              aria-controls="pills-home"
+              aria-selected="false"
+              >Look & Feel</a
             >
-              <h5 class="mb-0">
-                <a
-                  class="title"
-                  data-toggle="collapse"
-                  href="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
-                >
-                  layout
-                </a>
-              </h5>
-            </div>
-            <div
-              id="collapseOne"
-              class="collapse"
-              v-bind:class="{ show: layoutTab === 1 }"
-              role="tabpanel"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link "
+              v-bind:class="{ active: tabStep === 2 }"
+              id="pills-profile-tab"
+              data-toggle="pill"
+              href="#pills-profile"
+              role="tab"
+              aria-controls="pills-profile"
+              aria-selected="false"
+              >Options</a
             >
               <div class="card-body">
                 <div class="margin">
@@ -216,10 +212,10 @@
                     @keyup.enter="submitSourceWithPX"
                     v-model="componentSorce.padding"
                   />
+
                 </div>
               </div>
             </div>
-          </div>
 
           <div class="card">
             <div
@@ -315,6 +311,7 @@
                   ></b-button>
                 </div>
                 <!--
+
                   <input
                   type
                   name="backgroundColor"
@@ -361,10 +358,10 @@
                     @change="submitChangeImageSize"
                   ></b-form-select>
                   <!--<button @click="onUpload">Save</button>-->
+
                 </div>
               </div>
             </div>
-          </div>
 
           <div class="card">
             <div
@@ -542,10 +539,10 @@
                       #5555ff,
                       #ff5959); !important"
                   ></b-button>
+
                 </div>
               </div>
             </div>
-          </div>
 
           <div class="card">
             <div
@@ -954,12 +951,13 @@
                   id="ApplyAM"
                   @click="testAnimation"
                 ></b-button>
+
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
 
@@ -969,6 +967,8 @@ import { Chrome } from 'vue-color'
 import { mapGetters, mapMutations } from 'vuex'
 import Switches from 'vue-switches'
 import 'vue-range-slider/dist/vue-range-slider.css'
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
   data() {
     return {
@@ -1234,7 +1234,8 @@ export default {
   components: {
     RangeSlider,
     ChromeColor: VueColor.Chrome,
-    Switches
+    Switches,
+    vueCustomScrollbar
   },
   created() {},
   computed: {
@@ -1713,7 +1714,12 @@ export default {
   float: right;
 }
 .layout-box {
-  overflow: auto;
+  // overflow: auto;
+  width: 100%;
+  height: 100%;
+}
+.scroll-area {
+  height: 93%;
 }
 .dsadsadsad {
   color: white !important;
@@ -1951,7 +1957,7 @@ b {
     // display: flex;
     // flex-direction: column;
     padding: 0.4rem;
-    overflow: auto;
+    // overflow: auto;
   }
 }
 .Picker {

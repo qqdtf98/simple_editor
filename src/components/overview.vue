@@ -1,18 +1,20 @@
 <template>
   <div class="container">
-    <div class="overview-text">Overview</div>
-    <img @click="closeOverview" class="close-btn" src="../assets/images/close.svg" />
-    <ul class="acol" >
-      <li>
-        <input class="checkbox" type="checkbox" id="root" />
-        <label for="root">HTML</label>
-        <ul>
-          <li>
-            <input class="checkbox" type="checkbox" id="node3" />
-            <label for="node3">Body</label>
-            <ul id="bodySource" @mousemove="onmouseMove" @click="clickLabelEvent">
-
-              <!--
+    <div class="overview-box">
+      <ul class="acol">
+        <li>
+          <input class="checkbox" type="checkbox" id="root" />
+          <label for="root">HTML</label>
+          <ul>
+            <li>
+              <input class="checkbox" type="checkbox" id="node3" />
+              <label for="node3">Body</label>
+              <ul
+                id="bodySource"
+                @mousemove="onmouseMove"
+                @click="clickLabelEvent"
+              >
+                <!--
 
               <li id="aa">
                 <input class="checkbox" type="checkbox" id="node4" />
@@ -32,39 +34,41 @@
                 <ul id="aaaa"></ul>
               </li>
 
-              -->
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
+              --></ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 <script>
 export default {
   props: ['getDocument'],
 
-  data () {
+  data() {
     return {
       tags: [],
       dom: [],
       childNum: 10000,
       friendNum: 0,
       isActiveLabel: [],
-      myParent: []
-
+      myParent: [],
+      overviewMove: false,
+      isStickOverview: false,
+      xInter: 0,
+      yInter: 0,
+      moveTarget
     }
   },
 
-  created () {
-
-  },
-
+  created() {},
+  mounted() {},
   methods: {
-    closeOverview(){
+    closeOverview() {
       this.$emit('close-overview')
     },
-    printHomeDocument () {
+    printHomeDocument() {
       // console.log(this.getDocument)
       // console.log(document.body.children)
       // console.log(document.body.children[0].firstElementChild )
@@ -87,7 +91,7 @@ export default {
       // console.log(child)
       for (var i = 0; i < child.length; i++) {
         // console.log(child[i])
-        if (typeof (child[i].children) !== 'undefined') {
+        if (typeof child[i].children !== 'undefined') {
           // console.log("전")
           // var idOjb = "aa"
           // 자식
@@ -133,11 +137,10 @@ export default {
           // console.log(obj)
           this.myParent.push(-1)
           this.findChildren(child[i], newParentObj, 0)
-
         }
       }
     },
-    findChildren (child, obj, myParent) {
+    findChildren(child, obj, myParent) {
       // console.log("몇번")
       // console.log(child)
       // console.log(obj)
@@ -167,7 +170,7 @@ export default {
       // }
       // }).$mount('#mount');
 
-      if (typeof (child.children) !== 'undefined') {
+      if (typeof child.children !== 'undefined') {
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
           // console.log(childOFchil)
@@ -221,24 +224,27 @@ export default {
             this.myParent.push(myParent)
 
             var newOriginalParentObj = document.getElementById(this.childNum)
-            this.findChildren(childOFchil[i], newOriginalParentObj, this.friendNum)
+            this.findChildren(
+              childOFchil[i],
+              newOriginalParentObj,
+              this.friendNum
+            )
           }
         }
       }
     },
-    domSelection (payload) {
+    domSelection(payload) {
       // console.log(this.dom.length)
       // console.log(payload)
       // console.log(this.dom.length)
       // console.log(payload)
-      
-      
+
       for (var i = 0; i < this.dom.length; i++) {
-          // console.log(this.isActiveLabel)
-          // console.log(this.isActiveLabel[i])
-          $(`label[for="${i}"]`).trigger('click')
+        // console.log(this.isActiveLabel)
+        // console.log(this.isActiveLabel[i])
+        $(`label[for="${i}"]`).trigger('click')
       }
-      
+
       // console.log(this.isActiveLabel)
       // console.log(this.dom.length)
 
@@ -248,34 +254,33 @@ export default {
       // }
 
       for (var i = 0; i < this.dom.length; i++) {
-        
         if (payload === this.dom[i]) {
           // console.log(i)
           var a = i
           // console.log(this.myParent)
 
-          while(true){
-            
-            if(this.myParent[a]!='-1'){
+          while (true) {
+            if (this.myParent[a] != '-1') {
               // console.log("메롱")
               // console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
               console.log(this.myParent[a])
               if (this.isActiveLabel[this.myParent[a]] == false) {
-                  $(document.querySelector(`label[for="${this.myParent[a]}"]`)).trigger('click')
-                  
+                $(
+                  document.querySelector(`label[for="${this.myParent[a]}"]`)
+                ).trigger('click')
               }
               a = this.myParent[a]
-            }
-            else{
+            } else {
               if (this.isActiveLabel[0] == false) {
-                  $(document.querySelector(`label[for="${0}}"]`)).trigger('click')
-                  break;
+                $(document.querySelector(`label[for="${0}}"]`)).trigger('click')
+                break
               }
-              break;
+              break
             }
           }
           document.querySelector(`label[for="${i}"]`).scrollIntoView()
-          document.querySelector(`label[for="${i}"]`).style["backgroundColor"] = "blue";
+          document.querySelector(`label[for="${i}"]`).style['backgroundColor'] =
+            'blue'
           // console.log(this.myParent[i])
           // console.log(document.querySelector(`label[for="${i}"]`))
           // console.log(document.querySelector(`label[for="${i}"]`).parentElement)
@@ -316,7 +321,7 @@ export default {
           // console.log(obj.parent)
 
           */
-          
+
           // console.log('찾았다')
         } else {
           var obj = document.querySelector(`label[for="${i}"]`)
@@ -330,15 +335,12 @@ export default {
       //         }
       //     }
 
-        this.$emit('inParentTreeOption',this.myParent)
-        // this.$emit('inEventDomTree',this.dom)
-        // console.log(this.dom)
-        this.$emit('domWithTree',this.dom)
-
-        
-
+      this.$emit('inParentTreeOption', this.myParent)
+      // this.$emit('inEventDomTree',this.dom)
+      // console.log(this.dom)
+      this.$emit('domWithTree', this.dom)
     },
-    clickLabelEvent (e) {
+    clickLabelEvent(e) {
       if (e.target.tagName == 'LABEL') {
         // console.log(e.target.id)
         if (this.isActiveLabel[e.target.id]) {
@@ -348,7 +350,7 @@ export default {
         }
       }
     },
-    onmouseMove (e) {
+    onmouseMove(e) {
       if (e.target.tagName === 'LABEL') {
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
@@ -362,46 +364,70 @@ export default {
   justify-content: left;
   justify-items: left;
   padding: 0.4rem;
-  text-align:left;
-  overflow:auto;
+  text-align: left;
+  overflow: auto;
 }
-.overview-text{
+.overview-text {
   font-size: 1.4rem;
-  color: #Fff;
+  color: #fff;
 }
-.close-btn{
-      width: 1.1rem;
-      right: 0.4rem;
-      top: 0.4rem;
-      cursor:pointer;
-      position: absolute;
-    }
-li{
+.close-btn {
+  width: 1.1rem;
+  right: 0.4rem;
+  top: 0.4rem;
+  cursor: pointer;
+  position: absolute;
+}
+li {
   // float:left;
 }
-.acol{
+.acol {
   padding: 0.4rem;
 }
-.acol label:before{
-  content:'\f107 ';
-  font-family:FontAwesome;
+.acol label:before {
+  content: '\f107 ';
+  font-family: FontAwesome;
   // font-family: "fontello";
 }
-.acol, .acol ul{
-  color:#e7e4e4;
-  list-style:none;
-
+.acol,
+.acol ul {
+  color: #e7e4e4;
+  list-style: none;
 }
-.acol .checkbox{
+.acol .checkbox {
   display: none;
-
 }
-.acol .checkbox:checked~ul{
+.acol .checkbox:checked ~ ul {
   display: none;
-  color:red;
+  color: red;
 }
-.acol .checkbox:checked+label:before{
-  content:'\f105 ';
+.acol .checkbox:checked + label:before {
+  content: '\f105 ';
   font-family: FontAwesome;
+}
+.overview-text-box {
+  width: 100%;
+  height: 7%;
+  background-color: #292931;
+  justify-content: center;
+  cursor: move;
+  position: relative;
+  .overview-text {
+    padding: 0.2rem;
+    color: #ffffff;
+    font-size: 1.4rem;
+    cursor: default;
+    position: absolute;
+    left: 0.4rem;
+  }
+}
+.overview-box {
+  width: 100%;
+  background-color: #292931;
+  height: 93%;
+  // display: flex;
+  // flex-direction: column;
+  // padding: 0.4rem;
+  overflow: auto;
 }
 </style>
