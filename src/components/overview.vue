@@ -58,16 +58,13 @@ export default {
       isStickOverview: false,
       xInter: 0,
       yInter: 0,
-      moveTarget
+      moveTarget: null
     }
   },
 
   created() {},
   mounted() {},
   methods: {
-    closeOverview() {
-      this.$emit('close-overview')
-    },
     printHomeDocument() {
       // console.log(this.getDocument)
       // console.log(document.body.children)

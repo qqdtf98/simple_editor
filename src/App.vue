@@ -245,7 +245,6 @@
               @selectDomElement="selectDomElemented"
               @inParentTreeOption="inParentTreeOption"
               @domWithTree="domPushWithTree"
-              @close-overview="overviewBtn"
               :getDocument="homeDocument"
               class="htmlcontent"
             />
@@ -274,22 +273,12 @@
     <sitemap
       ref="sitemap"
       v-show="sitemapOn"
-      @copy-title="copyPage"
+      @copy-title="copyTitleFunc"
       @close-sitemap="sitemapBtn"
       @reset-title="resetTitle"
       @right-click="openSitemapContext"
       class="sitemap"
     />
-    <!-- <overview
-      v-if="overviewOn"
-      ref="overview"
-      @selectDomElement="selectDomElemented"
-      @inParentTreeOption="inParentTreeOption"
-      @domWithTree="domPushWithTree"
-      @close-overview="overviewBtn"
-      :getDocument="homeDocument"
-      class="overview"
-    ></overview> -->
 
     <div class="right-panel-border"></div>
 
@@ -321,11 +310,10 @@
     </div>
     <div v-if="isTitle" class="title-copy"></div>
     <div v-if="isContextMenu" class="sitemapContext">
-      <div class="open">Open</div>
-      <div class="cut">Cut</div>
-      <div class="copy">Copy</div>
+      <div @click="changePageSitemap" class="open">Open</div>
+      <div @click="copyPage" class="copy">Copy</div>
       <div @click="rename" class="rename">Rename</div>
-      <div @click="deleteList" class="delete">Delete</div>
+      <div @click="deleteTitle" class="delete">Delete</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -401,22 +389,17 @@ export default {
       selectedTag: null,
       hasht: null,
       isPustHtml: true,
-      mouseOverTarget: null,
       viewTemplate: false,
       isCtrl: false,
       moveTarget: null,
-      i: 0,
       workStack: [],
       reworkStack: [],
       studioOn: false,
-      overviewOn: false,
-      layoutOn: false,
       codeOn: false,
       resizeLoader: false,
       initialTop: null,
       initialY: null,
       initialHeight: null,
-      isShift: false,
       xInter: null,
       yInter: null,
       message: '',
@@ -468,7 +451,8 @@ export default {
       isSettingTab: false,
       isHelpTab: false,
       isContextMenu: false,
-      titleId: 0
+      titleId: 0,
+      selectedTitle: null
     }
   },
   computed: {
@@ -485,11 +469,10 @@ export default {
   mounted() {
     this.$refs.sitemap.loadSitemap(this.titles)
     let title = document.querySelector('.file-name')
-    // console.log(title)
     title.style.backgroundColor = 'rgb(78, 78, 92)'
     let htmltree = document.querySelector('.tree-name')
-    // console.log(htmltree)
     htmltree.style.backgroundColor = '#4e4e5c'
+
     $(window).resize(() => {
       this.$refs.home.windowResized()
     })
@@ -616,10 +599,8 @@ export default {
       }
       if (this.isTitle) {
         this.isTitle = false
-        // console.log(e.target)
         this.$refs.sitemap.movePosition(e.target)
       }
-
       if (this.treeMove) {
         let rightBorder = document.querySelector('.right-panel-border')
         let rightTopPanel = document.querySelector('.right-top-panel')
@@ -709,7 +690,68 @@ export default {
     this.hasht = h
   },
   methods: {
-    deleteList() {
+    copyPage() {
+      console.log(this.selectedTitle)
+      let titles = document.querySelectorAll('.titles')
+      let i
+      for (i = 0; i < titles.length; i++) {
+        if (titles[i] === this.selectedTitle) {
+          break
+        }
+      }
+      let payload = {
+        text: `${this.titles[i].text}`,
+        id: `${++this.titleId}`,
+        parentID: null
+      }
+      this.titles.push(payload)
+      let editor = document.querySelector('.board')
+      // let copy = editor.cloneNode(true)
+      let newEditorBox = document.createElement('div')
+      let ne = document.createElement('button')
+      newEditorBox.classList.add('board')
+      newEditorBox.classList.add('hidden')
+      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.appendChild(ne)
+      // console.log(editor.parentElement);
+
+      editor.parentElement.appendChild(newEditorBox)
+
+      // console.log(newEditorBox.classList);
+      this.editorNum++
+
+      let files = document.querySelectorAll('.file-name')
+      // files[files.length-1].style.backgroundColor = '#2c3134'
+      for (i = 0; i < files.length; i++) {
+        if (i === 0) {
+          files[i].style.backgroundColor = '#545e66'
+        } else {
+          files[i].style.backgroundColor = '#2c3134'
+        }
+      }
+      this.$refs.sitemap.loadSitemap(this.titles)
+    },
+    changePageSitemap(e) {
+      let titles = document.querySelectorAll('.titles')
+      let editor = document.querySelectorAll('.board')
+      let i
+      for (i = 0; i < titles.length; i++) {
+        if (titles[i] === this.selectedTitle) {
+          break
+        }
+      }
+      let j
+      for (j = 0; j < editor.length; j++) {
+        if (j === i) {
+          editor[j].classList.remove('hidden')
+          editor[j].classList.add('display')
+        } else {
+          editor[j].classList.remove('display')
+          editor[j].classList.add('hidden')
+        }
+      }
+    },
+    deleteTitle() {
       this.$refs.sitemap.deleteTitle()
       // this.closePage()
     },
@@ -723,6 +765,7 @@ export default {
       this.$refs.sitemap.renameTitle()
     },
     openSitemapContext(e) {
+      this.selectedTitle = e.target
       if (this.isContextMenu) {
         this.isContextMenu = false
       } else {
@@ -906,7 +949,7 @@ export default {
       let loader = document.querySelector('.loadDataPanel')
       loader.style.top = to
     },
-    copyPage(payload) {
+    copyTitleFunc(payload) {
       this.isTitle = true
       this.copyTitle = payload.target
       this.$nextTick(() => {
@@ -1065,34 +1108,15 @@ export default {
           this.initialTop = getComputedStyle(loader).top
         })
       }
-      if (this.layoutOn === true) {
-        this.layoutOn = false
-      }
-    },
-    layoutBtn() {
-      if (this.layoutOn === true) {
-        this.layoutOn = false
-      } else {
-        this.layoutOn = true
-      }
     },
     studioBtn() {
       if (this.studioOn === true) {
         this.studioOn = false
       } else {
-        this.overviewOn = false
         this.studioOn = true
       }
       if (this.codeOn === true) {
         this.codeOn = false
-      }
-    },
-    overviewBtn() {
-      if (this.overviewOn === true) {
-        this.overviewOn = false
-      } else {
-        this.studioOn = false
-        this.overviewOn = true
       }
     },
     redoWork() {
@@ -1193,7 +1217,6 @@ export default {
     componentSelected(payload) {
       this.$refs.layouts.isData = true
       this.payload = payload.target
-      this.layoutOn = true
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
@@ -1380,10 +1403,10 @@ export default {
     width: 20rem;
     height: 30rem;
     // border: 1.5px solid #000000;
-    box-shadow: 5px 5px 5px 1px #000000;
+    box-shadow: 5px 5px 8px 1px #000000;
     position: fixed;
     left: 3.5%;
-    background-color: #32373a;
+    background-color: #292931;
     z-index: 33;
     top: 3.5%;
   }
@@ -1887,10 +1910,9 @@ export default {
     position: fixed;
     width: 10rem;
     background-color: #34343c;
-    box-shadow: 5px 5px 5px 1px #000000;
+    box-shadow: 5px 5px 8px 1px #000000;
     z-index: 100;
     .open,
-    .cut,
     .copy,
     .rename,
     .delete {
