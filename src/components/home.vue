@@ -105,7 +105,7 @@ import Dashboard from '../sample/dashboard.vue'
 import Navi from '../sample/navi.vue'
 import HtmlLoader from './htmlLoader.vue'
 import spliter from '../sample/spliter.vue'
-import Context from '../sample/Context'
+import Context from '../components/Context'
 import ss from '../sample/ss'
 import vueCustomScrollbar from 'vue-custom-scrollbar'
 

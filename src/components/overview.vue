@@ -38,13 +38,11 @@ export default {
       isStickOverview: false,
       xInter: 0,
       yInter: 0,
-      intent: 10
+      intent: 10,
+      moveTarget: null
     }
   },
   methods: {
-    closeOverview() {
-      this.$emit('close-overview')
-    },
     printHomeDocument() {
       var child = document.getElementById('newLoaderHtml').children
       // console.log(child)
