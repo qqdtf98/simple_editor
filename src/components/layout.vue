@@ -14,7 +14,6 @@
         </div>
       </div>
     </div>
-     <vue-custom-scrollbar class="scroll-area">
     <div class="layout-box">
       <ul
         class="nav nav-tabs mb-3"
@@ -45,7 +44,8 @@
             role="tab"
             aria-controls="pills-profile"
             aria-selected="false"
-            >Animation</a>
+            >Animation</a
+          >
         </li>
       </ul>
       <!--options-->
@@ -66,22 +66,27 @@
               class="card-header"
               @click="clickLayoutTab"
               role="tab"
-              aria-controls="pills-home"
-              aria-selected="false"
-              >Look & Feel</a
+              id="headingOne"
             >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link "
-              v-bind:class="{ active: tabStep === 2 }"
-              id="pills-profile-tab"
-              data-toggle="pill"
-              href="#pills-profile"
-              role="tab"
-              aria-controls="pills-profile"
-              aria-selected="false"
-              >Options</a
+              <h5 class="mb-0">
+                <a
+                  class="title"
+                  data-toggle="collapse"
+                  href="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  layout
+                </a>
+              </h5>
+            </div>
+            <div
+              id="collapseOne"
+              class="collapse"
+              v-bind:class="{ show: layoutTab === 1 }"
+              role="tabpanel"
+              aria-labelledby="headingOne"
+              data-parent="#accordion"
             >
               <div class="card-body">
                 <div class="margin">
@@ -212,10 +217,10 @@
                     @keyup.enter="submitSourceWithPX"
                     v-model="componentSorce.padding"
                   />
-
                 </div>
               </div>
             </div>
+          </div>
 
           <div class="card">
             <div
@@ -311,7 +316,6 @@
                   ></b-button>
                 </div>
                 <!--
-
                   <input
                   type
                   name="backgroundColor"
@@ -358,10 +362,10 @@
                     @change="submitChangeImageSize"
                   ></b-form-select>
                   <!--<button @click="onUpload">Save</button>-->
-
                 </div>
               </div>
             </div>
+          </div>
 
           <div class="card">
             <div
@@ -539,10 +543,10 @@
                       #5555ff,
                       #ff5959); !important"
                   ></b-button>
-
                 </div>
               </div>
             </div>
+          </div>
 
           <div class="card">
             <div
@@ -951,13 +955,12 @@
                   id="ApplyAM"
                   @click="testAnimation"
                 ></b-button>
-
               </div>
             </div>
           </div>
         </div>
       </div>
-    </vue-custom-scrollbar>
+    </div>
   </div>
 </template>
 
@@ -967,8 +970,6 @@ import { Chrome } from 'vue-color'
 import { mapGetters, mapMutations } from 'vuex'
 import Switches from 'vue-switches'
 import 'vue-range-slider/dist/vue-range-slider.css'
-import vueCustomScrollbar from 'vue-custom-scrollbar'
-
 export default {
   data() {
     return {
@@ -1004,14 +1005,12 @@ export default {
       options: {
         //Monaco Editor Options
       },
-
       //Tab value
       layoutTab: 0,
       backgroundTab: 0,
       fontTab: 0,
       filterTab: 0,
       AnimationTab: 0,
-
       //Animation
       enabled: false,
       animationStyle: [
@@ -1036,9 +1035,7 @@ export default {
         { text: 'reverse' },
         { name: 'alterne-reverse', text: 'alt-reverse' }
       ],
-
       repeatTime: [{ text: 'custom' }, { text: 'infinite' }],
-
       imageSizeSelected: 'none',
       imageSize: [
         { value: 'none', text: 'None' },
@@ -1107,29 +1104,23 @@ export default {
       invertValue: '',
       saturateValue: 100 + '%',
       sepiaValue: '',
-
       isData: false,
       isBackgroundPicker: false,
       isFontPicker: false,
-
       backgroundColor: {
         backgroundColor: ''
       },
-
       fontColor: {
         backgroundColor: ''
       },
-
       submitSorce: {
         payload: '',
         style: '',
         value: '',
         change: ''
       },
-
       compo: null,
       borderstyle: null,
-
       onWidth: false,
       onHeight: false,
       onMargin: false,
@@ -1146,7 +1137,6 @@ export default {
       onInvert: false,
       onSaturate: false,
       onSepia: false,
-
       parentDom: [],
       selectedFile: null,
       domWithTree: [],
@@ -1181,7 +1171,6 @@ export default {
           rightBorder.style.backgroundImage =
             'linear-gradient(to right, #00000000, #68869250)'
           // rightBorder.style.backgroundColor = "#3a3a50"
-
           this.isSticky = true
         } else {
           // console.log('0')
@@ -1234,8 +1223,7 @@ export default {
   components: {
     RangeSlider,
     ChromeColor: VueColor.Chrome,
-    Switches,
-    vueCustomScrollbar
+    Switches
   },
   created() {},
   computed: {
@@ -1272,7 +1260,6 @@ export default {
         (this.onSaturate = false),
         (this.onSepia = false),
         (this.selected = 'none')
-
       if (!this.isData) {
         this.isData = true
       }
@@ -1292,7 +1279,6 @@ export default {
           this.margin[i].value = margin[0]
         }
       }
-
       // padding데이터 넣기
       var padding = getComputedStyle(payload.target)
         .padding.replace(/px/gi, '')
@@ -1319,7 +1305,6 @@ export default {
       )
       this.componentSorce.margin = getComputedStyle(payload.target).margin
       this.componentSorce.padding = getComputedStyle(payload.target).padding
-
       this.componentSorce.backgroundColor = getComputedStyle(
         payload.target
       ).backgroundColor
@@ -1330,10 +1315,8 @@ export default {
       this.componentSorce.fontSize = getComputedStyle(
         payload.target
       ).fontSize.replace('px', '')
-
       this.opacityValue = getComputedStyle(payload.target).opacity
       // console.log(this.opacity)
-
       // console.log(margin)
       // console.log(this.margin[3])
     },
@@ -1342,7 +1325,6 @@ export default {
       // 	this.isBackgroundPicker=false
       // else
       this.isBackgroundPicker = true
-
       // if(this.isBackgroundPicker==true)
       // 	this.isBackgroundPicker=false
       // else
@@ -1373,7 +1355,6 @@ export default {
     submitSourceWithPX(e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = e.target.name
-
       // this.submitSorce.value=e.target.value+'px'
       // console.log(e.target.value)
       if (e.target.value !== 'auto') {
@@ -1399,9 +1380,7 @@ export default {
         this.onHeight = true
       } else if (e.target.name == 'margin') {
         this.onMargin = true
-
         var margin = e.target.value.replace(/px/gi, '').split(' ')
-
         // console.log(margin)
         // console.log(this.margin[0])
         if (margin.length !== 1) {
@@ -1466,7 +1445,6 @@ export default {
       } else {
         this.submitSorce.value = e.target.getAttribute('name')
       }
-
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'float'
       // console.log(this.submitSorce)
@@ -1476,15 +1454,12 @@ export default {
     makeTreeParent(payload) {
       var obj = document.getElementById('inParentTreeOption')
       $(obj).empty()
-
       var newDIV = document.createElement('button')
       newDIV.innerHTML = 'HTML'
       obj.appendChild(newDIV)
-
       var newDIV = document.createElement('button')
       newDIV.innerHTML = 'Body'
       obj.appendChild(newDIV)
-
       var a = 0
       var print = []
       for (var i = 0; i < this.parentDom.length; i++) {
@@ -1493,16 +1468,12 @@ export default {
           break
         }
       }
-
       // console.log(a)
       print.push(a)
-
       // console.log(this.parentDom)
-
       while (true) {
         if (this.parentDom[a] != '-1') {
           a = this.parentDom[a]
-
           print.push(a)
         } else {
           break
@@ -1521,7 +1492,6 @@ export default {
     onFileSelected(e) {
       var file = e.target
       var fileList = file.files
-
       // 읽기
       var reader = new FileReader()
       reader.readAsDataURL(fileList[0])
@@ -1559,11 +1529,9 @@ export default {
       var file = document.querySelector('#getfile')
       file.onchange = function() {
         var fileList = file.files
-
         // 읽기
         var reader = new FileReader()
         reader.readAsText(fileList[0])
-
         //로드 한 후
         reader.onload = function() {
           document.querySelector('#preview').textContent = reader.result
@@ -1603,7 +1571,6 @@ export default {
       console.log(e)
       console.log('adsaD')
     },
-
     //레이아웃 Tab
     clickLayoutTab(e) {
       if (this.layoutTab == 1) {
@@ -1686,13 +1653,12 @@ export default {
       console.log(oScript)
       document.getElementsByTagName('head')[0].appendChild(oScript)
     },
-    //mouseover 
-    mouseOver(e){
+    //mouseover
+    mouseOver(e) {
       // console.log(e.target.tagName)
-      if(e.target.tagName=='SPAN'){
-        this.$emit('manualSelet',e.target.tagName)
-      }
-      else{
+      if (e.target.tagName == 'SPAN') {
+        this.$emit('manualSelet', e.target.tagName)
+      } else {
         this.$emit('manualSelet', e.target.tagName)
       }
     }
@@ -1714,12 +1680,7 @@ export default {
   float: right;
 }
 .layout-box {
-  // overflow: auto;
-  width: 100%;
-  height: 100%;
-}
-.scroll-area {
-  height: 93%;
+  overflow: auto;
 }
 .dsadsadsad {
   color: white !important;
@@ -1741,7 +1702,6 @@ export default {
 .nav-tabs .nav-link.active {
   color: #fff;
 }
-
 .card {
   margin-bottom: 10px;
   color: black;
@@ -1804,7 +1764,6 @@ export default {
   color: #86cf89;
   line-height: 1;
 }
-
 .middle {
   width: 100%;
   display: flex;
@@ -1957,7 +1916,7 @@ b {
     // display: flex;
     // flex-direction: column;
     padding: 0.4rem;
-    // overflow: auto;
+    overflow: auto;
   }
 }
 .Picker {
@@ -2013,7 +1972,6 @@ b {
   justify-content: center;
   vertical-align: middle;
 }
-
 //filter 속성
 .filter {
   margin: 0px -6px 12px -15px;
@@ -2119,4 +2077,3 @@ b {
   }
 }
 </style>
-`
