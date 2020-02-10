@@ -9,20 +9,32 @@
         src="../assets/images/close.svg"
       />
     </div>
-    <div
-      @mousedown="refineSitemap"
-      @mouseup="mouseRightClick"
-      class="title-map"
-    >
-      <div :key="title.id" class="titles" v-for="title in titles">
-        {{ title.text }}
+    <vue-custom-scrollbar class="scroll-area">
+      <div
+        ref="dash"
+        @mousedown="refineSitemap"
+        @mouseup="mouseRightClick"
+        class="title-map"
+      >
+        <div
+          :key="title.id"
+          @keydown.enter="isContentNotEditable"
+          :contenteditable="isContentEditable"
+          class="titles"
+          v-for="title in titles"
+        >
+          {{ title.text }}
+        </div>
       </div>
-    </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
+  components: { vueCustomScrollbar },
   data() {
     return {
       titles: [],
@@ -33,7 +45,9 @@ export default {
       target: null,
       targetId: null,
       position: null,
-      positionId: null
+      positionId: null,
+      contextTarget: null,
+      isContentEditable: false
     }
   },
   mounted() {
@@ -64,6 +78,72 @@ export default {
     })
   },
   methods: {
+    deleteTitle() {
+      console.log(this.contextTarget)
+      let i
+      let titles = document.querySelectorAll('.titles')
+      for (i = 0; i < titles.length; i++) {
+        console.log(titles[i])
+        if (titles[i] === this.contextTarget) {
+          break
+        }
+      }
+      console.log(i)
+      this.titles.splice(i, 1)
+      console.log(this.titles)
+      this.$emit('reset-title', this.titles)
+    },
+    isContentNotEditable(e) {
+      e.preventDefault()
+      let titles = document.querySelectorAll('.titles')
+      let i
+      for (i = 0; i < titles.length; i++) {
+        if (titles[i] === this.contextTarget) {
+          console.log(this.contextTarget.textContent.trim())
+          this.titles[i].text = this.contextTarget.textContent.trim()
+          break
+        }
+      }
+      console.log(titles)
+      this.$emit('reset-title', this.titles)
+      this.isContentEditable = false
+    },
+    renameTitle() {
+      console.log(this.contextTarget)
+      this.focusInput(this.contextTarget)
+    },
+    focusInput(e) {
+      this.isContentEditable = true
+      this.$nextTick(() => {
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        const range = new Range()
+        range.setStart(this.$refs.dash, 0)
+        range.setEnd(this.$refs.dash, 0)
+        sel.addRange(range)
+        // console.log(this.$ref.dash)
+        this.placeCaretAtEnd(this.$refs.dash)
+      })
+    },
+    placeCaretAtEnd(el) {
+      el.focus()
+      if (
+        typeof window.getSelection !== 'undefined' &&
+        typeof document.createRange !== 'undefined'
+      ) {
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        range.collapse(false)
+        const sel = window.getSelection()
+        sel.removeAllRanges()
+        sel.addRange(range)
+      } else if (typeof document.body.createTextRange !== 'undefined') {
+        const textRange = document.body.createTextRange()
+        textRange.moveToElementText(el)
+        textRange.collapse(false)
+        textRange.select()
+      }
+    },
     movePosition(payload) {
       this.position = payload
       let i
@@ -81,6 +161,7 @@ export default {
     mouseRightClick(e) {
       if (e.button === 2) {
         console.log('rightclick')
+        this.contextTarget = e.target
         this.$emit('right-click', e)
       }
     },
@@ -142,17 +223,19 @@ export default {
       position: absolute;
     }
   }
-  .title-map {
-    background-color: #292931;
-    color: #e7e4e4;
-    padding-left: 0.4rem;
-    align-items: left;
-    .titles {
-      text-align: left;
-      height: 1.5rem;
-      &:hover {
-        background-color: #505557;
-        cursor: pointer;
+  .scroll-area {
+    .title-map {
+      background-color: #292931;
+      color: #e7e4e4;
+      padding-left: 0.4rem;
+      align-items: left;
+      .titles {
+        text-align: left;
+        height: 1.5rem;
+        &:hover {
+          background-color: #505557;
+          cursor: pointer;
+        }
       }
     }
   }

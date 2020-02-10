@@ -19,137 +19,142 @@
         />
         <img class="search-icon" src="../assets/images/search.svg" />
       </div>
-      <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
-        <div class="tag-list-box">
-          <span class="tag-list">UI</span>
-          <div class="nested">
-            <div class="tag-list-box">
-              <span class="tag-list ui">Articles</span>
-              <div class="nested">
-                <div>Article Clean</div>
-                <div>Article Dual Column</div>
-                <div>Article List</div>
+      <vue-custom-scrollbar class="scroll-area">
+        <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
+          <div class="tag-list-box">
+            <span class="tag-list">UI</span>
+            <div class="nested">
+              <div class="tag-list-box">
+                <span class="tag-list ui">Articles</span>
+                <div class="nested">
+                  <div>Article Clean</div>
+                  <div>Article Dual Column</div>
+                  <div>Article List</div>
+                </div>
+              </div>
+              <div class="tag-list-box">
+                <span class="tag-list ui">Features</span>
+                <div class="nested">
+                  <div>Features Blue</div>
+                  <div>Features Boxed</div>
+                  <div>Features Clean</div>
+                </div>
+              </div>
+              <div class="tag-list-box">
+                <span class="tag-list ui">Footers</span>
+                <div class="nested">
+                  <div>Footer Basic</div>
+                  <div>Footer Clean</div>
+                  <div>Footer Dark</div>
+                </div>
               </div>
             </div>
-            <div class="tag-list-box">
-              <span class="tag-list ui">Features</span>
-              <div class="nested">
-                <div>Features Blue</div>
-                <div>Features Boxed</div>
-                <div>Features Clean</div>
-              </div>
-            </div>
-            <div class="tag-list-box">
-              <span class="tag-list ui">Footers</span>
-              <div class="nested">
-                <div>Footer Basic</div>
-                <div>Footer Clean</div>
-                <div>Footer Dark</div>
-              </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Text</span>
+            <div class="nested">
+              <div>Heading</div>
+              <div>Paragraph</div>
+              <div>Alert</div>
             </div>
           </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Text</span>
-          <div class="nested">
-            <div>Heading</div>
-            <div>Paragraph</div>
-            <div>Alert</div>
+          <div class="tag-list-box">
+            <span class="tag-list">Image</span>
+            <div class="nested">
+              <div>Image</div>
+              <div>Icon</div>
+              <div>Carousel</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Controls</span>
+            <div class="nested">
+              <div>Button</div>
+              <div>Split Button</div>
+              <div>Button Group</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Grid</span>
+            <div class="nested">
+              <div>Row</div>
+              <div>Column</div>
+              <div>Column Helper</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Containers</span>
+            <div class="nested">
+              <div>Container</div>
+              <div>Tabs</div>
+              <div>Accordion</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Cards</span>
+            <div class="nested">
+              <div>Card</div>
+              <div>Panel</div>
+              <div>Thumbnail</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Pages</span>
+            <div class="nested">
+              <div>Navbar</div>
+              <div>Nav</div>
+              <div>Header</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Pagination</span>
+            <div class="nested">
+              <div>Pagination</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Table</span>
+            <div class="nested">
+              <div>Table</div>
+              <div>Table Row</div>
+              <div>Table Cell</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Form</span>
+            <div class="nested">
+              <div>Form</div>
+              <div>Form Group</div>
+              <div>Field Label</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Social</span>
+            <div class="nested">
+              <div>Facebook Like Button</div>
+              <div>Facebook Post Embed</div>
+              <div>Twitter Follow Button</div>
+            </div>
+          </div>
+          <div class="tag-list-box">
+            <span class="tag-list">Misc</span>
+            <div class="nested">
+              <div>Chart</div>
+              <div>Map</div>
+              <div>Video</div>
+            </div>
           </div>
         </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Image</span>
-          <div class="nested">
-            <div>Image</div>
-            <div>Icon</div>
-            <div>Carousel</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Controls</span>
-          <div class="nested">
-            <div>Button</div>
-            <div>Split Button</div>
-            <div>Button Group</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Grid</span>
-          <div class="nested">
-            <div>Row</div>
-            <div>Column</div>
-            <div>Column Helper</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Containers</span>
-          <div class="nested">
-            <div>Container</div>
-            <div>Tabs</div>
-            <div>Accordion</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Cards</span>
-          <div class="nested">
-            <div>Card</div>
-            <div>Panel</div>
-            <div>Thumbnail</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Pages</span>
-          <div class="nested">
-            <div>Navbar</div>
-            <div>Nav</div>
-            <div>Header</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Pagination</span>
-          <div class="nested">
-            <div>Pagination</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Table</span>
-          <div class="nested">
-            <div>Table</div>
-            <div>Table Row</div>
-            <div>Table Cell</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Form</span>
-          <div class="nested">
-            <div>Form</div>
-            <div>Form Group</div>
-            <div>Field Label</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Social</span>
-          <div class="nested">
-            <div>Facebook Like Button</div>
-            <div>Facebook Post Embed</div>
-            <div>Twitter Follow Button</div>
-          </div>
-        </div>
-        <div class="tag-list-box">
-          <span class="tag-list">Misc</span>
-          <div class="nested">
-            <div>Chart</div>
-            <div>Map</div>
-            <div>Video</div>
-          </div>
-        </div>
-      </div>
+      </vue-custom-scrollbar>
     </div>
   </div>
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
+  components: { vueCustomScrollbar },
   data() {
     return {
       tagTarget: null,
@@ -368,16 +373,14 @@ export default {
       position: absolute;
     }
   }
+
   .tag-studio {
-    background-color: #292931;
     height: 93%;
     // display: flex;
     // flex-direction: column;
     padding: 0.4rem;
-    overflow: auto;
-    .tag-studio::-webkit-scrollbar {
-      width: 5px;
-    }
+    // overflow: auto;
+
     .search {
       background-color: #41474c;
       color: #fff;
@@ -402,63 +405,66 @@ export default {
         right: 8px;
       }
     }
-    .tag-box {
-      // overflow:scroll;
-      align-items: left;
-      justify-content: left;
-      .tag-list-box {
-        // float: left;
-        text-align: left;
-        margin: 0.1rem;
-        .tag-list {
-          margin-left: 0.4rem;
-          color: #e7e4e4;
-          cursor: pointer;
-          user-select: none; /* Prevent text selection */
-          //   float: left;
-          transition: all 300ms ease;
-        }
+    .scroll-area {
+      background-color: #292931;
+      .tag-box {
+        // overflow:scroll;
+        align-items: left;
+        justify-content: left;
+        .tag-list-box {
+          // float: left;
+          text-align: left;
+          margin: 0.1rem;
+          .tag-list {
+            margin-left: 0.4rem;
+            color: #e7e4e4;
+            cursor: pointer;
+            user-select: none; /* Prevent text selection */
+            //   float: left;
+            transition: all 300ms ease;
+          }
 
-        /* Create the tag-list/arrow with a unicode, and style it */
-        .tag-list::before {
-          content: '\25B6';
-          color: #e7e4e4;
-          display: inline-block;
-          margin-right: 6px;
-        }
+          /* Create the tag-list/arrow with a unicode, and style it */
+          .tag-list::before {
+            content: '\25B6';
+            color: #e7e4e4;
+            display: inline-block;
+            margin-right: 6px;
+          }
 
-        /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
-        .tag-list-down::before {
-          transform: rotate(90deg);
-        }
-        .nested {
-          display: none;
-        }
+          /* Rotate the tag-list/arrow icon when clicked on (using JavaScript) */
+          .tag-list-down::before {
+            transform: rotate(90deg);
+          }
+          .nested {
+            display: none;
+          }
 
-        /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
-        .active {
-          display: block;
-        }
-        .template {
-          margin-left: 2rem;
-          color: #e7e4e4;
-          &:hover {
-            background-color: #414649;
-            cursor: default;
+          /* Show the nested list when the user clicks on the tag-list/arrow (with JavaScript) */
+          .active {
+            display: block;
+          }
+          .template {
+            margin-left: 2rem;
+            color: #e7e4e4;
+            &:hover {
+              background-color: #414649;
+              cursor: default;
+            }
+          }
+          .template::before {
+            content: '\2B1A';
+            margin-right: 0.2rem;
+          }
+          .ui {
+            margin-left: 1.2rem;
           }
         }
-        .template::before {
-          content: '\2B1A';
-          margin-right: 0.2rem;
+        .filter {
+          color: #fff;
+          text-align: left;
+          margin-left: 1rem;
         }
-        .ui {
-          margin-left: 1.2rem;
-        }
-      }
-      .filter {
-        color: #fff;
-        text-align: left;
-        margin-left: 1rem;
       }
     }
   }
