@@ -14,308 +14,309 @@
         />
       </div>
     </div>
-    <div class="layout-box">
-      <ul
-        class="nav nav-tabs mb-3"
-        id="pills-tab"
-        role="tablist"
-        @click="chageTab"
-      >
-        <li class="nav-item">
-          <a
-            class="nav-link "
-            v-bind:class="{ active: tabStep === 1 }"
-            id="pills-home-tab"
-            data-toggle="pill"
-            href="#pills-home"
-            role="tab"
-            aria-controls="pills-home"
-            aria-selected="false"
-            >Options</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link "
-            v-bind:class="{ active: tabStep === 2 }"
-            id="pills-profile-tab"
-            data-toggle="pill"
-            href="#pills-profile"
-            role="tab"
-            aria-controls="pills-profile"
-            aria-selected="false"
-            >Animation</a
-          >
-        </li>
-      </ul>
-      <!--options-->
-      <div
-        @mouseover="mouseOver"
-        v-show="tabStep === 1"
-        class="tab-pane"
-        v-bind:class="{ active: tabStep === 1 }"
-        id="pills-home"
-        role="tabpanel"
-        aria-labelledby="pills-home-tab"
-      >
-        <div class="addButtonTree"></div>
-
-        <div id="accordion" role="tablist">
-          <div class="card">
-            <div
-              class="card-header"
-              @click="clickLayoutTab"
+    <vue-custom-scrollbar class="scroll-area">
+      <div class="layout-box">
+        <ul
+          class="nav nav-tabs mb-3"
+          id="pills-tab"
+          role="tablist"
+          @click="chageTab"
+        >
+          <li class="nav-item">
+            <a
+              class="nav-link "
+              v-bind:class="{ active: tabStep === 1 }"
+              id="pills-home-tab"
+              data-toggle="pill"
+              href="#pills-home"
               role="tab"
-              id="headingOne"
+              aria-controls="pills-home"
+              aria-selected="false"
+              >Options</a
             >
-              <h5 class="mb-0">
-                <a
-                  class="title"
-                  data-toggle="collapse"
-                  href="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
-                >
-                  layout
-                </a>
-              </h5>
-            </div>
-            <div
-              id="collapseOne"
-              class="collapse"
-              v-bind:class="{ show: layoutTab === 1 }"
-              role="tabpanel"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link "
+              v-bind:class="{ active: tabStep === 2 }"
+              id="pills-profile-tab"
+              data-toggle="pill"
+              href="#pills-profile"
+              role="tab"
+              aria-controls="pills-profile"
+              aria-selected="false"
+              >Animation</a
             >
-              <div class="card-body">
-                <div class="margin">
-                  <div class="box-row blue">
-                    <a class="margin-top" title="Margin Top">{{
-                      margin[0].value
-                    }}</a>
-                  </div>
-                  <div class="box-row middle">
-                    <div class="box-col blue">
-                      <a class="margin-left" title="Margin Left">{{
-                        margin[3].value
-                      }}</a>
-                    </div>
-                    <div class="box-col padding">
-                      <div class="box-row green">
-                        <a class="padding-top" title="Padding Top">{{
-                          padding[0]
-                        }}</a>
-                      </div>
-                      <div class="box-row middle">
-                        <div class="box-col green">
-                          <a class="padding-left" title="Padding Left">{{
-                            padding[3]
-                          }}</a>
-                        </div>
-                        <div class="box-col middle empty"></div>
-                        <div class="box-col green">
-                          <a class="padding-right" title="Padding Right">{{
-                            padding[1]
-                          }}</a>
-                        </div>
-                      </div>
-                      <div class="box-row green">
-                        <a class="padding-bottom" title="Padding Bottom">{{
-                          padding[2]
-                        }}</a>
-                      </div>
-                    </div>
-                    <div class="box-col blue">
-                      <a class="margin-right" title="Margin Right">{{
-                        margin[1].value
-                      }}</a>
-                    </div>
-                  </div>
-                  <div class="box-row blue">
-                    <a class="margin-top" title="Margin Top">{{
-                      margin[2].value
-                    }}</a>
-                  </div>
-                </div>
+          </li>
+        </ul>
+        <!--options-->
+        <div
+          @mouseover="mouseOver"
+          v-show="tabStep === 1"
+          class="tab-pane"
+          v-bind:class="{ active: tabStep === 1 }"
+          id="pills-home"
+          role="tabpanel"
+          aria-labelledby="pills-home-tab"
+        >
+          <div class="addButtonTree"></div>
 
-                <div class="row dimensions">
-                  <a class="size x"
-                    ><i>X</i><b>{{ componentSorce.x }}</b></a
+          <div id="accordion" role="tablist">
+            <div class="card">
+              <div
+                class="card-header"
+                @click="clickLayoutTab"
+                role="tab"
+                id="headingOne"
+              >
+                <h5 class="mb-0">
+                  <a
+                    class="title"
+                    data-toggle="collapse"
+                    href="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
                   >
-                  <a class="size y"
-                    ><i>Y</i><b>{{ componentSorce.y }}</b></a
-                  >
-                  <a class="size width"
-                    ><i>W</i><b>{{ componentSorce.width }}</b></a
-                  >
-                  <a class="size height"
-                    ><i>H</i><b>{{ componentSorce.height }}</b></a
-                  >
-                </div>
-                <br />
-                <!--글자-->
-                <div class="row">
-                  <span class="property">
-                    Width
-                  </span>
-                  <input
-                    class="propertyChange "
-                    type
-                    name="width"
-                    value
-                    title
-                    placeholder="31.4375px"
-                    @keyup.enter="submitSourceWithPX"
-                    v-model="componentSorce.width"
-                  />
-                </div>
-                <br />
-                <div class="row">
-                  <span class="property">
-                    Height
-                  </span>
-                  <input
-                    class="propertyChange"
-                    type="text"
-                    name="height"
-                    value
-                    title
-                    placeholder="40px"
-                    @keyup.enter="submitSourceWithPX"
-                    v-model="componentSorce.height"
-                  />
-                </div>
-                <br />
-                <div class="row">
-                  <span class="property">
-                    Margin
-                  </span>
-                  <input
-                    class="propertyChange"
-                    type="text"
-                    name="margin"
-                    value
-                    title
-                    placeholder="0"
-                    @keyup.enter="submitSourceWithPX"
-                    v-model="componentSorce.margin"
-                  />
-                </div>
-                <br />
-                <div class="row">
-                  <span class="property">
-                    Padding
-                  </span>
-                  <input
-                    class="propertyChange"
-                    type="text"
-                    name="padding"
-                    value
-                    title
-                    placeholder="0"
-                    @keyup.enter="submitSourceWithPX"
-                    v-model="componentSorce.padding"
-                  />
+                    layout
+                  </a>
+                </h5>
+              </div>
+              <div
+                id="collapseOne"
+                class="collapse"
+                v-bind:class="{ show: layoutTab === 1 }"
+                role="tabpanel"
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+              >
+                <div class="card-body">
+                  <div class="margin">
+                    <div class="box-row blue">
+                      <a class="margin-top" title="Margin Top">{{
+                        margin[0].value
+                      }}</a>
+                    </div>
+                    <div class="box-row middle">
+                      <div class="box-col blue">
+                        <a class="margin-left" title="Margin Left">{{
+                          margin[3].value
+                        }}</a>
+                      </div>
+                      <div class="box-col padding">
+                        <div class="box-row green">
+                          <a class="padding-top" title="Padding Top">{{
+                            padding[0]
+                          }}</a>
+                        </div>
+                        <div class="box-row middle">
+                          <div class="box-col green">
+                            <a class="padding-left" title="Padding Left">{{
+                              padding[3]
+                            }}</a>
+                          </div>
+                          <div class="box-col middle empty"></div>
+                          <div class="box-col green">
+                            <a class="padding-right" title="Padding Right">{{
+                              padding[1]
+                            }}</a>
+                          </div>
+                        </div>
+                        <div class="box-row green">
+                          <a class="padding-bottom" title="Padding Bottom">{{
+                            padding[2]
+                          }}</a>
+                        </div>
+                      </div>
+                      <div class="box-col blue">
+                        <a class="margin-right" title="Margin Right">{{
+                          margin[1].value
+                        }}</a>
+                      </div>
+                    </div>
+                    <div class="box-row blue">
+                      <a class="margin-top" title="Margin Top">{{
+                        margin[2].value
+                      }}</a>
+                    </div>
+                  </div>
+
+                  <div class="row dimensions">
+                    <a class="size x"
+                      ><i>X</i><b>{{ componentSorce.x }}</b></a
+                    >
+                    <a class="size y"
+                      ><i>Y</i><b>{{ componentSorce.y }}</b></a
+                    >
+                    <a class="size width"
+                      ><i>W</i><b>{{ componentSorce.width }}</b></a
+                    >
+                    <a class="size height"
+                      ><i>H</i><b>{{ componentSorce.height }}</b></a
+                    >
+                  </div>
+                  <br />
+                  <!--글자-->
+                  <div class="row">
+                    <span class="property">
+                      Width
+                    </span>
+                    <input
+                      class="propertyChange "
+                      type
+                      name="width"
+                      value
+                      title
+                      placeholder="31.4375px"
+                      @keyup.enter="submitSourceWithPX"
+                      v-model="componentSorce.width"
+                    />
+                  </div>
+                  <br />
+                  <div class="row">
+                    <span class="property">
+                      Height
+                    </span>
+                    <input
+                      class="propertyChange"
+                      type="text"
+                      name="height"
+                      value
+                      title
+                      placeholder="40px"
+                      @keyup.enter="submitSourceWithPX"
+                      v-model="componentSorce.height"
+                    />
+                  </div>
+                  <br />
+                  <div class="row">
+                    <span class="property">
+                      Margin
+                    </span>
+                    <input
+                      class="propertyChange"
+                      type="text"
+                      name="margin"
+                      value
+                      title
+                      placeholder="0"
+                      @keyup.enter="submitSourceWithPX"
+                      v-model="componentSorce.margin"
+                    />
+                  </div>
+                  <br />
+                  <div class="row">
+                    <span class="property">
+                      Padding
+                    </span>
+                    <input
+                      class="propertyChange"
+                      type="text"
+                      name="padding"
+                      value
+                      title
+                      placeholder="0"
+                      @keyup.enter="submitSourceWithPX"
+                      v-model="componentSorce.padding"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="card">
-            <div
-              class="card-header"
-              @click="clickBackgroundTab"
-              role="tab"
-              id="headingOne"
-            >
-              <h5 class="mb-0">
-                <a
-                  class="title"
-                  data-toggle="collapse"
-                  href="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
-                >
-                  background
-                </a>
-              </h5>
-            </div>
-            <div
-              id="collapseOne"
-              class="collapse"
-              v-bind:class="{ show: backgroundTab === 1 }"
-              role="tabpanel"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
-            >
-              <div class="card-body">
-                <div class="row">
-                  <span class="property backgruond" id="bgSpan">
-                    Background Color
-                  </span>
-                  <b-button
-                    class="backgroundColorPicker"
-                    @click="colorBackgroundpicker"
-                    @keyup.enter="submitSourceOriginal"
-                    :style="backgroundColor"
-                    variant="free"
-                  ></b-button>
-                </div>
-                <div class="row" id="buttonRow">
-                  <!--<img @click="closeLayout" src="../assets/ban.svg" class="layoutBanBtn">-->
-
-                  <b-button
-                    class="backgroundFixColor ban"
-                    style="background-color:#fffeec background:src(http://cdn.zetawiki.com/png/slash.png)"
+            <div class="card">
+              <div
+                class="card-header"
+                @click="clickBackgroundTab"
+                role="tab"
+                id="headingOne"
+              >
+                <h5 class="mb-0">
+                  <a
+                    class="title"
+                    data-toggle="collapse"
+                    href="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
                   >
-                  </b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #e6696e, #e67a7d); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #9177c0, #8268b4); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #dd8042, #dc8d5e); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #d69d2f, #cd8e27); !important"
-                  ></b-button>
-                </div>
+                    background
+                  </a>
+                </h5>
+              </div>
+              <div
+                id="collapseOne"
+                class="collapse"
+                v-bind:class="{ show: backgroundTab === 1 }"
+                role="tabpanel"
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+              >
+                <div class="card-body">
+                  <div class="row">
+                    <span class="property backgruond" id="bgSpan">
+                      Background Color
+                    </span>
+                    <b-button
+                      class="backgroundColorPicker"
+                      @click="colorBackgroundpicker"
+                      @keyup.enter="submitSourceOriginal"
+                      :style="backgroundColor"
+                      variant="free"
+                    ></b-button>
+                  </div>
+                  <div class="row" id="buttonRow">
+                    <!--<img @click="closeLayout" src="../assets/ban.svg" class="layoutBanBtn">-->
 
-                <div class="row" id="buttonRow">
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #6ca64e, #5f9943); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #5ba68f, #4b977f); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #629eb1, #5490a3); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #87919d, #7a8490); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor Picker"
-                    style="background-image: conic-gradient(
+                    <b-button
+                      class="backgroundFixColor ban"
+                      style="background-color:#fffeec background:src(http://cdn.zetawiki.com/png/slash.png)"
+                    >
+                    </b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #e6696e, #e67a7d); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #9177c0, #8268b4); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #dd8042, #dc8d5e); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #d69d2f, #cd8e27); !important"
+                    ></b-button>
+                  </div>
+
+                  <div class="row" id="buttonRow">
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #6ca64e, #5f9943); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #5ba68f, #4b977f); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #629eb1, #5490a3); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #87919d, #7a8490); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor Picker"
+                      style="background-image: conic-gradient(
                       #ff4141,
                       #ffff51,
                       #55fc55,
                       #5555ff,
                       #ff5959); !important"
-                  ></b-button>
-                </div>
-                <!--
+                    ></b-button>
+                  </div>
+                  <!--
                   <input
                   type
                   name="backgroundColor"
@@ -325,230 +326,233 @@
                   @keyup.enter="submitSourceOriginal"
                   v-model="backgroundColor.backgroundColor.hex"
                   />-->
-                <chrome-color
-                  class="chrome"
-                  v-show="isBackgroundPicker"
-                  :value="backgroundColor.backgroundColor"
-                  v-model="backgroundColor.backgroundColor"
-                  @input="updateBackgroundValue"
-                ></chrome-color>
-                <br />
-                <div class="row">
-                  <span class="property backgruond" title>
-                    Background Image
-                  </span>
-                  <input
-                    style="display:none"
-                    type="file"
-                    @change="onFileSelected"
-                    id="getfile"
-                    ref="fileInput"
-                  />
-                  <button class="pickPicture" @click="$refs.fileInput.click()">
-                    Pick
-                  </button>
-                  <!--<button @click="onUpload">Save</button>-->
-                </div>
+                  <chrome-color
+                    class="chrome"
+                    v-show="isBackgroundPicker"
+                    :value="backgroundColor.backgroundColor"
+                    v-model="backgroundColor.backgroundColor"
+                    @input="updateBackgroundValue"
+                  ></chrome-color>
+                  <br />
+                  <div class="row">
+                    <span class="property backgruond" title>
+                      Background Image
+                    </span>
+                    <input
+                      style="display:none"
+                      type="file"
+                      @change="onFileSelected"
+                      id="getfile"
+                      ref="fileInput"
+                    />
+                    <button
+                      class="pickPicture"
+                      @click="$refs.fileInput.click()"
+                    >
+                      Pick
+                    </button>
+                    <!--<button @click="onUpload">Save</button>-->
+                  </div>
 
-                <div class="row">
-                  <span class="property backgruond" title>
-                    Background Size
-                  </span>
-                  <b-form-select
-                    class=" btn btn-info btn-sm dropdown-toggle"
-                    id="dropBGSize"
-                    v-model="imageSizeSelected"
-                    :options="imageSize"
-                    @change="submitChangeImageSize"
-                  ></b-form-select>
-                  <!--<button @click="onUpload">Save</button>-->
+                  <div class="row">
+                    <span class="property backgruond" title>
+                      Background Size
+                    </span>
+                    <b-form-select
+                      class=" btn btn-info btn-sm dropdown-toggle"
+                      id="dropBGSize"
+                      v-model="imageSizeSelected"
+                      :options="imageSize"
+                      @change="submitChangeImageSize"
+                    ></b-form-select>
+                    <!--<button @click="onUpload">Save</button>-->
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="card">
-            <div
-              class="card-header"
-              @click="clickFontTab"
-              role="tab"
-              id="headingOne"
-            >
-              <h5 class="mb-0">
-                <a
-                  class="title"
-                  data-toggle="collapse"
-                  href="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
-                >
-                  font
-                </a>
-              </h5>
-            </div>
-            <div
-              id="collapseOne"
-              class="collapse"
-              v-bind:class="{ show: fontTab === 1 }"
-              role="tabpanel"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
-            >
-              <div class="card-body">
-                <div class="row font">
-                  <img
-                    @mousedown.stop
-                    class="left AlignBtn"
-                    src="../assets/images/left-align.svg"
-                  />
-                  <img
-                    @mousedown.stop
-                    class="center AlignBtn"
-                    src="../assets/images/center-align.svg"
-                  />
-                  <img
-                    @mousedown.stop
-                    class="right AlignBtn"
-                    src="../assets/images/left-align.svg"
-                  />
-                  <a class="linkA"> Link </a>
-                </div>
-
-                <div class="row font">
-                  <img
-                    @mousedown.stop
-                    class="thick"
-                    src="../assets/images/thick.svg"
-                  />
-                  <img
-                    @mousedown.stop
-                    class="line-font"
-                    src="../assets/images/line-font.svg"
-                  />
-                  <img
-                    @mousedown.stop
-                    class="italic"
-                    src="../assets/images/italic.svg"
-                  />
-                  <img
-                    @mousedown.stop
-                    class="bigAndSmall"
-                    src="../assets/images/bigAndSmall.svg"
-                  />
-                </div>
-
-                <div class="row">
-                  <span class="property">
-                    Style
-                  </span>
-                  <b-form-select
-                    class="btn btn-info btn-sm dropdown-toggle"
-                    id="dropdown-toggle"
-                    v-model="borderWidthSelected"
-                    :options="borderWidth"
-                    @change="submitChangeBorderWidth"
-                  ></b-form-select>
-                </div>
-                <br />
-                <div class="row">
-                  <span class="property">
-                    Font
-                  </span>
-                  <b-form-select
-                    class="btn btn-info btn-sm dropdown-toggle"
-                    id="dropdown-toggle"
-                    v-model="borderWidthSelected"
-                    :options="borderWidth"
-                    @change="submitChangeBorderWidth"
-                  ></b-form-select>
-                </div>
-                <br />
-                <div class="row">
-                  <span class="property">
-                    Size
-                  </span>
-                  <input
-                    class="propertyChange "
-                    type
-                    name="width"
-                    value
-                    title
-                    placeholder="31.4375px"
-                    @keyup.enter="submitSourceWithPX"
-                    v-model="componentSorce.width"
-                  />
-                </div>
-                <br />
-                <div class="row">
-                  <span class="property backgruond" id="bgSpan">
-                    Font Color
-                  </span>
-                  <b-button
-                    class="backgroundColorPicker"
-                    @click="colorBackgroundpicker"
-                    @keyup.enter="submitSourceOriginal"
-                    :style="backgroundColor"
-                    variant="free"
-                  ></b-button>
-                </div>
-
-                <div class="row" id="buttonRow">
-                  <!--<img @click="closeLayout" src="../assets/ban.svg" class="layoutBanBtn">-->
-                  <b-button
-                    class="backgroundFixColor ban"
-                    style="background-color:#fffeec background:src(http://cdn.zetawiki.com/png/slash.png)"
+            <div class="card">
+              <div
+                class="card-header"
+                @click="clickFontTab"
+                role="tab"
+                id="headingOne"
+              >
+                <h5 class="mb-0">
+                  <a
+                    class="title"
+                    data-toggle="collapse"
+                    href="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
                   >
-                  </b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #e6696e, #e67a7d); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #9177c0, #8268b4); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #dd8042, #dc8d5e); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #d69d2f, #cd8e27); !important"
-                  ></b-button>
-                </div>
+                    font
+                  </a>
+                </h5>
+              </div>
+              <div
+                id="collapseOne"
+                class="collapse"
+                v-bind:class="{ show: fontTab === 1 }"
+                role="tabpanel"
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+              >
+                <div class="card-body">
+                  <div class="row font">
+                    <img
+                      @mousedown.stop
+                      class="left AlignBtn"
+                      src="../assets/images/left-align.svg"
+                    />
+                    <img
+                      @mousedown.stop
+                      class="center AlignBtn"
+                      src="../assets/images/center-align.svg"
+                    />
+                    <img
+                      @mousedown.stop
+                      class="right AlignBtn"
+                      src="../assets/images/left-align.svg"
+                    />
+                    <a class="linkA"> Link </a>
+                  </div>
 
-                <div class="row" id="buttonRow">
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #6ca64e, #5f9943); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #5ba68f, #4b977f); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #629eb1, #5490a3); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor"
-                    style="background-image: linear-gradient(to bottom, #87919d, #7a8490); !important"
-                  ></b-button>
-                  <b-button
-                    class="backgroundFixColor Picker"
-                    style="background-image: conic-gradient(
+                  <div class="row font">
+                    <img
+                      @mousedown.stop
+                      class="thick"
+                      src="../assets/images/thick.svg"
+                    />
+                    <img
+                      @mousedown.stop
+                      class="line-font"
+                      src="../assets/images/line-font.svg"
+                    />
+                    <img
+                      @mousedown.stop
+                      class="italic"
+                      src="../assets/images/italic.svg"
+                    />
+                    <img
+                      @mousedown.stop
+                      class="bigAndSmall"
+                      src="../assets/images/bigAndSmall.svg"
+                    />
+                  </div>
+
+                  <div class="row">
+                    <span class="property">
+                      Style
+                    </span>
+                    <b-form-select
+                      class="btn btn-info btn-sm dropdown-toggle"
+                      id="dropdown-toggle"
+                      v-model="borderWidthSelected"
+                      :options="borderWidth"
+                      @change="submitChangeBorderWidth"
+                    ></b-form-select>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <span class="property">
+                      Font
+                    </span>
+                    <b-form-select
+                      class="btn btn-info btn-sm dropdown-toggle"
+                      id="dropdown-toggle"
+                      v-model="borderWidthSelected"
+                      :options="borderWidth"
+                      @change="submitChangeBorderWidth"
+                    ></b-form-select>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <span class="property">
+                      Size
+                    </span>
+                    <input
+                      class="propertyChange "
+                      type
+                      name="width"
+                      value
+                      title
+                      placeholder="31.4375px"
+                      @keyup.enter="submitSourceWithPX"
+                      v-model="componentSorce.width"
+                    />
+                  </div>
+                  <br />
+                  <div class="row">
+                    <span class="property backgruond" id="bgSpan">
+                      Font Color
+                    </span>
+                    <b-button
+                      class="backgroundColorPicker"
+                      @click="colorBackgroundpicker"
+                      @keyup.enter="submitSourceOriginal"
+                      :style="backgroundColor"
+                      variant="free"
+                    ></b-button>
+                  </div>
+
+                  <div class="row" id="buttonRow">
+                    <!--<img @click="closeLayout" src="../assets/ban.svg" class="layoutBanBtn">-->
+                    <b-button
+                      class="backgroundFixColor ban"
+                      style="background-color:#fffeec background:src(http://cdn.zetawiki.com/png/slash.png)"
+                    >
+                    </b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #e6696e, #e67a7d); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #9177c0, #8268b4); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #dd8042, #dc8d5e); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #d69d2f, #cd8e27); !important"
+                    ></b-button>
+                  </div>
+
+                  <div class="row" id="buttonRow">
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #6ca64e, #5f9943); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #5ba68f, #4b977f); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #629eb1, #5490a3); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor"
+                      style="background-image: linear-gradient(to bottom, #87919d, #7a8490); !important"
+                    ></b-button>
+                    <b-button
+                      class="backgroundFixColor Picker"
+                      style="background-image: conic-gradient(
                       #ff4141,
                       #ffff51,
                       #55fc55,
                       #5555ff,
                       #ff5959); !important"
-                  ></b-button>
+                    ></b-button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!--
+            <!--
           <div class="card">
             <div
               class="card-header"
@@ -582,387 +586,408 @@
                     class="filterSpan"
                     :class="{ fontActive: onOpacity }"
                     style="float:left"
-                  >
-                    Opacity
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    name="Opacity"
-                    submitSorce.style="Opacity"
-                    @input="submitOpacity"
-                    v-model="opacityValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    v-model="opacityValue"
-                    placeholder="0"
-                    name="Opacity"
-                    @keyup.enter="submitOpacity"
-                  />
-                </div>
 
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onBlur }"
-                    style="float:left"
                   >
-                    Blur
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="100"
-                    step="1"
-                    name="Blur"
-                    submitSorce.style="Blur"
-                    @input="submitBlur"
-                    v-model="blurValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0px"
-                    name="Blur"
-                    @keyup.enter="submitBlur"
-                    v-model="blurValue"
-                  />
-                </div>
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onBrightness }"
-                    style="float:left"
-                  >
-                    Brightness
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="100"
-                    step="1"
-                    name="Brightness"
-                    submitSorce.style="Brightness"
-                    @input="submitBrightness"
-                    v-model="brightnessValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0%"
-                    name="Brightness"
-                    @keyup.enter="submitBrightness"
-                    v-model="brightnessValue"
-                  />
-                </div>
+                    filter
+                  </a>
+                </h5>
+              </div>
+              <div
+                id="collapseOne"
+                class="collapse"
+                v-bind:class="{ show: filterTab === 1 }"
+                role="tabpanel"
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+              >
+                <div class="card-body">
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onOpacity }"
+                      style="float:left"
+                    >
+                      Opacity
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      name="Opacity"
+                      submitSorce.style="Opacity"
+                      @input="submitOpacity"
+                      v-model="opacityValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      v-model="opacityValue"
+                      placeholder="0"
+                      name="Opacity"
+                      @keyup.enter="submitOpacity"
+                    />
+                  </div>
 
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onContrast }"
-                    style="float:left"
-                  >
-                    Contrast
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="200"
-                    step="1"
-                    name="Contrast"
-                    submitSorce.style="Contrast"
-                    @input="submitContrast"
-                    v-model="contrastValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0%"
-                    name="Contrast"
-                    @keyup.enter="submitContrast"
-                    v-model="contrastValue"
-                  />
-                </div>
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onGrayscale }"
-                    style="float:left"
-                  >
-                    Grayscale
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="100"
-                    step="1"
-                    name="Grayscale"
-                    submitSorce.style="Grayscale"
-                    @input="submitGrayscale"
-                    v-model="grayscaleValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0%"
-                    name="Grayscale"
-                    @keyup.enter="submitGrayscale"
-                    v-model="grayscaleValue"
-                  />
-                </div>
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onHue }"
-                    style="float:left"
-                  >
-                    Hue
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="360"
-                    step="3"
-                    name="Hue"
-                    submitSorce.style="Hue"
-                    @input="submitHue"
-                    v-model="hueValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0deg"
-                    name="Hue"
-                    @keyup.enter="submitHue"
-                    v-model="hueValue"
-                  />
-                </div>
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onInvert }"
-                    style="float:left"
-                  >
-                    Invert
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="100"
-                    step="1"
-                    name="Invert"
-                    submitSorce.style="Invert"
-                    @input="submitInvert"
-                    v-model="invertValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="100%"
-                    name="Invert"
-                    @keyup.enter="submitInvert"
-                    v-model="invertValue"
-                  />
-                </div>
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onSaturate }"
-                    style="float:left"
-                  >
-                    Saturate
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="200"
-                    step="1"
-                    name="Saturate"
-                    submitSorce.style="Saturate"
-                    @input="submitSaturate"
-                    v-model="saturateValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0%"
-                    name="Saturate"
-                    @keyup.enter="submitSaturate"
-                    v-model="saturateValue"
-                  />
-                </div>
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onSepia }"
-                    style="float:left"
-                  >
-                    Sepia
-                  </span>
-                  <range-slider
-                    class="slider"
-                    min="0"
-                    max="100"
-                    step="1"
-                    name="Sepia"
-                    submitSorce.style="Sepia"
-                    @input="submitSepia"
-                    v-model="sepiaValue"
-                  />
-                  <input
-                    class="filterInput"
-                    style="width:50px"
-                    placeholder="0%"
-                    name="Sepia"
-                    @keyup.enter="submitSepia"
-                    v-model="sepiaValue"
-                  />
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onBlur }"
+                      style="float:left"
+                    >
+                      Blur
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="100"
+                      step="1"
+                      name="Blur"
+                      submitSorce.style="Blur"
+                      @input="submitBlur"
+                      v-model="blurValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0px"
+                      name="Blur"
+                      @keyup.enter="submitBlur"
+                      v-model="blurValue"
+                    />
+                  </div>
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onBrightness }"
+                      style="float:left"
+                    >
+                      Brightness
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="100"
+                      step="1"
+                      name="Brightness"
+                      submitSorce.style="Brightness"
+                      @input="submitBrightness"
+                      v-model="brightnessValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0%"
+                      name="Brightness"
+                      @keyup.enter="submitBrightness"
+                      v-model="brightnessValue"
+                    />
+                  </div>
+
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onContrast }"
+                      style="float:left"
+                    >
+                      Contrast
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="200"
+                      step="1"
+                      name="Contrast"
+                      submitSorce.style="Contrast"
+                      @input="submitContrast"
+                      v-model="contrastValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0%"
+                      name="Contrast"
+                      @keyup.enter="submitContrast"
+                      v-model="contrastValue"
+                    />
+                  </div>
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onGrayscale }"
+                      style="float:left"
+                    >
+                      Grayscale
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="100"
+                      step="1"
+                      name="Grayscale"
+                      submitSorce.style="Grayscale"
+                      @input="submitGrayscale"
+                      v-model="grayscaleValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0%"
+                      name="Grayscale"
+                      @keyup.enter="submitGrayscale"
+                      v-model="grayscaleValue"
+                    />
+                  </div>
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onHue }"
+                      style="float:left"
+                    >
+                      Hue
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="360"
+                      step="3"
+                      name="Hue"
+                      submitSorce.style="Hue"
+                      @input="submitHue"
+                      v-model="hueValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0deg"
+                      name="Hue"
+                      @keyup.enter="submitHue"
+                      v-model="hueValue"
+                    />
+                  </div>
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onInvert }"
+                      style="float:left"
+                    >
+                      Invert
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="100"
+                      step="1"
+                      name="Invert"
+                      submitSorce.style="Invert"
+                      @input="submitInvert"
+                      v-model="invertValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="100%"
+                      name="Invert"
+                      @keyup.enter="submitInvert"
+                      v-model="invertValue"
+                    />
+                  </div>
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onSaturate }"
+                      style="float:left"
+                    >
+                      Saturate
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="200"
+                      step="1"
+                      name="Saturate"
+                      submitSorce.style="Saturate"
+                      @input="submitSaturate"
+                      v-model="saturateValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0%"
+                      name="Saturate"
+                      @keyup.enter="submitSaturate"
+                      v-model="saturateValue"
+                    />
+                  </div>
+                  <div class="row filter">
+                    <span
+                      class="filterSpan"
+                      :class="{ fontActive: onSepia }"
+                      style="float:left"
+                    >
+                      Sepia
+                    </span>
+                    <range-slider
+                      class="slider"
+                      min="0"
+                      max="100"
+                      step="1"
+                      name="Sepia"
+                      submitSorce.style="Sepia"
+                      @input="submitSepia"
+                      v-model="sepiaValue"
+                    />
+                    <input
+                      class="filterInput"
+                      style="width:50px"
+                      placeholder="0%"
+                      name="Sepia"
+                      @keyup.enter="submitSepia"
+                      v-model="sepiaValue"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          -->
+          --></div>
         </div>
-      </div>
 
-      <!--Animation-->
-      <div
-        @mouseover="mouseOver"
-        v-show="tabStep === 2"
-        class="tab-pane"
-        v-bind:class="{ active: tabStep === 2 }"
-        id="pills-animation"
-        role="tabpane2"
-        aria-labelledby="pills-animation-tab"
-      >
-        <div id="accordion" role="tablist">
-          <div class="card">
-            <div
-              class="card-header"
-              @click="clickAnimationTab"
-              role="tab"
-              id="headingOne"
-            >
-              <h5 class="mb-0">
-                <a
-                  class="title"
-                  data-toggle="collapse"
-                  href="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
-                >
-                  Animation
-                </a>
-              </h5>
-            </div>
-            <div
-              id="collapseOne"
-              class="collapse"
-              v-bind:class="{ show: AnimationTab === 1 }"
-              role="tabpanel"
-              aria-labelledby="headingOne"
-              data-parent="#accordion"
-            >
-              <div class="row animation">
-                <span class="aniText">
-                  Animation
-                </span>
-                <b-form-select
-                  class=" btn btn-info btn-sm dropdownAnimation"
-                  v-model="imageSizeSelected"
-                  :options="animationStyle"
-                  @change="submitChangeImageSize"
-                ></b-form-select>
+        <!--Animation-->
+        <div
+          @mouseover="mouseOver"
+          v-show="tabStep === 2"
+          class="tab-pane"
+          v-bind:class="{ active: tabStep === 2 }"
+          id="pills-animation"
+          role="tabpane2"
+          aria-labelledby="pills-animation-tab"
+        >
+          <div id="accordion" role="tablist">
+            <div class="card">
+              <div
+                class="card-header"
+                @click="clickAnimationTab"
+                role="tab"
+                id="headingOne"
+              >
+                <h5 class="mb-0">
+                  <a
+                    class="title"
+                    data-toggle="collapse"
+                    href="#collapseOne"
+                    aria-expanded="true"
+                    aria-controls="collapseOne"
+                  >
+                    Animation
+                  </a>
+                </h5>
               </div>
-
-              <div>
+              <div
+                id="collapseOne"
+                class="collapse"
+                v-bind:class="{ show: AnimationTab === 1 }"
+                role="tabpanel"
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+              >
                 <div class="row animation">
                   <span class="aniText">
-                    Time
-                  </span>
-                  <input
-                    class="propertyChange aniTimeChange"
-                    type
-                    name="width"
-                    value
-                    title
-                    placeholder="31.4375px"
-                    v-model="componentSorce.width"
-                  />
-                </div>
-
-                <div class="row animation">
-                  <span class="aniText">
-                    Delay
-                  </span>
-                  <input
-                    class="propertyChange aniTimeChange"
-                    type
-                    name="width"
-                    value
-                    title
-                    placeholder="31.4375px"
-                    v-model="componentSorce.width"
-                  />
-                </div>
-
-                <div class="row animation">
-                  <span class="aniText">
-                    Repeat
+                    Animation
                   </span>
                   <b-form-select
                     class=" btn btn-info btn-sm dropdownAnimation"
                     v-model="imageSizeSelected"
-                    :options="repeatTime"
+                    :options="animationStyle"
                     @change="submitChangeImageSize"
                   ></b-form-select>
                 </div>
 
-                <div class="row animation">
-                  <span class="aniText">
-                    Function
-                  </span>
-                  <b-form-select
-                    class="btn btn-info btn-sm dropdownAnimation"
-                    v-model="imageSizeSelected"
-                    :options="timingFunction"
-                    @change="submitChangeImageSize"
-                  ></b-form-select>
+                <div>
+                  <div class="row animation">
+                    <span class="aniText">
+                      Time
+                    </span>
+                    <input
+                      class="propertyChange aniTimeChange"
+                      type
+                      name="width"
+                      value
+                      title
+                      placeholder="31.4375px"
+                      v-model="componentSorce.width"
+                    />
+                  </div>
+
+                  <div class="row animation">
+                    <span class="aniText">
+                      Delay
+                    </span>
+                    <input
+                      class="propertyChange aniTimeChange"
+                      type
+                      name="width"
+                      value
+                      title
+                      placeholder="31.4375px"
+                      v-model="componentSorce.width"
+                    />
+                  </div>
+
+                  <div class="row animation">
+                    <span class="aniText">
+                      Repeat
+                    </span>
+                    <b-form-select
+                      class=" btn btn-info btn-sm dropdownAnimation"
+                      v-model="imageSizeSelected"
+                      :options="repeatTime"
+                      @change="submitChangeImageSize"
+                    ></b-form-select>
+                  </div>
+
+                  <div class="row animation">
+                    <span class="aniText">
+                      Function
+                    </span>
+                    <b-form-select
+                      class="btn btn-info btn-sm dropdownAnimation"
+                      v-model="imageSizeSelected"
+                      :options="timingFunction"
+                      @change="submitChangeImageSize"
+                    ></b-form-select>
+                  </div>
+
+                  <div class="row animation">
+                    <span class="aniText">
+                      Direction
+                    </span>
+                    <b-form-select
+                      class=" btn btn-info btn-sm dropdownAnimation"
+                      v-model="imageSizeSelected"
+                      :options="direction"
+                      @change="submitChangeImageSize"
+                    ></b-form-select>
+                  </div>
+
+                  <b-button
+                    class="deleteAM"
+                    id="deleteAM"
+                    @click="testAnimation"
+                  ></b-button>
+
+                  <b-button
+                    class="testApplyAM"
+                    id="ApplyAM"
+                    @click="testAnimation"
+                  ></b-button>
                 </div>
-
-                <div class="row animation">
-                  <span class="aniText">
-                    Direction
-                  </span>
-                  <b-form-select
-                    class=" btn btn-info btn-sm dropdownAnimation"
-                    v-model="imageSizeSelected"
-                    :options="direction"
-                    @change="submitChangeImageSize"
-                  ></b-form-select>
-                </div>
-
-                <b-button
-                  class="deleteAM"
-                  id="deleteAM"
-                  @click="testAnimation"
-                ></b-button>
-
-                <b-button
-                  class="testApplyAM"
-                  id="ApplyAM"
-                  @click="testAnimation"
-                ></b-button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
 
@@ -972,6 +997,8 @@ import { Chrome } from 'vue-color'
 import { mapGetters, mapMutations } from 'vuex'
 import Switches from 'vue-switches'
 import 'vue-range-slider/dist/vue-range-slider.css'
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
   data() {
     return {
@@ -1225,7 +1252,8 @@ export default {
   components: {
     RangeSlider,
     ChromeColor: VueColor.Chrome,
-    Switches
+    Switches,
+    vueCustomScrollbar
   },
   created() {},
   computed: {
@@ -1324,13 +1352,13 @@ export default {
     },
     colorBackgroundpicker() {
       // if(this.isBackgroundPicker==true)
-      // 	this.isBackgroundPicker=false
+      //    this.isBackgroundPicker=false
       // else
       this.isBackgroundPicker = true
       // if(this.isBackgroundPicker==true)
-      // 	this.isBackgroundPicker=false
+      //    this.isBackgroundPicker=false
       // else
-      // 	this.isBackgroundPicker=true
+      //    this.isBackgroundPicker=true
       // console.log("sdas")
     },
     colorFontpicker() {
@@ -1682,7 +1710,12 @@ export default {
   float: right;
 }
 .layout-box {
-  overflow: auto;
+  // overflow: auto;
+  width: 100%;
+  height: 100%;
+}
+.scroll-area {
+  height: 93%;
 }
 .dsadsadsad {
   color: white !important;
@@ -1918,7 +1951,7 @@ b {
     // display: flex;
     // flex-direction: column;
     padding: 0.4rem;
-    overflow: auto;
+    // overflow: auto;
   }
 }
 .Picker {
