@@ -10,12 +10,12 @@
       />
     </div>
     <vue-custom-scrollbar class="scroll-area">
-    <div
+      <div
         ref="dash"
-      @mousedown="refineSitemap"
-      @mouseup="mouseRightClick"
-      class="title-map"
-    >
+        @mousedown="refineSitemap"
+        @mouseup="mouseRightClick"
+        class="title-map"
+      >
         <div
           :key="title.id"
           @keydown.enter="isContentNotEditable"
@@ -23,9 +23,9 @@
           class="titles"
           v-for="title in titles"
         >
-        {{ title.text }}
+          {{ title.text }}
+        </div>
       </div>
-    </div>
     </vue-custom-scrollbar>
   </div>
 </template>
@@ -78,6 +78,21 @@ export default {
     })
   },
   methods: {
+    deleteTitle() {
+      console.log(this.contextTarget)
+      let i
+      let titles = document.querySelectorAll('.titles')
+      for (i = 0; i < titles.length; i++) {
+        console.log(titles[i])
+        if (titles[i] === this.contextTarget) {
+          break
+        }
+      }
+      console.log(i)
+      this.titles.splice(i, 1)
+      console.log(this.titles)
+      this.$emit('reset-title', this.titles)
+    },
     isContentNotEditable(e) {
       e.preventDefault()
       let titles = document.querySelectorAll('.titles')
@@ -208,17 +223,19 @@ export default {
       position: absolute;
     }
   }
-  .title-map {
-    background-color: #292931;
-    color: #e7e4e4;
-    padding-left: 0.4rem;
-    align-items: left;
-    .titles {
-      text-align: left;
-      height: 1.5rem;
-      &:hover {
-        background-color: #505557;
-        cursor: pointer;
+  .scroll-area {
+    .title-map {
+      background-color: #292931;
+      color: #e7e4e4;
+      padding-left: 0.4rem;
+      align-items: left;
+      .titles {
+        text-align: left;
+        height: 1.5rem;
+        &:hover {
+          background-color: #505557;
+          cursor: pointer;
+        }
       }
     }
   }

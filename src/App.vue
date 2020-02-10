@@ -325,6 +325,7 @@
       <div class="cut">Cut</div>
       <div class="copy">Copy</div>
       <div @click="rename" class="rename">Rename</div>
+      <div @click="deleteList" class="delete">Delete</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -708,6 +709,10 @@ export default {
     this.hasht = h
   },
   methods: {
+    deleteList() {
+      this.$refs.sitemap.deleteTitle()
+      // this.closePage()
+    },
     resetTitle(titles) {
       console.log('reset')
       this.titles = titles
@@ -1374,7 +1379,8 @@ export default {
   .studio {
     width: 20rem;
     height: 30rem;
-    border: 1.5px solid #000000;
+    // border: 1.5px solid #000000;
+    box-shadow: 5px 5px 5px 1px #000000;
     position: fixed;
     left: 3.5%;
     background-color: #32373a;
@@ -1826,7 +1832,7 @@ export default {
     z-index: 50;
     // left: 10rem;
   }
-  ription-tag,
+  .description-tag,
   .description-ui {
     background-color: #000;
     position: fixed;
