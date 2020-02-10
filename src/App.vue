@@ -1934,10 +1934,10 @@ export default {
     height: 60%;
   }
   .tab-pane {
-    height: 145%;
+    height: 100%;
   }
   #pills-home {
-    height: 145%;
+    height: 100%;
   }
   #pills-profile {
     height: 145%;
