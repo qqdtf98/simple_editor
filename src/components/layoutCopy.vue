@@ -498,27 +498,27 @@
 					<div class="col md-4" :class="{fontActive:onSepia}" style="float:left">
 						Sepia
 					</div>
-				<div class="col md-4">
-				<range-slider
-					class="slider"
-					min="0"
-					max="100"
-					step="1"
-					name="Sepia"
-					submitSorce.style="Sepia"
-					@input = "submitSepia"
-					v-model="sepiaValue">
-				</range-slider>
-				</div>
-				<div class="col md-4">
-				<input
-					style="width:50px"
-					placeholder="0%"
-					name="Sepia"
-					@keyup.enter="submitSepia"
-					v-model="sepiaValue"
-				></input>
-				</div>
+					<div class="col md-4">
+						<range-slider
+							class="slider"
+							min="0"
+							max="100"
+							step="1"
+							name="Sepia"
+							submitSorce.style="Sepia"
+							@input = "submitSepia"
+							v-model="sepiaValue">
+						</range-slider>
+					</div>
+					<div class="col md-4">
+						<input
+							style="width:50px"
+							placeholder="0%"
+							name="Sepia"
+							@keyup.enter="submitSepia"
+							v-model="sepiaValue"
+						></input>
+					</div>
 				</div>
 
 			</b-collapse>
@@ -693,6 +693,45 @@ export default {
   props: ['payload','loadData'],
   data () {
     return {
+	  //selction 된 component 속성
+	  componentSorce: {
+        x: 228,
+        y: 500,
+        width: 960,
+        height: 614,
+        padding: '0px',
+        margin: '0px',
+        backgroundColor: '',
+        fontColor: '',
+        fontSize: ''
+	  },
+	  //margin 값 
+	  margin: [
+		  {
+          value: 0
+		  },
+		  {
+          value: 0
+		  },
+		  {
+          value: 0
+		  },
+		  {
+          value: 0
+		  }
+	  ],
+	  //paddoing 값
+	  padding: [0, 0, 0, 0],
+	  
+
+
+
+
+
+
+
+
+	  
 	  imageSizeSelected: 'none',
       imageSize: [
         { value: 'none', text: 'None' },
@@ -780,33 +819,9 @@ export default {
         value: '',
 		change:'',
       },
-      componentSorce: {
-        x: 228,
-        y: 500,
-        width: 960,
-        height: 614,
-        padding: '0px',
-        margin: '0px',
-        backgroundColor: '',
-        fontColor: '',
-        fontSize: ''
-	  },
-	  margin: [
-		  {
-          value: 0
-		  },
-		  {
-          value: 0
-		  },
-		  {
-          value: 0
-		  },
-		  {
-          value: 0
-		  }
-	  ],
+      
+	  
 
-	  padding: [0, 0, 0, 0],
 
       compo: null,
       borderstyle: null,

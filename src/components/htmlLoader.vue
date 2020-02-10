@@ -50,13 +50,13 @@ file.onchange = function () {
     var oScript = document.createElement('style')
     oScript.type = 'text/css'
     oScript.innerHTML = 
-`#dsadsadsa{
-  color: #fff; 
-  background:blue;
-  font-size:2em; 
-  border-radius:0.5em;
-  padding:5px 20px;
-}`
+      `#dsadsadsa{
+        color: #fff; 
+        background:blue;
+        font-size:2em; 
+        border-radius:0.5em;
+        padding:5px 20px;
+      }`
     document.getElementsByTagName('head')[0].appendChild(oScript)
     // var vScript = document.createElement('script');
     // vScript.type ='text/javascript';

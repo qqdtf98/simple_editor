@@ -103,6 +103,10 @@
             />
           </div>
         </div>
+
+        <!--자 넣는 곳-->
+        <SlideRuler />
+
         <div class="main-center-panel">
           <div class="main-menu">
             <home
@@ -112,28 +116,7 @@
               @loadData="loadData"
               class="home"
             ></home>
-            <div v-if="isCommentOn" class="comment-board">
-              <div class="add-comment">
-                <textarea class="comment-input" placeholder="comment" />
-                <img
-                  @click="addComment"
-                  class="add-comment-btn"
-                  src="./assets/images/plus.svg"
-                />
-              </div>
-              <div
-                :key="comment.index"
-                v-for="comment in comments"
-                class="comment-wrapper"
-              >
-                <div class="top-box">
-                  <div class="writer">{{ comment.writer }}</div>
-                  <div class="element">{{ comment.element }}</div>
-                  <div class="time">{{ comment.time }}</div>
-                </div>
-                <div class="comment-text">{{ comment.text }}</div>
-              </div>
-            </div>
+        
           </div>
         </div>
         <div class="row bottom-panel">
@@ -157,22 +140,29 @@
               >
                 <div class="showCode">
                   <div class="showCode">
-                    <Ruler
-                      ref="Ruler"
-                      min="0"
-                      max="100"
-                      step="0.01"
-                      @onchange="rulerChange"
-                      :range="range"
-                    />
+                    <!--
+                  <Ruler 
+                  ref="Ruler"
+                  min="0"
+							    max="100" 
+                  step="0.01"
+                  @onchange="rulerChange"
+                  :range="range"/>
 
-                    <SlideRuler ref="SlideRuler" maxValue: "230" minValue: "100"
-                    currentValue: "180" handleValue: "handleValue" precision:
-                    "1" />
-                    <h1>dasd</h1>
-                    <vue-ruler type="horizontal" ref="ruler" />
-                  </div>
+                  <SlideRuler
+                  ref="SlideRuler"
+                  maxValue: "230"
+                  minValue: "100"
+                  currentValue: "180"
+                  handleValue: "handleValue"
+                  precision: "1"
+                  ></SlideRuler>
+                  <h1>dasd</h1>
+                  <vue-ruler type="horizontal" ref="ruler"/>
+                  --></div>
+
                 </div>
+                <div class="comment-text">{{ comment.text }}</div>
               </div>
               <div
                 v-show="tabStep === 2"
@@ -219,6 +209,12 @@
             >JavaScript</span
           >
         </div>
+        <div class="row bottom-panel">
+          <div v-show="isData" class="loadDataPanel">
+            <div @mousedown="loaderResize" class="loader-bord"></div>
+            <div class="studio-text-box">
+              <span class="studio-text">CodeReview</span>
+
       </div>
       <div class="right-panel">
         <div class="right-top-panel">
@@ -252,6 +248,7 @@
             <div v-if="!showhtml" class="filecontent" />
           </div>
         </div>
+
       </div>
     </div>
     <CodeLoader
@@ -485,10 +482,10 @@ export default {
   mounted() {
     this.$refs.sitemap.loadSitemap(this.titles)
     let title = document.querySelector('.file-name')
-    // console.log(title)
+    console.log(title)
     title.style.backgroundColor = 'rgb(78, 78, 92)'
     let htmltree = document.querySelector('.tree-name')
-    // console.log(htmltree)
+    console.log(htmltree)
     htmltree.style.backgroundColor = '#4e4e5c'
     $(window).resize(() => {
       this.$refs.home.windowResized()
@@ -642,7 +639,7 @@ export default {
           if (this.layoutSticky === false) {
             let rightPanel = document.querySelector('.right-panel')
             let centerPanel = document.querySelector('.center-panel')
-            // this.moveTarget.style.borderTop = '1px solid black'
+            this.moveTarget.style.borderTop = '1px solid black'
             rightPanel.style.width = '0'
             centerPanel.style.width = '96.5%'
           } else {
@@ -1314,7 +1311,6 @@ export default {
         // 읽기
         var reader = new FileReader()
         reader.readAsText(fileList[0])
-
         //로드 한 후
         reader.onload = function() {
           document.querySelector('#preview').textContent = reader.result
@@ -1349,6 +1345,30 @@ export default {
     },
     rulerChange(e) {
       console.log(e)
+    },
+    //menual hover
+    manualSelet(payload){
+      console.log(payload)
+      if(payload!='SPAN'){
+        // this.viewTemplate=true;
+      
+        console.log("sdsad")
+      }
+      else if (payload=='SPAN'&&!this.viewTemplate) {
+        this.tagDescription = true
+        this.uiDescription = false
+        this.$nextTick(() => {
+          let text = document.querySelector('.description-tag')
+          let stu = document.querySelector('#layout')
+          let innerText = payload.target.innerHTML
+            .toLowerCase()
+            .replace(/ /gi, '')
+          text.innerHTML = this.hasht[innerText]
+
+          text.style.left = stu.getBoundingClientRect().left - 80 + 'px'
+          text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+        })
+      }
     }
   }
 }
