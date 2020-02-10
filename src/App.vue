@@ -1287,7 +1287,6 @@ export default {
     // },
     selectDomElemented(domElement) {
       this.dom = domElement
-      // console.log(this.dom)
       this.$refs.home.selectOverview(this.dom)
     },
     inParentTreeOption(dom) {
