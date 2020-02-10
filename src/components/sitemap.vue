@@ -224,6 +224,7 @@ export default {
     }
   }
   .scroll-area {
+    padding: 0.4rem;
     .title-map {
       background-color: #292931;
       color: #e7e4e4;
