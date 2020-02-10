@@ -315,6 +315,11 @@ export default {
   justify-items: left;
   padding: 0.4rem;
   text-align: left;
+  width: 100%;
+  /* height: 30px; */
+  display: inline-block;
+  white-space: nowrap;
+  overflow: auto;
   // overflow: scroll;
 }
 .overview-text {
@@ -328,14 +333,16 @@ export default {
   cursor: pointer;
   position: absolute;
 }
-li {
-  overflow-x: auto;
+.acol {
+  margin: 0px 2px 0px 0px;
 }
-a {
-  font-size: 13px;
-}
+
 .acol {
   padding: 0.4rem;
+  a {
+    font-size: 13px;
+    margin: 0px 15px 0px 0px;
+  }
 }
 .acol label:before {
   content: '\f107 ';
