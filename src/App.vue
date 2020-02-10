@@ -276,6 +276,7 @@
       v-show="sitemapOn"
       @copy-title="copyPage"
       @close-sitemap="sitemapBtn"
+      @reset-title="resetTitle"
       @right-click="openSitemapContext"
       class="sitemap"
     />
@@ -323,8 +324,7 @@
       <div class="open">Open</div>
       <div class="cut">Cut</div>
       <div class="copy">Copy</div>
-      <div @click="renameTitle" class="rename">Rename</div>
-      <div class="delete">Delete</div>
+      <div @click="rename" class="rename">Rename</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -708,7 +708,15 @@ export default {
     this.hasht = h
   },
   methods: {
-    renameTitle() {},
+    resetTitle(titles) {
+      console.log('reset')
+      this.titles = titles
+      // console.log(this.titles)
+      let topMenu = document.querySelector('.top-menu')
+    },
+    rename() {
+      this.$refs.sitemap.renameTitle()
+    },
     openSitemapContext(e) {
       if (this.isContextMenu) {
         this.isContextMenu = false
