@@ -321,11 +321,10 @@
     </div>
     <div v-if="isTitle" class="title-copy"></div>
     <div v-if="isContextMenu" class="sitemapContext">
-      <div class="open">Open</div>
-      <div class="cut">Cut</div>
-      <div class="copy">Copy</div>
+      <div @click="changePageSitemap" class="open">Open</div>
+      <div @click="copyPage" class="copy">Copy</div>
       <div @click="rename" class="rename">Rename</div>
-      <div @click="deleteList" class="delete">Delete</div>
+      <div @click="deleteTitle" class="delete">Delete</div>
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -709,7 +708,68 @@ export default {
     this.hasht = h
   },
   methods: {
-    deleteList() {
+    copyPage() {
+      console.log(this.selectedTitle)
+      let titles = document.querySelectorAll('.titles')
+      let i
+      for (i = 0; i < titles.length; i++) {
+        if (titles[i] === this.selectedTitle) {
+          break
+        }
+      }
+      let payload = {
+        text: `${this.titles[i].text}`,
+        id: `${++this.titleId}`,
+        parentID: null
+      }
+      this.titles.push(payload)
+      let editor = document.querySelector('.board')
+      // let copy = editor.cloneNode(true)
+      let newEditorBox = document.createElement('div')
+      let ne = document.createElement('button')
+      newEditorBox.classList.add('board')
+      newEditorBox.classList.add('hidden')
+      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.appendChild(ne)
+      // console.log(editor.parentElement);
+
+      editor.parentElement.appendChild(newEditorBox)
+
+      // console.log(newEditorBox.classList);
+      this.editorNum++
+
+      let files = document.querySelectorAll('.file-name')
+      // files[files.length-1].style.backgroundColor = '#2c3134'
+      for (i = 0; i < files.length; i++) {
+        if (i === 0) {
+          files[i].style.backgroundColor = '#545e66'
+        } else {
+          files[i].style.backgroundColor = '#2c3134'
+        }
+      }
+      this.$refs.sitemap.loadSitemap(this.titles)
+    },
+    changePageSitemap(e) {
+      let titles = document.querySelectorAll('.titles')
+      let editor = document.querySelectorAll('.board')
+      let i
+      for (i = 0; i < titles.length; i++) {
+        if (titles[i] === this.selectedTitle) {
+          break
+        }
+      }
+      let j
+      for (j = 0; j < editor.length; j++) {
+        if (j === i) {
+          editor[j].classList.remove('hidden')
+          editor[j].classList.add('display')
+        } else {
+          editor[j].classList.remove('display')
+          editor[j].classList.add('hidden')
+        }
+      }
+    },
+    deleteTitle() {
       this.$refs.sitemap.deleteTitle()
       // this.closePage()
     },
