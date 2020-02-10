@@ -75,6 +75,9 @@ export default {
         }
         this.sitemapMove = false
       }
+      if (this.isContentEditable) {
+        this.isContentNotEditable()
+      }
     })
   },
   methods: {
@@ -94,7 +97,11 @@ export default {
       this.$emit('reset-title', this.titles)
     },
     isContentNotEditable(e) {
-      e.preventDefault()
+      if (e) {
+        console.log(e)
+        e.preventDefault()
+      }
+
       let titles = document.querySelectorAll('.titles')
       let i
       for (i = 0; i < titles.length; i++) {
@@ -122,7 +129,7 @@ export default {
         range.setEnd(this.$refs.dash, 0)
         sel.addRange(range)
         // console.log(this.$ref.dash)
-        this.placeCaretAtEnd(this.$refs.dash)
+        this.placeCaretAtEnd(e)
       })
     },
     placeCaretAtEnd(el) {
