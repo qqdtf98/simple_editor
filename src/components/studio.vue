@@ -19,7 +19,7 @@
         />
         <img class="search-icon" src="../assets/images/search.svg" />
       </div>
-      <vue-custom-scrollbar class="scroll-area">
+      <vue-custom-scrollbar class="studio-scroll-area">
         <div @mousedown="addElement" @mouseover="mouseOver" class="tag-box">
           <div class="tag-list-box">
             <span class="tag-list">UI</span>
@@ -405,8 +405,9 @@ export default {
         right: 8px;
       }
     }
-    .scroll-area {
+    .studio-scroll-area {
       background-color: #292931;
+      height: calc(100% - 2rem);
       .tag-box {
         // overflow:scroll;
         align-items: left;

@@ -170,7 +170,6 @@
                     currentValue: "180" handleValue: "handleValue" precision:
                     "1" />
                     <h1>dasd</h1>
-                    <vue-ruler type="horizontal" ref="ruler" />
                   </div>
                 </div>
               </div>
@@ -518,6 +517,10 @@ export default {
     document.addEventListener('keyup', e => {
       if (e.which === 16) {
         this.isShift = false
+      }
+      if (e.which === 17) {
+        this.isCtrl = false
+        this.$refs.home.multiChoice(false)
       }
     })
     document.addEventListener('mousemove', e => {
@@ -1163,8 +1166,9 @@ export default {
         if (work.work === 'style') {
           work.elem.style[work.style] = work.value
         } else if (work.work === 'remove') {
+          console.log('remove')
           let parent = work.position
-          $(work.elem).insertBefore(parent.children[work.nth])
+          $(work.elem).insertAfter(parent.children[work.nth - 1])
         } else if (work.work === 'add') {
           let parent = work.position
           parent.removeChild(work.elem)
@@ -1286,8 +1290,8 @@ export default {
     //   this.selectedTag = e.target
     // },
     selectDomElemented(domElement) {
-      this.dom = domElement
-      this.$refs.home.selectOverview(this.dom)
+      this.$refs.home.selectOverview(domElement)
+      // this.dom = domElement
     },
     inParentTreeOption(dom) {
       this.$refs.layout.parentDom = dom
@@ -1758,7 +1762,6 @@ export default {
         justify-content: center;
         width: 100%;
         // border: 1px solid blue;
-        overflow: auto;
         .main-menu {
           width: 1200px;
           bottom: 0;

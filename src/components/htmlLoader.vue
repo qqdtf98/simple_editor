@@ -100,11 +100,10 @@ file.onchange = function () {
     }
   },
   mounted() {
-    console.log(this.$refs['mydiv'].firstChild)
+    // console.log(this.$refs['mydiv'].firstChild)
     // $('.layout-btn').trigger('click')
     this.$refs['mydiv'].firstChild.addEventListener('click', function(event) {
       event.preventDefault()
-      console.log('clicked: ', event.target)
       // alert('눌렀습니다')
     })
   }

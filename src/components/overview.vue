@@ -1,29 +1,35 @@
 <template>
   <div class="container">
-    <div class="overview-box">
-      <ul class="acol">
-        <li>
-          <input class="checkbox" type="checkbox" id="root" />
-          <label for="root">HTML</label>
-          <ul>
-            <li>
-              <input class="checkbox" type="checkbox" id="node3" />
-              <label for="node3">Body</label>
-              <ul
-                id="bodySource"
-                @mousemove="onmouseMove"
-                @click="clickLabelEvent"
-                style="text-indent:10px"
-              ></ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <vue-custom-scrollbar class="overview-scroll-area">
+      <div class="overview-box">
+        <ul class="acol">
+          <li>
+            <input class="checkbox" type="checkbox" id="root" />
+            <label for="root">HTML</label>
+            <ul>
+              <li>
+                <input class="checkbox" type="checkbox" id="node3" />
+                <label for="node3">Body</label>
+                <ul
+                  id="bodySource"
+                  @mousemove="onmouseMove"
+                  @click="clickLabelEvent"
+                  style="text-indent:10px"
+                ></ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
+
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
+  components: { vueCustomScrollbar },
   props: ['getDocument'],
 
   data() {
@@ -50,7 +56,6 @@ export default {
       child = child[0]
       // console.log(child.children)
       // console.log(child[1].children)
-      console.log(child)
 
       // console.log("전")
       // var idOjb = "aa"
@@ -82,7 +87,6 @@ export default {
       var newDIV2 = document.createElement('a')
       if (typeof child.className != 'undefined')
         newDIV2.innerHTML = ' .' + child.className
-      console.log($(child).attr('id'))
       if (typeof $(child).attr('id') != 'undefined')
         newDIV2.innerHTML += '  #' + $(child).attr('id')
       obj.appendChild(newDIV2)
@@ -112,7 +116,6 @@ export default {
       this.findChildren(child, newParentObj, 0)
     },
     findChildren(child, obj, myParent) {
-      console.log('ssssssss')
       if (typeof child.children !== 'undefined') {
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
@@ -210,7 +213,6 @@ export default {
             if (this.myParent[a] != '-1') {
               // console.log("메롱")
               // console.log(document.querySelector(`label[for="${this.myParent[a]}"]`))
-              console.log(this.myParent[a])
               if (this.isActiveLabel[this.myParent[a]] == false) {
                 $(
                   document.querySelector(`label[for="${this.myParent[a]}"]`)
@@ -225,6 +227,7 @@ export default {
               break
             }
           }
+
           document.querySelector(`label[for="${i}"]`).scrollIntoView()
           document.querySelector(`label[for="${i}"]`).style['color'] = '#3bc0f7'
           // console.log(this.myParent[i])
@@ -287,8 +290,6 @@ export default {
       this.$emit('domWithTree', this.dom)
     },
     clickLabelEvent(e) {
-      console.log(this.dom)
-      console.log(this.overviewMove)
       if (e.target.tagName == 'LABEL') {
         // console.log(e.target.id)
         if (this.isActiveLabel[e.target.id]) {
@@ -381,13 +382,16 @@ export default {
     left: 0.4rem;
   }
 }
-.overview-box {
+.overview-scroll-area {
   width: 100%;
   background-color: #292931;
-  height: 93%;
-  // display: flex;
-  // flex-direction: column;
-  // padding: 0.4rem;
-  overflow: auto;
+  height: 100%;
+  .overview-box {
+    width: 100%;
+    height: 100%;
+    // display: flex;
+    // flex-direction: column;
+    // padding: 0.4rem;
+  }
 }
 </style>
