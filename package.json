@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@caohenghu/vue-colorpicker": "^1.2.2",
-    "@scena/vue-ruler": "^0.2.3",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.1.0",
     "highlight": "^0.2.4",

@@ -6,6 +6,21 @@
         @ps-scroll-x="handleScroll"
         class="scroll-area"
       >
+        <!-- <div class="ruler-box">
+          <div class="ruler-line">
+            <div class="ruler-1"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-1"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-2"></div>
+            <div class="ruler-1"></div>
+          </div>
+        </div> -->
         <div
           @mouseup="onmouserightClick"
           @keydown.enter="isContentNotEditable"
@@ -162,7 +177,11 @@ export default {
       size: null,
       targetText: null,
       editElem: null,
+      multiSelect: null,
       multiSelectedElement: null,
+      multiSelectedBorder: [],
+      multiSelectedBorderRadius: [],
+      multiSelectIndex: 1
     }
   },
   mounted() {
@@ -960,7 +979,7 @@ export default {
             // console.log(this.multiSelectedElement)
           })
         } else {
-        console.log(e.target)
+          console.log(e.target)
           this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
             e.target
           ).border
@@ -2115,6 +2134,7 @@ export default {
     },
     onmouserightClick(e) {
       if (e.button === 2) {
+        console.log('right')
         this.mouseRightClick = true
         this.$nextTick(() => {
           let context = document.querySelector('.context')
@@ -2148,6 +2168,7 @@ export default {
     scroll-behavior: smooth;
     .scroll-area {
       width: 100%;
+      position: relative;
       height: 100%;
       .editor-component {
         // overflow: auto;
@@ -2159,8 +2180,36 @@ export default {
           // border: 1px solid #000000;
         }
       }
+      .ruler-box {
+        opacity: 0.5;
+        width: 100%;
+        top: 0;
+        right: 0;
+        position: absolute;
+        height: 3rem;
+        background-color: white;
+        .ruler-line {
+          width: 100%;
+          height: 2rem;
+          display: flex;
+          flex-direction: row;
+          .ruler-1 {
+            width: 1.5px;
+            height: 2rem;
+            margin-right: 50px;
+            background-color: black;
+          }
+          .ruler-2 {
+            width: 1.5px;
+            margin-right: 50px;
+            height: 1.5rem;
+            background-color: black;
+          }
+        }
+      }
     }
   }
+
   .navi {
     width: 100%;
     height: 80%;
