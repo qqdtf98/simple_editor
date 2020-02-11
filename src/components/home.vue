@@ -424,9 +424,10 @@ export default {
     multiChoice(mode) {
       this.multiSelect = mode
     },
-    closeMode() {
+    closeMode(payload) {
       this.mouseRightClick = false
       this.$emit('comment', this.clickedElement)
+      this.$emit('stack-push', payload)
       //연결안되어있음
     },
     addComponentTagStudio() {},
