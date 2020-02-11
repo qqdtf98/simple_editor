@@ -1,7 +1,7 @@
 <template>
   <div id="context">
     <ol>
-        <li @click="addMouseEvent" >마우스 이벤트</li>
+      <li @click="multiDelete">다중 삭제</li>
         <li @click="comment">comment</li>
         <li>ㅇㅇㅇ</li>
     </ol>
@@ -14,12 +14,29 @@ export default {
     return {
       clickedElem: null,
       mouseElemStyle: null,
-      mouseElemValue: null
+      mouseElemValue: null,
+      state: false,
+      multiSelectedElement: null
     }
   },
+  mounted() {
+    this.multiSelectedElement = new Set()
+  },
   methods: {
-    comment(){
-      this.$emit('comment')
+    multiDelete() {
+      if (this.state) {
+        let i
+        let entries = this.multiSelectedElement.entries()
+        let setIter = this.multiSelectedElement[Symbol.iterator]()
+        for (i = 0; i < this.multiSelectedElement.size; i++) {
+          let item = setIter.next().value
+          item.parentElement.removeChild(item)
+        }
+      } else {
+        console.log('다중선택아님')
+      }
+      this.$emit('close')
+    },
     },
     addMouseEvent (event) {
     // event 선택

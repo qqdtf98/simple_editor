@@ -519,6 +519,10 @@ export default {
       if (e.which === 16) {
         this.isShift = false
       }
+      if (e.which === 17) {
+        this.isCtrl = false
+        this.$refs.home.multiChoice(false)
+      }
     })
     document.addEventListener('mousemove', e => {
       if (this.viewTemplate) {

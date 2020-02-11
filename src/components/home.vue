@@ -88,10 +88,10 @@
       class="boundary-line-bottom"
     ></div>
     <Context
-      @comment="commentMode"
+      @close="closeMode"
       ref="context"
       class="context"
-      v-if="mouseRightClick"
+      v-show="mouseRightClick"
     />
 
     <!-- <div id="add">
@@ -162,11 +162,12 @@ export default {
       size: null,
       targetText: null,
       editElem: null,
-      multiSelect: null
+      multiSelectedElement: null,
     }
   },
   mounted() {
     // let b = document.querySelector('.3')
+    this.multiSelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
       e.preventDefault()
     })
@@ -939,9 +940,15 @@ export default {
     },
     onmouseClick(e) {
       if (this.multiSelect) {
+            this.multiSelectedElement.add(this.clickedElement)
+            this.multiSelectedElement.add(e.target)
+            this.$refs.context.multiState(true, this.multiSelectedElement)
         console.log(e.target)
-        console.log('multi')
+          this.multiSelectedElement.add(e.target)
+          this.$refs.context.multiState(true, this.multiSelectedElement)
       } else {
+        this.multiSelectedElement.clear()
+        this.$refs.context.multiState(false, null)
         this.mouseRightClick = false
         if (this.clickedElement === null) {
           if (
