@@ -403,9 +403,9 @@ export default {
   },
   methods: {
     multiChoice(mode) {
-      this.multiSelect = true
+      this.multiSelect = mode
     },
-    commentMode() {
+    closeMode() {
       this.mouseRightClick = false
       this.$emit('comment', this.clickedElement)
       //연결안되어있음
@@ -940,14 +940,54 @@ export default {
     },
     onmouseClick(e) {
       if (this.multiSelect) {
+        if (this.multiSelectedElement.size === 0) {
+          console.log('empty')
+          this.$nextTick(() => {
+            this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
+              e.target
+            ).border
+            this.multiSelectedBorderRadius[
+              this.multiSelectIndex
+            ] = getComputedStyle(e.target).borderRadius
+            this.multiSelectIndex++
+            e.target.style.border = '3px dashed #f75c51'
+            e.target.style.borderRadius = getComputedStyle(
+              e.target
+            ).borderRadius
             this.multiSelectedElement.add(this.clickedElement)
             this.multiSelectedElement.add(e.target)
             this.$refs.context.multiState(true, this.multiSelectedElement)
+            // console.log(this.multiSelectedElement)
+          })
+        } else {
         console.log(e.target)
+          this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
+            e.target
+          ).border
+          this.multiSelectedBorderRadius[
+            this.multiSelectIndex
+          ] = getComputedStyle(e.target).borderRadius
+          this.multiSelectIndex++
+          e.target.style.border = '3px dashed #f75c51'
+          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
           this.multiSelectedElement.add(e.target)
           this.$refs.context.multiState(true, this.multiSelectedElement)
+          // console.log(this.multiSelectedElement)
+        }
       } else {
+        let i
+        let entries = this.multiSelectedElement.entries()
+        let setIter = this.multiSelectedElement[Symbol.iterator]()
+        for (i = 0; i < this.multiSelectedElement.size; i++) {
+          let item = setIter.next().value
+          item.style.border = this.multiSelectedBorder[i]
+          item.style.borderRadius = this.multiSelectedBorderRadius[i]
+        }
         this.multiSelectedElement.clear()
+        this.multiSelectedBorder = []
+        this.multiSelectedBorderRadius = []
+        this.multiSelectIndex = 1
+
         this.$refs.context.multiState(false, null)
         this.mouseRightClick = false
         if (this.clickedElement === null) {
