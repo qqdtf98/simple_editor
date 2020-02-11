@@ -39,21 +39,23 @@ export default {
         let entries = this.multiSelectedElement.entries()
         let setIter = this.multiSelectedElement[Symbol.iterator]()
         for (i = 0; i < this.multiSelectedElement.size; i++) {
-          console.log('1')
           let item = setIter.next().value
           this.multiWidth[i] = item.getBoundingClientRect().width
           this.totalWidth += item.getBoundingClientRect().width
         }
-        console.log('2')
         let avgWidth = this.totalWidth / this.multiSelectedElement.size
         setIter = this.multiSelectedElement[Symbol.iterator]()
         for (i = 0; i < this.multiSelectedElement.size; i++) {
-          console.log('3')
           let item = setIter.next().value
           item.style.width = avgWidth + 'px'
         }
-        console.log('4')
-        this.$emit('close')
+        var widthChange = {
+          work: 'widthChange',
+          beforeWidth: this.multiWidth,
+          elems: this.multiSelectedElement,
+          afterWidth: avgWidth
+        }
+        this.$emit('close', widthChange)
       }
     },
     calcAverageHeight() {
@@ -72,7 +74,13 @@ export default {
           let item = setIter.next().value
           item.style.height = avgHeight + 'px'
         }
-        this.$emit('close')
+        var heightChange = {
+          work: 'heightChange',
+          beforeHeight: this.multiHeight,
+          elems: this.multiSelectedElement,
+          afterHeight: avgHeight
+        }
+        this.$emit('close', heightChange)
       }
     },
     multiDelete() {

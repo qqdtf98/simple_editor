@@ -1025,7 +1025,7 @@ export default {
     },
     newPage(e) {
       let payload = {
-        text: `${this.titleId}`,
+        text: 'Untitled',
         id: `${++this.titleId}`,
         parentID: null
       }
@@ -1148,6 +1148,22 @@ export default {
           rework.elem.style.height = rework.afterSize
         } else if (rework.work === 'edit') {
           rework.elem.textContent = rework.afterEdit
+        } else if (rework.work === 'widthChange') {
+          let i
+          let entries = rework.elems.entries()
+          let setIter = rework.elems[Symbol.iterator]()
+          for (i = 0; i < rework.elems.size; i++) {
+            let item = setIter.next().value
+            item.style.width = rework.afterWidth + 'px'
+          }
+        } else if (rework.work === 'heightChange') {
+          let i
+          let entries = rework.elems.entries()
+          let setIter = rework.elems[Symbol.iterator]()
+          for (i = 0; i < rework.elems.size; i++) {
+            let item = setIter.next().value
+            item.style.height = rework.afterHeight + 'px'
+          }
         }
         this.stackPush(work)
       }
@@ -1178,12 +1194,27 @@ export default {
           work.afterMovePosition.removeChild(work.elem)
           work.position.appendChild(work.elem)
         } else if (work.work === 'width') {
-          console.log('aaa')
           work.elem.style.width = work.beforeSize
         } else if (work.work === 'height') {
           work.elem.style.height = work.beforeSize
         } else if (work.work === 'edit') {
           work.elem.textContent = work.beforeEdit
+        } else if (work.work === 'widthChange') {
+          let i
+          let entries = work.elems.entries()
+          let setIter = work.elems[Symbol.iterator]()
+          for (i = 0; i < work.elems.size; i++) {
+            let item = setIter.next().value
+            item.style.width = work.beforeWidth[i] + 'px'
+          }
+        } else if (work.work === 'heightChange') {
+          let i
+          let entries = work.elems.entries()
+          let setIter = work.elems[Symbol.iterator]()
+          for (i = 0; i < work.elems.size; i++) {
+            let item = setIter.next().value
+            item.style.height = work.beforeHeight[i] + 'px'
+          }
         }
       }
     },
