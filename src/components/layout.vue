@@ -14,7 +14,7 @@
         />
       </div>
     </div>
-    <vue-custom-scrollbar class="scroll-area">
+    <vue-custom-scrollbar class="right-scroll-area">
       <div class="layout-box">
         <ul
           class="nav nav-tabs mb-3"
@@ -1714,7 +1714,7 @@ export default {
   width: 100%;
   height: 100%;
 }
-.scroll-area {
+.right-scroll-area {
   height: 93%;
 }
 .dsadsadsad {
@@ -1947,7 +1947,7 @@ b {
     }
   }
   .layout-box {
-    height: 93%;
+    height: 100%;
     // display: flex;
     // flex-direction: column;
     padding: 0.4rem;

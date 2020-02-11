@@ -9,7 +9,7 @@
         src="../assets/images/close.svg"
       />
     </div>
-    <vue-custom-scrollbar class="scroll-area">
+    <vue-custom-scrollbar class="sitemap-scroll-area">
       <div
         ref="dash"
         @mousedown="refineSitemap"
@@ -230,8 +230,9 @@ export default {
       position: absolute;
     }
   }
-  .scroll-area {
+  .sitemap-scroll-area {
     padding: 0.4rem;
+    height: 93%;
     .title-map {
       background-color: #292931;
       color: #e7e4e4;

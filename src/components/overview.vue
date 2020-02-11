@@ -1,29 +1,35 @@
 <template>
   <div class="container">
-    <div class="overview-box">
-      <ul class="acol">
-        <li>
-          <input class="checkbox" type="checkbox" id="root" />
-          <label for="root">HTML</label>
-          <ul>
-            <li>
-              <input class="checkbox" type="checkbox" id="node3" />
-              <label for="node3">Body</label>
-              <ul
-                id="bodySource"
-                @mousemove="onmouseMove"
-                @click="clickLabelEvent"
-                style="text-indent:10px"
-              ></ul>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+    <vue-custom-scrollbar class="overview-scroll-area">
+      <div class="overview-box">
+        <ul class="acol">
+          <li>
+            <input class="checkbox" type="checkbox" id="root" />
+            <label for="root">HTML</label>
+            <ul>
+              <li>
+                <input class="checkbox" type="checkbox" id="node3" />
+                <label for="node3">Body</label>
+                <ul
+                  id="bodySource"
+                  @mousemove="onmouseMove"
+                  @click="clickLabelEvent"
+                  style="text-indent:10px"
+                ></ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
+
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
+
 export default {
+  components: { vueCustomScrollbar },
   props: ['getDocument'],
 
   data() {
@@ -381,13 +387,16 @@ export default {
     left: 0.4rem;
   }
 }
-.overview-box {
+.overview-scroll-area {
   width: 100%;
   background-color: #292931;
-  height: 93%;
-  // display: flex;
-  // flex-direction: column;
-  // padding: 0.4rem;
-  overflow: auto;
+  height: 100%;
+  .overview-box {
+    width: 100%;
+    height: 100%;
+    // display: flex;
+    // flex-direction: column;
+    // padding: 0.4rem;
+  }
 }
 </style>
