@@ -18,7 +18,11 @@ export default {
       mouseElemStyle: null,
       mouseElemValue: null,
       state: false,
-      multiSelectedElement: null
+      multiSelectedElement: null,
+      multiWidth: [],
+      totalWidth: 0,
+      multiHeight: [],
+      totalHeight: 0
     }
   },
   mounted() {
@@ -31,10 +35,44 @@ export default {
     },
     calcAverageWidth() {
       if (this.state) {
+        let i
+        let entries = this.multiSelectedElement.entries()
+        let setIter = this.multiSelectedElement[Symbol.iterator]()
+        for (i = 0; i < this.multiSelectedElement.size; i++) {
+          console.log('1')
+          let item = setIter.next().value
+          this.multiWidth[i] = item.getBoundingClientRect().width
+          this.totalWidth += item.getBoundingClientRect().width
+        }
+        console.log('2')
+        let avgWidth = this.totalWidth / this.multiSelectedElement.size
+        setIter = this.multiSelectedElement[Symbol.iterator]()
+        for (i = 0; i < this.multiSelectedElement.size; i++) {
+          console.log('3')
+          let item = setIter.next().value
+          item.style.width = avgWidth + 'px'
+        }
+        console.log('4')
+        this.$emit('close')
       }
     },
     calcAverageHeight() {
       if (this.state) {
+        let i
+        let entries = this.multiSelectedElement.entries()
+        let setIter = this.multiSelectedElement[Symbol.iterator]()
+        for (i = 0; i < this.multiSelectedElement.size; i++) {
+          let item = setIter.next().value
+          this.multiHeight[i] = item.getBoundingClientRect().height
+          this.totalHeight += item.getBoundingClientRect().height
+        }
+        let avgHeight = this.totalHeight / this.multiSelectedElement.size
+        setIter = this.multiSelectedElement[Symbol.iterator]()
+        for (i = 0; i < this.multiSelectedElement.size; i++) {
+          let item = setIter.next().value
+          item.style.height = avgHeight + 'px'
+        }
+        this.$emit('close')
       }
     },
     multiDelete() {
