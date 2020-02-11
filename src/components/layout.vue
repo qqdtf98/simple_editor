@@ -1293,7 +1293,6 @@ export default {
       if (!this.isData) {
         this.isData = true
       }
-      console.log(payload)
       // margin데이터 넣기
       var margin = getComputedStyle(payload.target)
         .margin.replace(/px/gi, '')
@@ -1596,10 +1595,6 @@ export default {
     },
     closeLayout() {
       $(document.getElementById('codeBtnLayout')).trigger('click')
-    },
-    test(e) {
-      console.log(e)
-      console.log('adsaD')
     },
     //레이아웃 Tab
     clickLayoutTab(e) {
