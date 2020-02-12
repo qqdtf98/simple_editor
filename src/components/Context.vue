@@ -22,16 +22,23 @@ export default {
       multiWidth: [],
       totalWidth: 0,
       multiHeight: [],
-      totalHeight: 0
+      totalHeight: 0,
+      multiElementParent: [],
+      multiElementCurrentParent: [],
+      notDeletedParent: [],
+      notDeletedCurrentParent: [],
+      notDeletedElem: [],
+      notDeletedNth: []
     }
   },
   mounted() {
     this.multiSelectedElement = new Set()
   },
   methods: {
-    multiState(state, elem) {
+    multiState(state, elem, parent) {
       this.state = state
       this.multiSelectedElement = elem
+      this.multiElementParent = parent
     },
     calcAverageWidth() {
       if (this.state) {
@@ -90,12 +97,35 @@ export default {
         let setIter = this.multiSelectedElement[Symbol.iterator]()
         for (i = 0; i < this.multiSelectedElement.size; i++) {
           let item = setIter.next().value
-          item.parentElement.removeChild(item)
+          this.multiElementCurrentParent.push(item.parentElement)
+          if (!this.multiSelectedElement.has(item.parentElement)) {
+            this.notDeletedElem.push(item)
+            this.notDeletedCurrentParent.push(item.parentElement)
+            this.notDeletedParent.push(this.multiElementParent[i])
+            let j
+            for (j = 0; j < item.parentElement.children.length; j++) {
+              if (item.parentElement.children[j] === item) {
+                break
+              }
+            }
+            this.notDeletedNth.push(j)
+            item.parentElement.removeChild(item)
+          } else {
+            console.log('has')
+          }
         }
+        var multiDelete = {
+          work: 'multiDelete',
+          beforeParent: this.notDeletedParent,
+          afterParent: this.notDeletedCurrentParent,
+          elem: this.notDeletedElem,
+          nth: this.notDeletedNth
+        }
+        this.$emit('close', multiDelete)
       } else {
         console.log('다중선택아님')
+        this.$emit('close', null)
       }
-      this.$emit('close')
     },
     comment() {
       this.$emit('close')

@@ -221,13 +221,7 @@
       </div>
       <div class="right-panel">
         <div class="right-top-panel">
-          <layout
-            ref="layout"
-            :payload="payload"
-            @userSelected="userSelectedWidth"
-            @stick="layoutStick"
-            class="layout"
-          />
+          <layout ref="layout" @stick="layoutStick" class="layout" />
         </div>
         <div class="right-bottom-panel">
           <div class="tree-name-wrapper">
