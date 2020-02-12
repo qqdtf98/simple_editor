@@ -16,14 +16,14 @@
         @mouseup="mouseRightClick"
         class="title-map"
       >
-        <div
-          :key="title.id"
-          @keydown.enter="isContentNotEditable"
-          :contenteditable="isContentEditable"
-          class="titles"
-          v-for="title in titles"
-        >
-          {{ title.text }}
+        <div :key="title.id" v-for="title in titles" class="titles-box">
+          <span
+            @keydown.enter="isContentNotEditable"
+            :contenteditable="isContentEditable"
+            class="titles"
+          >
+            {{ title.text }}
+          </span>
         </div>
       </div>
     </vue-custom-scrollbar>
@@ -151,19 +151,42 @@ export default {
         textRange.select()
       }
     },
-    movePosition(payload) {
+    movePosition(payload, tar) {
       this.position = payload
       let i
-      let titles = document.querySelectorAll('.titles')
-      for (i = 0; i < titles.length; i++) {
-        if (titles[i] === payload) {
-          this.positionId = i
-          break
+      if (tar === 'titles') {
+        let titles = document.querySelectorAll('.titles')
+
+        for (i = 0; i < titles.length; i++) {
+          if (titles[i] === payload) {
+            this.positionId = i
+            this.titles[this.targetId].parentID = this.titles[i].id
+            titles[this.targetId].style.marginLeft = '1rem'
+            break
+          }
+        }
+        let target = this.titles.splice(this.targetId, 1)
+        if (this.targetId < i) {
+          this.titles.splice(this.positionId, 0, target[0])
+        } else {
+          this.titles.splice(this.positionId + 1, 0, target[0])
+        }
+      } else if (tar === 'titles-box') {
+        let titles = document.querySelectorAll('.titles-box')
+        for (i = 0; i < titles.length; i++) {
+          if (titles[i] === payload) {
+            this.positionId = i
+            // titles[this.targetId].style.marginLeft = '0'
+            break
+          }
+        }
+        let target = this.titles.splice(this.targetId, 1)
+        if (this.targetId < i) {
+          this.titles.splice(this.positionId, 0, target[0])
+        } else {
+          this.titles.splice(this.positionId + 1, 0, target[0])
         }
       }
-      let target = this.titles.splice(this.targetId, 1)
-      console.log(target[0])
-      this.titles.splice(this.positionId, 0, target[0])
     },
     mouseRightClick(e) {
       if (e.button === 2) {
@@ -184,14 +207,26 @@ export default {
       this.moveTarget = e.target.parentElement
     },
     refineSitemap(e) {
+      console.log('refine')
       if (e.button === 0) {
         this.target = e.target
-        let i
-        let titles = document.querySelectorAll('.titles')
-        for (i = 0; i < titles.length; i++) {
-          if (titles[i] === e.target) {
-            this.targetId = i
-            break
+        if (e.target.className === 'titles') {
+          let i
+          let titles = document.querySelectorAll('.titles')
+          for (i = 0; i < titles.length; i++) {
+            if (titles[i] === e.target) {
+              this.targetId = i
+              break
+            }
+          }
+        } else if (e.target.className === 'titles-box') {
+          let i
+          let titles = document.querySelectorAll('.titles-box')
+          for (i = 0; i < titles.length; i++) {
+            if (titles[i] === e.target) {
+              this.targetId = i
+              break
+            }
           }
         }
         this.$emit('copy-title', e)
@@ -238,12 +273,23 @@ export default {
       color: #e7e4e4;
       padding-left: 0.4rem;
       align-items: left;
-      .titles {
-        text-align: left;
+      .titles-box {
         height: 1.5rem;
+        display: flex;
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+        align-items: left;
         &:hover {
           background-color: #505557;
           cursor: pointer;
+        }
+        .titles {
+          text-align: left;
+          height: 1.5rem;
+          &:hover {
+            background-color: #505557;
+            cursor: pointer;
+          }
         }
       }
     }

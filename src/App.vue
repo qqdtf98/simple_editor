@@ -221,7 +221,13 @@
       </div>
       <div class="right-panel">
         <div class="right-top-panel">
-          <layout ref="layout" @stick="layoutStick" class="layout" />
+          <layout
+            ref="layout"
+            :payload="payload"
+            @userSelected="userSelectedWidth"
+            @stick="layoutStick"
+            class="layout"
+          />
         </div>
         <div class="right-bottom-panel">
           <div class="tree-name-wrapper">
@@ -602,7 +608,11 @@ export default {
       }
       if (this.isTitle) {
         this.isTitle = false
-        this.$refs.sitemap.movePosition(e.target)
+        if (e.target.className === 'titles') {
+          this.$refs.sitemap.movePosition(e.target, 'titles')
+        } else {
+          this.$refs.sitemap.movePosition(e.target, 'titles-box')
+        }
       }
       if (this.treeMove) {
         let rightBorder = document.querySelector('.right-panel-border')
@@ -1025,7 +1035,7 @@ export default {
     },
     newPage(e) {
       let payload = {
-        text: 'Untitled',
+        text: `${this.titleId}`,
         id: `${++this.titleId}`,
         parentID: null
       }
@@ -1164,6 +1174,11 @@ export default {
             let item = setIter.next().value
             item.style.height = rework.afterHeight + 'px'
           }
+        } else if (rework.work === 'multiDelete') {
+          let i
+          for (i = 0; i < rework.elem.length; i++) {
+            rework.elem[i].parentElement.removeChild(rework.elem[i])
+          }
         }
         this.stackPush(work)
       }
@@ -1215,12 +1230,20 @@ export default {
             let item = setIter.next().value
             item.style.height = work.beforeHeight[i] + 'px'
           }
+        } else if (work.work === 'multiDelete') {
+          let i
+          for (i = work.elem.length - 1; i >= 0; i--) {
+            console.log(work.nth[i])
+            work.afterParent[i].appendChild(work.elem[i])
+            // $(work.elem[i]).insertBefore(
+            //   work.afterParent[i].children[work.nth]
+            // )
+          }
         }
       }
     },
     stackPush(elem) {
       this.workStack.push(elem)
-      console.log('s')
       if (this.tabStep == 1) {
         // document.querySelector('#preview').textContent = this.loadData[0]
         this.message[0] = document.getElementById('newLoaderHtml').innerHTML
