@@ -181,7 +181,9 @@ export default {
       multiSelectedElement: null,
       multiSelectedBorder: [],
       multiSelectedBorderRadius: [],
-      multiSelectIndex: 1
+      multiSelectIndex: 1,
+      multiElementParent: [],
+      setSize: null
     }
   },
   mounted() {
@@ -427,7 +429,9 @@ export default {
     closeMode(payload) {
       this.mouseRightClick = false
       this.$emit('comment', this.clickedElement)
-      this.$emit('stack-push', payload)
+      if (payload !== null) {
+        this.$emit('stack-push', payload)
+      }
       //연결안되어있음
     },
     addComponentTagStudio() {},
@@ -961,7 +965,6 @@ export default {
     onmouseClick(e) {
       if (this.multiSelect) {
         if (this.multiSelectedElement.size === 0) {
-          console.log('empty')
           this.$nextTick(() => {
             this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
               e.target
@@ -975,12 +978,24 @@ export default {
               e.target
             ).borderRadius
             this.multiSelectedElement.add(this.clickedElement)
+            this.multiElementParent.push(this.clickedElement.parentElement)
+            this.setSize = this.multiSelectedElement.size
+
             this.multiSelectedElement.add(e.target)
-            this.$refs.context.multiState(true, this.multiSelectedElement)
+            if (this.setSize !== this.multiSelectedElement.size) {
+              this.multiElementParent.push(e.target.parentElement)
+            }
+            this.setSize = this.multiSelectedElement.size
+            // this.multiElementParent.push(this.clickedElement.parentElement)
+            // this.multiElementParent.pus(e.target)
+            this.$refs.context.multiState(
+              true,
+              this.multiSelectedElement,
+              this.multiElementParent
+            )
             // console.log(this.multiSelectedElement)
           })
         } else {
-          console.log(e.target)
           this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
             e.target
           ).border
@@ -991,9 +1006,18 @@ export default {
           e.target.style.border = '3px dashed #f75c51'
           e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
           this.multiSelectedElement.add(e.target)
-          this.$refs.context.multiState(true, this.multiSelectedElement)
+          if (this.setSize !== this.multiSelectedElement.size) {
+            this.multiElementParent.push(e.target.parentElement)
+          }
+          this.setSize = this.multiSelectedElement.size
+          this.$refs.context.multiState(
+            true,
+            this.multiSelectedElement,
+            this.multiElementParent
+          )
           // console.log(this.multiSelectedElement)
         }
+        console.log(this.multiElementParent)
       } else {
         let i
         let entries = this.multiSelectedElement.entries()
