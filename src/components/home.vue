@@ -977,15 +977,17 @@ export default {
             e.target.style.borderRadius = getComputedStyle(
               e.target
             ).borderRadius
-            this.multiSelectedElement.add(this.clickedElement)
-            this.multiElementParent.push(this.clickedElement.parentElement)
-            this.setSize = this.multiSelectedElement.size
+            // this.multiSelectedElement.add(this.clickedElement)
+            // this.multiElementParent.push(this.clickedElement.parentElement)
+            // this.setSize = this.multiSelectedElement.size
 
             this.multiSelectedElement.add(e.target)
             if (this.setSize !== this.multiSelectedElement.size) {
               this.multiElementParent.push(e.target.parentElement)
             }
             this.setSize = this.multiSelectedElement.size
+
+            this.$emit('componentSelected', this.multiSelectedElement)
             // this.multiElementParent.push(this.clickedElement.parentElement)
             // this.multiElementParent.pus(e.target)
             this.$refs.context.multiState(
@@ -1010,6 +1012,8 @@ export default {
             this.multiElementParent.push(e.target.parentElement)
           }
           this.setSize = this.multiSelectedElement.size
+          this.$emit('componentSelected', this.multiSelectedElement)
+
           this.$refs.context.multiState(
             true,
             this.multiSelectedElement,
@@ -1040,8 +1044,13 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component'
           ) {
-            this.$store.state.counter = e
-            this.$emit('componentSelected', this.$store.state.counter)
+            this.multiSelectedElement = new Set()
+            this.multiSelectedElement.add(e.target)
+            if (this.setSize !== this.multiSelectedElement.size) {
+              this.multiElementParent.push(e.target.parentElement)
+            }
+            this.setSize = this.multiSelectedElement.size
+            this.$emit('componentSelected', this.multiSelectedElement)
 
             this.clickedElement = e.target
 
@@ -1108,8 +1117,13 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component'
           ) {
-            this.$store.state.counter = e
-            this.$emit('componentSelected', this.$store.state.counter)
+            this.multiSelectedElement.add(e.target)
+            if (this.setSize !== this.multiSelectedElement.size) {
+              this.multiElementParent.push(e.target.parentElement)
+            }
+            this.setSize = this.multiSelectedElement.size
+
+            this.$emit('componentSelected', this.multiSelectedElement)
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
