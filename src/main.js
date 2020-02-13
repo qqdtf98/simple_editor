@@ -19,9 +19,6 @@ import 'highlight.js/styles/default.css'
 hljs.registerLanguage('javascript', javascript)
 hljs.registerLanguage('css', css)
 hljs.registerLanguage('html', html)
-import VuePrismEditor from 'vue-prism-editor'
-import 'vue-prism-editor/dist/VuePrismEditor.css' // import the styles
-Vue.component('prism-editor', VuePrismEditor)
 
 Vue.use(VueHighlightJS)
 Vue.use(BootstrapVue)

@@ -343,7 +343,6 @@ import saveList from './components/tabComponent/saveList'
 import settingList from './components/tabComponent/settingList'
 import helpList from './components/tabComponent/helpList'
 import MonacoEditor from 'monaco-editor-vue'
-import PrismEditor from 'vue-prism-editor'
 import * as monaco from 'monaco-editor'
 
 export default {
@@ -364,8 +363,7 @@ export default {
     editList,
     saveList,
     settingList,
-    helpList,
-    PrismEditor
+    helpList
   },
   props: ['selectDomElement'],
   name: 'App',
