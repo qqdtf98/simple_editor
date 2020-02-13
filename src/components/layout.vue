@@ -1003,7 +1003,7 @@ import MonacoEditor from 'monaco-editor-vue'
 
 export default {
   name: 'App',
-  props: ['payload', 'loadData'],
+  props: ['loadData'],
   components: {
     RangeSlider,
     ChromeColor: VueColor.Chrome,
@@ -1013,6 +1013,7 @@ export default {
   },
   data() {
     return {
+      payload: '',
       //selction 된 component 속성
       componentSorce: {
         x: 228,
@@ -1299,8 +1300,9 @@ export default {
       if (!this.isData) {
         this.isData = true
       }
-      console.log(payload.target)
+
       this.payload = payload.target
+      // console.log(this.payload)
       // margin데이터 넣기
       var margin = getComputedStyle(payload.target)
         .margin.replace(/px/gi, '')
@@ -1391,7 +1393,7 @@ export default {
     },
     //보내기
     submitSource(e) {
-      console.log(e)
+      console.log(this.payload)
       this.submitSorce.payload = this.payload
       this.submitSorce.style = e.target.name
       this.submitSorce.value = e.target.value
