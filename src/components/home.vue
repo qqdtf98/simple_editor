@@ -1194,7 +1194,6 @@ export default {
       }
     },
     styleChanged(data) {
-      console.log(data)
       if (data.payload.className === '') {
         console.log('없')
         var style = {
@@ -1211,39 +1210,19 @@ export default {
         // console.log(element)
         data.payload.style[this.style] = this.value
       } else {
-        this.target = data.payload.classList
-        var classValue = ''
-        let i
-        // console.log(data.payload.classList.length)
-        for (i = 0; i < data.payload.classList.length; i++) {
-          if (i === data.payload.classList.length - 1) {
-            classValue += '.' + data.payload.classList[i]
-          } else {
-            classValue += '.' + data.payload.classList[i] + ' '
-          }
-        }
-        // console.log(classValue)
         this.style = data.style
-        let element = document.getElementsByClassName(this.target)
-        for (i = 0; i < element.length; i++) {
-          if (element[i] === data.payload) {
-            break
-          }
-        }
+        this.value = data.value
 
         var style = {
           work: 'style',
-          elem: element[i],
+          elem: data.payload,
           style: this.style,
-          afterValue: data.value,
-          value: getComputedStyle(element[i])[this.style]
+          afterValue: this.value,
+          value: getComputedStyle(data.payload)[this.style]
         }
         this.$emit('stack-push', style)
 
-        this.value = data.value
-
-        // console.log(element)
-        element[i].style[this.style] = this.value
+        data.payload.style[data.style] = data.value + 'px'
       }
 
       // console.log("바꼈다")
