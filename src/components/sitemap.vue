@@ -156,23 +156,31 @@ export default {
       let i
       if (tar === 'titles') {
         let titles = document.querySelectorAll('.titles')
+        let boards = document.querySelectorAll('.board')
 
         for (i = 0; i < titles.length; i++) {
           if (titles[i] === payload) {
             this.positionId = i
             this.titles[this.targetId].parentID = this.titles[i].id
-            titles[this.targetId].style.marginLeft = '1rem'
+            // titles[this.targetId].style.marginLeft = '1rem'
             break
           }
         }
         let target = this.titles.splice(this.targetId, 1)
+        let parent = boards[this.targetId].parentElement
+        let child = boards[this.targetId]
         if (this.targetId < i) {
+          parent.removeChild(child)
+          parent.insertBefore(child, parent.childNodes[this.positionId])
           this.titles.splice(this.positionId, 0, target[0])
         } else {
+          parent.removeChild(boards[this.targetId])
+          parent.insertBefore(child, parent.childNodes[this.positionId + 1])
           this.titles.splice(this.positionId + 1, 0, target[0])
         }
       } else if (tar === 'titles-box') {
         let titles = document.querySelectorAll('.titles-box')
+        let boards = document.querySelectorAll('.board')
         for (i = 0; i < titles.length; i++) {
           if (titles[i] === payload) {
             this.positionId = i
@@ -181,16 +189,21 @@ export default {
           }
         }
         let target = this.titles.splice(this.targetId, 1)
+        let parent = boards[this.targetId].parentElement
+        let child = boards[this.targetId]
         if (this.targetId < i) {
+          parent.removeChild(child)
+          parent.insertBefore(child, parent.childNodes[this.positionId])
           this.titles.splice(this.positionId, 0, target[0])
         } else {
+          parent.removeChild(boards[this.targetId])
+          parent.insertBefore(child, parent.childNodes[this.positionId + 1])
           this.titles.splice(this.positionId + 1, 0, target[0])
         }
       }
     },
     mouseRightClick(e) {
       if (e.button === 2) {
-        console.log('rightclick')
         this.contextTarget = e.target
         this.$emit('right-click', e)
       }
@@ -207,7 +220,6 @@ export default {
       this.moveTarget = e.target.parentElement
     },
     refineSitemap(e) {
-      console.log('refine')
       if (e.button === 0) {
         this.target = e.target
         if (e.target.className === 'titles') {
