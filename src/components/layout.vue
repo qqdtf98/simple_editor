@@ -257,7 +257,6 @@
                     </span>
                     <b-button
                       class="backgroundColorPicker"
-                      @click="colorBackgroundpicker"
                       @keyup.enter="submitSourceOriginal"
                       :style="backgroundColor"
                       variant="free"
@@ -267,23 +266,33 @@
                     <!--<img @click="closeLayout" src="../assets/ban.svg" class="layoutBanBtn">-->
 
                     <b-button
+                      @click="backgroundBtn"
+                      name="none"
                       class="backgroundFixColor ban"
                       style="background-color:#fffeec background:src(http://cdn.zetawiki.com/png/slash.png)"
                     >
                     </b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#e6696e"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #e6696e, #e67a7d); !important"
                     ></b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#9177c0"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #9177c0, #8268b4); !important"
                     ></b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#dd8042"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #dd8042, #dc8d5e); !important"
                     ></b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#d69d2f"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #d69d2f, #cd8e27); !important"
                     ></b-button>
@@ -291,18 +300,26 @@
 
                   <div class="row" id="buttonRow">
                     <b-button
+                      @click="backgroundBtn"
+                      name="#6ca64e"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #6ca64e, #5f9943); !important"
                     ></b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#5ba68f"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #5ba68f, #4b977f); !important"
                     ></b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#629eb1"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #629eb1, #5490a3); !important"
                     ></b-button>
                     <b-button
+                      @click="backgroundBtn"
+                      name="#87919d"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #87919d, #7a8490); !important"
                     ></b-button>
@@ -314,25 +331,19 @@
                       #55fc55,
                       #5555ff,
                       #ff5959); !important"
+                      @click="colorBackgroundpicker"
+                      @keypress.enter="submitSourceOriginal"
                     ></b-button>
                   </div>
-                  <!--
-                  <input
-                  type
-                  name="backgroundColor"
-                  value
-                  title
-                  placeholder=""
-                  @keyup.enter="submitSourceOriginal"
-                  v-model="backgroundColor.backgroundColor.hex"
-                  />-->
-                  <chrome-color
-                    class="chrome"
-                    v-show="isBackgroundPicker"
-                    :value="backgroundColor.backgroundColor"
-                    v-model="backgroundColor.backgroundColor"
-                    @input="updateBackgroundValue"
-                  ></chrome-color>
+                  <div @mouseup="updateBackgroundValueWithUndo">
+                    <chrome-color
+                      class="chrome"
+                      v-show="isBackgroundPicker"
+                      :value="backgroundColor.backgroundColor"
+                      v-model="backgroundColor.backgroundColor"
+                      @input="updateBackgroundValue"
+                    ></chrome-color>
+                  </div>
                   <br />
                   <div class="row">
                     <span class="property backgruond" title>
@@ -351,10 +362,9 @@
                     >
                       Pick
                     </button>
-                    <!--<button @click="onUpload">Save</button>-->
                   </div>
 
-                  <div class="row">
+                  <div v-show="imageLoder" class="row" >
                     <span class="property backgruond" title>
                       Background Size
                     </span>
@@ -472,7 +482,7 @@
                       Size
                     </span>
                     <input
-                      class="propertyChange "
+                      class="propertyChange fontSize"
                       type
                       name="width"
                       value
@@ -1014,6 +1024,8 @@ export default {
   data() {
     return {
       payload: '',
+      clickBackground: false,
+      imageLoder:false,
       //selction 된 component 속성
       componentSorce: {
         x: 228,
@@ -1360,28 +1372,19 @@ export default {
       // console.log(this.margin[3])
     },
     colorBackgroundpicker() {
-      // if(this.isBackgroundPicker==true)
-      //    this.isBackgroundPicker=false
-      // else
-      this.isBackgroundPicker = true
+      if (this.isBackgroundPicker == true) this.isBackgroundPicker = false
+      else this.isBackgroundPicker = true
       // if(this.isBackgroundPicker==true)
       //    this.isBackgroundPicker=false
       // else
       //    this.isBackgroundPicker=true
       // console.log("sdas")
+      console.log('s')
     },
     colorFontpicker() {
       this.isFontPicker = true
     },
-    updateBackgroundValue(colorData) {
-      this.backgroundColor.background = colorData.hex
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background'
-      this.submitSorce.value = colorData.hex
-      this.onBackgroundColor = true
-      ;(this.submitSorce.change = 1),
-        this.$emit('userSelected', this.submitSorce)
-    },
+
     updateFontValue(colorData) {
       this.fontColor.background = colorData.hex
       this.submitSorce.payload = this.payload
@@ -1460,6 +1463,103 @@ export default {
       console.log(this.submitSorce)
       this.$emit('userSelectedWidth', this.submitSorce)
     },
+    updateBackgroundValue(colorData) {
+      if(!this.clickBackground){
+        this.submitSorce.change = 1
+        this.clickBackground=true
+      }
+      else{
+        this.submitSorce.change = 0
+      }
+      this.backgroundColor.background = colorData.hex
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'background'
+      this.submitSorce.value = colorData.hex
+      this.onBackgroundColor = true
+      
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    updateBackgroundValueWithUndo(e) {
+      if (this.clickBackground) {
+        var sub = {
+          payload: '',
+          style: '',
+          value: '',
+          change: ''
+        }
+        sub.payload = this.submitSorce.payload
+        sub.style = this.submitSorce.style
+        sub.value = this.submitSorce.value
+        sub.change = 1
+
+        this.$emit('userSelectedWidth', sub)
+      }
+    },
+    backgroundBtn(e){
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'background'
+      this.submitSorce.value = e.target.name
+      this.submitSorce.change = 1
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    onFileSelected(e) {
+      var file = e.target
+      var fileList = file.files
+      // 읽기
+      var reader = new FileReader()
+      reader.readAsDataURL(fileList[0])
+      // console.log(reader)
+      var submit = this.submitSorce
+      var data = this.payload
+      //로드 한 후
+      var vm = this
+      reader.onload = function() {
+        submit.payload = data
+        submit.style = 'background-image'
+        submit.value = 'url(' + reader.result + ')'
+        submit.change = 1 
+        vm.$emit('userSelectedWidth', submit)
+      }
+      this.imageLoder = true
+    },
+    submitChangeImageSize(e) {
+      console.log(e)
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'background-size'
+      this.submitSorce.value = e
+      // console.log(this.submitSorce)
+      this.submitSorce.change = 1
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    
+
+    testee(e) {
+      console.log('s')
+    },
+    //엔터
+    submitSourceOriginal(e) {
+      // console.log(e.target)
+      console.log('sd')
+      // console.log(e.target.name)
+      this.isBackgroundPicker = false
+      this.isFontPicker = false
+      if (e.target.name == 'backgroundColor') {
+        this.backgroundColor.backgroundColor = e.target.value
+      } else if (e.target.name == 'color') {
+        this.fontColor.backgroundColor = e.target.value
+      }
+      this.submitSorce.payload = this.payload
+      if (typeof e.target !== 'undefined') {
+        this.submitSorce.style = e.target.name
+        this.submitSorce.value = e.target.value
+      } else {
+        // onsole.log(this.submitSorce)
+        this.submitSorce.value = e
+      }
+      this.submitSorce.change = 1
+      this.$emit('userSelected', this.submitSorce)
+    },
+
     submitSourceWithPX(e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = e.target.name
@@ -1597,33 +1697,8 @@ export default {
         obj.appendChild(newDIV)
       }
     },
-    onFileSelected(e) {
-      var file = e.target
-      var fileList = file.files
-      // 읽기
-      var reader = new FileReader()
-      reader.readAsDataURL(fileList[0])
-      // console.log(reader)
-      var submit = this.submitSorce
-      var data = this.payload
-      //로드 한 후
-      var vm = this
-      reader.onload = function() {
-        submit.payload = data
-        submit.style = 'background-image'
-        submit.value = 'url(' + reader.result + ')'
-        ;(submit.change = 1), vm.$emit('userSelected', submit)
-      }
-    },
-    submitChangeImageSize(e) {
-      console.log(e)
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background-size'
-      this.submitSorce.value = e
-      // console.log(this.submitSorce)
-      ;(this.submitSorce.change = 1),
-        this.$emit('userSelected', this.submitSorce)
-    },
+    
+    
     onUpload() {
       /// 서버에 저장
     },
@@ -2050,6 +2125,10 @@ b {
   vertical-align: middle;
 }
 //font 속성
+.fontSize{
+    margin: 0px 0px 0px 65px;
+    width: 30%;
+}
 .row {
   .left {
     width: 40px !important;

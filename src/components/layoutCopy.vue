@@ -1060,7 +1060,6 @@ export default {
     },
     submitSourceOriginal (e) {
       // console.log(e.target)
-      // console.log("sd")
       // console.log(e.target.name)
       this.isBackgroundPicker = false
       this.isFontPicker = false
