@@ -167,7 +167,7 @@
                       value
                       title
                       placeholder="31.4375px"
-                      @keyup.enter="submitSourceWithPX"
+                      @keyup.enter="submitSource"
                       v-model="componentSorce.width"
                     />
                   </div>
@@ -998,10 +998,22 @@ import { mapGetters, mapMutations } from 'vuex'
 import Switches from 'vue-switches'
 import 'vue-range-slider/dist/vue-range-slider.css'
 import vueCustomScrollbar from 'vue-custom-scrollbar'
+// import MonacoEditor from 'vue-m-monaco-editor'
+import MonacoEditor from 'monaco-editor-vue'
 
 export default {
+  name: 'App',
+  props: ['loadData'],
+  components: {
+    RangeSlider,
+    ChromeColor: VueColor.Chrome,
+    Switches,
+    vueCustomScrollbar,
+    MonacoEditor
+  },
   data() {
     return {
+      payload: '',
       //selction 된 component 속성
       componentSorce: {
         x: 228,
@@ -1014,6 +1026,7 @@ export default {
         fontColor: '',
         fontSize: ''
       },
+      code: '<MonacoEditor l',
       //margin 값
       margin: [
         {
@@ -1249,12 +1262,6 @@ export default {
       }
     })
   },
-  components: {
-    RangeSlider,
-    ChromeColor: VueColor.Chrome,
-    Switches,
-    vueCustomScrollbar
-  },
   created() {},
   computed: {
     testMessage: function() {
@@ -1293,6 +1300,9 @@ export default {
       if (!this.isData) {
         this.isData = true
       }
+
+      this.payload = payload.target
+      // console.log(this.payload)
       // margin데이터 넣기
       var margin = getComputedStyle(payload.target)
         .margin.replace(/px/gi, '')
@@ -1312,7 +1322,7 @@ export default {
       var padding = getComputedStyle(payload.target)
         .padding.replace(/px/gi, '')
         .split(' ')
-      //   console.log(padding)
+      //   console.log(padding)o8
       //   console.log(this.margin[0])
       if (padding.length !== 1) {
         for (var i = 0; i < padding.length; i++) {
@@ -1380,6 +1390,57 @@ export default {
       ;(this.onColor = true),
         (this.submitSorce.change = 1),
         this.$emit('userSelected', this.submitSorce)
+    },
+    //보내기
+    submitSource(e) {
+      console.log(this.payload)
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = e.target.name
+      this.submitSorce.value = e.target.value
+      if (e.target.name == 'width') {
+        this.onWidth = true
+      } else if (e.target.name == 'height') {
+        this.onHeight = true
+      } else if (e.target.name == 'margin') {
+        this.onMargin = true
+
+        var margin = e.target.value.replace(/px/gi, '').split(' ')
+
+        // console.log(margin)
+        // console.log(this.margin[0])
+        if (margin.length !== 1) {
+          for (var i = 0; i < margin.length; i++) {
+            this.margin[i].value = margin[i]
+          }
+          for (var i = margin.length; i < 4; i++) {
+            this.margin[i].value = 0
+          }
+        } else {
+          for (var i = 0; i < 4; i++) {
+            this.margin[i].value = margin[0]
+          }
+        }
+      } else if (e.target.name == 'padding') {
+        this.onPadding = true
+        var padding = e.target.value.replace(/px/gi, '').split(' ')
+        // console.log(margin)
+        // console.log(this.margin[0])
+        if (padding.length !== 1) {
+          for (var i = 0; i < padding.length; i++) {
+            this.padding[i] = padding[i]
+          }
+          for (var i = padding.length; i < 4; i++) {
+            this.padding[i] = 0
+          }
+        } else {
+          for (var i = 0; i < 4; i++) {
+            this.padding[i] = padding[0]
+          }
+        }
+      }
+      this.submitSorce.change = 1
+      console.log(this.submitSorce)
+      this.$emit('userSelectedWidth', this.submitSorce)
     },
     submitSourceWithPX(e) {
       this.submitSorce.payload = this.payload
@@ -1686,6 +1747,9 @@ export default {
       } else {
         this.$emit('manualSelet', e.target.tagName)
       }
+    },
+    onCodeChange(e) {
+      console.log(e)
     }
   }
 }

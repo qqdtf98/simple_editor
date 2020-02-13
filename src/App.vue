@@ -9,6 +9,7 @@
       <div @mouseover="saveTab" class="Save menu-tab">Save</div>
       <div @mouseover="settingTab" class="Setting menu-tab">Setting</div>
       <div @mouseover="helpTab" class="Help menu-tab">Help</div>
+
       <!-- <div @click="newPage" class="new-box">
         <img class="new" src="./assets/images/new.svg" />
         <div class="new-text">New</div>
@@ -112,7 +113,7 @@
               @loadData="loadData"
               class="home"
             ></home>
-            <div v-if="isCommentOn" class="comment-board">
+            <div v-show="isCommentOn" class="comment-board">
               <div class="add-comment">
                 <textarea class="comment-input" placeholder="comment" />
                 <img
@@ -141,12 +142,20 @@
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span class="studio-text">CodeReview</span>
-
-              <img
-                @click="closeCodeReview"
-                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
-                class="close-btn"
-              />
+              <div class="manualatag">
+                mode
+                <switches
+                  class="toggleSwitch modeSwitch"
+                  theme="bootstrap"
+                  color="info"
+                  v-model="enabled"
+                />
+                <img
+                  @click="closeCodeReview"
+                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
+                  class="close-btn"
+                />
+              </div>
             </div>
             <div class="showSorce">
               <div
@@ -156,21 +165,19 @@
                 aria-labelledby="pills-home-tab"
               >
                 <div class="showCode">
-                  <div class="showCode">
-                    <Ruler
-                      ref="Ruler"
-                      min="0"
-                      max="100"
-                      step="0.01"
-                      @onchange="rulerChange"
-                      :range="range"
-                    />
-
-                    <SlideRuler ref="SlideRuler" maxValue: "230" minValue: "100"
-                    currentValue: "180" handleValue: "handleValue" precision:
-                    "1" />
-                    <h1>dasd</h1>
-                  </div>
+                  <div id="container" ref="editor" @change="onCodeChange"></div>
+                  <!--
+                  <MonacoEditor
+                    style="width:500px;height:300px;border:1px solid grey"
+                    v-model="code"
+                    theme="vs-dark"
+                    value="function hello() {\n\talert('Hello world!');\n}"
+                    language="css"
+                    autoIndent="none"
+                    @change="onCodeChange"
+                    :readOnly="true"
+                    revealHorizontalRightPadding="100"
+                  ></MonacoEditor>-->
                 </div>
               </div>
               <div
@@ -179,16 +186,7 @@
                 id="pills-profile"
                 role="tabpanel"
                 aria-labelledby="pills-profile-tab"
-              >
-                <div class="showCode">
-                  <MonacoEditor
-                    width="800"
-                    height="500"
-                    theme="vs-dark"
-                    language="javascript"
-                  ></MonacoEditor>
-                </div>
-              </div>
+              ></div>
               <div
                 v-show="tabStep === 3"
                 class="tab-pane"
@@ -221,7 +219,12 @@
       </div>
       <div class="right-panel">
         <div class="right-top-panel">
-          <layout ref="layout" @stick="layoutStick" class="layout" />
+          <layout
+            ref="layout"
+            @userSelected="userSelectedWidth"
+            @stick="layoutStick"
+            class="layout"
+          />
         </div>
         <div class="right-bottom-panel">
           <div class="tree-name-wrapper">
@@ -239,7 +242,7 @@
               </div>
             </div>
             <overview
-              v-if="showhtml"
+              v-show="showhtml"
               ref="overview"
               @selectDomElement="selectDomElemented"
               @inParentTreeOption="inParentTreeOption"
@@ -247,7 +250,7 @@
               :getDocument="homeDocument"
               class="htmlcontent"
             />
-            <div v-if="!showhtml" class="filecontent" />
+            <fileContent v-show="!showhtml" class="filecontent" />
           </div>
         </div>
       </div>
@@ -296,19 +299,19 @@
     <settingList v-show="isSettingTab" class="settinglist-tab list-tab" />
     <helpList v-show="isHelpTab" class="helplist-tab list-tab" />
 
-    <span v-if="tagDescription" class="description-tag">
+    <span v-show="tagDescription" class="description-tag">
       <span class="desc-tag-text">tag</span>
     </span>
-    <div v-if="uiDescription" class="description-ui">
+    <div v-show="uiDescription" class="description-ui">
       <img />
       <div class="image-name">name</div>
       <div class="desc-ui-text">text</div>
     </div>
-    <div v-if="viewTemplate" class="description-img">
+    <div v-show="viewTemplate" class="description-img">
       <img />
     </div>
-    <div v-if="isTitle" class="title-copy"></div>
-    <div v-if="isContextMenu" class="sitemapContext">
+    <div v-show="isTitle" class="title-copy"></div>
+    <div v-show="isContextMenu" class="sitemapContext">
       <div @click="changePageSitemap" class="open">Open</div>
       <div @click="copyPage" class="copy">Copy</div>
       <div @click="rename" class="rename">Rename</div>
@@ -331,7 +334,7 @@ import studio from './components/studio'
 import overview from './components/overview'
 import spliter from './sample/spliter'
 import Switches from 'vue-switches'
-import CodeLoader from './components/CodeLoader'
+import fileContent from './components/fileContent'
 import sitemap from './components/sitemap'
 import SlideRuler from 'slide-ruler'
 import fileList from './components/tabComponent/fileList'
@@ -339,8 +342,9 @@ import editList from './components/tabComponent/editList'
 import saveList from './components/tabComponent/saveList'
 import settingList from './components/tabComponent/settingList'
 import helpList from './components/tabComponent/helpList'
-
 import MonacoEditor from 'monaco-editor-vue'
+import PrismEditor from 'vue-prism-editor'
+import * as monaco from 'monaco-editor'
 
 export default {
   components: {
@@ -351,7 +355,7 @@ export default {
     overview,
     spliter,
     Switches,
-    CodeLoader,
+    fileContent,
     sitemap,
     MonacoEditor,
     Ruler,
@@ -360,17 +364,26 @@ export default {
     editList,
     saveList,
     settingList,
-    helpList
+    helpList,
+    PrismEditor
   },
   props: ['selectDomElement'],
   name: 'App',
   data() {
     return {
+      borderWidth: [
+        { text: 'White' },
+        { text: 'Black' },
+        { text: '' },
+        { text: 'Thin' },
+        { text: 'Length' }
+      ],
       code:
         '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
-      options: {
-        selectOnLineNumbers: true
-      },
+      // options: {
+      //   selectOnLineNumbers: true
+      // },
+      // code: 'const noop = () => {}',
       range: [0, 100],
       payload: '',
       data: '',
@@ -402,7 +415,7 @@ export default {
       xInter: null,
       yInter: null,
       message: '',
-      isData: false,
+      isData: true,
       tabStep: 0,
       js: ' 불러올 데이터가 없습니다.',
       isShift: false,
@@ -451,7 +464,8 @@ export default {
       isHelpTab: false,
       isContextMenu: false,
       titleId: 0,
-      selectedTitle: null
+      selectedTitle: null,
+      vsMode: ''
     }
   },
   computed: {
@@ -465,7 +479,41 @@ export default {
       this.$refs.home.modeSelect(this.enabled)
     }
   },
+  watch: {},
   mounted() {
+    console.log('df')
+    if (this.enabled) {
+      this.vsMode = 'vs-dark'
+    } else {
+      this.vsMode = 'vs'
+    }
+    console.log(monaco.editor)
+    var editor = monaco.editor.create(document.getElementById('container'), {
+      value: 'console.log("Hello, world")',
+      language: 'css',
+      theme: 'vs-dark',
+      height: 100,
+      accessibilityPageSize: 4,
+      lineDecorationsWidth: 10,
+      mouseWheelZoom: true
+      // find: 'IEditorFindOptions',
+    })
+    var myBinding = editor.onDidChangeModelContent(function(e) {
+      console.log('시작')
+      console.log(editor.getValue())
+      console.log(editor.getContentHeight())
+
+      // alert(editor.getValue())
+      console.log(e.target)
+    })
+    editor.onDidContentSizeChange(function(e) {
+      console.log('시작s')
+    })
+    // monaco.editor.model.onDidChangeContent(event => {
+    //   render()
+    //   console.log('s')
+    // })
+
     this.$refs.sitemap.loadSitemap(this.titles)
     let title = document.querySelector('.file-name')
     title.style.backgroundColor = 'rgb(78, 78, 92)'
@@ -498,6 +546,14 @@ export default {
       }
     })
     document.addEventListener('keydown', e => {
+      // if (e.which === 120) {
+      //   alert('F9 pressed!')
+      //   console.log(this.value)
+      //   monaco.editor.addCommand(monaco.KeyCode.F9, function() {
+      //     alert('F9 pressed!')
+      //     console.log(this.value)
+      //   })
+      // }
       if (e.which === 17) {
         this.isCtrl = true
         this.$refs.home.multiChoice(true)
@@ -543,8 +599,9 @@ export default {
         let bord = document.querySelector('.loader-bord')
         loader.style.height =
           this.initialHeight - (e.clientY - this.initialY) + 'px'
-        console.log(parseInt(getComputedStyle(loader).top))
-        console.log(parseInt(getComputedStyle(bord).height))
+        // console.log(parseInt(getComputedStyle(loader).top))
+        // console.log(parseInt(getComputedStyle(bord).height))
+        document.getElementById('container').removeChildAll()
         this.$nextTick(() => {
           bord.style.top = parseInt(getComputedStyle(loader).top) + 'px'
         })
@@ -1274,6 +1331,10 @@ export default {
       this.homeLayoutLocation = document
         .getElementById('dashboard')
         .getBoundingClientRect()
+
+      console.log('이제 보낸다')
+      console.log(payload.target)
+
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
         this.isPustHtml = false
@@ -1423,6 +1484,10 @@ export default {
     },
     rulerChange(e) {
       console.log(e)
+    },
+    onCodeChange(e) {
+      console.log(e)
+      // console.log(e.target.value)
     }
   }
 }
@@ -1733,7 +1798,7 @@ export default {
             overflow: auto;
             width: 100%;
             height: 22.8rem;
-            background-color: yellow;
+            background-color: #292931;
           }
         }
       }
@@ -1857,7 +1922,7 @@ export default {
   .loader-bord {
     cursor: n-resize;
     height: 7px;
-    width: 92%;
+    width: 80%;
     position: fixed;
     z-index: 10000;
     //  bottom: 5%;
@@ -1994,7 +2059,7 @@ export default {
   }
 
   .loadDataPanel {
-    width: 92%;
+    width: 80%;
     z-index: 10000;
     position: fixed;
     bottom: 5%;
@@ -2038,6 +2103,32 @@ export default {
       cursor: pointer;
       position: absolute;
     }
+  }
+  #container {
+    width: 100% !important;
+    height: 120% !important;
+    text-align: left;
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+  }
+  .monaco-editor {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0;
+    padding: 0;
+  }
+  .monaco_editor_container {
+    width: 100% !important;
+  }
+  .manualatag {
+    color: #fff;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .view-lines {
+    text-align: left;
+    margin: 0px 0px 0px 0px;
   }
 }
 </style>
