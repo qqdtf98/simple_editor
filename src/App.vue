@@ -221,7 +221,7 @@
         <div class="right-top-panel">
           <layout
             ref="layout"
-            @userSelected="userSelectedWidth"
+            @userSelectedWidth="userSelectedWidth"
             @stick="layoutStick"
             class="layout"
           />
@@ -1344,6 +1344,7 @@ export default {
     },
     userSelectedWidth(data) {
       // console.log(data)
+      console.log('qkqkqklk')
       this.data = data
       this.$refs.home.styleChanged(this.data)
     },
