@@ -463,7 +463,8 @@ export default {
       isContextMenu: false,
       titleId: 0,
       selectedTitle: null,
-      vsMode: ''
+      vsMode: '',
+      select: null
     }
   },
   computed: {
@@ -542,6 +543,9 @@ export default {
         this.isSettingTab = false
         this.isSaveTab = false
       }
+    })
+    document.addEventListener('mousedown', e => {
+      this.select = e.target
     })
     document.addEventListener('keydown', e => {
       // if (e.which === 120) {
@@ -657,10 +661,12 @@ export default {
       }
       if (this.isTitle) {
         this.isTitle = false
-        if (e.target.className === 'titles') {
-          this.$refs.sitemap.movePosition(e.target, 'titles')
-        } else {
-          this.$refs.sitemap.movePosition(e.target, 'titles-box')
+        if (this.select !== e.target && this.select !== null) {
+          if (e.target.className === 'titles') {
+            this.$refs.sitemap.movePosition(e.target, 'titles')
+          } else {
+            this.$refs.sitemap.movePosition(e.target, 'titles-box')
+          }
         }
       }
       if (this.treeMove) {
@@ -794,22 +800,43 @@ export default {
       this.$refs.sitemap.loadSitemap(this.titles)
     },
     changePageSitemap(e) {
-      let titles = document.querySelectorAll('.titles')
-      let editor = document.querySelectorAll('.board')
-      let i
-      for (i = 0; i < titles.length; i++) {
-        if (titles[i] === this.selectedTitle) {
-          break
+      if (this.selectedTitle.className === 'titles') {
+        let titles = document.querySelectorAll('.titles')
+        let editor = document.querySelectorAll('.board')
+        let i
+        for (i = 0; i < titles.length; i++) {
+          if (titles[i] === this.selectedTitle) {
+            break
+          }
         }
-      }
-      let j
-      for (j = 0; j < editor.length; j++) {
-        if (j === i) {
-          editor[j].classList.remove('hidden')
-          editor[j].classList.add('display')
-        } else {
-          editor[j].classList.remove('display')
-          editor[j].classList.add('hidden')
+        let j
+        for (j = 0; j < editor.length; j++) {
+          if (j === i) {
+            editor[j].classList.remove('hidden')
+            editor[j].classList.add('display')
+          } else {
+            editor[j].classList.remove('display')
+            editor[j].classList.add('hidden')
+          }
+        }
+      } else if (this.selectedTitle.className === 'titles-box') {
+        let titles = document.querySelectorAll('.titles-box')
+        let editor = document.querySelectorAll('.board')
+        let i
+        for (i = 0; i < titles.length; i++) {
+          if (titles[i] === this.selectedTitle) {
+            break
+          }
+        }
+        let j
+        for (j = 0; j < editor.length; j++) {
+          if (j === i) {
+            editor[j].classList.remove('hidden')
+            editor[j].classList.add('display')
+          } else {
+            editor[j].classList.remove('display')
+            editor[j].classList.add('hidden')
+          }
         }
       }
     },
@@ -834,7 +861,6 @@ export default {
         this.isContextMenu = true
         this.$nextTick(() => {
           let context = document.querySelector('.sitemapContext')
-          console.log(context)
           context.style.left = e.clientX + 'px'
           context.style.top = e.clientY + 'px'
         })
@@ -1071,7 +1097,6 @@ export default {
       }
       let j
       let editor = document.querySelectorAll('.board')
-      console.log(editor)
       for (j = 0; j < editor.length; j++) {
         if (j === num) {
           editor[j].classList.remove('hidden')
