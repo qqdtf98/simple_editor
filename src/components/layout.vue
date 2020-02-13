@@ -183,7 +183,7 @@
                       value
                       title
                       placeholder="40px"
-                      @keyup.enter="submitSourceWithPX"
+                      @keyup.enter="submitSource"
                       v-model="componentSorce.height"
                     />
                   </div>
@@ -193,29 +193,29 @@
                       Margin
                     </span>
                     <input
-                      class="propertyChange"
+                      class="propertyChange small"
                       type="text"
                       name="margin"
                       value
                       title
                       placeholder="0"
-                      @keyup.enter="submitSourceWithPX"
+                      @keyup.enter="submitSource"
                       v-model="componentSorce.margin"
                     />
                   </div>
                   <br />
                   <div class="row">
-                    <span class="property">
+                    <span class="property ">
                       Padding
                     </span>
                     <input
-                      class="propertyChange"
+                      class="propertyChange small"
                       type="text"
                       name="padding"
                       value
                       title
                       placeholder="0"
-                      @keyup.enter="submitSourceWithPX"
+                      @keyup.enter="submitSource"
                       v-model="componentSorce.padding"
                     />
                   </div>
@@ -1396,47 +1396,65 @@ export default {
       console.log(this.payload)
       this.submitSorce.payload = this.payload
       this.submitSorce.style = e.target.name
-      this.submitSorce.value = e.target.value
+
       if (e.target.name == 'width') {
         this.onWidth = true
+        this.submitSorce.value = e.target.value + 'px'
       } else if (e.target.name == 'height') {
         this.onHeight = true
+        this.submitSorce.value = e.target.value + 'px'
       } else if (e.target.name == 'margin') {
         this.onMargin = true
 
         var margin = e.target.value.replace(/px/gi, '').split(' ')
-
+        var value = ''
         // console.log(margin)
         // console.log(this.margin[0])
         if (margin.length !== 1) {
           for (var i = 0; i < margin.length; i++) {
             this.margin[i].value = margin[i]
+            value += margin[i] + 'px '
           }
           for (var i = margin.length; i < 4; i++) {
             this.margin[i].value = 0
+            if (typeof margin[i] == 'undefined') {
+              value += 0 + 'px '
+            } else {
+              value += margin[i] + 'px '
+            }
           }
         } else {
           for (var i = 0; i < 4; i++) {
             this.margin[i].value = margin[0]
+            value += margin[0] + 'px '
           }
         }
+        this.submitSorce.value = value
       } else if (e.target.name == 'padding') {
         this.onPadding = true
         var padding = e.target.value.replace(/px/gi, '').split(' ')
-        // console.log(margin)
-        // console.log(this.margin[0])
+        var value = ''
+
         if (padding.length !== 1) {
           for (var i = 0; i < padding.length; i++) {
             this.padding[i] = padding[i]
+            value += padding[i] + 'px '
           }
           for (var i = padding.length; i < 4; i++) {
             this.padding[i] = 0
+            if (typeof padding[i] == 'undefined') {
+              value += 0 + 'px '
+            } else {
+              value += padding[i] + 'px '
+            }
           }
         } else {
           for (var i = 0; i < 4; i++) {
             this.padding[i] = padding[0]
+            value += padding[0] + 'px '
           }
         }
+        this.submitSorce.value = value
       }
       this.submitSorce.change = 1
       console.log(this.submitSorce)
@@ -1890,7 +1908,7 @@ export default {
   margin: -90px 0px 0px -10px;
 }
 .property {
-  margin: 0px 0px 0px 20px;
+  margin: 0px 0px 0px 10px;
   color: grey !important;
   width: 30%;
 }
@@ -1898,12 +1916,15 @@ export default {
   background-color: #35373a;
   border-style: none;
   border-bottom: 0.5px solid #768ea7;
-  width: 30%;
+  width: 50%;
   float: right;
-  margin: 0 5px 0 60px;
+  margin: 0px 5px 0px 40px;
   text-align: right;
   padding: 0px 5px 0px 0px;
   color: #dedede;
+}
+.small {
+  font-size: 13px;
 }
 .size {
   margin: 100px 0px 0px 0px;

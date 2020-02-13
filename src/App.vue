@@ -221,7 +221,7 @@
         <div class="right-top-panel">
           <layout
             ref="layout"
-            @userSelected="userSelectedWidth"
+            @userSelectedWidth="userSelectedWidth"
             @stick="layoutStick"
             class="layout"
           />
@@ -498,6 +498,7 @@ export default {
       mouseWheelZoom: true
       // find: 'IEditorFindOptions',
     })
+ 
     var myBinding = editor.onDidChangeModelContent(function(e) {
       console.log('시작')
       console.log(editor.getValue())
