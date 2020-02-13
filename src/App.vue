@@ -1309,10 +1309,10 @@ export default {
           let i
           for (i = work.elem.length - 1; i >= 0; i--) {
             console.log(work.nth[i])
-            work.afterParent[i].appendChild(work.elem[i])
-            // $(work.elem[i]).insertBefore(
-            //   work.afterParent[i].children[work.nth]
-            // )
+            work.afterParent[i].insertBefore(
+              work.elem[i],
+              work.afterParent[i].childNodes[work.nth[i]]
+            )
           }
         }
       }
