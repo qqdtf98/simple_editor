@@ -5,23 +5,23 @@
             <input type="checkbox" id="root">
            
             <ul>
-                <li>node1</li>
+                <li>html</li>
             </ul>
         </ul>
         <ul class="tree">
-            <label for="root">HTML </label>
+            <label for="root">CSS </label>
             <input type="checkbox" id="root">
            
             <ul>
-                <li>node1</li>
+                <li>css</li>
             </ul>
         </ul>
         <ul class="tree">
-            <label for="root">HTML </label>
+            <label for="root">JavaScript </label>
             <input type="checkbox" id="root">
            
             <ul>
-                <li>node1</li>
+                <li>js</li>
             </ul>
         </ul>
         <!--

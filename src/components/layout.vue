@@ -364,7 +364,7 @@
                     </button>
                   </div>
 
-                  <div v-show="imageLoder" class="row" >
+                  <div v-show="imageLoder" class="row">
                     <span class="property backgruond" title>
                       Background Size
                     </span>
@@ -412,56 +412,105 @@
                   <div class="row font">
                     <img
                       @mousedown.stop
+                      @click="submitBasicProperty"
+                      name="left"
+                      property="text-align"
                       class="left AlignBtn"
                       src="../assets/images/left-align.svg"
                     />
                     <img
                       @mousedown.stop
+                      @click="submitBasicProperty"
+                      name="center"
+                      property="text-align"
                       class="center AlignBtn"
                       src="../assets/images/center-align.svg"
                     />
                     <img
                       @mousedown.stop
+                      @click="submitBasicProperty"
+                      name="right"
+                      property="text-align"
                       class="right AlignBtn"
                       src="../assets/images/left-align.svg"
                     />
-                    <a class="linkA"> Link </a>
+                    <h5 class="linkA" @click="pushLink">Link</h5>
+                    <input 
+                      class="propertyChange link"
+                      type
+                      name="font-weight"
+                      value
+                      title
+                      placeholder="http://naver.com"
+                      @keyup.enter="submitLinkAddress"
+                      v-show="isLink">
+                      </input>
                   </div>
 
                   <div class="row font">
                     <img
                       @mousedown.stop
+                      @click="submitChangeProperty"
+                      name="bold"
+                      notname="normal"
+                      data="isThick"
+                      property="font-weight"
                       class="thick"
                       src="../assets/images/thick.svg"
                     />
                     <img
                       @mousedown.stop
+                      @click="submitChangeProperty"
+                      name="underline"
+                      notname="none"
+                      data="isUnderLine"
+                      property="text-decoration"
                       class="line-font"
                       src="../assets/images/line-font.svg"
                     />
                     <img
                       @mousedown.stop
+                      @click="submitChangeProperty"
+                      name="italic"
+                      notname="initial"
+                      data="isItalic"
+                      property="font-style"
                       class="italic"
                       src="../assets/images/italic.svg"
                     />
                     <img
                       @mousedown.stop
+                      @click="submitChangeProperty"
+                      name="uppercase"
+                      notname="lowercase"
+                      data="isBigAndSmall"
+                      property="text-transform"
                       class="bigAndSmall"
                       src="../assets/images/bigAndSmall.svg"
                     />
                   </div>
 
-                  <div class="row">
+                  <div v-show="isFontWeight"class="row">
                     <span class="property">
                       Style
                     </span>
                     <b-form-select
                       class="btn btn-info btn-sm dropdown-toggle"
                       id="dropdown-toggle"
-                      v-model="borderWidthSelected"
-                      :options="borderWidth"
-                      @change="submitChangeBorderWidth"
+                      v-model="fontWeightSelected"
+                      :options="fontWeight"
+                      @change="submitFontWeight"
                     ></b-form-select>
+                    <input 
+                      class="propertyChange add "
+                      type
+                      name="font-weight"
+                      value
+                      title
+                      placeholder="200"
+                      @keyup.enter="submitSource"
+                      v-show="isCustomFontWeight">
+                      </input>
                   </div>
                   <br />
                   <div class="row">
@@ -471,9 +520,9 @@
                     <b-form-select
                       class="btn btn-info btn-sm dropdown-toggle"
                       id="dropdown-toggle"
-                      v-model="borderWidthSelected"
-                      :options="borderWidth"
-                      @change="submitChangeBorderWidth"
+                      v-model="fontFamilySelected"
+                      :options="fontFamily"
+                      @change="submitFontStyle"
                     ></b-form-select>
                   </div>
                   <br />
@@ -484,11 +533,11 @@
                     <input
                       class="propertyChange fontSize"
                       type
-                      name="width"
+                      name="font-size"
                       value
                       title
-                      placeholder="31.4375px"
-                      @keyup.enter="submitSourceWithPX"
+                      placeholder="30px"
+                      @keyup.enter="submitSource"
                       v-model="componentSorce.width"
                     />
                   </div>
@@ -499,9 +548,8 @@
                     </span>
                     <b-button
                       class="backgroundColorPicker"
-                      @click="colorBackgroundpicker"
                       @keyup.enter="submitSourceOriginal"
-                      :style="backgroundColor"
+                      :style="fontColor"
                       variant="free"
                     ></b-button>
                   </div>
@@ -509,23 +557,33 @@
                   <div class="row" id="buttonRow">
                     <!--<img @click="closeLayout" src="../assets/ban.svg" class="layoutBanBtn">-->
                     <b-button
-                      class="backgroundFixColor ban"
-                      style="background-color:#fffeec background:src(http://cdn.zetawiki.com/png/slash.png)"
+                      @click="fontColorBtn"
+                      name="#fff"
+                      class="backgroundFixColor"
+                      style="background-color:#fff !important"
                     >
                     </b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#e6696e"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #e6696e, #e67a7d); !important"
                     ></b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#9177c0"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #9177c0, #8268b4); !important"
                     ></b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#dd8042"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #dd8042, #dc8d5e); !important"
                     ></b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#d69d2f"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #d69d2f, #cd8e27); !important"
                     ></b-button>
@@ -533,18 +591,26 @@
 
                   <div class="row" id="buttonRow">
                     <b-button
+                      @click="fontColorBtn"
+                      name="#6ca64e"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #6ca64e, #5f9943); !important"
                     ></b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#5ba68f"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #5ba68f, #4b977f); !important"
                     ></b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#629eb1"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #629eb1, #5490a3); !important"
                     ></b-button>
                     <b-button
+                      @click="fontColorBtn"
+                      name="#87919d"
                       class="backgroundFixColor"
                       style="background-image: linear-gradient(to bottom, #87919d, #7a8490); !important"
                     ></b-button>
@@ -556,13 +622,24 @@
                       #55fc55,
                       #5555ff,
                       #ff5959); !important"
+                      @click="colorBackgroundpicker"
+                      @keypress.enter="submitSourceOriginal"
                     ></b-button>
+                    <div @mouseup="updateBackgroundValueWithUndo">
+                    <chrome-color
+                      class="chrome"
+                      v-show="isBackgroundPicker"
+                      :value="fontColor.backgroundColor"
+                      v-model="fontColor.backgroundColor"
+                      @input="updateFontColorValue"
+                    ></chrome-color>
+                  </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!--
+            
           <div class="card">
             <div
               class="card-header"
@@ -591,276 +668,267 @@
               data-parent="#accordion"
             >
               <div class="card-body">
-                <div class="row filter">
-                  <span
-                    class="filterSpan"
-                    :class="{ fontActive: onOpacity }"
-                    style="float:left"
+                <div
+                  id="collapseOne"
+                  class="collapse"
+                  v-bind:class="{ show: filterTab === 1 }"
+                  role="tabpanel"
+                  aria-labelledby="headingOne"
+                  data-parent="#accordion"
+                >
+                  <div class="card-body">
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onOpacity }"
+                        style="float:left"
+                      >
+                        Opacity
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        name="Opacity"
+                        submitSorce.style="Opacity"
+                        @input="submitOpacity"
+                        v-model="opacityValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        v-model="opacityValue"
+                        placeholder="0"
+                        name="Opacity"
+                        @keyup.enter="submitOpacity"
+                      />
+                    </div>
 
-                  >
-                    filter
-                  </a>
-                </h5>
-              </div>
-              <div
-                id="collapseOne"
-                class="collapse"
-                v-bind:class="{ show: filterTab === 1 }"
-                role="tabpanel"
-                aria-labelledby="headingOne"
-                data-parent="#accordion"
-              >
-                <div class="card-body">
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onOpacity }"
-                      style="float:left"
-                    >
-                      Opacity
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="1"
-                      step="0.01"
-                      name="Opacity"
-                      submitSorce.style="Opacity"
-                      @input="submitOpacity"
-                      v-model="opacityValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      v-model="opacityValue"
-                      placeholder="0"
-                      name="Opacity"
-                      @keyup.enter="submitOpacity"
-                    />
-                  </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onBlur }"
+                        style="float:left"
+                      >
+                        Blur
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="100"
+                        step="1"
+                        name="Blur"
+                        submitSorce.style="Blur"
+                        @input="submitBlur"
+                        v-model="blurValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0px"
+                        name="Blur"
+                        @keyup.enter="submitBlur"
+                        v-model="blurValue"
+                      />
+                    </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onBrightness }"
+                        style="float:left"
+                      >
+                        Brightness
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="100"
+                        step="1"
+                        name="Brightness"
+                        submitSorce.style="Brightness"
+                        @input="submitBrightness"
+                        v-model="brightnessValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0%"
+                        name="Brightness"
+                        @keyup.enter="submitBrightness"
+                        v-model="brightnessValue"
+                      />
+                    </div>
 
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onBlur }"
-                      style="float:left"
-                    >
-                      Blur
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="100"
-                      step="1"
-                      name="Blur"
-                      submitSorce.style="Blur"
-                      @input="submitBlur"
-                      v-model="blurValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0px"
-                      name="Blur"
-                      @keyup.enter="submitBlur"
-                      v-model="blurValue"
-                    />
-                  </div>
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onBrightness }"
-                      style="float:left"
-                    >
-                      Brightness
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="100"
-                      step="1"
-                      name="Brightness"
-                      submitSorce.style="Brightness"
-                      @input="submitBrightness"
-                      v-model="brightnessValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0%"
-                      name="Brightness"
-                      @keyup.enter="submitBrightness"
-                      v-model="brightnessValue"
-                    />
-                  </div>
-
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onContrast }"
-                      style="float:left"
-                    >
-                      Contrast
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="200"
-                      step="1"
-                      name="Contrast"
-                      submitSorce.style="Contrast"
-                      @input="submitContrast"
-                      v-model="contrastValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0%"
-                      name="Contrast"
-                      @keyup.enter="submitContrast"
-                      v-model="contrastValue"
-                    />
-                  </div>
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onGrayscale }"
-                      style="float:left"
-                    >
-                      Grayscale
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="100"
-                      step="1"
-                      name="Grayscale"
-                      submitSorce.style="Grayscale"
-                      @input="submitGrayscale"
-                      v-model="grayscaleValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0%"
-                      name="Grayscale"
-                      @keyup.enter="submitGrayscale"
-                      v-model="grayscaleValue"
-                    />
-                  </div>
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onHue }"
-                      style="float:left"
-                    >
-                      Hue
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="360"
-                      step="3"
-                      name="Hue"
-                      submitSorce.style="Hue"
-                      @input="submitHue"
-                      v-model="hueValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0deg"
-                      name="Hue"
-                      @keyup.enter="submitHue"
-                      v-model="hueValue"
-                    />
-                  </div>
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onInvert }"
-                      style="float:left"
-                    >
-                      Invert
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="100"
-                      step="1"
-                      name="Invert"
-                      submitSorce.style="Invert"
-                      @input="submitInvert"
-                      v-model="invertValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="100%"
-                      name="Invert"
-                      @keyup.enter="submitInvert"
-                      v-model="invertValue"
-                    />
-                  </div>
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onSaturate }"
-                      style="float:left"
-                    >
-                      Saturate
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="200"
-                      step="1"
-                      name="Saturate"
-                      submitSorce.style="Saturate"
-                      @input="submitSaturate"
-                      v-model="saturateValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0%"
-                      name="Saturate"
-                      @keyup.enter="submitSaturate"
-                      v-model="saturateValue"
-                    />
-                  </div>
-                  <div class="row filter">
-                    <span
-                      class="filterSpan"
-                      :class="{ fontActive: onSepia }"
-                      style="float:left"
-                    >
-                      Sepia
-                    </span>
-                    <range-slider
-                      class="slider"
-                      min="0"
-                      max="100"
-                      step="1"
-                      name="Sepia"
-                      submitSorce.style="Sepia"
-                      @input="submitSepia"
-                      v-model="sepiaValue"
-                    />
-                    <input
-                      class="filterInput"
-                      style="width:50px"
-                      placeholder="0%"
-                      name="Sepia"
-                      @keyup.enter="submitSepia"
-                      v-model="sepiaValue"
-                    />
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onContrast }"
+                        style="float:left"
+                      >
+                        Contrast
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="200"
+                        step="1"
+                        name="Contrast"
+                        submitSorce.style="Contrast"
+                        @input="submitContrast"
+                        v-model="contrastValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0%"
+                        name="Contrast"
+                        @keyup.enter="submitContrast"
+                        v-model="contrastValue"
+                      />
+                    </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onGrayscale }"
+                        style="float:left"
+                      >
+                        Grayscale
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="100"
+                        step="1"
+                        name="Grayscale"
+                        submitSorce.style="Grayscale"
+                        @input="submitGrayscale"
+                        v-model="grayscaleValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0%"
+                        name="Grayscale"
+                        @keyup.enter="submitGrayscale"
+                        v-model="grayscaleValue"
+                      />
+                    </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onHue }"
+                        style="float:left"
+                      >
+                        Hue
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="360"
+                        step="3"
+                        name="Hue"
+                        submitSorce.style="Hue"
+                        @input="submitHue"
+                        v-model="hueValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0deg"
+                        name="Hue"
+                        @keyup.enter="submitHue"
+                        v-model="hueValue"
+                      />
+                    </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onInvert }"
+                        style="float:left"
+                      >
+                        Invert
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="100"
+                        step="1"
+                        name="Invert"
+                        submitSorce.style="Invert"
+                        @input="submitInvert"
+                        v-model="invertValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="100%"
+                        name="Invert"
+                        @keyup.enter="submitInvert"
+                        v-model="invertValue"
+                      />
+                    </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onSaturate }"
+                        style="float:left"
+                      >
+                        Saturate
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="200"
+                        step="1"
+                        name="Saturate"
+                        submitSorce.style="Saturate"
+                        @input="submitSaturate"
+                        v-model="saturateValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0%"
+                        name="Saturate"
+                        @keyup.enter="submitSaturate"
+                        v-model="saturateValue"
+                      />
+                    </div>
+                    <div class="row filter">
+                      <span
+                        class="filterSpan"
+                        :class="{ fontActive: onSepia }"
+                        style="float:left"
+                      >
+                        Sepia
+                      </span>
+                      <range-slider
+                        class="slider"
+                        min="0"
+                        max="100"
+                        step="1"
+                        name="Sepia"
+                        submitSorce.style="Sepia"
+                        @input="submitSepia"
+                        v-model="sepiaValue"
+                      />
+                      <input
+                        class="filterInput"
+                        style="width:50px"
+                        placeholder="0%"
+                        name="Sepia"
+                        @keyup.enter="submitSepia"
+                        v-model="sepiaValue"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          --></div>
+          
+          </div>
         </div>
 
         <!--Animation-->
@@ -1025,7 +1093,14 @@ export default {
     return {
       payload: '',
       clickBackground: false,
-      imageLoder:false,
+      imageLoder: false,
+      isThick: false,
+      isUnderLine: false,
+      isItalic: false,
+      isBigAndSmall: false,
+      isFontWeight:false,
+      isCustomFontWeight:false,
+      isLink:false,
       //selction 된 component 속성
       componentSorce: {
         x: 228,
@@ -1126,10 +1201,10 @@ export default {
       ],
       fontWeightSelected: 'none',
       fontWeight: [
-        { value: 'none', text: 'None' },
+        { value: 'normal', text: 'None' },
         { value: 'lighter', text: 'Lighter' },
         { value: 'bold', text: 'Bold' },
-        { value: 'number', text: 'Number' }
+        { value: 'custom', text: 'Custum' }
       ],
       borderStyleSelected: 'none',
       borderStyle: [
@@ -1296,19 +1371,19 @@ export default {
       this.onHeight = false
       this.onMargin = false
       this.onPadding = false
-      ;(this.onBackgroundColor = false),
-        (this.onColor = false),
-        (this.onFontSize = false),
-        (this.onOpacity = false),
-        (this.onBlur = false),
-        (this.onBrightness = false),
-        (this.onContrast = false),
-        (this.onGrayscale = false),
-        (this.onHue = false),
-        (this.onInvert = false),
-        (this.onSaturate = false),
-        (this.onSepia = false),
-        (this.selected = 'none')
+      this.onBackgroundColor = false
+      this.onColor = false
+      this.onFontSize = false
+      this.onOpacity = false
+      this.onBlur = false
+      this.onBrightness = false
+      this.onContrast = false
+      this.onGrayscale = false
+      this.onHue = false
+      this.onInvert = false
+      this.onSaturate = false
+      this.onSepia = false
+      this.selected = 'none'
       if (!this.isData) {
         this.isData = true
       }
@@ -1379,7 +1454,6 @@ export default {
       // else
       //    this.isBackgroundPicker=true
       // console.log("sdas")
-      console.log('s')
     },
     colorFontpicker() {
       this.isFontPicker = true
@@ -1458,25 +1532,43 @@ export default {
           }
         }
         this.submitSorce.value = value
+      }else if(e.target.name == 'font-weight'){
+        this.submitSorce.value = e.target.value
+      }else if(e.target.name == 'font-size'){
+        var size = e.target.value.replace(/px/gi, '').split(' ')
+        this.submitSorce.value = size+'px'
       }
       this.submitSorce.change = 1
-      console.log(this.submitSorce)
       this.$emit('userSelectedWidth', this.submitSorce)
     },
     updateBackgroundValue(colorData) {
-      if(!this.clickBackground){
+      this.backgroundColor.background = colorData.hex
+      if (!this.clickBackground) {
         this.submitSorce.change = 1
-        this.clickBackground=true
-      }
-      else{
+        this.clickBackground = true
+      } else {
         this.submitSorce.change = 0
       }
-      this.backgroundColor.background = colorData.hex
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'background'
       this.submitSorce.value = colorData.hex
       this.onBackgroundColor = true
-      
+
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    updateFontColorValue(colorData){
+      this.fontColor.background = colorData.hex
+      if (!this.clickBackground) {
+        this.submitSorce.change = 1
+        this.clickBackground = true
+      } else {
+        this.submitSorce.change = 0
+      }
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'color'
+      this.submitSorce.value = colorData.hex
+      this.onBackgroundColor = true
+
       this.$emit('userSelectedWidth', this.submitSorce)
     },
     updateBackgroundValueWithUndo(e) {
@@ -1495,11 +1587,30 @@ export default {
         this.$emit('userSelectedWidth', sub)
       }
     },
-    backgroundBtn(e){
+    backgroundBtn(e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'background'
       this.submitSorce.value = e.target.name
       this.submitSorce.change = 1
+      if(e.target.name=='none'){
+        this.backgroundColor.backgroundColor='white'
+      }
+      else{
+        this.backgroundColor.backgroundColor=e.target.name
+      }
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    fontColorBtn(e){
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'color'
+      this.submitSorce.value = e.target.name
+      this.submitSorce.change = 1
+      if(e.target.name=='none'){
+        this.fontColor.backgroundColor='white'
+      }
+      else{
+        this.fontColor.backgroundColor=e.target.name
+      }
       this.$emit('userSelectedWidth', this.submitSorce)
     },
     onFileSelected(e) {
@@ -1517,7 +1628,7 @@ export default {
         submit.payload = data
         submit.style = 'background-image'
         submit.value = 'url(' + reader.result + ')'
-        submit.change = 1 
+        submit.change = 1
         vm.$emit('userSelectedWidth', submit)
       }
       this.imageLoder = true
@@ -1531,10 +1642,140 @@ export default {
       this.submitSorce.change = 1
       this.$emit('userSelectedWidth', this.submitSorce)
     },
-    
+    pushLink(e) {
+      this.isLink=true
+    },
+    submitLinkAddress(e){
+      console.log(e.target.value)
+      this.payload.setAttribute('onclick',"window.open('"+e.target.value+"')")
 
+    },
+    submitChangeProperty(e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = e.target.getAttribute('property')
+      this.submitSorce.change = 1
+      var value = e.target.getAttribute('data')
+      if(value=='isThick'){
+        if(this.isFontWeight)
+          this.isFontWeight=false
+        else
+          this.isFontWeight=true
+      }
+      if (!this[value]) {
+        this.submitSorce.value = e.target.getAttribute('name')
+        this[value] = true
+      } else {
+        this.submitSorce.value = e.target.getAttribute('notname')
+        this[value] = false
+      }
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitOpacity (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'opacity'
+      if (typeof (e.target) !== 'undefined') {
+        this.submitSorce.value = e.target.value
+        // this.submitSorce.value=e
+      } else { this.submitSorce.value = e }
+      this.onOpacity = true
+	    this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitBlur (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'blur(' + e + 'px)' } else {
+        this.submitSorce.value = 'blur(' + e.target.value.replace(/px/gi, '') + 'px)'
+      }
+      this.onBlur = true
+	    this.submitSorce.change = 1
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitBrightness (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'brightness(' + e + '%)' } else { this.submitSorce.value = 'brightness(' + e.target.value.replace(/%/gi, '') + '%)' }
+      this.onBrightness = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitContrast (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'contrast(' + e + '%)' } else { this.submitSorce.value = 'contrast(' + e.target.value.replace(/%/gi, '') + '%)' }
+      this.onContrast = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitGrayscale (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'grayscale(' + e + '%)' } else { this.submitSorce.value = 'grayscale(' + e.target.value.replace(/%/gi, '') + '%)' }
+      this.onGrayscale = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitHue (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'hue-rotate(' + e + 'deg)' } else { this.submitSorce.value = 'hue(' + e.target.value.replace(/deg/gi, '') + 'deg)' }
+      this.onHue = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitInvert (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'invert(' + e + '%)' } else { this.submitSorce.value = 'invert(' + e.target.value.replace(/%/gi, '') + '%)' }
+      this.onInvert = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitSaturate (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'saturate(' + e + '%)' } else { this.submitSorce.value = 'saturate(' + e.target.value.replace(/%/gi, '') + '%)' }
+      this.onSaturate = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitSepia (e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'filter'
+      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'sepia(' + e + '%)' } else { this.submitSorce.value = 'sepia(' + e.target.value.replace(/%/gi, '') + '%)' }
+      this.onSepia = true
+	  this.submitSorce.change = 1,
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitBasicProperty(e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = e.target.getAttribute('property')
+      this.submitSorce.value = e.target.getAttribute('name')
+      this.submitSorce.change = 1
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
+    submitFontWeight(e){
+      if(e=='custom'){
+        this.isCustomFontWeight=true
+      }
+      else{
+        this.submitSorce.payload = this.payload
+        this.submitSorce.style = 'font-weight'
+        this.submitSorce.value = e
+        this.isCustomFontWeight=false
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitFontStyle(e){
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'font-family'
+      this.submitSorce.value = e
+      this.submitSorce.change = 1
+      this.$emit('userSelectedWidth', this.submitSorce)
+    },
     testee(e) {
-      console.log('s')
+      console.log(e)
     },
     //엔터
     submitSourceOriginal(e) {
@@ -1697,8 +1938,7 @@ export default {
         obj.appendChild(newDIV)
       }
     },
-    
-    
+
     onUpload() {
       /// 서버에 저장
     },
@@ -1803,20 +2043,7 @@ export default {
     closelayout() {
       this.$emit('close-layout')
     },
-    //filter 변화 메소드
-    submitOpacity(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'opacity'
-      if (typeof e.target !== 'undefined') {
-        this.submitSorce.value = e.target.value
-        // this.submitSorce.value=e
-      } else {
-        this.submitSorce.value = e
-      }
-      this.onOpacity = true
-      ;(this.submitSorce.change = 1),
-        this.$emit('userSelected', this.submitSorce)
-    },
+
     //Animation 테스트
     testAnimation(e) {
       console.log(e)
@@ -2125,9 +2352,13 @@ b {
   vertical-align: middle;
 }
 //font 속성
-.fontSize{
-    margin: 0px 0px 0px 65px;
-    width: 30%;
+.add{
+  margin:0px 0px 0px 162px;
+  width:30%;
+}
+.fontSize {
+  margin: 0px 0px 0px 65px;
+  width: 30%;
 }
 .row {
   .left {
@@ -2139,8 +2370,14 @@ b {
   }
   .linkA {
     font-size: 25px;
-    color: blue !important;
+    color: #3bc0f7 !important;
     text-decoration: underline !important;
+    font-style: 'italic' !important;
+  }
+  .link{
+    width: 74%;
+    height: 28px;
+    margin: 5px 0px 5px 51px;
   }
   .thick {
     width: 40px !important;
@@ -2168,18 +2405,19 @@ b {
 }
 //filter 속성
 .filter {
-  margin: 0px -6px 12px -15px;
+  margin: 0px -30px 15px -30px;
 }
+
 .filterSpan {
   margin: 0px 0px 0px 0px;
   color: grey !important;
   width: 32%;
 }
 .range-slider-inner {
-  width: 48%;
+  width: 45%;
 }
 .filterInput {
-  width: 16%;
+  width: 24%;
   background-color: #35373a;
   border-style: none;
   border-bottom: 0.5px solid #768ea7;
