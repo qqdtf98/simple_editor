@@ -111,6 +111,7 @@
               @componentSelected="componentSelected"
               @stack-push="stackPush"
               @loadData="loadData"
+              @open-code="openCode"
               class="home"
             ></home>
             <div v-show="isCommentOn" class="comment-board">
@@ -811,6 +812,10 @@ export default {
     this.hasht = h
   },
   methods: {
+    openCode() {
+      console.log('sdfsdfsdf')
+      this.isData = true
+    },
     copyPage() {
       console.log(this.selectedTitle)
       let titles = document.querySelectorAll('.titles')
@@ -1170,14 +1175,36 @@ export default {
       let editor = document.querySelector('.board')
       // let copy = editor.cloneNode(true)
       let newEditorBox = document.createElement('div')
-      let ne = document.createElement('button')
       newEditorBox.classList.add('board')
       newEditorBox.classList.add('hidden')
       newEditorBox.classList.add('board' + this.editorNum)
-      newEditorBox.appendChild(ne)
+
+      let sampleCompo = document.createElement('div')
+      sampleCompo.classList.add('sample-component')
+
+      let sampleBtn = document.createElement('img')
+      sampleBtn.classList.add('sample-add-btn')
+      sampleBtn.src = '../static/sample/plus2.svg'
+
       // console.log(editor.parentElement);
 
+      sampleCompo.appendChild(sampleBtn)
+      newEditorBox.appendChild(sampleCompo)
       editor.parentElement.appendChild(newEditorBox)
+
+      console.log(sampleBtn)
+
+      newEditorBox.style.height = '100%'
+      newEditorBox.style.width = '100%'
+      sampleCompo.style.width = '100%'
+      sampleCompo.style.height = '100%'
+      sampleCompo.style.display = 'flex'
+      sampleCompo.style.alignItems = 'center'
+      sampleCompo.style.justifyContent = 'center'
+      sampleBtn.style.width = '5rem'
+      sampleBtn.style.cursor = 'pointer'
+
+      sampleBtn.setAttribute('onclick', this.openCode())
 
       // console.log(newEditorBox.classList);
       this.editorNum++
@@ -1489,9 +1516,6 @@ export default {
     },
     loadData(data) {
       this.message = data
-    },
-    closeCodeRiview() {
-      this.isData = false
     },
     chageContent() {
       console.log(this.message)
@@ -1996,10 +2020,8 @@ export default {
     cursor: n-resize;
     height: 7px;
     width: 100%;
-    // position: fixed;
     z-index: 10000;
-    //  bottom: 5%;
-    background-color: #545e66;
+    // background-color: #545e66;
   }
 
   // .layout {

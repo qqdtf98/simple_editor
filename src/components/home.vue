@@ -6,21 +6,6 @@
         @ps-scroll-x="handleScroll"
         class="scroll-area"
       >
-        <!-- <div class="ruler-box">
-          <div class="ruler-line">
-            <div class="ruler-1"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-1"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-2"></div>
-            <div class="ruler-1"></div>
-          </div>
-        </div> -->
         <div
           @mouseup="onmouserightClick"
           @keydown.enter="isContentNotEditable"
@@ -33,14 +18,19 @@
           @mousedown="mousedown"
         >
           <div class="board">
+            <div class="sample-component">
+              <img
+                src="../assets/images/plus.svg"
+                @click="addCode"
+                class="sample-add-btn"
+              />
+            </div>
+            <!-- <Dashboard />
             <Dashboard />
             <Dashboard />
-            <Dashboard />
-            <!-- <ss /> -->
-
             <spliter />
             <HtmlLoader class="navi" />
-            <Navi class="navi" />
+            <Navi class="navi" /> -->
           </div>
         </div>
       </vue-custom-scrollbar>
@@ -423,6 +413,9 @@ export default {
     })
   },
   methods: {
+    addCode() {
+      this.$emit('open-code')
+    },
     multiChoice(mode) {
       this.multiSelect = mode
     },
@@ -454,7 +447,9 @@ export default {
         if (
           e.target.className !== 'tagname' &&
           e.target.className !== 'home' &&
-          e.target.className !== 'editor-component'
+          e.target.className !== 'editor-component' &&
+          e.target.className !== 'sample-component' &&
+          e.target.className !== 'sample-add-btn'
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
@@ -465,7 +460,9 @@ export default {
           if (
             e.target.className !== 'tagname' &&
             e.target.className !== 'home' &&
-            e.target.className !== 'editor-component'
+            e.target.className !== 'editor-component' &&
+            e.target.className !== 'sample-component' &&
+            e.target.className !== 'sample-add-btn'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
             this.movePosition = e
@@ -1042,7 +1039,9 @@ export default {
           if (
             e.target.className !== 'tagname' &&
             e.target.className !== 'home' &&
-            e.target.className !== 'editor-component'
+            e.target.className !== 'editor-component' &&
+            e.target.className !== 'sample-component' &&
+            e.target.className !== 'sample-add-btn'
           ) {
             this.multiSelectedElement = new Set()
             this.multiSelectedElement.add(e.target)
@@ -1115,7 +1114,9 @@ export default {
           if (
             e.target.className !== 'tagname' &&
             e.target.className !== 'home' &&
-            e.target.className !== 'editor-component'
+            e.target.className !== 'editor-component' &&
+            e.target.className !== 'sample-component' &&
+            e.target.className !== 'sample-add-btn'
           ) {
             this.multiSelectedElement.add(e.target)
             if (this.setSize !== this.multiSelectedElement.size) {
@@ -1194,7 +1195,9 @@ export default {
           if (
             e.target.className !== 'tagname' &&
             e.target.className !== 'home' &&
-            e.target.className !== 'editor-component'
+            e.target.className !== 'editor-component' &&
+            e.target.className !== 'sample-component' &&
+            e.target.className !== 'sample-add-btn'
           ) {
             this.$emit('componentSelected', e)
           }
@@ -1273,7 +1276,9 @@ export default {
       if (
         e.target.className !== 'tagname' &&
         e.target.className !== 'home' &&
-        e.target.className !== 'editor-component'
+        e.target.className !== 'editor-component' &&
+        e.target.className !== 'sample-component' &&
+        e.target.className !== 'sample-add-btn'
       ) {
         this.isContentEditable = true
         this.targetText = e.target.textContent
@@ -1293,7 +1298,9 @@ export default {
       if (
         e.target.className !== 'tagname' &&
         e.target.className !== 'home' &&
-        e.target.className !== 'editor-component'
+        e.target.className !== 'editor-component' &&
+        e.target.className !== 'sample-component' &&
+        e.target.className !== 'sample-add-btn'
       ) {
         this.focusInput(e)
         this.editElem = e.target
@@ -2192,9 +2199,20 @@ export default {
         height: 100%;
 
         .board {
-          // overflow: auto;
-          // height: 120%;
-          // border: 1px solid #000000;
+          height: 100%;
+          width: 100%;
+          .sample-component {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .sample-add-btn {
+              width: 5rem;
+              cursor: pointer;
+              height: 5rem;
+            }
+          }
         }
       }
       .ruler-box {
