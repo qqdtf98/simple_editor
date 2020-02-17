@@ -143,6 +143,7 @@
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span class="studio-text">CodeReview</span>
+
               <div class="manualatag">
                 mode
                 <switches
@@ -157,6 +158,14 @@
                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
                 class="close-btn"
               />
+            </div>
+            <div class="tab-box">
+              <div class="left-tab">
+                <div class="htmlTitle">index.html</div>
+              </div>
+              <div class="right-tab">
+                <div class="cssTitle">style.css</div>
+              </div>
             </div>
             <div class="showSorce">
               <div
@@ -813,7 +822,6 @@ export default {
   },
   methods: {
     openCode() {
-      console.log('sdfsdfsdf')
       this.isData = true
     },
     copyPage() {
@@ -1184,13 +1192,21 @@ export default {
 
       let sampleBtn = document.createElement('img')
       sampleBtn.classList.add('sample-add-btn')
-      sampleBtn.src = '../static/sample/plus2.svg'
 
       // console.log(editor.parentElement);
 
       sampleCompo.appendChild(sampleBtn)
       newEditorBox.appendChild(sampleCompo)
       editor.parentElement.appendChild(newEditorBox)
+
+      // sampleBtn.src = './static/sample/plus.svg'
+      $('.sample-add-btn').attr(
+        'src',
+        sampleBtn.setAttribute(
+          'src',
+          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhlaWdodD0iMzQiIHZpZXdCb3g9IjAgMCAzNSAzNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxyZWN0IHg9IjAuMTAwNTg2IiB5PSIxNC4xNTk0IiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIGZpbGw9IndoaXRlIi8+DQo8cmVjdCB4PSIxNCIgeT0iMzMuOTk4NyIgd2lkdGg9IjMzLjk5ODciIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC05MCAxNCAzMy45OTg3KSIgZmlsbD0id2hpdGUiLz4NCjwvc3ZnPg0K'
+        )
+      )
 
       console.log(sampleBtn)
 
@@ -1204,7 +1220,9 @@ export default {
       sampleBtn.style.width = '5rem'
       sampleBtn.style.cursor = 'pointer'
 
-      sampleBtn.setAttribute('onclick', this.openCode())
+      sampleBtn.addEventListener('click', () => {
+        this.openCode()
+      })
 
       // console.log(newEditorBox.classList);
       this.editorNum++
@@ -2156,13 +2174,14 @@ export default {
   .loadDataPanel {
     width: 80%;
     z-index: 10000;
+    border: 1px solid #525252;
     position: fixed;
-    bottom: 5%;
+    bottom: 3%;
     height: 50%;
     background-color: #23282b;
   }
   .showSorce {
-    height: calc(97% - 7px - 2.5rem);
+    height: calc(97% - 7px - 4.1rem);
   }
   .tab-pane {
     height: 100%;
@@ -2191,6 +2210,7 @@ export default {
       position: absolute;
       left: 0.4rem;
     }
+
     .manualatag {
       color: #fff;
       align-items: center;
@@ -2205,13 +2225,52 @@ export default {
       position: absolute;
     }
   }
+  .tab-box {
+    height: 1.6rem;
+    background-color: #1e1e1e;
+    display: flex;
+    flex-direction: row;
+    .right-tab {
+      border-left: 1.5px solid #4f4f86a6;
+      height: 100%;
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      .cssTitle {
+        height: 90%;
+        color: #ccc;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+        background-image: linear-gradient(to bottom, #48545a, #3d484d);
+        // background-color: #2c3e50;
+        cursor: pointer;
+      }
+    }
+    .left-tab {
+      border-left: 1.5px solid #4f4f86a6;
+      height: 100%;
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      .htmlTitle {
+        height: 90%;
+        padding-left: 0.2rem;
+        background-image: linear-gradient(to bottom, #48545a, #3d484d);
+        // background-color: #2c3e50;?
+        padding-right: 0.2rem;
+        color: #ccc;
+        cursor: pointer;
+      }
+    }
+  }
   #monacoContainer {
     width: 100%;
     height: 100%;
     text-align: left;
     display: flex;
     flex-direction: row;
-    border: 1px solid #ccc;
     margin: 0;
     padding: 0;
   }
@@ -2225,6 +2284,9 @@ export default {
       width: 100% !important;
       height: 100% !important;
       .margin {
+        border: none;
+        border-left: 1.5px solid #4f4f86a6;
+        border-right: 2px solid #4f4f86;
         width: 55px !important;
         height: 100% !important;
       }
