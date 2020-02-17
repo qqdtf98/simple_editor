@@ -761,7 +761,7 @@ export default {
       fontStyleSelected: 'none',
       fontStyle: [
         { value: 'none', text: 'None' },
-        { value: 'initial  ', text: 'Initial  ' },
+        { value: 'initial  ', text: 'Initial' },
         { value: 'italic ', text: 'Italic' },
         { value: 'oblique ', text: 'Oblique' },
         { value: 'underline', text: 'Underline' }
@@ -1060,7 +1060,6 @@ export default {
     },
     submitSourceOriginal (e) {
       // console.log(e.target)
-      // console.log("sd")
       // console.log(e.target.name)
       this.isBackgroundPicker = false
       this.isFontPicker = false

@@ -67,7 +67,6 @@ export default {
 
       // newDIV.style.backgroundColor="yellow";
       obj.appendChild(newDIV)
-
       var obj = document.getElementById(this.childNum)
       var newDIV = document.createElement('input')
       // newDIV.innerHTML = child[i].tagName;
