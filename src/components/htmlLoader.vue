@@ -45,6 +45,7 @@ file.onchange = function () {
   created() {
     var oScript = document.createElement('style')
     oScript.type = 'text/css'
+    oScript.setAttribute('id', 'cssUser')
     oScript.innerHTML = `#dsadsadsa{
         color: #fff; 
         background:blue;

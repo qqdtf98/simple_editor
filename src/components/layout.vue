@@ -443,8 +443,7 @@
                       title
                       placeholder="http://naver.com"
                       @keyup.enter="submitLinkAddress"
-                      v-show="isLink">
-                      </input>
+                      v-show="isLink" />
                   </div>
 
                   <div class="row font">
@@ -490,7 +489,7 @@
                     />
                   </div>
 
-                  <div v-show="isFontWeight"class="row">
+                  <div v-show="isFontWeight" class="row">
                     <span class="property">
                       Style
                     </span>
@@ -509,8 +508,7 @@
                       title
                       placeholder="200"
                       @keyup.enter="submitSource"
-                      v-show="isCustomFontWeight">
-                      </input>
+                      v-show="isCustomFontWeight" />
                   </div>
                   <br />
                   <div class="row">

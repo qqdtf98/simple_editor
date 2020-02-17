@@ -150,12 +150,12 @@
                   color="info"
                   v-model="enabled"
                 />
-                <img
-                  @click="closeCodeReview"
-                  src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
-                  class="close-btn"
-                />
               </div>
+              <img
+                @click="closeCodeReview"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
+                class="close-btn"
+              />
             </div>
             <div class="showSorce">
               <div
@@ -165,7 +165,12 @@
                 aria-labelledby="pills-home-tab"
               >
                 <div class="showCode">
-                  <div id="container" ref="editor" @change="onCodeChange"></div>
+                  <div
+                    id="monacoContainer"
+                    ref="editor"
+                    @change="onCodeChange"
+                  ></div>
+
                   <!--
                   <MonacoEditor
                     style="width:500px;height:300px;border:1px solid grey"
@@ -255,13 +260,13 @@
         </div>
       </div>
     </div>
-    <CodeLoader
+    <!-- <CodeLoader
       @setFile="setFile"
       :loaderData="message"
       ref="codeloader"
       v-show="codeOn"
       class="code-loader"
-    ></CodeLoader>
+    ></CodeLoader> -->
 
     <studio
       v-show="studioOn"
@@ -344,6 +349,7 @@ import settingList from './components/tabComponent/settingList'
 import helpList from './components/tabComponent/helpList'
 import MonacoEditor from 'monaco-editor-vue'
 import * as monaco from 'monaco-editor'
+import vueCustomScrollbar from 'vue-custom-scrollbar'
 
 export default {
   components: {
@@ -363,7 +369,8 @@ export default {
     editList,
     saveList,
     settingList,
-    helpList
+    helpList,
+    vueCustomScrollbar
   },
   props: ['selectDomElement'],
   name: 'App',
@@ -376,8 +383,9 @@ export default {
         { text: 'Thin' },
         { text: 'Length' }
       ],
-      code:
-        '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
+      monacoIndex: 0,
+      code: '',
+      css: '',
       // options: {
       //   selectOnLineNumbers: true
       // },
@@ -486,27 +494,60 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
-    // console.log(document.getElementById('newLoaderHtml').innerHTML)
+    console.log(document.getElementById('cssUser').innerHTML)
     this.code = document.getElementById('newLoaderHtml').innerHTML
-    var editor = monaco.editor.create(document.getElementById('container'), {
-      value: this.code,
-      language: 'html',
-      theme: 'vs-dark',
-      height: 100,
-      accessibilityPageSize: 4,
-      lineDecorationsWidth: 10,
-      mouseWheelZoom: true
-      // find: 'IEditorFindOptions',
-    })
+    this.css = document.getElementById('cssUser').innerHTML
+    console.log(monaco.editor)
+    let container = document.getElementById('monacoContainer')
+    let custom = document.createElement('vue-custom-scrollbar')
+    custom.classList.add('custom' + this.monacoIndex)
+    container.appendChild(custom)
+    document.querySelector('.custom' + this.monacoIndex++).style['width'] =
+      '50%'
 
-    var myBinding = editor.onDidChangeModelContent(function(e) {
-      console.log('시작')
-      console.log(editor.getValue())
-      document.getElementById('newLoaderHtml').innerHTML = editor.getValue()
-      console.log(editor.getContentHeight())
+    let custom1 = document.createElement('vue-custom-scrollbar')
+    custom1.classList.add('custom' + this.monacoIndex)
+
+    container.appendChild(custom1)
+    document.querySelector('.custom' + this.monacoIndex++).style['width'] =
+      '50%'
+    var editorHtml = monaco.editor.create(
+      document.getElementById('monacoContainer').children[0],
+      {
+        value: this.code,
+        language: 'html',
+        theme: 'vs-dark',
+        height: 100,
+        accessibilityPageSize: 4,
+        lineDecorationsWidth: 10,
+        mouseWheelZoom: true
+        // find: 'IEditorFindOptions',
+      }
+    )
+    var editorCss = monaco.editor.create(
+      document.getElementById('monacoContainer').children[1],
+      {
+        value: this.css,
+        language: 'css',
+        theme: 'vs-dark',
+        height: 100,
+        accessibilityPageSize: 4,
+        lineDecorationsWidth: 10,
+        mouseWheelZoom: true
+        // find: 'IEditorFindOptions',
+      }
+    )
+
+    var myBinding = editorHtml.onDidChangeModelContent(function(e) {
+      document.getElementById('newLoaderHtml').innerHTML = editorHtml.getValue()
 
       // alert(editor.getValue())
-      console.log(e.target)
+    })
+    var muBinding2 = editorCss.onDidChangeModelContent(function(e) {
+      console.log(editorCss.getValue())
+      document.getElementById('cssUser').innerHTML = editorCss.getValue()
+
+      // alert(editor.getValue())
     })
     editor.onDidContentSizeChange(function(e) {
       console.log('시작s')
@@ -600,13 +641,14 @@ export default {
         })
       }
       if (this.resizeLoader) {
+        console.log('alsdjf;laj')
         let loader = document.querySelector('.loadDataPanel')
         let bord = document.querySelector('.loader-bord')
+        console.log(loader)
+        console.log(bord)
         loader.style.height =
           this.initialHeight - (e.clientY - this.initialY) + 'px'
-        // console.log(parseInt(getComputedStyle(loader).top))
-        // console.log(parseInt(getComputedStyle(bord).height))
-        document.getElementById('container').removeChildAll()
+        // document.getElementById('monacoContainer').removeChildAll()
         this.$nextTick(() => {
           bord.style.top = parseInt(getComputedStyle(loader).top) + 'px'
         })
@@ -1945,8 +1987,8 @@ export default {
   .loader-bord {
     cursor: n-resize;
     height: 7px;
-    width: 80%;
-    position: fixed;
+    width: 100%;
+    // position: fixed;
     z-index: 10000;
     //  bottom: 5%;
     background-color: #545e66;
@@ -2086,12 +2128,11 @@ export default {
     z-index: 10000;
     position: fixed;
     bottom: 5%;
-    height: 35%;
+    height: 50%;
     background-color: #23282b;
   }
   .showSorce {
-    margin: 14px 0px 0px 0px;
-    height: 60%;
+    height: calc(97% - 7px - 2.5rem);
   }
   .tab-pane {
     height: 100%;
@@ -2109,8 +2150,9 @@ export default {
     height: 100%;
   }
   .studio-text-box {
-    height: 7%;
-    justify-content: center;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
     position: relative;
     .studio-text {
       padding: 0.2rem;
@@ -2119,36 +2161,55 @@ export default {
       position: absolute;
       left: 0.4rem;
     }
+    .manualatag {
+      color: #fff;
+      align-items: center;
+      position: absolute;
+      right: 1.6rem;
+    }
     .close-btn {
       width: 1.1rem;
       right: 0.4rem;
-      top: 0.4rem;
       cursor: pointer;
+      top: 0.6rem;
       position: absolute;
     }
   }
-  #container {
-    width: 100% !important;
-    height: 120% !important;
+  #monacoContainer {
+    width: 100%;
+    height: 100%;
     text-align: left;
+    display: flex;
+    flex-direction: row;
     border: 1px solid #ccc;
     margin: 0;
     padding: 0;
   }
   .monaco-editor {
     width: 100% !important;
-    height: 100% !important;
     margin: 0;
+    height: 100% !important;
+    // overflow: auto;
     padding: 0;
+    .overflow-guard {
+      width: 100% !important;
+      height: 100% !important;
+      .margin {
+        width: 55px !important;
+        height: 100% !important;
+      }
+      .monaco-scrollable-element {
+        width: calc(100% - 135px) !important;
+      }
+      .minimap {
+        width: 80px !important;
+      }
+    }
   }
   .monaco_editor_container {
     width: 100% !important;
   }
-  .manualatag {
-    color: #fff;
-    justify-content: flex-end;
-    align-items: center;
-  }
+
   .view-lines {
     text-align: left;
     margin: 0px 0px 0px 0px;
