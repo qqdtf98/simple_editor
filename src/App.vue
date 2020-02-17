@@ -498,7 +498,7 @@ export default {
       mouseWheelZoom: true
       // find: 'IEditorFindOptions',
     })
- 
+
     var myBinding = editor.onDidChangeModelContent(function(e) {
       console.log('시작')
       console.log(editor.getValue())
