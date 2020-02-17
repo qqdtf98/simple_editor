@@ -143,7 +143,6 @@
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span class="studio-text">CodeReview</span>
-
               <div class="manualatag">
                 mode
                 <switches
@@ -504,18 +503,18 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
-    console.log(document.getElementById('newLoaderHtml'))
-    console.log(document.getElementById('newLoaderHtml').style)
-    for (var key in document.getElementById('newLoaderHtml').style) {
-      if (document.getElementById('newLoaderHtml').style[key] != '') {
-        console.log(key)
-        console.log(` ${document.getElementById('newLoaderHtml').style[key]} `)
-      }
-    }
+    // console.log(document.getElementById('newLoaderHtml'))
+    // console.log(document.getElementById('newLoaderHtml').style)
+    // for (var key in document.getElementById('newLoaderHtml').style) {
+    //   if (document.getElementById('newLoaderHtml').style[key] != '') {
+    //     console.log(key)
+    //     console.log(` ${document.getElementById('newLoaderHtml').style[key]} `)
+    //   }
+    // }
 
-    this.code = document.getElementById('newLoaderHtml').innerHTML
-    this.css = document.getElementById('cssUser').innerHTML
-    console.log(monaco.editor)
+    // this.code = document.getElementById('newLoaderHtml').innerHTML
+    // this.css = document.getElementById('cssUser').innerHTML
+    // console.log(monaco.editor)
     let container = document.getElementById('monacoContainer')
     let custom = document.createElement('vue-custom-scrollbar')
     custom.classList.add('custom' + this.monacoIndex)
