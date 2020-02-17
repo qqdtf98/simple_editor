@@ -1021,7 +1021,7 @@ export default {
           )
           // console.log(this.multiSelectedElement)
         }
-        console.log(this.multiElementParent)
+        // console.log(this.multiElementParent)
       } else {
         let i
         let entries = this.multiSelectedElement.entries()
@@ -1235,8 +1235,7 @@ export default {
           value: getComputedStyle(data.payload)[this.style]
         }
         this.$emit('stack-push', style)
-
-        data.payload.style[data.style] = data.value + 'px'
+        data.payload.style[data.style] = data.value
       }
 
       // console.log("바꼈다")

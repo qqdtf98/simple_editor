@@ -486,9 +486,9 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
-    console.log(monaco.editor)
+    // this.code=document.getElementById
     var editor = monaco.editor.create(document.getElementById('container'), {
-      value: 'console.log("Hello, world")',
+      value: this.code,
       language: 'css',
       theme: 'vs-dark',
       height: 100,
@@ -1357,7 +1357,7 @@ export default {
         .getBoundingClientRect()
 
       console.log('이제 보낸다')
-      console.log(payload.target)
+      console.log(payload)
 
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
@@ -1369,8 +1369,7 @@ export default {
       this.$refs.layout.makeTreeParent(this.payload)
     },
     userSelectedWidth(data) {
-      // console.log(data)
-      console.log('qkqkqklk')
+      console.log(data)
       this.data = data
       this.$refs.home.styleChanged(this.data)
     },
