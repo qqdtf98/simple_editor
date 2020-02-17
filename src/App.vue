@@ -486,6 +486,9 @@ export default {
       isCssIn: false
     }
   },
+  created() {
+    
+  },
   computed: {
     testMessage: function() {
       this.test = document.getElementById('newLoaderHtml').innerHTML
@@ -497,8 +500,9 @@ export default {
       this.$refs.home.modeSelect(this.enabled)
     }
   },
-  watch: {},
+ 
   mounted() {
+    this.isData = false
     console.log('df')
     if (this.enabled) {
       this.vsMode = 'vs-dark'
