@@ -494,7 +494,15 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
-    console.log(document.getElementById('cssUser').innerHTML)
+    console.log(document.getElementById('newLoaderHtml'))
+    console.log(document.getElementById('newLoaderHtml').style)
+    for (var key in document.getElementById('newLoaderHtml').style) {
+      if (document.getElementById('newLoaderHtml').style[key] != '') {
+        console.log(key)
+        console.log(` ${document.getElementById('newLoaderHtml').style[key]} `)
+      }
+    }
+
     this.code = document.getElementById('newLoaderHtml').innerHTML
     this.css = document.getElementById('cssUser').innerHTML
     console.log(monaco.editor)
