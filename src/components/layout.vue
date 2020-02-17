@@ -975,6 +975,7 @@
                     class=" btn btn-info btn-sm dropdownAnimation"
                     v-model="animationStyleSelected"
                     :options="animationStyle"
+                    @change="submitAnimation"
                   ></b-form-select>
                 </div>
 
@@ -1840,6 +1841,15 @@ export default {
         this.$emit('userSelectedWidth', this.submitSorce)
       }
     },
+    submitAnimation(e){
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'font-family'
+        this.submitSorce.value = e
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
     testee(e) {
       console.log(e)
     },
@@ -2510,7 +2520,7 @@ b {
 .aniText {
   color: grey !important;
   margin: 15px 10px 0px 13px;
-  width: 40%;
+  width:40%;
 }
 .buttonAnimation {
   // animation: slidein 4s 1s infinite linear alternate;
@@ -2529,7 +2539,7 @@ b {
 }
 .aniTimeChange {
   margin: 0px 0px 0px 40px;
-  width:30% !important
+  width: 30% !important;
 }
 .manual {
   margin: 0px 12px 0px 0px;

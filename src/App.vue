@@ -394,8 +394,8 @@ export default {
         { text: 'Length' }
       ],
       monacoIndex: 0,
-      code:
-        '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
+      code: '',
+      css: '',
       // options: {
       //   selectOnLineNumbers: true
       // },
@@ -504,6 +504,17 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
+    console.log(document.getElementById('newLoaderHtml'))
+    console.log(document.getElementById('newLoaderHtml').style)
+    for (var key in document.getElementById('newLoaderHtml').style) {
+      if (document.getElementById('newLoaderHtml').style[key] != '') {
+        console.log(key)
+        console.log(` ${document.getElementById('newLoaderHtml').style[key]} `)
+      }
+    }
+
+    this.code = document.getElementById('newLoaderHtml').innerHTML
+    this.css = document.getElementById('cssUser').innerHTML
     console.log(monaco.editor)
     let container = document.getElementById('monacoContainer')
     let custom = document.createElement('vue-custom-scrollbar')
@@ -518,10 +529,10 @@ export default {
     container.appendChild(custom1)
     document.querySelector('.custom' + this.monacoIndex++).style['width'] =
       '50%'
-    var editor = monaco.editor.create(
+    var editorHtml = monaco.editor.create(
       document.getElementById('monacoContainer').children[0],
       {
-        value: 'console.log("Hello, world")',
+        value: this.code,
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -531,10 +542,10 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
-    var editor = monaco.editor.create(
+    var editorCss = monaco.editor.create(
       document.getElementById('monacoContainer').children[1],
       {
-        value: 'console.log("Hello, world")',
+        value: this.css,
         language: 'css',
         theme: 'vs-dark',
         height: 100,
@@ -545,13 +556,16 @@ export default {
       }
     )
 
-    var myBinding = editor.onDidChangeModelContent(function(e) {
-      console.log('시작')
-      console.log(editor.getValue())
-      console.log(editor.getContentHeight())
+    var myBinding = editorHtml.onDidChangeModelContent(function(e) {
+      document.getElementById('newLoaderHtml').innerHTML = editorHtml.getValue()
 
       // alert(editor.getValue())
-      console.log(e.target)
+    })
+    var muBinding2 = editorCss.onDidChangeModelContent(function(e) {
+      console.log(editorCss.getValue())
+      document.getElementById('cssUser').innerHTML = editorCss.getValue()
+
+      // alert(editor.getValue())
     })
     editor.onDidContentSizeChange(function(e) {
       console.log('시작s')
@@ -1438,9 +1452,6 @@ export default {
       this.homeLayoutLocation = document
         .getElementById('dashboard')
         .getBoundingClientRect()
-
-      console.log('이제 보낸다')
-      console.log(payload)
 
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
