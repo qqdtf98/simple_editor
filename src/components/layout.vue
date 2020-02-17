@@ -1422,10 +1422,11 @@ export default {
       }
       //사용자가 사용하는 화면에 맞춘 좌표
       this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
-      ;(this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y)),
+      this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y)(
         (this.componentSorce.width = Math.floor(
           payload.target.getBoundingClientRect().width
         ))
+      )
       this.componentSorce.height = Math.floor(
         payload.target.getBoundingClientRect().height
       )
@@ -1458,15 +1459,23 @@ export default {
     colorFontpicker() {
       this.isFontPicker = true
     },
-
+    updateBackgroundValue(colorData) {
+      this.backgroundColor.background = colorData.hex
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'background'
+      this.submitSorce.value = colorData.hex
+      this.onBackgroundColor = true
+      this.submitSorce.change = 1
+      this.$emit('userSelected', this.submitSorce)
+    },
     updateFontValue(colorData) {
       this.fontColor.background = colorData.hex
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'color'
       this.submitSorce.value = colorData.hex
-      ;(this.onColor = true),
-        (this.submitSorce.change = 1),
-        this.$emit('userSelected', this.submitSorce)
+      this.onColor = true
+      this.submitSorce.change = 1
+      this.$emit('userSelected', this.submitSorce)
     },
     //보내기
     submitSource(e) {
@@ -1861,24 +1870,24 @@ export default {
       this.submitSorce.style = 'border'
       this.submitSorce.value = 'solid'
       // console.log(this.submitSorce)
-      ;(this.submitSorce.change = 1),
-        this.$emit('userSelectBorder', this.submitSorce)
+      this.submitSorce.change = 1
+      this.$emit('userSelectBorder', this.submitSorce)
     },
     submitChangeBorderWidth(e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
       this.submitSorce.value = e
       // console.log(this.submitSorce)
-      ;(this.submitSorce.change = 1),
-        this.$emit('userSelectBorder', this.submitSorce)
+      this.submitSorce.change = 1
+      this.$emit('userSelectBorder', this.submitSorce)
     },
     submitChangeBorderStyle(e) {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'border'
       this.submitSorce.value = e
-      ;(this.submitSorce.change = 1),
-        // console.log(this.submitSorce)
-        this.$emit('userSelectBorder', this.submitSorce)
+      this.submitSorce.change = 1
+      // console.log(this.submitSorce)
+      this.$emit('userSelectBorder', this.submitSorce)
     },
     submitChangeFloat(e) {
       if (e.target.getAttribute('name') == null) {
@@ -1897,8 +1906,8 @@ export default {
       this.submitSorce.payload = this.payload
       this.submitSorce.style = 'float'
       // console.log(this.submitSorce)
-      ;(this.submitSorce.change = 1),
-        this.$emit('userSelected', this.submitSorce)
+      this.submitSorce.change = 1
+      this.$emit('userSelected', this.submitSorce)
     },
     makeTreeParent(payload) {
       var obj = document.getElementById('inParentTreeOption')
@@ -1938,7 +1947,34 @@ export default {
         obj.appendChild(newDIV)
       }
     },
-
+    onFileSelected(e) {
+      var file = e.target
+      var fileList = file.files
+      // 읽기
+      var reader = new FileReader()
+      reader.readAsDataURL(fileList[0])
+      // console.log(reader)
+      var submit = this.submitSorce
+      var data = this.payload
+      //로드 한 후
+      var vm = this
+      reader.onload = function() {
+        submit.payload = data
+        submit.style = 'background-image'
+        submit.value = 'url(' + reader.result + ')'
+        submit.change = 1
+        vm.$emit('userSelected', submit)
+      }
+    },
+    submitChangeImageSize(e) {
+      console.log(e)
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'background-size'
+      this.submitSorce.value = e
+      // console.log(this.submitSorce)
+      this.submitSorce.change = 1
+      this.$emit('userSelected', this.submitSorce)
+    },
     onUpload() {
       /// 서버에 저장
     },
@@ -2043,7 +2079,20 @@ export default {
     closelayout() {
       this.$emit('close-layout')
     },
-
+    //filter 변화 메소드
+    submitOpacity(e) {
+      this.submitSorce.payload = this.payload
+      this.submitSorce.style = 'opacity'
+      if (typeof e.target !== 'undefined') {
+        this.submitSorce.value = e.target.value
+        // this.submitSorce.value=e
+      } else {
+        this.submitSorce.value = e
+      }
+      this.onOpacity = true
+      this.submitSorce.change = 1
+      this.$emit('userSelected', this.submitSorce)
+    },
     //Animation 테스트
     testAnimation(e) {
       console.log(e)
@@ -2306,6 +2355,7 @@ b {
   .layout-text-box {
     // background-color: #2c?2c46;
     justify-content: center;
+    display: flex;
     align-items: center;
     vertical-align: middle;
     height: 7%;
