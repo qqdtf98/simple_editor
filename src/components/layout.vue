@@ -140,7 +140,7 @@
                     </div>
                   </div>
 
-                  <div class="row dimensions">
+                  <div class="dimensions">
                     <a class="size x"
                       ><i>X</i><b>{{ componentSorce.x }}</b></a
                     >
@@ -1089,7 +1089,7 @@ export default {
   },
   data() {
     return {
-      payload: '',
+      payload : new Set(),
       clickBackground: false,
       imageLoder: false,
       isThick: false,
@@ -1385,62 +1385,65 @@ export default {
       if (!this.isData) {
         this.isData = true
       }
+      this.payload.clear()
+      for(let item of payload){
+        this.payload.add(item)
+        // console.log(this.payload)
 
-      this.payload = payload.target
-      // console.log(this.payload)
-      // margin데이터 넣기
-      var margin = getComputedStyle(payload.target)
-        .margin.replace(/px/gi, '')
-        .split(' ')
-      // console.log(margin)
-      // console.log(this.margin[0])
-      if (margin.length !== 1) {
-        for (var i = 0; i < margin.length; i++) {
-          this.margin[i].value = margin[i]
+        var margin = getComputedStyle(item)
+          .margin.replace(/px/gi, '')
+          .split(' ')
+        // console.log(margin)
+        // console.log(this.margin[0])
+        if (margin.length !== 1) {
+          for (var i = 0; i < margin.length; i++) {
+            this.margin[i].value = margin[i]
+          }
+        } else {
+          for (var i = 0; i < 4; i++) {
+            this.margin[i].value = margin[0]
+          }
         }
-      } else {
-        for (var i = 0; i < 4; i++) {
-          this.margin[i].value = margin[0]
+        // padding데이터 넣기
+        var padding = getComputedStyle(item)
+          .padding.replace(/px/gi, '')
+          .split(' ')
+        //   console.log(padding)o8
+        //   console.log(this.margin[0])
+        if (padding.length !== 1) {
+          for (var i = 0; i < padding.length; i++) {
+            this.padding[i] = padding[i]
+          }
+        } else {
+          for (var i = 0; i < 4; i++) {
+            this.padding[i] = padding[0]
+          }
         }
-      }
-      // padding데이터 넣기
-      var padding = getComputedStyle(payload.target)
-        .padding.replace(/px/gi, '')
-        .split(' ')
-      //   console.log(padding)o8
-      //   console.log(this.margin[0])
-      if (padding.length !== 1) {
-        for (var i = 0; i < padding.length; i++) {
-          this.padding[i] = padding[i]
+        //사용자가 사용하는 화면에 맞춘 좌표
+        this.componentSorce.x = Math.floor(item.getBoundingClientRect().x - homeLayoutLocation.x)
+        this.componentSorce.y = Math.floor(item.getBoundingClientRect().y - homeLayoutLocation.y)
+        this.componentSorce.width = Math.floor(
+            item.getBoundingClientRect().width
+          )
+    
+        this.componentSorce.height = Math.floor(
+          item.getBoundingClientRect().height
+        )
+        this.componentSorce.margin = getComputedStyle(item).margin
+        this.componentSorce.padding = getComputedStyle(item).padding
+        this.componentSorce.backgroundColor = getComputedStyle(
+          item
+        ).backgroundColor
+        this.backgroundColor.backgroundColor = getComputedStyle(
+          item
+        ).backgroundColor
+        this.fontColor.backgroundColor = getComputedStyle(item).color
+        this.componentSorce.fontSize = getComputedStyle(
+          item
+        ).fontSize.replace('px', '')
+        this.opacityValue = getComputedStyle(item).opacity
         }
-      } else {
-        for (var i = 0; i < 4; i++) {
-          this.padding[i] = padding[0]
-        }
-      }
-      //사용자가 사용하는 화면에 맞춘 좌표
-      this.componentSorce.x = Math.floor(payload.x - homeLayoutLocation.x)
-      this.componentSorce.y = Math.floor(payload.y - homeLayoutLocation.y)(
-        (this.componentSorce.width = Math.floor(
-          payload.target.getBoundingClientRect().width
-        ))
-      )
-      this.componentSorce.height = Math.floor(
-        payload.target.getBoundingClientRect().height
-      )
-      this.componentSorce.margin = getComputedStyle(payload.target).margin
-      this.componentSorce.padding = getComputedStyle(payload.target).padding
-      this.componentSorce.backgroundColor = getComputedStyle(
-        payload.target
-      ).backgroundColor
-      this.backgroundColor.backgroundColor = getComputedStyle(
-        payload.target
-      ).backgroundColor
-      this.fontColor.backgroundColor = getComputedStyle(payload.target).color
-      this.componentSorce.fontSize = getComputedStyle(
-        payload.target
-      ).fontSize.replace('px', '')
-      this.opacityValue = getComputedStyle(payload.target).opacity
+      
       // console.log(this.opacity)
       // console.log(margin)
       // console.log(this.margin[3])
@@ -1458,209 +1461,226 @@ export default {
       this.isFontPicker = true
     },
     updateBackgroundValue(colorData) {
-      this.backgroundColor.background = colorData.hex
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background'
-      this.submitSorce.value = colorData.hex
-      this.onBackgroundColor = true
-      this.submitSorce.change = 1
-      this.$emit('userSelected', this.submitSorce)
+      for(let payload of this.payload){
+        this.backgroundColor.background = colorData.hex
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'background'
+        this.submitSorce.value = colorData.hex
+        this.onBackgroundColor = true
+        this.submitSorce.change = 1
+        this.$emit('userSelected', this.submitSorce)
+      }
     },
     updateFontValue(colorData) {
-      this.fontColor.background = colorData.hex
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'color'
-      this.submitSorce.value = colorData.hex
-      this.onColor = true
-      this.submitSorce.change = 1
-      this.$emit('userSelected', this.submitSorce)
+      for(let payload of this.payload){
+        this.fontColor.background = colorData.hex
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'color'
+        this.submitSorce.value = colorData.hex
+        this.onColor = true
+        this.submitSorce.change = 1
+        this.$emit('userSelected', this.submitSorce)
+      }
     },
     //보내기
     submitSource(e) {
-      console.log(this.payload)
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = e.target.name
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = e.target.name
 
-      if (e.target.name == 'width') {
-        this.onWidth = true
-        this.submitSorce.value = e.target.value + 'px'
-      } else if (e.target.name == 'height') {
-        this.onHeight = true
-        this.submitSorce.value = e.target.value + 'px'
-      } else if (e.target.name == 'margin') {
-        this.onMargin = true
+        if (e.target.name == 'width') {
+          this.onWidth = true
+          this.submitSorce.value = e.target.value + 'px'
+        } else if (e.target.name == 'height') {
+          this.onHeight = true
+          this.submitSorce.value = e.target.value + 'px'
+        } else if (e.target.name == 'margin') {
+          this.onMargin = true
 
-        var margin = e.target.value.replace(/px/gi, '').split(' ')
-        var value = ''
-        // console.log(margin)
-        // console.log(this.margin[0])
-        if (margin.length !== 1) {
-          for (var i = 0; i < margin.length; i++) {
-            this.margin[i].value = margin[i]
-            value += margin[i] + 'px '
-          }
-          for (var i = margin.length; i < 4; i++) {
-            this.margin[i].value = 0
-            if (typeof margin[i] == 'undefined') {
-              value += 0 + 'px '
-            } else {
+          var margin = e.target.value.replace(/px/gi, '').split(' ')
+          var value = ''
+          // console.log(margin)
+          // console.log(this.margin[0])
+          if (margin.length !== 1) {
+            for (var i = 0; i < margin.length; i++) {
+              this.margin[i].value = margin[i]
               value += margin[i] + 'px '
             }
-          }
-        } else {
-          for (var i = 0; i < 4; i++) {
-            this.margin[i].value = margin[0]
-            value += margin[0] + 'px '
-          }
-        }
-        this.submitSorce.value = value
-      } else if (e.target.name == 'padding') {
-        this.onPadding = true
-        var padding = e.target.value.replace(/px/gi, '').split(' ')
-        var value = ''
-
-        if (padding.length !== 1) {
-          for (var i = 0; i < padding.length; i++) {
-            this.padding[i] = padding[i]
-            value += padding[i] + 'px '
-          }
-          for (var i = padding.length; i < 4; i++) {
-            this.padding[i] = 0
-            if (typeof padding[i] == 'undefined') {
-              value += 0 + 'px '
-            } else {
-              value += padding[i] + 'px '
+            for (var i = margin.length; i < 4; i++) {
+              this.margin[i].value = 0
+              if (typeof margin[i] == 'undefined') {
+                value += 0 + 'px '
+              } else {
+                value += margin[i] + 'px '
+              }
+            }
+          } else {
+            for (var i = 0; i < 4; i++) {
+              this.margin[i].value = margin[0]
+              value += margin[0] + 'px '
             }
           }
-        } else {
-          for (var i = 0; i < 4; i++) {
-            this.padding[i] = padding[0]
-            value += padding[0] + 'px '
+          this.submitSorce.value = value
+        } else if (e.target.name == 'padding') {
+          this.onPadding = true
+          var padding = e.target.value.replace(/px/gi, '').split(' ')
+          var value = ''
+
+          if (padding.length !== 1) {
+            for (var i = 0; i < padding.length; i++) {
+              this.padding[i] = padding[i]
+              value += padding[i] + 'px '
+            }
+            for (var i = padding.length; i < 4; i++) {
+              this.padding[i] = 0
+              if (typeof padding[i] == 'undefined') {
+                value += 0 + 'px '
+              } else {
+                value += padding[i] + 'px '
+              }
+            }
+          } else {
+            for (var i = 0; i < 4; i++) {
+              this.padding[i] = padding[0]
+              value += padding[0] + 'px '
+            }
           }
+          this.submitSorce.value = value
+        }else if(e.target.name == 'font-weight'){
+          this.submitSorce.value = e.target.value
+        }else if(e.target.name == 'font-size'){
+          var size = e.target.value.replace(/px/gi, '').split(' ')
+          this.submitSorce.value = size+'px'
         }
-        this.submitSorce.value = value
-      }else if(e.target.name == 'font-weight'){
-        this.submitSorce.value = e.target.value
-      }else if(e.target.name == 'font-size'){
-        var size = e.target.value.replace(/px/gi, '').split(' ')
-        this.submitSorce.value = size+'px'
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
       }
-      this.submitSorce.change = 1
-      this.$emit('userSelectedWidth', this.submitSorce)
     },
     updateBackgroundValue(colorData) {
-      this.backgroundColor.background = colorData.hex
-      if (!this.clickBackground) {
-        this.submitSorce.change = 1
-        this.clickBackground = true
-      } else {
-        this.submitSorce.change = 0
-      }
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background'
-      this.submitSorce.value = colorData.hex
-      this.onBackgroundColor = true
+      for(let payload of this.payload){
+        this.backgroundColor.background = colorData.hex
+        if (!this.clickBackground) {
+          this.submitSorce.change = 1
+          this.clickBackground = true
+        } else {
+          this.submitSorce.change = 0
+        }
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'background'
+        this.submitSorce.value = colorData.hex
+        this.onBackgroundColor = true
 
-      this.$emit('userSelectedWidth', this.submitSorce)
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
     },
     updateFontColorValue(colorData){
-      this.fontColor.background = colorData.hex
-      if (!this.clickBackground) {
-        this.submitSorce.change = 1
-        this.clickBackground = true
-      } else {
-        this.submitSorce.change = 0
-      }
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'color'
-      this.submitSorce.value = colorData.hex
-      this.onBackgroundColor = true
+      for(let payload of this.payload){
+        this.fontColor.background = colorData.hex
+        if (!this.clickBackground) {
+          this.submitSorce.change = 1
+          this.clickBackground = true
+        } else {
+          this.submitSorce.change = 0
+        }
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'color'
+        this.submitSorce.value = colorData.hex
+        this.onBackgroundColor = true
 
-      this.$emit('userSelectedWidth', this.submitSorce)
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
     },
     updateBackgroundValueWithUndo(e) {
-      if (this.clickBackground) {
-        var sub = {
-          payload: '',
-          style: '',
-          value: '',
-          change: ''
-        }
-        sub.payload = this.submitSorce.payload
-        sub.style = this.submitSorce.style
-        sub.value = this.submitSorce.value
-        sub.change = 1
+      for(let payload of this.payload){
+        if (this.clickBackground) {
+          var sub = {
+            payload: '',
+            style: '',
+            value: '',
+            change: ''
+          }
+          sub.payload = this.submitSorce.payload
+          sub.style = this.submitSorce.style
+          sub.value = this.submitSorce.value
+          sub.change = 1
 
-        this.$emit('userSelectedWidth', sub)
+          this.$emit('userSelectedWidth', sub)
+        }      
       }
     },
     backgroundBtn(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background'
-      this.submitSorce.value = e.target.name
-      this.submitSorce.change = 1
-      if(e.target.name=='none'){
-        this.backgroundColor.backgroundColor='white'
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'background'
+        this.submitSorce.value = e.target.name
+        this.submitSorce.change = 1
+        if(e.target.name=='none'){
+          this.backgroundColor.backgroundColor='white'
+        }
+        else{
+          this.backgroundColor.backgroundColor=e.target.name
+        }
+        this.$emit('userSelectedWidth', this.submitSorce)
       }
-      else{
-        this.backgroundColor.backgroundColor=e.target.name
-      }
-      this.$emit('userSelectedWidth', this.submitSorce)
     },
     fontColorBtn(e){
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'color'
-      this.submitSorce.value = e.target.name
-      this.submitSorce.change = 1
-      if(e.target.name=='none'){
-        this.fontColor.backgroundColor='white'
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'color'
+        this.submitSorce.value = e.target.name
+        this.submitSorce.change = 1
+        if(e.target.name=='none'){
+          this.fontColor.backgroundColor='white'
+        }
+        else{
+          this.fontColor.backgroundColor=e.target.name
+        }
+        this.$emit('userSelectedWidth', this.submitSorce)
       }
-      else{
-        this.fontColor.backgroundColor=e.target.name
-      }
-      this.$emit('userSelectedWidth', this.submitSorce)
     },
     onFileSelected(e) {
       var file = e.target
       var fileList = file.files
       // 읽기
       var reader = new FileReader()
-      reader.readAsDataURL(fileList[0])
       // console.log(reader)
-      var submit = this.submitSorce
-      var data = this.payload
       //로드 한 후
       var vm = this
+      reader.readAsDataURL(fileList[0])
       reader.onload = function() {
-        submit.payload = data
-        submit.style = 'background-image'
-        submit.value = 'url(' + reader.result + ')'
-        submit.change = 1
-        vm.$emit('userSelectedWidth', submit)
+        vm.onFileApply('url(' + reader.result + ')')
       }
       this.imageLoder = true
+      
+    },
+    onFileApply(submit){
+       for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'background-image'
+        this.submitSorce.value = submit
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
+       }
     },
     submitChangeImageSize(e) {
-      console.log(e)
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background-size'
-      this.submitSorce.value = e
-      // console.log(this.submitSorce)
-      this.submitSorce.change = 1
-      this.$emit('userSelectedWidth', this.submitSorce)
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'background-size'
+        this.submitSorce.value = e
+        // console.log(this.submitSorce)
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
     },
     pushLink(e) {
       this.isLink=true
     },
     submitLinkAddress(e){
-      console.log(e.target.value)
-      this.payload.setAttribute('onclick',"window.open('"+e.target.value+"')")
-
+      for(let payload of this.payload){
+        payload.setAttribute('onclick',"window.open('"+e.target.value+"')")
+      }
     },
     submitChangeProperty(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = e.target.getAttribute('property')
-      this.submitSorce.change = 1
       var value = e.target.getAttribute('data')
       if(value=='isThick'){
         if(this.isFontWeight)
@@ -1675,111 +1695,140 @@ export default {
         this.submitSorce.value = e.target.getAttribute('notname')
         this[value] = false
       }
-      this.$emit('userSelectedWidth', this.submitSorce)
+      this.submitSorce.style = e.target.getAttribute('property')
+      this.submitSorce.change = 1
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
     },
     submitOpacity (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'opacity'
-      if (typeof (e.target) !== 'undefined') {
-        this.submitSorce.value = e.target.value
-        // this.submitSorce.value=e
-      } else { this.submitSorce.value = e }
-      this.onOpacity = true
-	    this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'opacity'
+        if (typeof (e.target) !== 'undefined') {
+          this.submitSorce.value = e.target.value
+          // this.submitSorce.value=e
+        } else { this.submitSorce.value = e }
+        this.onOpacity = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
     },
     submitBlur (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'blur(' + e + 'px)' } else {
-        this.submitSorce.value = 'blur(' + e.target.value.replace(/px/gi, '') + 'px)'
-      }
-      this.onBlur = true
-	    this.submitSorce.change = 1
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitBrightness (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'brightness(' + e + '%)' } else { this.submitSorce.value = 'brightness(' + e.target.value.replace(/%/gi, '') + '%)' }
-      this.onBrightness = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitContrast (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'contrast(' + e + '%)' } else { this.submitSorce.value = 'contrast(' + e.target.value.replace(/%/gi, '') + '%)' }
-      this.onContrast = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitGrayscale (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'grayscale(' + e + '%)' } else { this.submitSorce.value = 'grayscale(' + e.target.value.replace(/%/gi, '') + '%)' }
-      this.onGrayscale = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitHue (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'hue-rotate(' + e + 'deg)' } else { this.submitSorce.value = 'hue(' + e.target.value.replace(/deg/gi, '') + 'deg)' }
-      this.onHue = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitInvert (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'invert(' + e + '%)' } else { this.submitSorce.value = 'invert(' + e.target.value.replace(/%/gi, '') + '%)' }
-      this.onInvert = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitSaturate (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'saturate(' + e + '%)' } else { this.submitSorce.value = 'saturate(' + e.target.value.replace(/%/gi, '') + '%)' }
-      this.onSaturate = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitSepia (e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'filter'
-      if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'sepia(' + e + '%)' } else { this.submitSorce.value = 'sepia(' + e.target.value.replace(/%/gi, '') + '%)' }
-      this.onSepia = true
-	  this.submitSorce.change = 1,
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitBasicProperty(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = e.target.getAttribute('property')
-      this.submitSorce.value = e.target.getAttribute('name')
-      this.submitSorce.change = 1
-      this.$emit('userSelectedWidth', this.submitSorce)
-    },
-    submitFontWeight(e){
-      if(e=='custom'){
-        this.isCustomFontWeight=true
-      }
-      else{
-        this.submitSorce.payload = this.payload
-        this.submitSorce.style = 'font-weight'
-        this.submitSorce.value = e
-        this.isCustomFontWeight=false
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'blur(' + e + 'px)' } else {
+          this.submitSorce.value = 'blur(' + e.target.value.replace(/px/gi, '') + 'px)'
+        }
+        this.onBlur = true
         this.submitSorce.change = 1
         this.$emit('userSelectedWidth', this.submitSorce)
       }
     },
+    submitBrightness (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'brightness(' + e + '%)' } else { this.submitSorce.value = 'brightness(' + e.target.value.replace(/%/gi, '') + '%)' }
+        this.onBrightness = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitContrast (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'contrast(' + e + '%)' } else { this.submitSorce.value = 'contrast(' + e.target.value.replace(/%/gi, '') + '%)' }
+        this.onContrast = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+        }
+    },
+    submitGrayscale (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'grayscale(' + e + '%)' } else { this.submitSorce.value = 'grayscale(' + e.target.value.replace(/%/gi, '') + '%)' }
+        this.onGrayscale = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+        }
+    },
+    submitHue (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'hue-rotate(' + e + 'deg)' } else { this.submitSorce.value = 'hue(' + e.target.value.replace(/deg/gi, '') + 'deg)' }
+        this.onHue = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitInvert (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'invert(' + e + '%)' } else { this.submitSorce.value = 'invert(' + e.target.value.replace(/%/gi, '') + '%)' }
+        this.onInvert = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitSaturate (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'saturate(' + e + '%)' } else { this.submitSorce.value = 'saturate(' + e.target.value.replace(/%/gi, '') + '%)' }
+        this.onSaturate = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitSepia (e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'filter'
+        if (typeof (e.target) === 'undefined') { this.submitSorce.value = 'sepia(' + e + '%)' } else { this.submitSorce.value = 'sepia(' + e.target.value.replace(/%/gi, '') + '%)' }
+        this.onSepia = true
+        this.submitSorce.change = 1,
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitBasicProperty(e) {
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = e.target.getAttribute('property')
+        this.submitSorce.value = e.target.getAttribute('name')
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
+    submitFontWeight(e){
+      for(let payload of this.payload){
+        if(e=='custom'){
+          this.isCustomFontWeight=true
+        }
+        else{
+          this.submitSorce.payload = payload
+          this.submitSorce.style = 'font-weight'
+          this.submitSorce.value = e
+          this.isCustomFontWeight=false
+          this.submitSorce.change = 1
+          this.$emit('userSelectedWidth', this.submitSorce)
+        }
+      }
+    },
     submitFontStyle(e){
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'font-family'
-      this.submitSorce.value = e
-      this.submitSorce.change = 1
-      this.$emit('userSelectedWidth', this.submitSorce)
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'font-family'
+        this.submitSorce.value = e
+        this.submitSorce.change = 1
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
     },
     testee(e) {
       console.log(e)
@@ -1945,34 +1994,6 @@ export default {
         obj.appendChild(newDIV)
       }
     },
-    onFileSelected(e) {
-      var file = e.target
-      var fileList = file.files
-      // 읽기
-      var reader = new FileReader()
-      reader.readAsDataURL(fileList[0])
-      // console.log(reader)
-      var submit = this.submitSorce
-      var data = this.payload
-      //로드 한 후
-      var vm = this
-      reader.onload = function() {
-        submit.payload = data
-        submit.style = 'background-image'
-        submit.value = 'url(' + reader.result + ')'
-        submit.change = 1
-        vm.$emit('userSelected', submit)
-      }
-    },
-    submitChangeImageSize(e) {
-      console.log(e)
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'background-size'
-      this.submitSorce.value = e
-      // console.log(this.submitSorce)
-      this.submitSorce.change = 1
-      this.$emit('userSelected', this.submitSorce)
-    },
     onUpload() {
       /// 서버에 저장
     },
@@ -2076,20 +2097,6 @@ export default {
     },
     closelayout() {
       this.$emit('close-layout')
-    },
-    //filter 변화 메소드
-    submitOpacity(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'opacity'
-      if (typeof e.target !== 'undefined') {
-        this.submitSorce.value = e.target.value
-        // this.submitSorce.value=e
-      } else {
-        this.submitSorce.value = e
-      }
-      this.onOpacity = true
-      this.submitSorce.change = 1
-      this.$emit('userSelected', this.submitSorce)
     },
     //Animation 테스트
     testAnimation(e) {
@@ -2254,7 +2261,8 @@ export default {
   }
 }
 .dimensions {
-  margin: -90px 0px 0px -10px;
+  margin: 20px 0px 0px 0px;
+  text-align:center;
 }
 .property {
   margin: 0px 0px 0px 10px;
