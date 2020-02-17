@@ -486,10 +486,11 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
-    // this.code=document.getElementById
+    // console.log(document.getElementById('newLoaderHtml').innerHTML)
+    this.code = document.getElementById('newLoaderHtml').innerHTML
     var editor = monaco.editor.create(document.getElementById('container'), {
       value: this.code,
-      language: 'css',
+      language: 'html',
       theme: 'vs-dark',
       height: 100,
       accessibilityPageSize: 4,
@@ -501,6 +502,7 @@ export default {
     var myBinding = editor.onDidChangeModelContent(function(e) {
       console.log('시작')
       console.log(editor.getValue())
+      document.getElementById('newLoaderHtml').innerHTML = editor.getValue()
       console.log(editor.getContentHeight())
 
       // alert(editor.getValue())
@@ -1355,9 +1357,6 @@ export default {
       this.homeLayoutLocation = document
         .getElementById('dashboard')
         .getBoundingClientRect()
-
-      console.log('이제 보낸다')
-      console.log(payload)
 
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {
