@@ -17,7 +17,7 @@
           @mousemove="onmouseMove"
           @mousedown="mousedown"
         >
-          <div class="board">
+          <div class="board" id="userComponentScreen">
             <div class="sample-component">
               <img
                 src="../assets/images/plus.svg"

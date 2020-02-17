@@ -975,7 +975,6 @@
                     class=" btn btn-info btn-sm dropdownAnimation"
                     v-model="animationStyleSelected"
                     :options="animationStyle"
-                    @change="submitAnimation"
                   ></b-form-select>
                 </div>
 
@@ -1674,10 +1673,12 @@ export default {
       }
     },
     submitAnimation(e){
+      console.log(this.submitSorce)
+      console.log(this.payload)
       for(let payload of this.payload){
         this.submitSorce.payload = payload
         this.submitSorce.style = 'animation'
-        this.submitSorce.value = animationStyleSelected+' '+animationTime+'s'+' '+animationDelay+'s'+' '+repeatTimeSelected+' '+timingFunctionSelected+' '+directionSelected
+        this.submitSorce.value = this.animationStyleSelected+' '+this.animationTime+'s'+' '+this.animationDelay+'s'+' '+this.repeatTimeSelected+' '+this.timingFunctionSelected+' '+this.directionSelected
         this.submitSorce.change = 1
         console.log(this.submitSorce)
         this.$emit('userSelectedWidth', this.submitSorce)
@@ -1841,15 +1842,7 @@ export default {
         this.$emit('userSelectedWidth', this.submitSorce)
       }
     },
-    submitAnimation(e){
-      for(let payload of this.payload){
-        this.submitSorce.payload = payload
-        this.submitSorce.style = 'font-family'
-        this.submitSorce.value = e
-        this.submitSorce.change = 1
-        this.$emit('userSelectedWidth', this.submitSorce)
-      }
-    },
+  
     testee(e) {
       console.log(e)
     },

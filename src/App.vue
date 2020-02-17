@@ -481,9 +481,11 @@ export default {
       titleId: 0,
       selectedTitle: null,
       vsMode: '',
-      select: null
+      select: null,
+      isCssIn: false
     }
   },
+  created() {},
   computed: {
     testMessage: function() {
       this.test = document.getElementById('newLoaderHtml').innerHTML
@@ -495,8 +497,9 @@ export default {
       this.$refs.home.modeSelect(this.enabled)
     }
   },
-  watch: {},
+
   mounted() {
+    this.isData = false
     console.log('df')
     if (this.enabled) {
       this.vsMode = 'vs-dark'
@@ -512,9 +515,9 @@ export default {
     //   }
     // }
 
-    // this.code = document.getElementById('newLoaderHtml').innerHTML
+    this.code = document.getElementById('userComponentScreen').innerHTML
     // this.css = document.getElementById('cssUser').innerHTML
-    // console.log(monaco.editor)
+    console.log(monaco.editor)
     let container = document.getElementById('monacoContainer')
     let custom = document.createElement('vue-custom-scrollbar')
     custom.classList.add('custom' + this.monacoIndex)
@@ -556,13 +559,24 @@ export default {
     )
 
     var myBinding = editorHtml.onDidChangeModelContent(function(e) {
-      document.getElementById('newLoaderHtml').innerHTML = editorHtml.getValue()
+      document.getElementById(
+        'userComponentScreen'
+      ).innerHTML = editorHtml.getValue()
 
       // alert(editor.getValue())
     })
-    var muBinding2 = editorCss.onDidChangeModelContent(function(e) {
-      console.log(editorCss.getValue())
-      document.getElementById('cssUser').innerHTML = editorCss.getValue()
+    var muBinding2 = editorCss.onDidChangeModelContent(e => {
+      if (!this.isCssIn) {
+        var oScript = document.createElement('style')
+        oScript.type = 'text/css'
+        oScript.setAttribute('id', 'cssUser')
+        oScript.innerHTML = editorCss.getValue()
+        document.getElementsByTagName('head')[0].appendChild(oScript)
+        this.isCssIn = true
+      } else {
+        console.log(editorCss.getValue())
+        document.getElementById('cssUser').innerHTML = editorCss.getValue()
+      }
 
       // alert(editor.getValue())
     })
