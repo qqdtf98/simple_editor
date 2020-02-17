@@ -271,12 +271,4 @@ input[type="checkbox"]:checked~ul{
 
       }
     }
-    .loadDataPanel{
-        width: 92%;
-        z-index: 10000;
-        position: fixed;
-        bottom: 5%;
-        height: 20rem;
-        background-color: #23282b;
-    }
 </style>

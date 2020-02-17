@@ -24,6 +24,8 @@
                 @click="addCode"
                 class="sample-add-btn"
               />
+              <!-- <div class="line" />
+              <div class="verti" /> -->
             </div>
             <!-- <Dashboard />
             <Dashboard />
@@ -2207,6 +2209,16 @@ export default {
             display: flex;
             align-items: center;
             justify-content: center;
+            .verti {
+              height: 5rem;
+              width: 7px;
+              background-color: #fff;
+            }
+            .line {
+              width: 5rem;
+              background-color: #fff;
+              height: 7px;
+            }
             .sample-add-btn {
               width: 5rem;
               cursor: pointer;
