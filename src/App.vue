@@ -807,7 +807,8 @@ export default {
     this.hasht = h
   },
   methods: {
-    openCode() {
+    openCode(e) {
+      console.log(e.target.parentElement.parentElement.getAttribute('id'))
       this.isData = true
     },
     copyPage() {
@@ -825,14 +826,12 @@ export default {
         parentID: null
       }
       this.titles.push(payload)
-      let editor = document.querySelector('.board')
+      let editor = document.querySelector('#board')
       // let copy = editor.cloneNode(true)
       let newEditorBox = document.createElement('div')
-      let ne = document.createElement('button')
       newEditorBox.classList.add('board')
       newEditorBox.classList.add('hidden')
-      newEditorBox.classList.add('board' + this.editorNum)
-      newEditorBox.appendChild(ne)
+      newEditorBox.setAttribute('id', 'board' + this.editorNum)
       // console.log(editor.parentElement);
 
       editor.parentElement.appendChild(newEditorBox)
@@ -1166,12 +1165,12 @@ export default {
         parentID: null
       }
       this.titles.push(payload)
-      let editor = document.querySelector('.board')
+      let editor = document.querySelector('#board')
       // let copy = editor.cloneNode(true)
       let newEditorBox = document.createElement('div')
       newEditorBox.classList.add('board')
       newEditorBox.classList.add('hidden')
-      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.setAttribute('id', 'board' + this.editorNum)
 
       let sampleCompo = document.createElement('div')
       sampleCompo.classList.add('sample-component')
@@ -1206,8 +1205,8 @@ export default {
       sampleBtn.style.width = '5rem'
       sampleBtn.style.cursor = 'pointer'
 
-      sampleBtn.addEventListener('click', () => {
-        this.openCode()
+      sampleBtn.addEventListener('click', e => {
+        this.openCode(e)
       })
 
       // console.log(newEditorBox.classList);
