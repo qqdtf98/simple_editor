@@ -442,9 +442,6 @@ export default {
       // console.log(this.addComponentTag)
     },
     onmouseMove(e) {
-      console.log(e.target)
-      // console.log(this.addComponentTag)
-      // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
