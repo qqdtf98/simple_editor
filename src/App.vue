@@ -159,68 +159,100 @@
                 class="close-btn"
               />
             </div>
-            <div class="tab-box">
-              <div class="left-tab">
+            <div class="code-box">
+              <div class="left-box">
                 <div class="htmlTitle">index.html</div>
-              </div>
-              <div class="right-tab">
-                <div class="cssTitle">style.css</div>
-              </div>
-            </div>
-            <div class="showSorce">
-              <div
-                class="tab-pane"
-                id="pills-home"
-                role="tabpanel"
-                aria-labelledby="pills-home-tab"
-              >
-                <div class="showCode">
+                <div class="showSorce">
                   <div
-                    id="monacoContainer"
-                    ref="editor"
-                    @change="onCodeChange"
+                    class="tab-pane"
+                    id="pills-home"
+                    role="tabpanel"
+                    aria-labelledby="pills-home-tab"
+                  >
+                    <div class="showCode">
+                      <div
+                        id="leftContainer"
+                        ref="editor"
+                        @change="onCodeChange"
+                      ></div>
+                    </div>
+                  </div>
+                  <div
+                    v-show="tabStep === 2"
+                    class="tab-pane"
+                    id="pills-profile"
+                    role="tabpanel"
+                    aria-labelledby="pills-profile-tab"
                   ></div>
-
-                  <!--
-                  <MonacoEditor
-                    style="width:500px;height:300px;border:1px solid grey"
-                    v-model="code"
-                    theme="vs-dark"
-                    value="function hello() {\n\talert('Hello world!');\n}"
-                    language="css"
-                    autoIndent="none"
-                    @change="onCodeChange"
-                    :readOnly="true"
-                    revealHorizontalRightPadding="100"
-                  ></MonacoEditor>-->
+                  <div
+                    v-show="tabStep === 3"
+                    class="tab-pane"
+                    id="pills-contact"
+                    role="tabpanel"
+                    aria-labelledby="pills-contact-tab"
+                  >
+                    <div class="showCode">
+                      <textarea class="showJS" v-model="js" id="preview3">
+불러올 데이터가 없습니다. </textarea
+                      >
+                      <input
+                        style="float:left;"
+                        type="submit"
+                        value="Apply"
+                        @click="inputFile"
+                        id="getfile"
+                        accept="text/*"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div
-                v-show="tabStep === 2"
-                class="tab-pane"
-                id="pills-profile"
-                role="tabpanel"
-                aria-labelledby="pills-profile-tab"
-              ></div>
-              <div
-                v-show="tabStep === 3"
-                class="tab-pane"
-                id="pills-contact"
-                role="tabpanel"
-                aria-labelledby="pills-contact-tab"
-              >
-                <div class="showCode">
-                  <textarea class="showJS" v-model="js" id="preview3">
-불러올 데이터가 없습니다. </textarea
+              <div @mousedown="moveBorder" class="center-border"></div>
+              <div class="right-box">
+                <div class="cssTitle">style.css</div>
+                <div class="showSorce">
+                  <div
+                    class="tab-pane"
+                    id="pills-home"
+                    role="tabpanel"
+                    aria-labelledby="pills-home-tab"
                   >
-                  <input
-                    style="float:left;"
-                    type="submit"
-                    value="Apply"
-                    @click="inputFile"
-                    id="getfile"
-                    accept="text/*"
-                  />
+                    <div class="showCode">
+                      <div
+                        id="rightContainer"
+                        ref="editor"
+                        @change="onCodeChange"
+                      ></div>
+                    </div>
+                  </div>
+                  <div
+                    v-show="tabStep === 2"
+                    class="tab-pane"
+                    id="pills-profile"
+                    role="tabpanel"
+                    aria-labelledby="pills-profile-tab"
+                  ></div>
+                  <div
+                    v-show="tabStep === 3"
+                    class="tab-pane"
+                    id="pills-contact"
+                    role="tabpanel"
+                    aria-labelledby="pills-contact-tab"
+                  >
+                    <div class="showCode">
+                      <textarea class="showJS" v-model="js" id="preview3">
+불러올 데이터가 없습니다. </textarea
+                      >
+                      <input
+                        style="float:left;"
+                        type="submit"
+                        value="Apply"
+                        @click="inputFile"
+                        id="getfile"
+                        accept="text/*"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -475,6 +507,8 @@ export default {
       treeMove: false,
       isFileTab: false,
       isEditTab: false,
+      initialLeftWidth: null,
+      initialRightWidth: null,
       isSaveTab: false,
       isSettingTab: false,
       isHelpTab: false,
@@ -482,7 +516,9 @@ export default {
       titleId: 0,
       selectedTitle: null,
       vsMode: '',
-      select: null
+      select: null,
+      moveLine: false,
+      initialBorder: 0
     }
   },
   computed: {
@@ -505,21 +541,21 @@ export default {
       this.vsMode = 'vs'
     }
     console.log(monaco.editor)
-    let container = document.getElementById('monacoContainer')
-    let custom = document.createElement('vue-custom-scrollbar')
-    custom.classList.add('custom' + this.monacoIndex)
-    container.appendChild(custom)
-    document.querySelector('.custom' + this.monacoIndex++).style['width'] =
-      '50%'
+    let container = document.getElementById('leftContainer')
+    // let custom = document.createElement('vue-custom-scrollbar')
+    // custom.classList.add('custom' + this.monacoIndex)
+    // container.appendChild(custom)
+    // document.querySelector('.custom' + this.monacoIndex++).style['width'] =
+    //   '50%'
 
-    let custom1 = document.createElement('vue-custom-scrollbar')
-    custom1.classList.add('custom' + this.monacoIndex)
+    // let custom1 = document.createElement('vue-custom-scrollbar')
+    // custom1.classList.add('custom' + this.monacoIndex)
 
-    container.appendChild(custom1)
-    document.querySelector('.custom' + this.monacoIndex++).style['width'] =
-      '50%'
+    // container.appendChild(custom1)
+    // document.querySelector('.custom' + this.monacoIndex++).style['width'] =
+    //   '50%'
     var editor = monaco.editor.create(
-      document.getElementById('monacoContainer').children[0],
+      document.getElementById('leftContainer'),
       {
         value: 'console.log("Hello, world")',
         language: 'html',
@@ -532,7 +568,7 @@ export default {
       }
     )
     var editor = monaco.editor.create(
-      document.getElementById('monacoContainer').children[1],
+      document.getElementById('rightContainer'),
       {
         value: 'console.log("Hello, world")',
         language: 'css',
@@ -630,6 +666,24 @@ export default {
       }
     })
     document.addEventListener('mousemove', e => {
+      if (this.moveLine) {
+        let leftBox = document.querySelector('.left-box')
+        let rightBox = document.querySelector('.right-box')
+        let bord = document.querySelector('.center-border')
+        if (
+          this.initialLeftWidth + (e.clientX - this.initialBorder) > 300 &&
+          this.initialRightWidth - (e.clientX - this.initialBorder) > 300
+        ) {
+          leftBox.style.width =
+            this.initialLeftWidth + (e.clientX - this.initialBorder) + 'px'
+          rightBox.style.width =
+            this.initialRightWidth - (e.clientX - this.initialBorder) + 'px'
+          // document.getElementById('monacoContainer').removeChildAll()
+          this.$nextTick(() => {
+            bord.style.left = parseInt(getComputedStyle(leftBox).right) + 'px'
+          })
+        }
+      }
       if (this.viewTemplate) {
         this.$nextTick(() => {
           let img = document.querySelector('.description-img')
@@ -645,7 +699,6 @@ export default {
         })
       }
       if (this.resizeLoader) {
-        console.log('alsdjf;laj')
         let loader = document.querySelector('.loadDataPanel')
         let bord = document.querySelector('.loader-bord')
         console.log(loader)
@@ -694,6 +747,7 @@ export default {
     document.addEventListener('mouseup', e => {
       this.resizeLoader = false
       this.viewTemplate = false
+      this.moveLine = false
       let tar = e.target
       if (this.addTag) {
         while (1) {
@@ -807,6 +861,14 @@ export default {
     this.hasht = h
   },
   methods: {
+    moveBorder(e) {
+      this.moveLine = true
+      this.initialBorder = e.target.getBoundingClientRect().left
+      let leftBox = document.querySelector('.left-box')
+      let rightBox = document.querySelector('.right-box')
+      this.initialLeftWidth = leftBox.getBoundingClientRect().width
+      this.initialRightWidth = rightBox.getBoundingClientRect().width
+    },
     openCode() {
       this.isData = true
     },
@@ -2170,9 +2232,7 @@ export default {
     height: 50%;
     background-color: #23282b;
   }
-  .showSorce {
-    height: calc(97% - 7px - 4.1rem);
-  }
+
   .tab-pane {
     height: 100%;
   }
@@ -2185,9 +2245,7 @@ export default {
   #pills-contact {
     height: 125%;
   }
-  .showCode {
-    height: 100%;
-  }
+
   .studio-text-box {
     height: 2.5rem;
     display: flex;
@@ -2215,37 +2273,31 @@ export default {
       position: absolute;
     }
   }
-  .tab-box {
-    height: 1.6rem;
-    background-color: #1e1e1e;
+  .code-box {
+    height: calc(100% - 7px - 2.5rem);
+    width: 100%;
     display: flex;
     flex-direction: row;
-    .right-tab {
-      border-left: 1.5px solid #4f4f86a6;
+    .center-border {
+      width: 0.4%;
       height: 100%;
-      width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: left;
-      .cssTitle {
-        height: 90%;
-        color: #ccc;
-        padding-left: 0.2rem;
-        padding-right: 0.2rem;
-        background-image: linear-gradient(to bottom, #48545a, #3d484d);
-        // background-color: #2c3e50;
-        cursor: pointer;
+      background-color: #866a4fbd;
+      &:hover {
+        cursor: ew-resize;
       }
     }
-    .left-tab {
-      border-left: 1.5px solid #4f4f86a6;
+    .left-box,
+    .right-box {
+      // border-left: 1.5px solid #86744fa6;
       height: 100%;
-      width: 50%;
+      width: 49.8%;
       display: flex;
       align-items: center;
+      flex-direction: column;
       justify-content: left;
       .htmlTitle {
-        height: 90%;
+        height: 5%;
+        width: 100%;
         padding-left: 0.2rem;
         background-image: linear-gradient(to bottom, #48545a, #3d484d);
         // background-color: #2c3e50;?
@@ -2253,9 +2305,53 @@ export default {
         color: #ccc;
         cursor: pointer;
       }
+      .cssTitle {
+        height: 5%;
+        width: 100%;
+        color: #ccc;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+        background-image: linear-gradient(to bottom, #48545a, #3d484d);
+        // background-color: #2c3e50;
+        cursor: pointer;
+      }
+      .showSorce {
+        height: 95%;
+        width: 100%;
+        .tab-pane {
+          .showCode {
+            height: 100%;
+            .monaco-editor {
+              width: 100% !important;
+              margin: 0;
+              height: 100% !important;
+              // overflow: auto;
+              padding: 0;
+              .overflow-guard {
+                width: 100% !important;
+                height: 100% !important;
+                .margin {
+                  border: none;
+                  // border-left: 1.5px solid #4f4f86a6;
+                  border-right: 2px solid #4f4f86;
+                  width: 55px !important;
+                  height: 100% !important;
+                }
+                .monaco-scrollable-element {
+                  width: calc(100% - 135px) !important;
+                }
+                .minimap {
+                  width: 80px !important;
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
-  #monacoContainer {
+
+  #leftContainer {
     width: 100%;
     height: 100%;
     text-align: left;
@@ -2264,30 +2360,16 @@ export default {
     margin: 0;
     padding: 0;
   }
-  .monaco-editor {
-    width: 100% !important;
+  #rightContainer {
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
     margin: 0;
-    height: 100% !important;
-    // overflow: auto;
     padding: 0;
-    .overflow-guard {
-      width: 100% !important;
-      height: 100% !important;
-      .margin {
-        border: none;
-        border-left: 1.5px solid #4f4f86a6;
-        border-right: 2px solid #4f4f86;
-        width: 55px !important;
-        height: 100% !important;
-      }
-      .monaco-scrollable-element {
-        width: calc(100% - 135px) !important;
-      }
-      .minimap {
-        width: 80px !important;
-      }
-    }
   }
+
   .monaco_editor_container {
     width: 100% !important;
   }

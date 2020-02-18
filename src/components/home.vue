@@ -442,6 +442,7 @@ export default {
       // console.log(this.addComponentTag)
     },
     onmouseMove(e) {
+      console.log(e.target)
       // console.log(this.addComponentTag)
       // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
@@ -451,7 +452,9 @@ export default {
           e.target.className !== 'home' &&
           e.target.className !== 'editor-component' &&
           e.target.className !== 'sample-component' &&
-          e.target.className !== 'sample-add-btn'
+          e.target.className !== 'sample-add-btn' &&
+          e.target.className !== 'editor-box' &&
+          e.target.className !== 'scroll-area'
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
@@ -464,7 +467,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
             this.movePosition = e
@@ -1043,7 +1048,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.multiSelectedElement = new Set()
             this.multiSelectedElement.add(e.target)
@@ -1118,7 +1125,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.multiSelectedElement.add(e.target)
             if (this.setSize !== this.multiSelectedElement.size) {
@@ -1199,7 +1208,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.$emit('componentSelected', e)
           }
@@ -1280,7 +1291,9 @@ export default {
         e.target.className !== 'home' &&
         e.target.className !== 'editor-component' &&
         e.target.className !== 'sample-component' &&
-        e.target.className !== 'sample-add-btn'
+        e.target.className !== 'sample-add-btn' &&
+        e.target.className !== 'editor-box' &&
+        e.target.className !== 'scroll-area'
       ) {
         this.isContentEditable = true
         this.targetText = e.target.textContent
@@ -1302,7 +1315,9 @@ export default {
         e.target.className !== 'home' &&
         e.target.className !== 'editor-component' &&
         e.target.className !== 'sample-component' &&
-        e.target.className !== 'sample-add-btn'
+        e.target.className !== 'sample-add-btn' &&
+        e.target.className !== 'editor-box' &&
+        e.target.className !== 'scroll-area'
       ) {
         this.focusInput(e)
         this.editElem = e.target
