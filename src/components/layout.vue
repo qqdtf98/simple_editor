@@ -16,15 +16,10 @@
     </div>
     <vue-custom-scrollbar class="right-scroll-area">
       <div class="layout-box">
-        <ul
-          class="nav nav-tabs mb-3"
-          id="pills-tab"
-          role="tablist"
-          @click="chageTab"
-        >
-          <li class="nav-item">
+        <ul class="" id="pills-tab" role="tablist" @click="chageTab">
+          <li class="">
             <a
-              class="nav-link "
+              class="nav-link layout-tab"
               v-bind:class="{ active: tabStep === 1 }"
               id="pills-home-tab"
               data-toggle="pill"
@@ -35,9 +30,9 @@
               >Options</a
             >
           </li>
-          <li class="nav-item">
+          <li class="">
             <a
-              class="nav-link "
+              class="nav-link layout-tab"
               v-bind:class="{ active: tabStep === 2 }"
               id="pills-profile-tab"
               data-toggle="pill"
@@ -62,7 +57,7 @@
           <div class="addButtonTree"></div>
 
           <div id="accordion" role="tablist">
-            <div class="card">
+            <div class="card option-list">
               <div
                 class="card-header"
                 @click="clickLayoutTab"
@@ -71,7 +66,7 @@
               >
                 <h5 class="mb-0">
                   <a
-                    class="title"
+                    class="title list-font"
                     data-toggle="collapse"
                     href="#collapseOne"
                     aria-expanded="true"
@@ -223,7 +218,7 @@
               </div>
             </div>
 
-            <div class="card">
+            <div class="card option-list">
               <div
                 class="card-header"
                 @click="clickBackgroundTab"
@@ -232,7 +227,7 @@
               >
                 <h5 class="mb-0">
                   <a
-                    class="title"
+                    class="title list-font"
                     data-toggle="collapse"
                     href="#collapseOne"
                     aria-expanded="true"
@@ -381,7 +376,7 @@
               </div>
             </div>
 
-            <div class="card">
+            <div class="card option-list">
               <div
                 class="card-header"
                 @click="clickFontTab"
@@ -390,7 +385,7 @@
               >
                 <h5 class="mb-0">
                   <a
-                    class="title"
+                    class="title list-font"
                     data-toggle="collapse"
                     href="#collapseOne"
                     aria-expanded="true"
@@ -639,7 +634,7 @@
               </div>
             </div>
 
-            <div class="card">
+            <div class="card option-list">
               <div
                 class="card-header"
                 @click="clickFilterTab"
@@ -648,7 +643,7 @@
               >
                 <h5 class="mb-0">
                   <a
-                    class="title"
+                    class="title list-font"
                     data-toggle="collapse"
                     href="#collapseOne"
                     aria-expanded="true"
@@ -940,7 +935,7 @@
           aria-labelledby="pills-animation-tab"
         >
           <div id="accordion" role="tablist">
-            <div class="card">
+            <div class="card option-list">
               <div
                 class="card-header"
                 @click="clickAnimationTab"
@@ -949,7 +944,7 @@
               >
                 <h5 class="mb-0">
                   <a
-                    class="title"
+                    class="title list-font"
                     data-toggle="collapse"
                     href="#collapseOne"
                     aria-expanded="true"
@@ -968,7 +963,7 @@
                 data-parent="#accordion"
               >
                 <div class="row animation">
-                  <span class="aniText">
+                  <span class="aniText list-font">
                     Animation
                   </span>
                   <b-form-select
@@ -2221,18 +2216,19 @@ export default {
   font-weight: bold;
   font-size: 14px;
 }
-.nav-tabs {
-  border-bottom: 1px solid #242729;
-}
 .nav-link {
   color: #868e96;
 }
 .nav-link.active {
-  background: linear-gradient(#3b4144, #32373a);
+  // background: linear-gradient(#3b4144, #32373a);
+  background-color: #333538;
   border-style: none;
 }
 .nav-tabs .nav-link.active {
   color: #fff;
+}
+.nav-tabs {
+  border: none;
 }
 .card {
   margin-bottom: 10px;
@@ -2636,5 +2632,38 @@ b {
   100% {
     -webkit-transform: rotate(360deg);
   }
+}
+.layout-tab {
+  padding: 0;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background-color: #292931;
+  width: 5.5rem;
+  text-align: center;
+  color: #d3d3d3;
+  &:hover {
+    color: #d3d3d3;
+  }
+}
+#pills-tab {
+  display: flex;
+  margin: 0;
+  flex-direction: row;
+}
+.option-list {
+  background-color: #292931;
+  border-top: 1.2px solid #333538;
+  border-bottom: 1.2px solid #333538;
+  padding: 0;
+  margin: 0;
+}
+.list-font {
+  font-weight: 300 !important;
+  font-family: 'Inter', sans-serif;
+}
+li {
+  list-style-type: none;
 }
 </style>
