@@ -807,8 +807,7 @@ export default {
     this.hasht = h
   },
   methods: {
-    openCode(e) {
-      console.log(e.target.parentElement.parentElement.getAttribute('id'))
+    openCode() {
       this.isData = true
     },
     copyPage() {
@@ -865,6 +864,7 @@ export default {
           if (j === i) {
             editor[j].classList.remove('hidden')
             editor[j].classList.add('display')
+            console.log(editor[j].getAttribute('id'))
           } else {
             editor[j].classList.remove('display')
             editor[j].classList.add('hidden')
@@ -884,6 +884,7 @@ export default {
           if (j === i) {
             editor[j].classList.remove('hidden')
             editor[j].classList.add('display')
+            console.log(editor[j].getAttribute('id'))
           } else {
             editor[j].classList.remove('display')
             editor[j].classList.add('hidden')
@@ -1151,6 +1152,7 @@ export default {
       for (j = 0; j < editor.length; j++) {
         if (j === num) {
           editor[j].classList.remove('hidden')
+          console.log(editor[j].getAttribute('id'))
           editor[j].classList.add('display')
         } else {
           editor[j].classList.remove('display')
@@ -1206,7 +1208,7 @@ export default {
       sampleBtn.style.cursor = 'pointer'
 
       sampleBtn.addEventListener('click', e => {
-        this.openCode(e)
+        this.openCode()
       })
 
       // console.log(newEditorBox.classList);
