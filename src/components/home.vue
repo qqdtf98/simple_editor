@@ -17,7 +17,7 @@
           @mousemove="onmouseMove"
           @mousedown="mousedown"
         >
-          <div class="board">
+          <div id="board" class="board">
             <div class="sample-component">
               <img
                 src="../assets/images/plus.svg"
@@ -415,8 +415,13 @@ export default {
     })
   },
   methods: {
-    addCode() {
-      this.$emit('open-code')
+    addCode(e) {
+      console.log(e.target.parentElement.parentElement)
+      console.log()
+      this.$emit(
+        'open-code',
+        e.target.parentElement.parentElement.getAttribute('id')
+      )
     },
     multiChoice(mode) {
       this.multiSelect = mode

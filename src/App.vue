@@ -825,14 +825,12 @@ export default {
         parentID: null
       }
       this.titles.push(payload)
-      let editor = document.querySelector('.board')
+      let editor = document.querySelector('#board')
       // let copy = editor.cloneNode(true)
       let newEditorBox = document.createElement('div')
-      let ne = document.createElement('button')
       newEditorBox.classList.add('board')
       newEditorBox.classList.add('hidden')
-      newEditorBox.classList.add('board' + this.editorNum)
-      newEditorBox.appendChild(ne)
+      newEditorBox.setAttribute('id', 'board' + this.editorNum)
       // console.log(editor.parentElement);
 
       editor.parentElement.appendChild(newEditorBox)
@@ -854,7 +852,7 @@ export default {
     changePageSitemap(e) {
       if (this.selectedTitle.className === 'titles') {
         let titles = document.querySelectorAll('.titles')
-        let editor = document.querySelectorAll('.board')
+        let editor = document.querySelectorAll('#board')
         let i
         for (i = 0; i < titles.length; i++) {
           if (titles[i] === this.selectedTitle) {
@@ -873,7 +871,7 @@ export default {
         }
       } else if (this.selectedTitle.className === 'titles-box') {
         let titles = document.querySelectorAll('.titles-box')
-        let editor = document.querySelectorAll('.board')
+        let editor = document.querySelectorAll('#board')
         let i
         for (i = 0; i < titles.length; i++) {
           if (titles[i] === this.selectedTitle) {
@@ -1148,7 +1146,7 @@ export default {
         }
       }
       let j
-      let editor = document.querySelectorAll('.board')
+      let editor = document.querySelectorAll('#board')
       for (j = 0; j < editor.length; j++) {
         if (j === num) {
           editor[j].classList.remove('hidden')
@@ -1166,12 +1164,12 @@ export default {
         parentID: null
       }
       this.titles.push(payload)
-      let editor = document.querySelector('.board')
+      let editor = document.querySelector('#board')
       // let copy = editor.cloneNode(true)
       let newEditorBox = document.createElement('div')
       newEditorBox.classList.add('board')
       newEditorBox.classList.add('hidden')
-      newEditorBox.classList.add('board' + this.editorNum)
+      newEditorBox.setAttribute('id', 'board' + this.editorNum)
 
       let sampleCompo = document.createElement('div')
       sampleCompo.classList.add('sample-component')
