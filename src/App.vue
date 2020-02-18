@@ -143,7 +143,6 @@
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span class="studio-text">CodeReview</span>
-
               <div class="manualatag">
                 mode
                 <switches
@@ -394,8 +393,8 @@ export default {
         { text: 'Length' }
       ],
       monacoIndex: 0,
-      code:
-        '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
+      code: '',
+      css: '',
       // options: {
       //   selectOnLineNumbers: true
       // },
@@ -482,9 +481,11 @@ export default {
       titleId: 0,
       selectedTitle: null,
       vsMode: '',
-      select: null
+      select: null,
+      isCssIn: false
     }
   },
+  created() {},
   computed: {
     testMessage: function() {
       this.test = document.getElementById('newLoaderHtml').innerHTML
@@ -496,14 +497,26 @@ export default {
       this.$refs.home.modeSelect(this.enabled)
     }
   },
-  watch: {},
+
   mounted() {
+    this.isData = false
     console.log('df')
     if (this.enabled) {
       this.vsMode = 'vs-dark'
     } else {
       this.vsMode = 'vs'
     }
+    // console.log(document.getElementById('newLoaderHtml'))
+    // console.log(document.getElementById('newLoaderHtml').style)
+    // for (var key in document.getElementById('newLoaderHtml').style) {
+    //   if (document.getElementById('newLoaderHtml').style[key] != '') {
+    //     console.log(key)
+    //     console.log(` ${document.getElementById('newLoaderHtml').style[key]} `)
+    //   }
+    // }
+
+    this.code = document.getElementById('userComponentScreen').innerHTML
+    // this.css = document.getElementById('cssUser').innerHTML
     console.log(monaco.editor)
     let container = document.getElementById('monacoContainer')
     let custom = document.createElement('vue-custom-scrollbar')
@@ -518,10 +531,10 @@ export default {
     container.appendChild(custom1)
     document.querySelector('.custom' + this.monacoIndex++).style['width'] =
       '50%'
-    var editor = monaco.editor.create(
+    var editorHtml = monaco.editor.create(
       document.getElementById('monacoContainer').children[0],
       {
-        value: 'console.log("Hello, world")',
+        value: this.code,
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -531,10 +544,10 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
-    var editor = monaco.editor.create(
+    var editorCss = monaco.editor.create(
       document.getElementById('monacoContainer').children[1],
       {
-        value: 'console.log("Hello, world")',
+        value: this.css,
         language: 'css',
         theme: 'vs-dark',
         height: 100,
@@ -545,13 +558,27 @@ export default {
       }
     )
 
-    var myBinding = editor.onDidChangeModelContent(function(e) {
-      console.log('시작')
-      console.log(editor.getValue())
-      console.log(editor.getContentHeight())
+    var myBinding = editorHtml.onDidChangeModelContent(function(e) {
+      document.getElementById(
+        'userComponentScreen'
+      ).innerHTML = editorHtml.getValue()
 
       // alert(editor.getValue())
-      console.log(e.target)
+    })
+    var muBinding2 = editorCss.onDidChangeModelContent(e => {
+      if (!this.isCssIn) {
+        var oScript = document.createElement('style')
+        oScript.type = 'text/css'
+        oScript.setAttribute('id', 'cssUser')
+        oScript.innerHTML = editorCss.getValue()
+        document.getElementsByTagName('head')[0].appendChild(oScript)
+        this.isCssIn = true
+      } else {
+        console.log(editorCss.getValue())
+        document.getElementById('cssUser').innerHTML = editorCss.getValue()
+      }
+
+      // alert(editor.getValue())
     })
     editor.onDidContentSizeChange(function(e) {
       console.log('시작s')
@@ -1436,9 +1463,6 @@ export default {
       this.homeLayoutLocation = document
         .getElementById('dashboard')
         .getBoundingClientRect()
-
-      console.log('이제 보낸다')
-      console.log(payload)
 
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       if (this.isPustHtml) {

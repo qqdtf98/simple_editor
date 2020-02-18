@@ -973,9 +973,8 @@
                   </span>
                   <b-form-select
                     class=" btn btn-info btn-sm dropdownAnimation"
-                    v-model="imageSizeSelected"
+                    v-model="animationStyleSelected"
                     :options="animationStyle"
-                    @change="submitChangeImageSize"
                   ></b-form-select>
                 </div>
 
@@ -990,8 +989,8 @@
                       name="width"
                       value
                       title
-                      placeholder="31.4375px"
-                      v-model="componentSorce.width"
+                      placeholder="4s"
+                      v-model="animationTime"
                     />
                   </div>
 
@@ -1005,8 +1004,8 @@
                       name="width"
                       value
                       title
-                      placeholder="31.4375px"
-                      v-model="componentSorce.width"
+                      placeholder="4s"
+                      v-model="animationDelay"
                     />
                   </div>
 
@@ -1016,9 +1015,8 @@
                     </span>
                     <b-form-select
                       class=" btn btn-info btn-sm dropdownAnimation"
-                      v-model="imageSizeSelected"
+                      v-model="repeatTimeSelected"
                       :options="repeatTime"
-                      @change="submitChangeImageSize"
                     ></b-form-select>
                   </div>
 
@@ -1028,9 +1026,8 @@
                     </span>
                     <b-form-select
                       class="btn btn-info btn-sm dropdownAnimation"
-                      v-model="imageSizeSelected"
+                      v-model="timingFunctionSelected"
                       :options="timingFunction"
-                      @change="submitChangeImageSize"
                     ></b-form-select>
                   </div>
 
@@ -1040,23 +1037,20 @@
                     </span>
                     <b-form-select
                       class=" btn btn-info btn-sm dropdownAnimation"
-                      v-model="imageSizeSelected"
+                      v-model="directionSelected"
                       :options="direction"
-                      @change="submitChangeImageSize"
                     ></b-form-select>
                   </div>
-
                   <b-button
-                    class="deleteAM"
+                    class="buttonAnimation"
+                    id="ApplyAM"
+                    @click="submitAnimation"
+                  >Apply</b-button>
+                  <b-button
+                    class="buttonAnimation"
                     id="deleteAM"
                     @click="testAnimation"
-                  ></b-button>
-
-                  <b-button
-                    class="testApplyAM"
-                    id="ApplyAM"
-                    @click="testAnimation"
-                  ></b-button>
+                  >Delite</b-button>
                 </div>
               </div>
             </div>
@@ -1140,6 +1134,7 @@ export default {
       AnimationTab: 0,
       //Animation
       enabled: false,
+      animationStyleSelected: 'none',
       animationStyle: [
         { text: 'none' },
         { text: 'bounce' },
@@ -1149,6 +1144,9 @@ export default {
         { text: 'rotate' },
         { text: 'custom' }
       ],
+      animationTime:0,
+      animationDelay:0,
+      timingFunctionSelected: 'none',
       timingFunction: [
         { text: 'ease' },
         { text: 'ease-in' },
@@ -1156,12 +1154,14 @@ export default {
         { text: 'ease-in-out' },
         { text: 'linear' }
       ],
+      directionSelected: 'none',
       direction: [
         { text: 'nomal' },
         { text: 'alternate' },
         { text: 'reverse' },
         { name: 'alterne-reverse', text: 'alt-reverse' }
       ],
+      repeatTimeSelected: 'none',
       repeatTime: [{ text: 'custom' }, { text: 'infinite' }],
       imageSizeSelected: 'none',
       imageSize: [
@@ -1672,6 +1672,18 @@ export default {
         this.$emit('userSelectedWidth', this.submitSorce)
       }
     },
+    submitAnimation(e){
+      console.log(this.submitSorce)
+      console.log(this.payload)
+      for(let payload of this.payload){
+        this.submitSorce.payload = payload
+        this.submitSorce.style = 'animation'
+        this.submitSorce.value = this.animationStyleSelected+' '+this.animationTime+'s'+' '+this.animationDelay+'s'+' '+this.repeatTimeSelected+' '+this.timingFunctionSelected+' '+this.directionSelected
+        this.submitSorce.change = 1
+        console.log(this.submitSorce)
+        this.$emit('userSelectedWidth', this.submitSorce)
+      }
+    },
     pushLink(e) {
       this.isLink=true
     },
@@ -1830,6 +1842,7 @@ export default {
         this.$emit('userSelectedWidth', this.submitSorce)
       }
     },
+  
     testee(e) {
       console.log(e)
     },
@@ -2500,10 +2513,16 @@ b {
 .aniText {
   color: grey !important;
   margin: 15px 10px 0px 13px;
-  width: 40%;
+  width:40%;
 }
-.testApplyAM {
-  animation: slidein 4s 1s infinite linear alternate;
+.buttonAnimation {
+  // animation: slidein 4s 1s infinite linear alternate;
+  width: 80px !important;
+  margin:15px 5px 0px 5px;
+  height:30px; 
+  background-color: #858a96 !important;
+  font-size:10px;
+  padding:0px !important;
   // animation-name: a;
   // animation-duration: 5s;
   // animation-timing-function: linear;
@@ -2513,6 +2532,7 @@ b {
 }
 .aniTimeChange {
   margin: 0px 0px 0px 40px;
+  width: 30% !important;
 }
 .manual {
   margin: 0px 12px 0px 0px;
