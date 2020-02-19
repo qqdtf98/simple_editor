@@ -17,22 +17,17 @@
           @mousemove="onmouseMove"
           @mousedown="mousedown"
         >
-          <div class="board">
+          <div id="board" class="board">
+            
+            <!--
             <div class="sample-component">
               <img
                 src="../assets/images/plus.svg"
                 @click="addCode"
                 class="sample-add-btn"
               />
-              <!-- <div class="line" />
-              <div class="verti" /> -->
-            </div>
-            <!-- <Dashboard />
-            <Dashboard />
-            <Dashboard />
-            <spliter />
-            <HtmlLoader class="navi" />
-            <Navi class="navi" /> -->
+            </div> -->
+
           </div>
         </div>
       </vue-custom-scrollbar>
@@ -415,8 +410,8 @@ export default {
     })
   },
   methods: {
-    addCode() {
-      this.$emit('open-code')
+    addCode(e) {
+      this.$emit('open-code', e)
     },
     multiChoice(mode) {
       this.multiSelect = mode
@@ -442,8 +437,6 @@ export default {
       // console.log(this.addComponentTag)
     },
     onmouseMove(e) {
-      // console.log(this.addComponentTag)
-      // let dashboardElem = document.querySelector('.editor')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
@@ -451,7 +444,9 @@ export default {
           e.target.className !== 'home' &&
           e.target.className !== 'editor-component' &&
           e.target.className !== 'sample-component' &&
-          e.target.className !== 'sample-add-btn'
+          e.target.className !== 'sample-add-btn' &&
+          e.target.className !== 'editor-box' &&
+          e.target.className !== 'scroll-area'
         ) {
           this.onelementSelected = true
           this.selectedElement = e.target.getBoundingClientRect()
@@ -464,7 +459,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.selectedElement = e.target.getBoundingClientRect()
             this.movePosition = e
@@ -1043,7 +1040,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.multiSelectedElement = new Set()
             this.multiSelectedElement.add(e.target)
@@ -1118,7 +1117,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.multiSelectedElement.add(e.target)
             if (this.setSize !== this.multiSelectedElement.size) {
@@ -1199,7 +1200,9 @@ export default {
             e.target.className !== 'home' &&
             e.target.className !== 'editor-component' &&
             e.target.className !== 'sample-component' &&
-            e.target.className !== 'sample-add-btn'
+            e.target.className !== 'sample-add-btn' &&
+            e.target.className !== 'editor-box' &&
+            e.target.className !== 'scroll-area'
           ) {
             this.$emit('componentSelected', e)
           }
@@ -1280,7 +1283,9 @@ export default {
         e.target.className !== 'home' &&
         e.target.className !== 'editor-component' &&
         e.target.className !== 'sample-component' &&
-        e.target.className !== 'sample-add-btn'
+        e.target.className !== 'sample-add-btn' &&
+        e.target.className !== 'editor-box' &&
+        e.target.className !== 'scroll-area'
       ) {
         this.isContentEditable = true
         this.targetText = e.target.textContent
@@ -1302,7 +1307,9 @@ export default {
         e.target.className !== 'home' &&
         e.target.className !== 'editor-component' &&
         e.target.className !== 'sample-component' &&
-        e.target.className !== 'sample-add-btn'
+        e.target.className !== 'sample-add-btn' &&
+        e.target.className !== 'editor-box' &&
+        e.target.className !== 'scroll-area'
       ) {
         this.focusInput(e)
         this.editElem = e.target
