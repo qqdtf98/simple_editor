@@ -957,7 +957,8 @@ export default {
             source[j].classList.add('hidden')
           }
         }
-      },
+      }
+    },
     generateCode(id) {
       this.idSelected = id
       this.code = document.getElementById(id).innerHTML
