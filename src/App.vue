@@ -604,6 +604,17 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
+    // this.css = document.querySelector('#board').style
+    // console.log(document.querySelector('#board').style)
+
+    const percentBar = document.querySelector('#board')
+    let compStyles = window.getComputedStyle(percentBar)
+    for (var key in percentBar.style) {
+      if (percentBar.style[key] != '') {
+        console.log(`${key} : ${compStyles.getPropertyValue[key]}`)
+      }
+    }
+
     this.editor2 = monaco.editor.create(
       document.getElementById('rightContainer'),
       {
@@ -629,12 +640,39 @@ export default {
       // console.log('시작s')
     })
 
+    var oScript = document.createElement('style')
+    oScript.setAttribute('id', 'jumsimmuk')
+    oScript.setAttribute('lang', 'scss')
+    oScript.type = 'text/css'
+    document.getElementsByTagName('head')[0].appendChild(oScript)
+
     var myBinding2 = this.editor2.onDidContentSizeChange(e => {
-      var oScript = document.createElement('style')
-      oScript.type = 'text/css'
-      oScript.innerHTML = this.editor2.getValue()
-      document.getElementsByTagName('head')[0].appendChild(oScript)
+      // var sss = document.createElement('link')
+      // sss.setAttribute('rel','stylesheet')
+      // sss.setAttribute('href','scss/main.scss')
+      // document.getElementsByTagName('head')[0].appendChild(sss)
+
+      var test = document.querySelector('#jumsimmuk')
+      var text = this.editor2.getValue()
+      console.log(text)
+      text = text.replace(/}/gi, '} #board ')
+      console.log(text)
+      test.innerHTML = '#board ' + text
+
+      console.log(test)
+
+      // const percentBar = document.querySelector("#app");
+      // let compStyles = window.getComputedStyle(percentBar)
+      // for(var key in percentBar.style) {
+      //     if(percentBar.style[key] != "") {
+      //     console.log(key+ ':'+ compStyles.getPropertyValue(key));
+      //     }
+      // }
+
       // var vScript = document.createElement('script');
+
+      // '<style type="text/css">' + this.editor2.getValue() + '</style>'
+
       // vScript.type ='text/javascript';
       // vScript.charset ='utf-8';
       // vScript.innerHTML=`
@@ -723,6 +761,7 @@ export default {
         let leftBox = document.querySelector('.left-box')
         let rightBox = document.querySelector('.right-box')
         let bord = document.querySelector('.center-border')
+        console.log(bord)
         if (
           this.initialLeftWidth + (e.clientX - this.initialBorder) > 300 &&
           this.initialRightWidth - (e.clientX - this.initialBorder) > 300
