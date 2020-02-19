@@ -1839,7 +1839,7 @@ export default {
     position: fixed;
     left: 3.5%;
     background-color: #292931;
-    z-index: 33;
+    z-index: 151;
     top: 3.5%;
   }
 
@@ -1861,7 +1861,7 @@ export default {
     position: fixed;
     left: 3.5%;
     background-color: #292931;
-    z-index: 30;
+    z-index: 151;
     top: 3.5%;
   }
 
@@ -2050,7 +2050,7 @@ export default {
           width: 100%;
           height: 100%;
           background-color: #292931;
-          z-index: 33;
+          z-index: 151;
         }
       }
       .right-bottom-panel {
@@ -2063,6 +2063,7 @@ export default {
           width: 100%;
           height: 100%;
           border: 1px solid #525252;
+          z-index: 150;
           // border-top : none;
           .tree-name-box {
             background-color: #292931;
@@ -2374,7 +2375,7 @@ export default {
 
   .loadDataPanel {
     width: 80%;
-    z-index: 10000;
+    z-index: 100;
     border: 1px solid #525252;
     position: fixed;
     bottom: 3%;
@@ -2486,6 +2487,7 @@ export default {
               .overflow-guard {
                 width: 100% !important;
                 height: 100% !important;
+                position: relative;
                 .margin {
                   border: none;
                   // border-left: 1.5px solid #4f4f86a6;
@@ -2497,6 +2499,8 @@ export default {
                   width: calc(100% - 135px) !important;
                 }
                 .minimap {
+                  position: absolute;
+                  right: 0 !important;
                   width: 80px !important;
                 }
               }
