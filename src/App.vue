@@ -167,13 +167,13 @@
                     v-for="leftTitle in leftTitles"
                     :key="leftTitle.id"
                   >
-                    <div class="title-text">
+                    <div @click="changeSourceTab" class="title-text">
                       {{ leftTitle.text }}
                     </div>
                     <img class="close-icon" src="./assets/images/close.svg" />
                   </div>
                 </div>
-                <div class="showSource" id="leftSource">
+                <div class="leftSource" id="leftSource">
                   <div
                     class="tab-pane"
                     id="pills-home"
@@ -226,13 +226,13 @@
                     v-for="rightTitle in rightTitles"
                     :key="rightTitle.id"
                   >
-                    <div class="title-text">
+                    <div @click="changeSourceTab" class="title-text">
                       {{ rightTitle.text }}
                     </div>
                     <img class="close-icon" src="./assets/images/close.svg" />
                   </div>
                 </div>
-                <div class="showSource0" id="rightSource">
+                <div class="rightSource" id="rightSource">
                   <div
                     class="tab-pane"
                     id="pills-home"
@@ -486,8 +486,8 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
-      leftTitleIndex: 1,
-      rightTitleIndex: 1,
+      leftSourceIndex: 1,
+      rightSourceIndex: 1,
       xInter: null,
       yInter: null,
       message: '',
@@ -550,9 +550,6 @@ export default {
       leftTitles: [
         {
           text: 'index.html'
-        },
-        {
-          text: 'aaa'
         }
       ],
       rightTitles: [
@@ -601,7 +598,8 @@ export default {
     var editor = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
-        value: 'console.log("Hello, world")',
+        value:
+          '<div><div>aaa</div><div>bbbb</div><div>ccc</div><div>dddd</div></div>',
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -905,24 +903,70 @@ export default {
     this.hasht = h
   },
   methods: {
+    changeSourceTab(e) {
+      let i
+      let num
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          num = i
+          e.target.parentElement.style.backgroundColor = '#3f3f3f'
+        } else {
+          e.target.parentElement.parentElement.children[
+            i
+          ].style.backgroundColor = '#23282b'
+        }
+      }
+      let j
+      if (e.target.parentElement.className === 'right-title') {
+        let source = document.querySelectorAll('.rightSource')
+        for (j = 0; j < source.length; j++) {
+          if (j === num) {
+            source[j].classList.remove('hidden')
+            source[j].classList.add('display')
+          } else {
+            source[j].classList.remove('display')
+            source[j].classList.add('hidden')
+          }
+        }
+      } else if (e.target.parentElement.className === 'left-title') {
+        let source = document.querySelectorAll('.leftSource')
+        for (j = 0; j < source.length; j++) {
+          if (j === num) {
+            source[j].classList.remove('hidden')
+            source[j].classList.add('display')
+          } else {
+            source[j].classList.remove('display')
+            source[j].classList.add('hidden')
+          }
+        }
+      }
+    },
     addJS() {
       var example = {
         text: 'sample'
       }
       this.rightTitles.push(example)
 
-      let rightTitle = document.querySelector('.showSource')
+      let rightSource = document.querySelector('.rightSource')
       // let leftTitle = document.querySelectorAll('.left-title')
 
-      let editor = document.querySelector('#board')
-      let newRightTitle = document.createElement('div')
-      newRightTitle.classList.add('right-title')
+      let source = document.querySelector('#rightSource')
+      let newRightTitle = source.cloneNode(true)
+
+      newRightTitle.classList.add('rightSource')
       newRightTitle.classList.add('hidden')
-      newRightTitle.setAttribute('id', 'right-title' + this.rightTitleIndex)
+      newRightTitle.setAttribute('id', 'rightSource' + this.rightSourceIndex)
 
-      rightTitle.parentElement.appendChild(newRightTitle)
+      rightSource.parentElement.appendChild(newRightTitle)
 
-      this.rightTitleIndex++
+      this.rightSourceIndex++
     },
     moveBorder(e) {
       this.moveLine = true
@@ -2384,7 +2428,8 @@ export default {
           }
         }
       }
-      .showSource {
+      .leftSource,
+      .rightSource {
         height: calc(100% - 1.7rem);
         width: 100%;
         .tab-pane {
@@ -2416,6 +2461,12 @@ export default {
             }
           }
         }
+      }
+      .hidden {
+        display: none;
+      }
+      .display {
+        display: block;
       }
     }
   }
