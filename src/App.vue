@@ -889,23 +889,43 @@ export default {
           e.target.parentElement.parentElement.children[i] ===
           e.target.parentElement
         ) {
-          e.target.parentElement.parentElement.children[
-            i - 1
-          ].style.backgroundColor = '#3f3f3f'
-          e.target.parentElement.parentElement.children[
-            i
-          ].style.backgroundColor = '#23282b'
+          if (i === 0) {
+            // e.target.parentElement.parentElement.children[
+            //   i + 1
+            // ].style.backgroundColor = '#3f3f3f'
+            // e.target.parentElement.parentElement.children[
+            //   i
+            // ].style.backgroundColor = '#23282b'
+          } else {
+            e.target.parentElement.parentElement.children[
+              i - 1
+            ].style.backgroundColor = '#3f3f3f'
+            e.target.parentElement.parentElement.children[
+              i
+            ].style.backgroundColor = '#23282b'
+          }
+
           break
         }
       }
       if (e.target.parentElement.className === 'right-title') {
         this.rightTitles.splice(i, 1)
-        this.currentRightTab = i - 1
-        this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
+        if (i === 0) {
+          this.currentRightTab = i
+          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
+        } else {
+          this.currentRightTab = i - 1
+          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
+        }
       } else if (e.target.parentElement.className === 'left-title') {
         this.leftTitles.splice(i, 1)
-        this.currentLeftTab = i - 1
-        this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+        if (i === 0) {
+          this.currentLeftTab = i
+          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+        } else {
+          this.currentLeftTab = i - 1
+          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+        }
       }
     },
     changeSourceTab(e) {
