@@ -170,7 +170,11 @@
                     <div @click="changeSourceTab" class="title-text">
                       {{ leftTitle.text }}
                     </div>
-                    <img class="close-icon" src="./assets/images/close.svg" />
+                    <img
+                      @click="closeSource"
+                      class="close-icon"
+                      src="./assets/images/close.svg"
+                    />
                   </div>
                 </div>
                 <div class="leftSource" id="leftSource">
@@ -201,7 +205,11 @@
                     <div @click="changeSourceTab" class="title-text">
                       {{ rightTitle.text }}
                     </div>
-                    <img class="close-icon" src="./assets/images/close.svg" />
+                    <img
+                      @click="closeSource"
+                      class="close-icon"
+                      src="./assets/images/close.svg"
+                    />
                   </div>
                 </div>
                 <div class="rightSource" id="rightSource">
@@ -574,6 +582,7 @@ export default {
       document.getElementById(
         this.idSelected
       ).innerHTML = this.editor1.getValue()
+      this.leftTitles[this.currentLeftTab].code = this.editor2.getValue()
       // editor.setValue(editor.getValue())1
       // console.log(document.getElementById(id).innerHTML)
       // console.log(this.codeReview.get(id).getValue())
@@ -586,9 +595,7 @@ export default {
       oScript.type = 'text/css'
       oScript.innerHTML = this.editor2.getValue()
       document.getElementsByTagName('head')[0].appendChild(oScript)
-      console.log(this.currentRightTab)
       this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
-      console.log(this.rightTitles)
       // var vScript = document.createElement('script');
       // vScript.type ='text/javascript';
       // vScript.charset ='utf-8';
@@ -869,6 +876,38 @@ export default {
     this.hasht = h
   },
   methods: {
+    closeSource(e) {
+      console.log('close')
+      let i
+      let num
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          e.target.parentElement.parentElement.children[
+            i - 1
+          ].style.backgroundColor = '#3f3f3f'
+          e.target.parentElement.parentElement.children[
+            i
+          ].style.backgroundColor = '#23282b'
+          break
+        }
+      }
+      if (e.target.parentElement.className === 'right-title') {
+        this.rightTitles.splice(i, 1)
+        this.currentRightTab = i - 1
+        this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
+      } else if (e.target.parentElement.className === 'left-title') {
+        this.leftTitles.splice(i, 1)
+        this.currentLeftTab = i - 1
+        this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+      }
+    },
     changeSourceTab(e) {
       let i
       let num
@@ -890,9 +929,7 @@ export default {
         }
       }
       this.currentRightTab = num
-      console.log(this.rightTitles)
       if (e.target.parentElement.className === 'right-title') {
-        console.log(this.rightTitles[num].code)
         this.editor2.setValue(this.rightTitles[num].code)
         // let source = document.querySelectorAll('.rightSource')
         // for (j = 0; j < source.length; j++) {
