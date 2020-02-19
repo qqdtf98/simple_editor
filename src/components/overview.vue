@@ -45,12 +45,17 @@ export default {
       xInter: 0,
       yInter: 0,
       intent: 10,
-      moveTarget: null
+      moveTarget: null,
+      loadId: ''
     }
   },
   methods: {
+    setId(id) {
+      this.loadId = id
+      this.printHomeDocument()
+    },
     printHomeDocument() {
-      var child = document.getElementById('newLoaderHtml').children
+      var child = document.getElementById(this.loadId).children
       // console.log(child)
 
       child = child[0]

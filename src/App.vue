@@ -543,6 +543,12 @@ export default {
       isContextMenu: false,
       titleId: 0,
       selectedTitle: null,
+      showCode: true,
+      codeReview: new Map(),
+      overView: new Map(),
+      editor1: '',
+      editor2: '',
+      idSelected: 'board',
       vsMode: '',
       select: null,
       moveLine: false,
@@ -583,23 +589,12 @@ export default {
     }
     console.log(monaco.editor)
     let container = document.getElementById('leftContainer')
-    // let custom = document.createElement('vue-custom-scrollbar')
-    // custom.classList.add('custom' + this.monacoIndex)
-    // container.appendChild(custom)
-    // document.querySelector('.custom' + this.monacoIndex++).style['width'] =
-    //   '50%'
 
-    // let custom1 = document.createElement('vue-custom-scrollbar')
-    // custom1.classList.add('custom' + this.monacoIndex)
-
-    // container.appendChild(custom1)
-    // document.querySelector('.custom' + this.monacoIndex++).style['width'] =
-    //   '50%'
-    var editor = monaco.editor.create(
+    this.code = document.getElementById(this.idSelected).innerHTML
+    this.editor1 = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
-        value:
-          '<div><div>aaa</div><div>bbbb</div><div>ccc</div><div>dddd</div></div>',
+        value: this.code,
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -609,10 +604,10 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
-    var editor = monaco.editor.create(
+    this.editor2 = monaco.editor.create(
       document.getElementById('rightContainer'),
       {
-        value: 'console.log("Hello, world")',
+        value: this.css,
         language: 'css',
         theme: 'vs-dark',
         height: 100,
@@ -623,17 +618,33 @@ export default {
       }
     )
 
-    var myBinding = editor.onDidChangeModelContent(function(e) {
-      console.log('시작')
-      console.log(editor.getValue())
-      console.log(editor.getContentHeight())
+    var myBinding1 = this.editor1.onDidChangeModelContent(e => {
+      document.getElementById(
+        this.idSelected
+      ).innerHTML = this.editor1.getValue()
+      // editor.setValue(editor.getValue())1
+      // console.log(document.getElementById(id).innerHTML)
+      // console.log(this.codeReview.get(id).getValue())
 
-      // alert(editor.getValue())
-      console.log(e.target)
+      // console.log('시작s')
     })
-    editor.onDidContentSizeChange(function(e) {
-      console.log('시작s')
+
+    var myBinding2 = this.editor2.onDidContentSizeChange(e => {
+      var oScript = document.createElement('style')
+      oScript.type = 'text/css'
+      oScript.innerHTML = this.editor2.getValue()
+      document.getElementsByTagName('head')[0].appendChild(oScript)
+      // var vScript = document.createElement('script');
+      // vScript.type ='text/javascript';
+      // vScript.charset ='utf-8';
+      // vScript.innerHTML=`
+      // open(){
+      //   alert("s")
+      // }
+      // `
+      // document.getElementsByTagName('head')[0].appendChild(vScript)
     })
+    this.isData = false
     // monaco.editor.model.onDidChangeContent(event => {
     //   render()
     //   console.log('s')
@@ -946,7 +957,14 @@ export default {
             source[j].classList.add('hidden')
           }
         }
-      }
+      },
+    generateCode(id) {
+      this.idSelected = id
+      this.code = document.getElementById(id).innerHTML
+      console.log(this.code)
+      // editor.setValue(this.code)
+      this.editor1.setValue(this.code)
+      document.getElementById(id).innerHTML = this.editor1.getValue()
     },
     addJS() {
       var example = {
@@ -1034,6 +1052,8 @@ export default {
             editor[j].classList.remove('hidden')
             editor[j].classList.add('display')
             console.log(editor[j].getAttribute('id'))
+            this.$refs.overview.setId(editor[j].getAttribute('id'))
+            this.generateCode(editor[j].getAttribute('id'))
           } else {
             editor[j].classList.remove('display')
             editor[j].classList.add('hidden')
@@ -1054,6 +1074,8 @@ export default {
             editor[j].classList.remove('hidden')
             editor[j].classList.add('display')
             console.log(editor[j].getAttribute('id'))
+            this.$refs.overview.setId(editor[j].getAttribute('id'))
+            this.generateCode(editor[j].getAttribute('id'))
           } else {
             editor[j].classList.remove('display')
             editor[j].classList.add('hidden')
@@ -1322,6 +1344,8 @@ export default {
         if (j === num) {
           editor[j].classList.remove('hidden')
           console.log(editor[j].getAttribute('id'))
+          this.$refs.overview.setId(editor[j].getAttribute('id'))
+          this.generateCode(editor[j].getAttribute('id'))
           editor[j].classList.add('display')
         } else {
           editor[j].classList.remove('display')
