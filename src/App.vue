@@ -188,34 +188,6 @@
                       ></div>
                     </div>
                   </div>
-                  <div
-                    v-show="tabStep === 2"
-                    class="tab-pane"
-                    id="pills-profile"
-                    role="tabpanel"
-                    aria-labelledby="pills-profile-tab"
-                  ></div>
-                  <div
-                    v-show="tabStep === 3"
-                    class="tab-pane"
-                    id="pills-contact"
-                    role="tabpanel"
-                    aria-labelledby="pills-contact-tab"
-                  >
-                    <div class="showCode">
-                      <textarea class="showJS" v-model="js" id="preview3">
-불러올 데이터가 없습니다. </textarea
-                      >
-                      <input
-                        style="float:left;"
-                        type="submit"
-                        value="Apply"
-                        @click="inputFile"
-                        id="getfile"
-                        accept="text/*"
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
               <div @mousedown="moveBorder" class="center-border"></div>
@@ -245,34 +217,6 @@
                         ref="editor"
                         @change="onCodeChange"
                       ></div>
-                    </div>
-                  </div>
-                  <div
-                    v-show="tabStep === 2"
-                    class="tab-pane"
-                    id="pills-profile"
-                    role="tabpanel"
-                    aria-labelledby="pills-profile-tab"
-                  ></div>
-                  <div
-                    v-show="tabStep === 3"
-                    class="tab-pane"
-                    id="pills-contact"
-                    role="tabpanel"
-                    aria-labelledby="pills-contact-tab"
-                  >
-                    <div class="showCode">
-                      <textarea class="showJS" v-model="js" id="preview3">
-불러올 데이터가 없습니다. </textarea
-                      >
-                      <input
-                        style="float:left;"
-                        type="submit"
-                        value="Apply"
-                        @click="inputFile"
-                        id="getfile"
-                        accept="text/*"
-                      />
                     </div>
                   </div>
                 </div>
@@ -551,16 +495,22 @@ export default {
       idSelected: 'board',
       vsMode: '',
       select: null,
+      currentRightTab: null,
+      currentLeftTab: null,
       moveLine: false,
       initialBorder: 0,
       leftTitles: [
         {
-          text: 'index.html'
+          text: 'index.html',
+          code: '',
+          type: 'html'
         }
       ],
       rightTitles: [
         {
-          text: 'style.css'
+          text: 'style.css',
+          code: '',
+          type: 'css'
         }
       ]
     }
@@ -578,6 +528,8 @@ export default {
   },
   watch: {},
   mounted() {
+    this.currentRightTab = 0
+    this.currentLeftTab = 0
     let leftTitle = document.querySelector('.left-title')
     let rightTitle = document.querySelector('.right-title')
     leftTitle.style.backgroundColor = '#3f3f3f'
@@ -634,6 +586,9 @@ export default {
       oScript.type = 'text/css'
       oScript.innerHTML = this.editor2.getValue()
       document.getElementsByTagName('head')[0].appendChild(oScript)
+      console.log(this.currentRightTab)
+      this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
+      console.log(this.rightTitles)
       // var vScript = document.createElement('script');
       // vScript.type ='text/javascript';
       // vScript.charset ='utf-8';
@@ -934,29 +889,33 @@ export default {
           ].style.backgroundColor = '#23282b'
         }
       }
-      let j
+      this.currentRightTab = num
+      console.log(this.rightTitles)
       if (e.target.parentElement.className === 'right-title') {
-        let source = document.querySelectorAll('.rightSource')
-        for (j = 0; j < source.length; j++) {
-          if (j === num) {
-            source[j].classList.remove('hidden')
-            source[j].classList.add('display')
-          } else {
-            source[j].classList.remove('display')
-            source[j].classList.add('hidden')
-          }
-        }
+        console.log(this.rightTitles[num].code)
+        this.editor2.setValue(this.rightTitles[num].code)
+        // let source = document.querySelectorAll('.rightSource')
+        // for (j = 0; j < source.length; j++) {
+        //   if (j === num) {
+        //     source[j].classList.remove('hidden')
+        //     source[j].classList.add('display')
+        //   } else {
+        //     source[j].classList.remove('display')
+        //     source[j].classList.add('hidden')
+        //   }
+        // }
       } else if (e.target.parentElement.className === 'left-title') {
-        let source = document.querySelectorAll('.leftSource')
-        for (j = 0; j < source.length; j++) {
-          if (j === num) {
-            source[j].classList.remove('hidden')
-            source[j].classList.add('display')
-          } else {
-            source[j].classList.remove('display')
-            source[j].classList.add('hidden')
-          }
-        }
+        this.editor1.setValue(this.leftTitles[num].code)
+        // let source = document.querySelectorAll('.leftSource')
+        // for (j = 0; j < source.length; j++) {
+        //   if (j === num) {
+        //     source[j].classList.remove('hidden')
+        //     source[j].classList.add('display')
+        //   } else {
+        //     source[j].classList.remove('display')
+        //     source[j].classList.add('hidden')
+        //   }
+        // }
       }
     },
     generateCode(id) {
@@ -969,23 +928,24 @@ export default {
     },
     addJS() {
       var example = {
-        text: 'sample'
+        text: 'sample',
+        code: '',
+        type: null
       }
       this.rightTitles.push(example)
 
-      let rightSource = document.querySelector('.rightSource')
-      // let leftTitle = document.querySelectorAll('.left-title')
+      // let rightSource = document.querySelector('.rightSource')
 
-      let source = document.querySelector('#rightSource')
-      let newRightTitle = source.cloneNode(true)
+      // let source = document.querySelector('#rightSource')
+      // let newRightTitle = source.cloneNode(true)
 
-      newRightTitle.classList.add('rightSource')
-      newRightTitle.classList.add('hidden')
-      newRightTitle.setAttribute('id', 'rightSource' + this.rightSourceIndex)
+      // newRightTitle.classList.add('rightSource')
+      // newRightTitle.classList.add('hidden')
+      // newRightTitle.setAttribute('id', 'rightSource' + this.rightSourceIndex)
 
-      rightSource.parentElement.appendChild(newRightTitle)
+      // rightSource.parentElement.appendChild(newRightTitle)
 
-      this.rightSourceIndex++
+      // this.rightSourceIndex++
     },
     moveBorder(e) {
       this.moveLine = true
