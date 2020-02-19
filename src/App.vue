@@ -161,8 +161,19 @@
             </div>
             <div class="code-box">
               <div class="left-box">
-                <div class="htmlTitle">index.html</div>
-                <div class="showSorce">
+                <div class="leftTitle">
+                  <div
+                    class="left-title"
+                    v-for="leftTitle in leftTitles"
+                    :key="leftTitle.id"
+                  >
+                    <div class="title-text">
+                      {{ leftTitle.text }}
+                    </div>
+                    <img class="close-icon" src="./assets/images/close.svg" />
+                  </div>
+                </div>
+                <div class="showSource" id="leftSource">
                   <div
                     class="tab-pane"
                     id="pills-home"
@@ -209,8 +220,19 @@
               </div>
               <div @mousedown="moveBorder" class="center-border"></div>
               <div class="right-box">
-                <div class="cssTitle">style.css</div>
-                <div class="showSorce">
+                <div class="rightTitle">
+                  <div
+                    class="right-title"
+                    v-for="rightTitle in rightTitles"
+                    :key="rightTitle.id"
+                  >
+                    <div class="title-text">
+                      {{ rightTitle.text }}
+                    </div>
+                    <img class="close-icon" src="./assets/images/close.svg" />
+                  </div>
+                </div>
+                <div class="showSource0" id="rightSource">
                   <div
                     class="tab-pane"
                     id="pills-home"
@@ -297,7 +319,11 @@
               :getDocument="homeDocument"
               class="htmlcontent"
             />
-            <fileContent v-show="!showhtml" class="filecontent" />
+            <fileContent
+              @add-js="addJS"
+              v-show="!showhtml"
+              class="filecontent"
+            />
           </div>
         </div>
       </div>
@@ -460,6 +486,8 @@ export default {
       initialTop: null,
       initialY: null,
       initialHeight: null,
+      leftTitleIndex: 1,
+      rightTitleIndex: 1,
       xInter: null,
       yInter: null,
       message: '',
@@ -518,7 +546,20 @@ export default {
       vsMode: '',
       select: null,
       moveLine: false,
-      initialBorder: 0
+      initialBorder: 0,
+      leftTitles: [
+        {
+          text: 'index.html'
+        },
+        {
+          text: 'aaa'
+        }
+      ],
+      rightTitles: [
+        {
+          text: 'style.css'
+        }
+      ]
     }
   },
   computed: {
@@ -534,7 +575,10 @@ export default {
   },
   watch: {},
   mounted() {
-    console.log('df')
+    let leftTitle = document.querySelector('.left-title')
+    let rightTitle = document.querySelector('.right-title')
+    leftTitle.style.backgroundColor = '#3f3f3f'
+    rightTitle.style.backgroundColor = '#3f3f3f'
     if (this.enabled) {
       this.vsMode = 'vs-dark'
     } else {
@@ -861,6 +905,25 @@ export default {
     this.hasht = h
   },
   methods: {
+    addJS() {
+      var example = {
+        text: 'sample'
+      }
+      this.rightTitles.push(example)
+
+      let rightTitle = document.querySelector('.showSource')
+      // let leftTitle = document.querySelectorAll('.left-title')
+
+      let editor = document.querySelector('#board')
+      let newRightTitle = document.createElement('div')
+      newRightTitle.classList.add('right-title')
+      newRightTitle.classList.add('hidden')
+      newRightTitle.setAttribute('id', 'right-title' + this.rightTitleIndex)
+
+      rightTitle.parentElement.appendChild(newRightTitle)
+
+      this.rightTitleIndex++
+    },
     moveBorder(e) {
       this.moveLine = true
       this.initialBorder = e.target.getBoundingClientRect().left
@@ -2294,29 +2357,35 @@ export default {
       display: flex;
       align-items: center;
       flex-direction: column;
-      justify-content: left;
-      .htmlTitle {
-        height: 5%;
+      justify-content: center;
+      .leftTitle,
+      .rightTitle {
+        display: flex;
+        flex-direction: row;
+        align-items: left;
+        height: 1.7rem;
         width: 100%;
-        padding-left: 0.2rem;
-        background-image: linear-gradient(to bottom, #48545a, #3d484d);
-        // background-color: #2c3e50;?
-        padding-right: 0.2rem;
-        color: #ccc;
         cursor: pointer;
+        .left-title,
+        .right-title {
+          // background-color: #3f3f3f;
+          padding-right: 0.25rem;
+          padding-left: 0.25rem;
+          display: flex;
+          flex-direction: row;
+          height: 100%;
+          .title-text {
+            margin-right: 0.3rem;
+            color: #ccc;
+          }
+          .close-icon {
+            width: 0.7rem;
+            padding-right: 0.1rem;
+          }
+        }
       }
-      .cssTitle {
-        height: 5%;
-        width: 100%;
-        color: #ccc;
-        padding-left: 0.2rem;
-        padding-right: 0.2rem;
-        background-image: linear-gradient(to bottom, #48545a, #3d484d);
-        // background-color: #2c3e50;
-        cursor: pointer;
-      }
-      .showSorce {
-        height: 95%;
+      .showSource {
+        height: calc(100% - 1.7rem);
         width: 100%;
         .tab-pane {
           .showCode {
