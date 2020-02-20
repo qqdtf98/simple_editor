@@ -18,21 +18,16 @@
           @mousedown="mousedown"
         >
           <div id="board" class="board">
+            
+            <!--
             <div class="sample-component">
               <img
                 src="../assets/images/plus.svg"
                 @click="addCode"
                 class="sample-add-btn"
               />
-              <!-- <div class="line" />
-              <div class="verti" /> -->
-            </div>
-            <!-- <Dashboard />
-            <Dashboard />
-            <Dashboard />
-            <spliter />
-            <HtmlLoader class="navi" />
-            <Navi class="navi" /> -->
+            </div> -->
+
           </div>
         </div>
       </vue-custom-scrollbar>
