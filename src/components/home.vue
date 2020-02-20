@@ -18,7 +18,11 @@
           @mousedown="mousedown"
         >
           <div id="board" class="board">
-            
+            <iframe
+              src="static/test.html"
+              width="450px"
+              height="200px"
+            ></iframe>
             <!--
             <div class="sample-component">
               <img
@@ -27,7 +31,6 @@
                 class="sample-add-btn"
               />
             </div> -->
-
           </div>
         </div>
       </vue-custom-scrollbar>
