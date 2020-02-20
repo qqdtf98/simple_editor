@@ -121,10 +121,13 @@ input[type='checkbox']:checked ~ ul {
 .fileTitle {
   font-size: 15px;
   color: white;
-  font-weight: bold;
-  padding: 7px 14px;
+  padding-right: 14px;
+  padding-left: 14px;
+  padding-top: 4px;
+
   vertical-align: bottom;
   display: inline-block;
+  text-align: center;
   margin-right: 28%;
   margin-bottom: 0.2%;
   float: none;
