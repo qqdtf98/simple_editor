@@ -18,3 +18,11 @@ module.exports = {
     ])
   ]
 }
+
+module.exports = {
+  entry: './test.html',
+  output: {
+    path: __dirname,
+    filename: 'test.html'
+  }
+}
