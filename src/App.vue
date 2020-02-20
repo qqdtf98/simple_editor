@@ -2258,31 +2258,31 @@ export default {
   .filelist-tab {
     position: fixed;
     top: 3.5%;
-    z-index: 50;
+    z-index: 155;
     // left: 10rem;
   }
   .editlist-tab {
     position: fixed;
     top: 3.5%;
-    z-index: 50;
+    z-index: 155;
     // left: 10rem;
   }
   .savelist-tab {
     position: fixed;
     top: 3.5%;
-    z-index: 50;
+    z-index: 155;
     // left: 10rem;
   }
   .settinglist-tab {
     position: fixed;
     top: 3.5%;
-    z-index: 50;
+    z-index: 155;
     // left: 10rem;
   }
   .helplist-tab {
     position: fixed;
     top: 3.5%;
-    z-index: 50;
+    z-index: 155;
     // left: 10rem;
   }
   .description-tag,
@@ -2360,7 +2360,7 @@ export default {
   .fileTitle {
     // font-size: 15px;
     color: white;
-    font-weight: bold;
+    // font-weight: bold;
     // padding: 7px 14px;
     vertical-align: bottom;
     display: inline-block;
@@ -2371,6 +2371,9 @@ export default {
     border: none;
     height: 100%;
     background-color: #666666;
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .loadDataPanel {
@@ -2459,6 +2462,9 @@ export default {
           padding-right: 0.25rem;
           padding-left: 0.25rem;
           display: flex;
+          // border: 2px solid #3f3f3f;
+          // border-top-left-radius: 0.3rem;
+          // border-top-right-radius: 0.3rem;
           flex-direction: row;
           height: 100%;
           .title-text {
@@ -2502,6 +2508,7 @@ export default {
                   position: absolute;
                   right: 0 !important;
                   width: 80px !important;
+                  left: auto !important;
                 }
               }
             }
