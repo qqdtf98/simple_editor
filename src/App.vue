@@ -170,7 +170,11 @@
                     <div @click="changeSourceTab" class="title-text">
                       {{ leftTitle.text }}
                     </div>
-                    <img class="close-icon" src="./assets/images/close.svg" />
+                    <img
+                      @click="closeSource"
+                      class="close-icon"
+                      src="./assets/images/close.svg"
+                    />
                   </div>
                 </div>
                 <div class="leftSource" id="leftSource">
@@ -188,34 +192,6 @@
                       ></div>
                     </div>
                   </div>
-                  <div
-                    v-show="tabStep === 2"
-                    class="tab-pane"
-                    id="pills-profile"
-                    role="tabpanel"
-                    aria-labelledby="pills-profile-tab"
-                  ></div>
-                  <div
-                    v-show="tabStep === 3"
-                    class="tab-pane"
-                    id="pills-contact"
-                    role="tabpanel"
-                    aria-labelledby="pills-contact-tab"
-                  >
-                    <div class="showCode">
-                      <textarea class="showJS" v-model="js" id="preview3">
-불러올 데이터가 없습니다. </textarea
-                      >
-                      <input
-                        style="float:left;"
-                        type="submit"
-                        value="Apply"
-                        @click="inputFile"
-                        id="getfile"
-                        accept="text/*"
-                      />
-                    </div>
-                  </div>
                 </div>
               </div>
               <div @mousedown="moveBorder" class="center-border"></div>
@@ -229,7 +205,11 @@
                     <div @click="changeSourceTab" class="title-text">
                       {{ rightTitle.text }}
                     </div>
-                    <img class="close-icon" src="./assets/images/close.svg" />
+                    <img
+                      @click="closeSource"
+                      class="close-icon"
+                      src="./assets/images/close.svg"
+                    />
                   </div>
                 </div>
                 <div class="rightSource" id="rightSource">
@@ -245,34 +225,6 @@
                         ref="editor"
                         @change="onCodeChange"
                       ></div>
-                    </div>
-                  </div>
-                  <div
-                    v-show="tabStep === 2"
-                    class="tab-pane"
-                    id="pills-profile"
-                    role="tabpanel"
-                    aria-labelledby="pills-profile-tab"
-                  ></div>
-                  <div
-                    v-show="tabStep === 3"
-                    class="tab-pane"
-                    id="pills-contact"
-                    role="tabpanel"
-                    aria-labelledby="pills-contact-tab"
-                  >
-                    <div class="showCode">
-                      <textarea class="showJS" v-model="js" id="preview3">
-불러올 데이터가 없습니다. </textarea
-                      >
-                      <input
-                        style="float:left;"
-                        type="submit"
-                        value="Apply"
-                        @click="inputFile"
-                        id="getfile"
-                        accept="text/*"
-                      />
                     </div>
                   </div>
                 </div>
@@ -551,16 +503,22 @@ export default {
       idSelected: 'board',
       vsMode: '',
       select: null,
+      currentRightTab: null,
+      currentLeftTab: null,
       moveLine: false,
       initialBorder: 0,
       leftTitles: [
         {
-          text: 'index.html'
+          text: 'index.html',
+          code: '',
+          type: 'html'
         }
       ],
       rightTitles: [
         {
-          text: 'style.css'
+          text: 'style.css',
+          code: '',
+          type: 'css'
         }
       ]
     }
@@ -578,6 +536,8 @@ export default {
   },
   watch: {},
   mounted() {
+    this.currentRightTab = 0
+    this.currentLeftTab = 0
     let leftTitle = document.querySelector('.left-title')
     let rightTitle = document.querySelector('.right-title')
     leftTitle.style.backgroundColor = '#3f3f3f'
@@ -633,6 +593,7 @@ export default {
       document.getElementById(
         this.idSelected
       ).innerHTML = this.editor1.getValue()
+      this.leftTitles[this.currentLeftTab].code = this.editor2.getValue()
       // editor.setValue(editor.getValue())1
       // console.log(document.getElementById(id).innerHTML)
       // console.log(this.codeReview.get(id).getValue())
@@ -669,6 +630,7 @@ export default {
       //     }
       // }
 
+      this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
       // var vScript = document.createElement('script');
 
       // '<style type="text/css">' + this.editor2.getValue() + '</style>'
@@ -953,6 +915,58 @@ export default {
     this.hasht = h
   },
   methods: {
+    closeSource(e) {
+      console.log('close')
+      let i
+      let num
+      for (
+        i = 0;
+        i < e.target.parentElement.parentElement.children.length;
+        i++
+      ) {
+        if (
+          e.target.parentElement.parentElement.children[i] ===
+          e.target.parentElement
+        ) {
+          if (i === 0) {
+            // e.target.parentElement.parentElement.children[
+            //   i + 1
+            // ].style.backgroundColor = '#3f3f3f'
+            // e.target.parentElement.parentElement.children[
+            //   i
+            // ].style.backgroundColor = '#23282b'
+          } else {
+            e.target.parentElement.parentElement.children[
+              i - 1
+            ].style.backgroundColor = '#3f3f3f'
+            e.target.parentElement.parentElement.children[
+              i
+            ].style.backgroundColor = '#23282b'
+          }
+
+          break
+        }
+      }
+      if (e.target.parentElement.className === 'right-title') {
+        this.rightTitles.splice(i, 1)
+        if (i === 0) {
+          this.currentRightTab = i
+          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
+        } else {
+          this.currentRightTab = i - 1
+          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
+        }
+      } else if (e.target.parentElement.className === 'left-title') {
+        this.leftTitles.splice(i, 1)
+        if (i === 0) {
+          this.currentLeftTab = i
+          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+        } else {
+          this.currentLeftTab = i - 1
+          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+        }
+      }
+    },
     changeSourceTab(e) {
       let i
       let num
@@ -973,29 +987,31 @@ export default {
           ].style.backgroundColor = '#23282b'
         }
       }
-      let j
+      this.currentRightTab = num
       if (e.target.parentElement.className === 'right-title') {
-        let source = document.querySelectorAll('.rightSource')
-        for (j = 0; j < source.length; j++) {
-          if (j === num) {
-            source[j].classList.remove('hidden')
-            source[j].classList.add('display')
-          } else {
-            source[j].classList.remove('display')
-            source[j].classList.add('hidden')
-          }
-        }
+        this.editor2.setValue(this.rightTitles[num].code)
+        // let source = document.querySelectorAll('.rightSource')
+        // for (j = 0; j < source.length; j++) {
+        //   if (j === num) {
+        //     source[j].classList.remove('hidden')
+        //     source[j].classList.add('display')
+        //   } else {
+        //     source[j].classList.remove('display')
+        //     source[j].classList.add('hidden')
+        //   }
+        // }
       } else if (e.target.parentElement.className === 'left-title') {
-        let source = document.querySelectorAll('.leftSource')
-        for (j = 0; j < source.length; j++) {
-          if (j === num) {
-            source[j].classList.remove('hidden')
-            source[j].classList.add('display')
-          } else {
-            source[j].classList.remove('display')
-            source[j].classList.add('hidden')
-          }
-        }
+        this.editor1.setValue(this.leftTitles[num].code)
+        // let source = document.querySelectorAll('.leftSource')
+        // for (j = 0; j < source.length; j++) {
+        //   if (j === num) {
+        //     source[j].classList.remove('hidden')
+        //     source[j].classList.add('display')
+        //   } else {
+        //     source[j].classList.remove('display')
+        //     source[j].classList.add('hidden')
+        //   }
+        // }
       }
     },
     generateCode(id) {
@@ -1008,23 +1024,24 @@ export default {
     },
     addJS() {
       var example = {
-        text: 'sample'
+        text: 'sample',
+        code: '',
+        type: null
       }
       this.rightTitles.push(example)
 
-      let rightSource = document.querySelector('.rightSource')
-      // let leftTitle = document.querySelectorAll('.left-title')
+      // let rightSource = document.querySelector('.rightSource')
 
-      let source = document.querySelector('#rightSource')
-      let newRightTitle = source.cloneNode(true)
+      // let source = document.querySelector('#rightSource')
+      // let newRightTitle = source.cloneNode(true)
 
-      newRightTitle.classList.add('rightSource')
-      newRightTitle.classList.add('hidden')
-      newRightTitle.setAttribute('id', 'rightSource' + this.rightSourceIndex)
+      // newRightTitle.classList.add('rightSource')
+      // newRightTitle.classList.add('hidden')
+      // newRightTitle.setAttribute('id', 'rightSource' + this.rightSourceIndex)
 
-      rightSource.parentElement.appendChild(newRightTitle)
+      // rightSource.parentElement.appendChild(newRightTitle)
 
-      this.rightSourceIndex++
+      // this.rightSourceIndex++
     },
     moveBorder(e) {
       this.moveLine = true
@@ -1861,7 +1878,7 @@ export default {
     position: fixed;
     left: 3.5%;
     background-color: #292931;
-    z-index: 33;
+    z-index: 151;
     top: 3.5%;
   }
 
@@ -1883,7 +1900,7 @@ export default {
     position: fixed;
     left: 3.5%;
     background-color: #292931;
-    z-index: 30;
+    z-index: 151;
     top: 3.5%;
   }
 
@@ -2072,7 +2089,7 @@ export default {
           width: 100%;
           height: 100%;
           background-color: #292931;
-          z-index: 33;
+          z-index: 151;
         }
       }
       .right-bottom-panel {
@@ -2085,6 +2102,7 @@ export default {
           width: 100%;
           height: 100%;
           border: 1px solid #525252;
+          z-index: 150;
           // border-top : none;
           .tree-name-box {
             background-color: #292931;
@@ -2396,7 +2414,7 @@ export default {
 
   .loadDataPanel {
     width: 80%;
-    z-index: 10000;
+    z-index: 100;
     border: 1px solid #525252;
     position: fixed;
     bottom: 3%;
@@ -2508,6 +2526,7 @@ export default {
               .overflow-guard {
                 width: 100% !important;
                 height: 100% !important;
+                position: relative;
                 .margin {
                   border: none;
                   // border-left: 1.5px solid #4f4f86a6;
@@ -2519,6 +2538,8 @@ export default {
                   width: calc(100% - 135px) !important;
                 }
                 .minimap {
+                  position: absolute;
+                  right: 0 !important;
                   width: 80px !important;
                 }
               }
