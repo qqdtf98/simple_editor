@@ -142,7 +142,7 @@
           <div v-show="isData" class="loadDataPanel">
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
-              <span class="studio-text">CodeReview</span>
+              <span @click="testtt" class="studio-text">CodeReview</span>
 
               <div class="manualatag">
                 mode
@@ -244,6 +244,7 @@
             ref="layout"
             @userSelectedWidth="userSelectedWidth"
             @stick="layoutStick"
+            @manualSelet="manualSelet"
             class="layout"
           />
         </div>
@@ -276,6 +277,7 @@
               v-show="!showhtml"
               class="filecontent"
             />
+            <div class="testYap" data-event="zzzzz"></div>
           </div>
         </div>
       </div>
@@ -396,6 +398,7 @@ export default {
   name: 'App',
   data() {
     return {
+      zzzzz: 3,
       borderWidth: [
         { text: 'White' },
         { text: 'Black' },
@@ -410,6 +413,7 @@ export default {
       //   selectOnLineNumbers: true
       // },
       // code: 'const noop = () => {}',
+      css: '',
       range: [0, 100],
       payload: '',
       data: '',
@@ -426,6 +430,7 @@ export default {
       selectedTemplate: null,
       selectedTag: null,
       hasht: null,
+      manualScript: null,
       isPustHtml: true,
       viewTemplate: false,
       isCtrl: false,
@@ -536,6 +541,7 @@ export default {
   },
   watch: {},
   mounted() {
+    ///
     this.currentRightTab = 0
     this.currentLeftTab = 0
     let leftTitle = document.querySelector('.left-title')
@@ -550,11 +556,14 @@ export default {
     console.log(monaco.editor)
     let container = document.getElementById('leftContainer')
 
-    this.code = document.getElementById(this.idSelected).innerHTML
+    this.code = document.getElementById('userScreenIframe')
+    console.log('나와라참')
+    console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
+    console.log(document.getElementById('userScreenIframe').body)
     this.editor1 = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
-        value: this.code,
+        value: '코드를 입력해주세요',
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -564,9 +573,15 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
+    this.editor1.onMouseMove(function(e) {
+      if (e.target.element.className == 'view-line')
+        console.log(e.target.position.lineNumber)
+    })
+
     // this.css = document.querySelector('#board').style
     // console.log(document.querySelector('#board').style)
 
+    //////
     const percentBar = document.querySelector('#board')
     let compStyles = window.getComputedStyle(percentBar)
     for (var key in percentBar.style) {
@@ -578,7 +593,7 @@ export default {
     this.editor2 = monaco.editor.create(
       document.getElementById('rightContainer'),
       {
-        value: this.css,
+        value: '코드를 입력해주세요',
         language: 'css',
         theme: 'vs-dark',
         height: 100,
@@ -590,10 +605,13 @@ export default {
     )
 
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
-      document.getElementById(
-        this.idSelected
-      ).innerHTML = this.editor1.getValue()
-      this.leftTitles[this.currentLeftTab].code = this.editor2.getValue()
+      // document.getElementById(
+      //   this.idSelected
+      // ).innerHTML = this.editor1.getValue()
+      $('iframe').get(0).contentWindow.document.body.innerHTML =
+        this.editor1.getValue() + '<style>' + this.css + '</style>'
+      console.log('fds')
+      this.$refs.overview.printHomeDocument()
       // editor.setValue(editor.getValue())1
       // console.log(document.getElementById(id).innerHTML)
       // console.log(this.codeReview.get(id).getValue())
@@ -609,19 +627,31 @@ export default {
 
     var myBinding2 = this.editor2.onDidContentSizeChange(e => {
       // var sss = document.createElement('link')
-      // sss.setAttribute('rel','stylesheet')
-      // sss.setAttribute('href','scss/main.scss')
-      // document.getElementsByTagName('head')[0].appendChild(sss)
+      // sss.setAttribute('rel', 'stylesheet')
+      // sss.setAttribute('href', 'style.css')
+      // sss.setAttribute('type', 'style.css')
+      // sss.innerHTML = this.editor2.getValue()
+      // $('iframe')
+      //   .get(0)
+      //   .contentWindow.document.getElementsByTagName('head')[0]
+      //   .appendChild(sss)
+      $('iframe')
+        .get(0)
+        .contentWindow.document.getElementsByTagName(
+          'style'
+        )[0].innerHTML = this.editor2.getValue()
+      this.css = this.editor2.getValue()
+      // console.log(sss)
+      ///////////
+      // var test = document.querySelector('#jumsimmuk')
+      // var text = this.editor2.getValue()
+      // console.log(text)
+      // text = text.replace(/}/gi, '} #board ')
+      // console.log(text)
+      // test.innerHTML = '#board ' + text
 
-      var test = document.querySelector('#jumsimmuk')
-      var text = this.editor2.getValue()
-      console.log(text)
-      text = text.replace(/}/gi, '} #board ')
-      console.log(text)
-      test.innerHTML = '#board ' + text
-
-      console.log(test)
-
+      // console.log(test)
+      ////////////////
       // const percentBar = document.querySelector("#app");
       // let compStyles = window.getComputedStyle(percentBar)
       // for(var key in percentBar.style) {
@@ -630,7 +660,7 @@ export default {
       //     }
       // }
 
-      this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
+      // this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
       // var vScript = document.createElement('script');
 
       // '<style type="text/css">' + this.editor2.getValue() + '</style>'
@@ -913,8 +943,72 @@ export default {
       'Thumbnails are a variation of the Bootstrap 4 Card component. They can include a header image, title, description and action buttons or links.'
 
     this.hasht = h
+
+    var manual = {}
+    manual['blur'] = '이미지의 블러 효과를 설정합니다.'
+    manual['brightness'] = '이미지의 고 어두움 정도를 설정합니다.'
+    manual['contrast'] = '이미지의 대비를 설정합니다.'
+    manual['grayscale'] = '이미지의 그레이스케일를 설정합니다.'
+    manual['hue'] = '이미지의 색조를 설정합니다.'
+    manual['invert'] = '이미지를 반전합니다.'
+    manual['opacity'] = '이미지의 투명도를 설정합니다.'
+    manual['saturate'] = '이미지의 채도를 설정합니다.'
+    manual['sepia'] = '이미지의 세피아 효과를 설정합니다.'
+
+    this.manualScript = manual
   },
   methods: {
+    testtt(e) {
+      console.log(
+        window.parent.document
+          .getElementsByTagName('body')[0]
+          .querySelector('.testYap').dataset.event
+      )
+      // this.currentRightTab = 0
+      // this.currentLeftTab = 0
+      // let leftTitle = document.querySelector('.left-title')
+      // let rightTitle = document.querySelector('.right-title')
+      // leftTitle.style.backgroundColor = '#3f3f3f'
+      // rightTitle.style.backgroundColor = '#3f3f3f'
+      // if (this.enabled) {
+      //   this.vsMode = 'vs-dark'
+      // } else {
+      //   this.vsMode = 'vs'
+      // }
+      // console.log(monaco.editor)
+      // let container = document.getElementById('leftContainer')
+
+      // this.code = document.getElementById('userScreenIframe')
+      console.log('나와라참')
+      console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
+      console.log(
+        $('iframe')
+          .get(0)
+          .contentWindow.document.getElementsByTagName('head')[0]
+      )
+      console.log(
+        $('iframe')
+          .get(0)
+          .contentWindow.document.getElementsByTagName('style')[0].innerHTML
+      )
+      console.log($('iframe'))
+      console.log($('iframe').get(0).parentElement)
+      // this.editor1 = monaco.editor.create(
+      //   document.getElementById('leftContainer'),
+      //   {
+      //     value: this.code,
+      //     language: 'html',
+      //     theme: 'vs-dark',
+      //     height: 100,
+      //     accessibilityPageSize: 4,
+      //     lineDecorationsWidth: 10,
+      //     mouseWheelZoom: true
+      //     // find: 'IEditorFindOptions',
+      //   }
+      // )
+      // this.css = document.querySelector('#board').style
+      // console.log(document.querySelector('#board').style)
+    },
     closeSource(e) {
       console.log('close')
       let i
@@ -1843,6 +1937,24 @@ export default {
     onCodeChange(e) {
       console.log(e)
       // console.log(e.target.value)
+    },
+    manualSelet(payload) {
+      if (payload.target.tagName == 'A') {
+        this.tagDescription = true
+        this.uiDescription = false
+        this.$nextTick(() => {
+          let text = document.querySelector('.description-tag')
+          let stu = document.querySelector('#layout')
+          text.innerHTML = this.manualScript['blur']
+
+          console.log(stu)
+          text.style.right = stu.getBoundingClientRect().right + 'px'
+          text.style.top = payload.target.getBoundingClientRect().top - 8 + 'px'
+        })
+      } else {
+        this.tagDescription = false
+        this.uiDescription = false
+      }
     }
   }
 }

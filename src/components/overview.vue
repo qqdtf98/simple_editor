@@ -55,10 +55,13 @@ export default {
       this.printHomeDocument()
     },
     printHomeDocument() {
-      var child = document.getElementById(this.loadId).children
+      // var child = document.getElementById(this.loadId).children
+      var child = $('iframe').get(0).contentWindow.document.body
+      console.log(child)
+
       // console.log(child)
 
-      child = child[0]
+      // child = child[0]
       // console.log(child.children)
       // console.log(child[1].children)
 
@@ -66,6 +69,10 @@ export default {
       // var idOjb = "aa"
       // 자식
       var obj = document.getElementById('bodySource')
+      $(obj).empty()
+      this.childNum = 0
+      this.friendNum = 0
+      this.intent = 10
       var newDIV = document.createElement('li')
       // newDIV.innerHTML = child[i].tagName;
       newDIV.setAttribute('id', this.childNum)

@@ -19,9 +19,11 @@
         >
           <div id="board" class="board">
             <iframe
+              name="iframe1"
+              id="userScreenIframe"
               src="static/test.html"
-              width="450px"
-              height="200px"
+              width="100%"
+              height="100%"
             ></iframe>
             <!--
             <div class="sample-component">
@@ -178,6 +180,7 @@ export default {
   },
   mounted() {
     // let b = document.querySelector('.3')
+
     this.multiSelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
       e.preventDefault()

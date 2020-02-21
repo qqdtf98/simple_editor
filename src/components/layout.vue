@@ -660,6 +660,7 @@
                 role="tabpanel"
                 aria-labelledby="headingOne"
                 data-parent="#accordion"
+                @mouseover="mouseOverFilter"
               >
                 <div class="card-body">
                   <div
@@ -672,13 +673,13 @@
                   >
                     <div class="card-body">
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onOpacity }"
                           style="float:left"
                         >
                           Opacity
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -700,13 +701,13 @@
                       </div>
 
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onBlur }"
                           style="float:left"
                         >
                           Blur
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -727,13 +728,13 @@
                         />
                       </div>
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onBrightness }"
                           style="float:left"
                         >
                           Brightness
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -755,13 +756,13 @@
                       </div>
 
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onContrast }"
                           style="float:left"
                         >
                           Contrast
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -782,13 +783,13 @@
                         />
                       </div>
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onGrayscale }"
                           style="float:left"
                         >
                           Grayscale
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -809,13 +810,13 @@
                         />
                       </div>
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onHue }"
                           style="float:left"
                         >
                           Hue
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -836,13 +837,13 @@
                         />
                       </div>
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onInvert }"
                           style="float:left"
                         >
                           Invert
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -863,13 +864,13 @@
                         />
                       </div>
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onSaturate }"
                           style="float:left"
                         >
                           Saturate
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -890,13 +891,13 @@
                         />
                       </div>
                       <div class="row filter">
-                        <span
+                        <a
                           class="filterSpan"
                           :class="{ fontActive: onSepia }"
                           style="float:left"
                         >
                           Sepia
-                        </span>
+                        </a>
                         <range-slider
                           class="slider"
                           min="0"
@@ -2176,10 +2177,16 @@ export default {
     mouseOver(e) {
       // console.log(e.target.tagName)
       if (e.target.tagName == 'SPAN') {
-        this.$emit('manualSelet', e.target.tagName)
+        // this.$emit('manualSelet', e.target.tagName)
       } else {
-        this.$emit('manualSelet', e.target.tagName)
+        // this.$emit('manualSelet', e.target.tagName)
       }
+    },
+    mouseOverFilter(e){
+      console.log(e.target.tagName)
+      
+      this.$emit('manualSelet', e)
+      
     },
     onCodeChange(e) {
       console.log(e)
