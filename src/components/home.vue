@@ -19,9 +19,10 @@
         >
           <div id="board" class="board">
             <iframe
+              id="filecontainer"
               src="static/test.html"
-              width="450px"
-              height="200px"
+              width="100%"
+              height="100%"
             ></iframe>
             <!--
             <div class="sample-component">
@@ -126,6 +127,7 @@ export default {
   },
   data() {
     return {
+      sample: 'aaaaaaaaaaaaaaaff',
       selectedElement: null,
       borderstyle: null,
       onelementSelected: false,
@@ -177,6 +179,21 @@ export default {
     }
   },
   mounted() {
+    let homeDoc = this
+    $(document).ready(function() {
+      // console.log(
+      //   document.body.children[0].children[1].children[1].children[1]
+      //     .children[0].children[0].children[0].children[0].children[0]
+      //     .children[0].children[0]
+      // )
+      var iframe = $('iframe')
+      iframe.get(0).contentDocument.addEventListener('click', e => {
+        // console.log(e)
+        homeDoc.onmouseClick(e)
+        // console.log(me)
+      })
+    })
+
     // let b = document.querySelector('.3')
     this.multiSelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
