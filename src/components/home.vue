@@ -18,6 +18,7 @@
         >
           <div id="board" class="board">
             <iframe
+              name="iframe1"
               id="filecontainer"
               src="static/test.html"
               width="100%"
@@ -284,6 +285,7 @@ export default {
     })
 
     // let b = document.querySelector('.3')
+
     this.multiSelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
       e.preventDefault()
