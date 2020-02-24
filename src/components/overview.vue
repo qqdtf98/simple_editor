@@ -6,11 +6,7 @@
           <li>
             <input class="checkbox" type="checkbox" id="root" />
             <label for="root">HTML</label>
-            <ul>
-              <li>
-                <input class="checkbox" type="checkbox" id="node3" />
-                <label for="node3">Body</label>
-                <ul
+            <ul
                   id="bodySource"
                   @mousemove="onmouseMove"
                   @click="clickLabelEvent"
@@ -61,7 +57,7 @@ export default {
 
       // console.log(child)
 
-      // child = child[0]
+      // child = child[0djjdjfs]
       // console.log(child.children)
       // console.log(child[1].children)
 
@@ -70,7 +66,7 @@ export default {
       // 자식
       var obj = document.getElementById('bodySource')
       $(obj).empty()
-      this.childNum = 0
+      this.childNum = 10000
       this.friendNum = 0
       this.intent = 10
       var newDIV = document.createElement('li')
@@ -113,8 +109,8 @@ export default {
 
       var newDIV = document.createElement('ul')
       // newDIV.innerHTML = child[i].tagName;
-      this.intent += 10
-      newDIV.setAttribute('style', 'text-indent:' + this.intent + 'px')
+      var intent = 10
+      newDIV.setAttribute('style', 'text-indent:' + intent + 'px')
       newDIV.setAttribute('id', this.childNum)
       obj.appendChild(newDIV)
 
@@ -124,9 +120,9 @@ export default {
       // console.log(obj)
       this.myParent.push(-1)
 
-      this.findChildren(child, newParentObj, 0)
+      this.findChildren(child, newParentObj, 0,intent)
     },
-    findChildren(child, obj, myParent) {
+    findChildren(child, obj, myParent,intent) {
       if (typeof child.children !== 'undefined') {
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
@@ -183,8 +179,7 @@ export default {
             var newDIV = document.createElement('ul')
             // newDIV.innerHTML = child[i].tagName;
             newDIV.setAttribute('id', this.childNum)
-            this.intent += 10
-            newDIV.setAttribute('style', 'text-indent:' + this.intent + 'px')
+            newDIV.setAttribute('style', 'text-indent:' + intent + 'px')
             // newDIV.style.backgroundColor="yellow";
             newParentObj.appendChild(newDIV)
             this.myParent.push(myParent)
@@ -193,17 +188,19 @@ export default {
             this.findChildren(
               childOFchil[i],
               newOriginalParentObj,
-              this.friendNum
+              this.friendNum,
+              intent+10
             )
           }
         }
       }
     },
     domSelection(payload) {
+      console.log(this.dom.length)
       for (var i = 0; i < this.dom.length; i++) {
         // console.log(this.isActiveLabel)
-        // console.log(this.isActiveLabel[i])
-        $(`label[for="${i}"]`).trigger('click')
+
+        if (this.isActiveLabel[i]) $(`label[for="${i}"]`).trigger('click')
       }
 
       // console.log(this.isActiveLabel)
@@ -213,7 +210,7 @@ export default {
       //   console.log(i+"번째")
       //   console.log(this.myParent[i])
       // }
-
+      console.log(payload)
       for (var i = 0; i < this.dom.length; i++) {
         if (payload === this.dom[i]) {
           // console.log(i)

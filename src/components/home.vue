@@ -1345,7 +1345,12 @@ export default {
             e.target.className !== 'editor-box' &&
             e.target.className !== 'scroll-area'
           ) {
-            this.$emit('componentSelected', e)
+            this.multiSelectedElement.add(e.target)
+            if (this.setSize !== this.multiSelectedElement.size) {
+              this.multiElementParent.push(e.target.parentElement)
+            }
+            this.setSize = this.multiSelectedElement.size
+            this.$emit('componentSelected', this.multiSelectedElement)
           }
         }
         if (this.mode) {

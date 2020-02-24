@@ -416,6 +416,7 @@ export default {
       css: '',
       range: [0, 100],
       payload: '',
+      dataPayload: '',
       data: '',
       homeLayoutLocation: '',
       isSticklayout: true,
@@ -556,10 +557,10 @@ export default {
     console.log(monaco.editor)
     let container = document.getElementById('leftContainer')
 
-    this.code = document.getElementById('userScreenIframe')
+    this.code = document.getElementById('filecontainer')
     console.log('나와라참')
     console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
-    console.log(document.getElementById('userScreenIframe').body)
+    console.log(document.getElementById('filecontainer').body)
     this.editor1 = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
@@ -1786,13 +1787,19 @@ export default {
 
       console.log('이제 보낸다')
       console.log(payload)
-
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
+      for (let item of payload) {
+        console.log(item)
+        console.log(this.dataPayload)
+        this.dataPayload = item
+      }
+      console.log(this.dataPayload)
+
       if (this.isPustHtml) {
         this.isPustHtml = false
         this.$refs.overview.printHomeDocument()
       }
-      this.$refs.overview.domSelection(payload.target)
+      this.$refs.overview.domSelection(this.dataPayload)
       this.$refs.layout.isData = true
       this.$refs.layout.makeTreeParent(this.payload)
     },
