@@ -532,6 +532,13 @@ export default {
     })
   },
   methods: {
+    uploadImage() {
+      let uploadImg = document.createElement('input')
+
+      // console.log(editor.parentElement);
+
+      this.clickedElement.appendChild(uploadImg)
+    },
     addCode(e) {
       this.$emit('open-code', e)
     },

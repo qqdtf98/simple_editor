@@ -4,6 +4,7 @@
       <li @click="calcAverageWidth">너비 평균 크기로 맞춤</li>
       <li @click="calcAverageHeight">높이 평균 크기로 맞춤</li>
       <li @click="multiDelete">다중 삭제</li>
+      <li @click="uploadImage">이미지 업로드</li>
       <li @click="addMouseEvent">마우스 이벤트</li>
       <li @click="comment">comment</li>
     </ol>
@@ -35,6 +36,9 @@ export default {
     this.multiSelectedElement = new Set()
   },
   methods: {
+    uploadImage() {
+      this.$emit('upload-image')
+    },
     multiState(state, elem, parent) {
       this.state = state
       this.multiSelectedElement = elem
