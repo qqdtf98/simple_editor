@@ -547,6 +547,7 @@ export default {
       //연결안되어있음
     },
     onmouseMove(e) {
+      let board = document.querySelector('.board')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
@@ -579,17 +580,21 @@ export default {
             let tag = document.querySelector('.tagname')
 
             tag.textContent = e.target.tagName
-            tag.style.left = this.selectedElement.left + 'px'
+            tag.style.left =
+              this.selectedElement.left +
+              board.getBoundingClientRect().left +
+              'px'
 
             tag.style.top =
-              this.selectedElement.top -
+              this.selectedElement.top +
+              board.getBoundingClientRect().top -
               tag.getBoundingClientRect().height +
               'px'
             let bottomBord = document.querySelector('.bottom-border')
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            let editorBox = document.querySelector('.editor-box')
+            // let editorBox= document.querySelector('.editor-box')
 
             let leftOver = false
             let rightOver = false
@@ -597,31 +602,36 @@ export default {
             let topOver = false
 
             if (
-              e.target.getBoundingClientRect().left <
-              editorBox.getBoundingClientRect().left
+              e.target.getBoundingClientRect().left +
+                board.getBoundingClientRect().left <
+              board.getBoundingClientRect().left
             ) {
               leftOver = true
             }
             if (
-              e.target.getBoundingClientRect().right >
-              editorBox.getBoundingClientRect().right
+              e.target.getBoundingClientRect().right +
+                board.getBoundingClientRect().left >
+              board.getBoundingClientRect().right
             ) {
               rightOver = true
             }
             if (
-              e.target.getBoundingClientRect().top <
-              editorBox.getBoundingClientRect().top
+              e.target.getBoundingClientRect().top +
+                board.getBoundingClientRect().top <
+              board.getBoundingClientRect().top
             ) {
               topOver = true
             }
             if (
-              e.target.getBoundingClientRect().bottom >
-              editorBox.getBoundingClientRect().bottom
+              e.target.getBoundingClientRect().bottom +
+                board.getBoundingClientRect().top >
+              board.getBoundingClientRect().bottom
             ) {
               bottomOver = true
             }
             if (leftOver && topOver && !rightOver && !bottomOver) {
               // left, top 벗어날 때
+              console.log('1')
               tag.style.display = 'none'
               leftBord.style.display = 'none'
               topBord.style.display = 'none'
@@ -630,30 +640,22 @@ export default {
 
               rightBord.style.left =
                 this.selectedElement.left +
+                board.getBoundingClientRect().left +
                 this.selectedElement.width -
                 2 +
                 'px'
-              rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.top = board.getBoundingClientRect().top + 'px'
               rightBord.style.height =
-                this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
-                2 +
-                'px'
-              bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
+              bottomBord.style.left = board.getBoundingClientRect().left + 'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
               bottomBord.style.width =
-                this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
-                  this.selectedElement.left) -
-                2 +
-                'px'
+                this.selectedElement.width + this.selectedElement.left + 'px'
               // 1
             } else if (!leftOver && topOver && !rightOver && !bottomOver) {
               // top 벗어날 때
@@ -665,31 +667,29 @@ export default {
 
               rightBord.style.left =
                 this.selectedElement.left +
+                board.getBoundingClientRect().left +
                 this.selectedElement.width -
                 2 +
                 'px'
-              rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.top = board.getBoundingClientRect().top + 'px'
               rightBord.style.height =
-                this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
-                2 +
-                'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height =
-                this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
-                2 +
-                'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
 
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
@@ -703,29 +703,35 @@ export default {
               leftBord.style.display = 'block'
               bottomBord.style.display = 'block'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 2 +
                 'px'
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
               // 3
             } else if (!leftOver && !topOver && rightOver && !bottomOver) {
+              console.log('3')
               // right 벗어날 때
               tag.style.display = 'block'
               leftBord.style.display = 'block'
@@ -733,29 +739,42 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'block'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height = this.selectedElement.height + 'px'
 
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
 
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
               // 4
@@ -767,21 +786,34 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'none'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
               // 5
@@ -793,27 +825,47 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'none'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
-              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width = this.selectedElement.width + 2 + 'px'
               // 6
             } else if (leftOver && !topOver && !rightOver && bottomOver) {
@@ -825,20 +877,33 @@ export default {
               bottomBord.style.display = 'none'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
-              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
-              topBord.style.left = editorBox.getBoundingClientRect().left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
                 2 +
                 'px'
@@ -852,27 +917,46 @@ export default {
               bottomBord.style.display = 'block'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
-              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height = this.selectedElement.height + 'px'
 
               topBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
                 1 +
                 'px'
 
               bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
               bottomBord.style.top =
-                this.selectedElement.top + this.selectedElement.height + 'px'
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                this.selectedElement.height +
+                'px'
               bottomBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
                 1 +
                 'px'
@@ -886,30 +970,40 @@ export default {
               bottomBord.style.display = 'block'
 
               topBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
 
               bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 6 +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
               // 9
@@ -922,27 +1016,37 @@ export default {
               bottomBord.style.display = 'none'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
               rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
               // 10
@@ -955,15 +1059,20 @@ export default {
               bottomBord.style.display = 'none'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
+                this.selectedElement.left +
+                this.selectedElement.width +
+                board.getBoundingClientRect().left +
+                'px'
               rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
               // 11
@@ -976,15 +1085,20 @@ export default {
               bottomBord.style.display = 'block'
 
               bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
-                this.selectedElement.top + this.selectedElement.height + 'px'
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                this.selectedElement.height +
+                'px'
               bottomBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
               // 12
@@ -996,15 +1110,20 @@ export default {
               topBord.style.display = 'none'
               bottomBord.style.display = 'none'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
               // 13
@@ -1017,14 +1136,20 @@ export default {
               bottomBord.style.display = 'none'
 
               topBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
               // 14
@@ -1035,32 +1160,50 @@ export default {
               rightBord.style.display = 'none'
               topBord.style.display = 'none'
               bottomBord.style.display = 'none'
-              // 14
+              // 15
             } else {
               tag.style.display = 'block'
               leftBord.style.display = 'block'
               topBord.style.display = 'block'
               rightBord.style.display = 'block'
               bottomBord.style.display = 'block'
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width = this.selectedElement.width + 'px'
               // bottomBord.style.display = 'none'?
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               leftBord.style.height = this.selectedElement.height + 'px'
               rightBord.style.left =
                 this.selectedElement.left +
-                this.selectedElement.width -
-                2 +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
                 'px'
-              rightBord.style.top = this.selectedElement.top + 'px'
-              rightBord.style.height = this.selectedElement.height + 'px'
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
+              rightBord.style.height = this.selectedElement.height + 2 + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
-                this.selectedElement.height -
-                2 +
+                board.getBoundingClientRect().top +
+                this.selectedElement.height +
                 'px'
               bottomBord.style.width = this.selectedElement.width + 'px'
             }
@@ -1552,19 +1695,45 @@ export default {
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
-            move.style.top = moveTop + 'px'
-            deleteIcon.style.top = moveTop + 'px'
-            copyIcon.style.top = moveTop + 'px'
+            move.style.top = moveTop + board.getBoundingClientRect().top + 'px'
+            deleteIcon.style.top =
+              moveTop + board.getBoundingClientRect().top + 'px'
+            copyIcon.style.top =
+              moveTop + board.getBoundingClientRect().top + 'px'
+            left_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              board.getBoundingClientRect().top +
+              'px'
+            right_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              board.getBoundingClientRect().top +
+              'px'
+            top_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              board.getBoundingClientRect().top +
+              'px'
+            bottom_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              this.clickedElement.getBoundingClientRect().height +
+              board.getBoundingClientRect().top +
+              'px'
           }
-          if (moveLeft > 300) {
+          if (moveLeft > 0) {
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
-            move.style.left = moveLeft + 'px'
+            move.style.left =
+              moveLeft + board.getBoundingClientRect().left + 'px'
             deleteIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) * 2 + 'px'
+              moveLeft +
+              board.getBoundingClientRect().left +
+              parseInt(getComputedStyle(move).width) * 2 +
+              'px'
             copyIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) + 'px'
+              moveLeft +
+              board.getBoundingClientRect().left +
+              parseInt(getComputedStyle(move).width) +
+              'px'
           } else {
             this.$nextTick(() => {
               this.isContentClicked = false
