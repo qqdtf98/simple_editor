@@ -15,12 +15,11 @@
           @dblclick="onmouseDoubleClick"
           @click="onmouseClick"
           @mousemove="onmouseMove"
-          @mousedown="mousedown"
         >
           <div id="board" class="board">
             <iframe
               name="iframe1"
-              id="userScreenIframe"
+              id="filecontainer"
               src="static/test.html"
               width="100%"
               height="100%"
@@ -128,6 +127,7 @@ export default {
   },
   data() {
     return {
+      sample: 'aaaaaaaaaaaaaaaff',
       selectedElement: null,
       borderstyle: null,
       onelementSelected: false,
@@ -179,6 +179,111 @@ export default {
     }
   },
   mounted() {
+    let homeDoc = this
+    $(document).ready(function() {
+      var iframe = $('iframe')
+      iframe.get(0).contentDocument.addEventListener('click', e => {
+        homeDoc.onmouseClick(e)
+      })
+      iframe.get(0).contentDocument.addEventListener('mousemove', e => {
+        window.dispatchEvent(
+          new CustomEvent('mousemove', {
+            detail: e
+          })
+        )
+        homeDoc.onmouseMove()
+      })
+      iframe.get(0).contentDocument.addEventListener('mouseup', e => {
+        if (homeDoc.isContentResizable) {
+          var style = {
+            work: 'style',
+            elem: homeDoc.clickedElement,
+            style: 'transform',
+            afterValue: `scale(${homeDoc.size})`,
+            value: `scale(${homeDoc.initialscale})`
+          }
+          homeDoc.$emit('stack-push', style)
+          homeDoc.isContentResizable = false
+        }
+        homeDoc.resizedirection = null
+        if (homeDoc.isContentMovable) {
+          homeDoc.clickedElement.style.filter = 'blur(0)'
+          if (homeDoc.mouseElem !== null) {
+            homeDoc.mouseElem.style.backgroundColor = '#3e8ce4'
+            if (homeDoc.clickedElement.className === '') {
+              console.log('없음')
+              var move = {
+                work: 'move',
+                position: homeDoc.clickedElement.parentElement,
+                elem: homeDoc.clickedElement,
+                afterMovePosition: homeDoc.movePosition.target
+              }
+              homeDoc.$emit('stack-push', move)
+              homeDoc.movePosition.target.appendChild(homeDoc.clickedElement)
+            } else {
+              let addComponent = document.getElementsByClassName(
+                homeDoc.clickedElement.classList.value
+              )
+              let i
+              // console.log(addComponent)
+              for (i = 0; i < addComponent.length; i++) {
+                if (addComponent[i] === homeDoc.clickedElement) {
+                  // console.log(i);
+                  // console.log(addComponent[i]);
+                  break
+                }
+              }
+              var move = {
+                work: 'move',
+                position: homeDoc.clickedElement.parentElement,
+                elem: homeDoc.clickedElement,
+                afterMovePosition: homeDoc.movePosition.target
+              }
+              homeDoc.$emit('stack-push', move)
+              // console.log(addComponent[i])
+              homeDoc.movePosition.target.appendChild(addComponent[i])
+
+              homeDoc.$nextTick(() => {
+                // console.log(addComponent);
+                // console.log(e)
+
+                // tag가 추가할 element. 자식이 된다.
+                // console.log(position)
+                // position이 추가할 위치에 있는 element. 부모가 된다.
+                // homeDoc.movePosition.parentElement
+
+                if (
+                  e.target.className === 'left-border' ||
+                  e.target.className === 'right-border' ||
+                  e.target.className === 'top-border' ||
+                  e.target.className === 'bottom-border'
+                ) {
+                  // let pos = e.target.className.split('-')[0]
+                  let addComponent = document.getElementsByClassName(
+                    homeDoc.clickedElement.classList.value
+                  )
+                  let i
+                  for (i = 0; i < addComponent.length; i++) {
+                    if (addComponent[i] === homeDoc.clickedElement) {
+                      console.log(i)
+                      break
+                    }
+                  }
+                  homeDoc.movePosition.target.parentElement.appendChild(
+                    addComponent[i]
+                  )
+                }
+              })
+            }
+          }
+        }
+
+        homeDoc.isContentMovable = false
+
+        homeDoc.$emit('elementresize', homeDoc.clickedElement)
+      })
+    })
+
     // let b = document.querySelector('.3')
 
     this.multiSelectedElement = new Set()
@@ -197,60 +302,67 @@ export default {
       editor.getBoundingClientRect().left + editor.getBoundingClientRect().width
 
     window.addEventListener('mousemove', event => {
-      event.preventDefault()
       if (this.isContentResizable) {
         if (this.resizedirection === 'right') {
-          if (event.pageX < this.initialposition) {
+          if (event.detail.pageX < this.initialposition) {
             const size =
-              (this.initialwidth - (this.initialposition - event.pageX) * 2) /
+              (this.initialwidth -
+                (this.initialposition - event.detail.pageX) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
-          } else if (event.pageX > this.initialposition) {
+          } else if (event.detail.pageX > this.initialposition) {
             const size =
-              (this.initialwidth + (event.pageX - this.initialposition) * 2) /
+              (this.initialwidth +
+                (event.detail.pageX - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
           }
         } else if (this.resizedirection === 'left') {
-          if (event.pageX < this.initialposition) {
+          if (event.detail.pageX < this.initialposition) {
             const size =
-              (this.initialwidth + (this.initialposition - event.pageX) * 2) /
+              (this.initialwidth +
+                (this.initialposition - event.detail.pageX) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
-          } else if (event.pageX > this.initialposition) {
+          } else if (event.detail.pageX > this.initialposition) {
             const size =
-              (this.initialwidth - (event.pageX - this.initialposition) * 2) /
+              (this.initialwidth -
+                (event.detail.pageX - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).width)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
           }
         } else if (this.resizedirection === 'top') {
-          if (event.pageY < this.initialposition) {
+          if (event.detail.pageY < this.initialposition) {
             const size =
-              (this.initialheight + (this.initialposition - event.pageY) * 2) /
+              (this.initialheight +
+                (this.initialposition - event.detail.pageY) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
-          } else if (event.pageY > this.initialposition) {
+          } else if (event.detail.pageY > this.initialposition) {
             const size =
-              (this.initialheight - (event.pageY - this.initialposition) * 2) /
+              (this.initialheight -
+                (event.detail.pageY - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
           }
         } else if (this.resizedirection === 'bottom') {
-          if (event.pageY < this.initialposition) {
+          if (event.detail.pageY < this.initialposition) {
             const size =
-              (this.initialheight - (this.initialposition - event.pageY) * 2) /
+              (this.initialheight -
+                (this.initialposition - event.detail.pageY) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
-          } else if (event.pageY > this.initialposition) {
+          } else if (event.detail.pageY > this.initialposition) {
             const size =
-              (this.initialheight + (event.pageY - this.initialposition) * 2) /
+              (this.initialheight +
+                (event.detail.pageY - this.initialposition) * 2) /
               parseInt(getComputedStyle(this.clickedElement).height)
             this.clickedElement.style.transform = `scale(${size})`
             this.size = size
@@ -261,25 +373,29 @@ export default {
         let borderElem
         if (this.mouseElem === null) {
           if (
-            event.target.className === 'left-border' ||
-            event.target.className === 'right-border' ||
-            event.target.className === 'top-border' ||
-            event.target.className === 'bottom-border'
+            event.detail.target.className === 'left-border' ||
+            event.detail.target.className === 'right-border' ||
+            event.detail.target.className === 'top-border' ||
+            event.detail.target.className === 'bottom-border'
           ) {
-            borderElem = document.querySelector('.' + event.target.className)
+            borderElem = document.querySelector(
+              '.' + event.detail.target.className
+            )
             borderElem.style.backgroundColor = '#0fdc28'
             this.mouseElem = borderElem
           }
         } else {
-          if (this.mouseElem !== event.target) {
+          if (this.mouseElem !== event.detail.target) {
             this.mouseElem.style.backgroundColor = '#3e8ce4'
             if (
-              event.target.className === 'left-border' ||
-              event.target.className === 'right-border' ||
-              event.target.className === 'top-border' ||
-              event.target.className === 'bottom-border'
+              event.detail.target.className === 'left-border' ||
+              event.detail.target.className === 'right-border' ||
+              event.detail.target.className === 'top-border' ||
+              event.detail.target.className === 'bottom-border'
             ) {
-              borderElem = document.querySelector('.' + event.target.className)
+              borderElem = document.querySelector(
+                '.' + event.detail.target.className
+              )
               borderElem.style.backgroundColor = '#0fdc28'
               this.mouseElem = borderElem
             }
@@ -429,18 +545,6 @@ export default {
         this.$emit('stack-push', payload)
       }
       //연결안되어있음
-    },
-    addComponentTagStudio() {},
-    mousedown(e) {
-      // this.addComponentTag=e.target
-    },
-    mouseup(e) {
-      // console.log(this.addComponentTag)
-      // console.log(e.target)
-      // if(this.addComponentTag!=e.target)
-      //   e.target.appendChild(this.addComponentTag)
-      // console.log(this.addComponentTag)
-      // console.log(this.addComponentTag)
     },
     onmouseMove(e) {
       this.onelementSelected = true
@@ -965,6 +1069,7 @@ export default {
       }
     },
     onmouseClick(e) {
+      let board = document.querySelector('.board')
       if (this.multiSelect) {
         if (this.multiSelectedElement.size === 0) {
           this.$nextTick(() => {
@@ -1083,20 +1188,34 @@ export default {
               this.elem = e.target.getBoundingClientRect()
 
               this.$nextTick(() => {
-                bottom_line.style.left = this.elem.left + 'px'
+                bottom_line.style.left =
+                  this.elem.left + board.getBoundingClientRect().left + 'px'
                 bottom_line.style.top =
-                  this.elem.top + this.elem.height - 1 + 'px'
+                  this.elem.top +
+                  this.elem.height +
+                  board.getBoundingClientRect().top -
+                  1 +
+                  'px'
                 bottom_line.style.width = this.elem.width + 'px'
-                top_line.style.left = this.elem.left + 'px'
-                top_line.style.top = this.elem.top + 1 + 'px'
+                top_line.style.left =
+                  this.elem.left + board.getBoundingClientRect().left + 'px'
+                top_line.style.top =
+                  this.elem.top + board.getBoundingClientRect().top + 1 + 'px'
                 top_line.style.width = this.elem.width + 'px'
-                left_line.style.left = this.elem.left - 1 + 'px'
-                left_line.style.top = this.elem.top + 'px'
-                left_line.style.height = this.elem.width + 'px'
+                left_line.style.left =
+                  this.elem.left + board.getBoundingClientRect().left + 'px'
+                left_line.style.top =
+                  this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
+                left_line.style.height = this.elem.height + 'px'
                 right_line.style.left =
-                  this.elem.left + this.elem.width - 1 + 'px'
-                right_line.style.top = this.elem.top + 'px'
-                right_line.style.height = this.elem.width + 'px'
+                  this.elem.left +
+                  this.elem.width +
+                  board.getBoundingClientRect().left -
+                  2 +
+                  'px'
+                right_line.style.top =
+                  this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
+                right_line.style.height = this.elem.height + 'px'
               })
             })
 
@@ -1159,18 +1278,34 @@ export default {
             // eslint-disable-next-line camelcase
 
             this.elem = e.target.getBoundingClientRect()
-            top_line.style.left = this.elem.left + 'px'
-            top_line.style.top = this.elem.top + 1 + 'px'
-            top_line.style.width = this.elem.width + 'px'
-            bottom_line.style.left = this.elem.left + 'px'
-            bottom_line.style.top = this.elem.top + this.elem.height - 1 + 'px'
+            bottom_line.style.left =
+              this.elem.left + board.getBoundingClientRect().left + 'px'
+            bottom_line.style.top =
+              this.elem.top +
+              this.elem.height +
+              board.getBoundingClientRect().top -
+              1 +
+              'px'
             bottom_line.style.width = this.elem.width + 'px'
-            left_line.style.left = this.elem.left - 1 + 'px'
-            left_line.style.top = this.elem.top + 'px'
-            left_line.style.height = this.elem.width + 'px'
-            right_line.style.left = this.elem.left + this.elem.width - 1 + 'px'
-            right_line.style.top = this.elem.top + 'px'
-            right_line.style.height = this.elem.width + 'px'
+            top_line.style.left =
+              this.elem.left + board.getBoundingClientRect().left + 'px'
+            top_line.style.top =
+              this.elem.top + board.getBoundingClientRect().top + 'px'
+            top_line.style.width = this.elem.width + 'px'
+            left_line.style.left =
+              this.elem.left + board.getBoundingClientRect().left + 'px'
+            left_line.style.top =
+              this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
+            left_line.style.height = this.elem.height + 'px'
+            right_line.style.left =
+              this.elem.left +
+              this.elem.width +
+              board.getBoundingClientRect().left -
+              2 +
+              'px'
+            right_line.style.top =
+              this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
+            right_line.style.height = this.elem.height + 'px'
 
             this.isContentClicked = true
             this.isContentRemovable = true
@@ -1383,7 +1518,6 @@ export default {
             scaleVal = Number(regExpResult[0])
           }
           this.initialscale = scaleVal
-          console.log(this.initialscale)
         }
       })
     },
@@ -2369,12 +2503,14 @@ export default {
   .boundary-line-bottom {
     width: 100%;
     height: 5px;
+    background-color: purple;
     position: fixed;
     z-index: 10000;
   }
 
   .boundary-line-left,
   .boundary-line-right {
+    background-color: purple;
     width: 5px;
     height: 100%;
     position: fixed;
