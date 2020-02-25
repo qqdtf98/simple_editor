@@ -109,7 +109,7 @@ export default {
 
       var newDIV = document.createElement('ul')
       // newDIV.innerHTML = child[i].tagName;
-      var intent = 10
+      var intent = 20
       newDIV.setAttribute('style', 'text-indent:' + intent + 'px')
       newDIV.setAttribute('id', this.childNum)
       obj.appendChild(newDIV)

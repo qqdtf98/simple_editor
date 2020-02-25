@@ -574,7 +574,8 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
-    this.editor1.onMouseMove(function(e) {
+    this.editor1.onMouseDown(function(e) {
+      console.log(e.target.position.lineNumber)
       if (e.target.element.className == 'view-line')
         console.log(e.target.position.lineNumber)
     })
@@ -611,7 +612,7 @@ export default {
       // ).innerHTML = this.editor1.getValue()
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
-      console.log('fds')
+      console.log(e)
       this.$refs.overview.printHomeDocument()
       // editor.setValue(editor.getValue())1
       // console.log(document.getElementById(id).innerHTML)
