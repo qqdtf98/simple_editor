@@ -9,45 +9,6 @@
       <div @mouseover="saveTab" class="Save menu-tab">Save</div>
       <div @mouseover="settingTab" class="Setting menu-tab">Setting</div>
       <div @mouseover="helpTab" class="Help menu-tab">Help</div>
-
-      <!-- <div @click="newPage" class="new-box">
-        <img class="new" src="./assets/images/new.svg" />
-        <div class="new-text">New</div>
-      </div>
-      <div class="open-box">
-        <img class="open" src="./assets/images/open.svg" />
-        <div class="open-text">Open</div>
-      </div>
-      <div class="save-box">
-        <img class="save" src="./assets/images/save.svg" />
-        <div class="save-text">Save</div>
-      </div>
-      <div class="export-box">
-        <img class="export" src="./assets/images/export.svg" />
-        <div class="export-text">Export</div>
-      </div>
-      <div class="setting-box">
-        <img class="setting" src="./assets/images/settings.svg" />
-        <div class="setting-text">Setting</div>
-      </div>
-      <div class="switch-box">
-        <switches
-          @click="toggleClicked"
-          class="swtich"
-          theme="bootstrap"
-          color="info"
-          v-model="enabled"
-        />
-        <div class="switch-text">Switch</div>
-      </div>
-      <div class="undo-box">
-        <img @click="undoWork" class="undo" src="./assets/images/undo.svg" />
-        <div @click="undoWork" class="undo-text">Undo</div>
-      </div>
-      <div class="redo-box">
-        <img @click="redoWork" class="redo" src="./assets/images/undo.svg" />
-        <div @click="redoWork" class="redo-text">Redo</div>
-      </div> -->
     </div>
     <div class="main-panel">
       <div class="left-panel">
@@ -57,12 +18,6 @@
           src="./assets/images/studio.svg"
           title="studio"
         />
-        <!-- <img
-          @click="overviewBtn"
-          class="overview-btn"
-          src="./assets/images/overview.svg"
-          title="overview"
-        /> -->
         <img
           @click="sitemapBtn"
           class="sitemap-btn"
@@ -980,7 +935,7 @@ export default {
       // console.log(monaco.editor)
       // let container = document.getElementById('leftContainer')
 
-      // this.code = document.getElementById('userScreenIframe')
+      // this.code = document.getElementById('filecontainer')
       console.log('나와라참')
       console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
       console.log(
@@ -1639,7 +1594,6 @@ export default {
     },
     redoWork() {
       let i
-      console.log('redo')
       if (this.reworkStack.length !== 0) {
         for (i = 0; i < this.reworkStack.length; i++) {
           console.log(this.reworkStack[i])
@@ -1691,11 +1645,10 @@ export default {
     undoWork() {
       // console.log('aaa')
       let i
-      console.log('undo')
       if (this.workStack.length !== 0) {
-        for (i = 0; i < this.workStack.length; i++) {
-          console.log(this.workStack[i])
-        }
+        // for (i = 0; i < this.workStack.length; i++) {
+        //   console.log(this.workStack[i])
+        // }
         let work = this.workStack.pop()
         let rework = work
         this.reworkStack.push(rework)
@@ -1738,7 +1691,6 @@ export default {
         } else if (work.work === 'multiDelete') {
           let i
           for (i = work.elem.length - 1; i >= 0; i--) {
-            console.log(work.nth[i])
             work.afterParent[i].insertBefore(
               work.elem[i],
               work.afterParent[i].childNodes[work.nth[i]]
