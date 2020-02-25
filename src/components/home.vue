@@ -21,6 +21,7 @@
               name="iframe1"
               id="filecontainer"
               src="static/test.html"
+              ref="iframe"
               width="100%"
               height="100%"
             ></iframe>
@@ -95,6 +96,7 @@
     ></div>
     <Context
       @close="closeMode"
+      @upload-image="uploadImage"
       ref="context"
       class="context"
       v-show="mouseRightClick"
@@ -170,11 +172,13 @@ export default {
       targetText: null,
       editElem: null,
       multiSelect: null,
+      isCtrl: false,
       multiSelectedElement: null,
       multiSelectedBorder: [],
       multiSelectedBorderRadius: [],
       multiSelectIndex: 1,
       multiElementParent: [],
+      isShift: false,
       setSize: null
     }
   },
@@ -191,97 +195,49 @@ export default {
             detail: e
           })
         )
-        homeDoc.onmouseMove()
+        homeDoc.onmouseMove(e)
       })
       iframe.get(0).contentDocument.addEventListener('mouseup', e => {
-        if (homeDoc.isContentResizable) {
-          var style = {
-            work: 'style',
-            elem: homeDoc.clickedElement,
-            style: 'transform',
-            afterValue: `scale(${homeDoc.size})`,
-            value: `scale(${homeDoc.initialscale})`
-          }
-          homeDoc.$emit('stack-push', style)
-          homeDoc.isContentResizable = false
-        }
-        homeDoc.resizedirection = null
-        if (homeDoc.isContentMovable) {
-          homeDoc.clickedElement.style.filter = 'blur(0)'
-          if (homeDoc.mouseElem !== null) {
-            homeDoc.mouseElem.style.backgroundColor = '#3e8ce4'
-            if (homeDoc.clickedElement.className === '') {
-              console.log('없음')
-              var move = {
-                work: 'move',
-                position: homeDoc.clickedElement.parentElement,
-                elem: homeDoc.clickedElement,
-                afterMovePosition: homeDoc.movePosition.target
-              }
-              homeDoc.$emit('stack-push', move)
-              homeDoc.movePosition.target.appendChild(homeDoc.clickedElement)
-            } else {
-              let addComponent = document.getElementsByClassName(
-                homeDoc.clickedElement.classList.value
-              )
-              let i
-              // console.log(addComponent)
-              for (i = 0; i < addComponent.length; i++) {
-                if (addComponent[i] === homeDoc.clickedElement) {
-                  // console.log(i);
-                  // console.log(addComponent[i]);
-                  break
-                }
-              }
-              var move = {
-                work: 'move',
-                position: homeDoc.clickedElement.parentElement,
-                elem: homeDoc.clickedElement,
-                afterMovePosition: homeDoc.movePosition.target
-              }
-              homeDoc.$emit('stack-push', move)
-              // console.log(addComponent[i])
-              homeDoc.movePosition.target.appendChild(addComponent[i])
-
-              homeDoc.$nextTick(() => {
-                // console.log(addComponent);
-                // console.log(e)
-
-                // tag가 추가할 element. 자식이 된다.
-                // console.log(position)
-                // position이 추가할 위치에 있는 element. 부모가 된다.
-                // homeDoc.movePosition.parentElement
-
-                if (
-                  e.target.className === 'left-border' ||
-                  e.target.className === 'right-border' ||
-                  e.target.className === 'top-border' ||
-                  e.target.className === 'bottom-border'
-                ) {
-                  // let pos = e.target.className.split('-')[0]
-                  let addComponent = document.getElementsByClassName(
-                    homeDoc.clickedElement.classList.value
-                  )
-                  let i
-                  for (i = 0; i < addComponent.length; i++) {
-                    if (addComponent[i] === homeDoc.clickedElement) {
-                      console.log(i)
-                      break
-                    }
-                  }
-                  homeDoc.movePosition.target.parentElement.appendChild(
-                    addComponent[i]
-                  )
-                }
-              })
-            }
-          }
-        }
-
-        homeDoc.isContentMovable = false
-
-        homeDoc.$emit('elementresize', homeDoc.clickedElement)
+        window.dispatchEvent(
+          new CustomEvent('mouseup', {
+            detail: e
+          })
+        )
+        homeDoc.onmouserightClick(e)
       })
+      iframe.get(0).contentDocument.addEventListener('scroll', e => {
+        homeDoc.handleScroll(e)
+      })
+      iframe.get(0).contentDocument.addEventListener('contextmenu', e => {
+        homeDoc.onmouseClick(e)
+      })
+      iframe.get(0).contentDocument.addEventListener('keydown', e => {
+        if (e.which === 17) {
+          this.isCtrl = true
+          homeDoc.multiChoice(true)
+        }
+        if (e.which === 16) {
+          this.isShift = true
+        }
+        if (e.which === 90 && this.isCtrl && !this.isShift) {
+          // this.undoWork()
+        }
+        if (e.which === 90 && this.isCtrl && this.isShift) {
+          // this.redoWork()
+        }
+      })
+      iframe.get(0).contentDocument.addEventListener('keyup', e => {
+        if (e.which === 16) {
+          this.isShift = false
+        }
+        if (e.which === 17) {
+          this.isCtrl = false
+          homeDoc.multiChoice(false)
+        }
+      })
+      // iframe.get(0).contentDocument.addEventListener('dblclick', e => {
+      //   homeDoc.onmouseDoubleClick(e)
+      // })
     })
 
     // let b = document.querySelector('.3')
@@ -404,29 +360,37 @@ export default {
       }
 
       if (this.clickedElement !== null) {
+        let board = document.querySelector('.board')
         let move = document.querySelector('.move-icon')
         move.style.left =
-          this.clickedElement.getBoundingClientRect().left + 'px'
+          this.clickedElement.getBoundingClientRect().left +
+          board.getBoundingClientRect().left +
+          'px'
         move.style.top =
-          this.clickedElement.getBoundingClientRect().top -
+          this.clickedElement.getBoundingClientRect().top +
+          board.getBoundingClientRect().top -
           move.getBoundingClientRect().height +
           'px'
         let deleteIcon = document.querySelector('.delete-icon')
         deleteIcon.style.left =
           this.clickedElement.getBoundingClientRect().left +
+          board.getBoundingClientRect().left +
           parseInt(getComputedStyle(move).width) * 2 +
           'px'
         deleteIcon.style.top =
-          this.clickedElement.getBoundingClientRect().top -
+          this.clickedElement.getBoundingClientRect().top +
+          board.getBoundingClientRect().top -
           deleteIcon.getBoundingClientRect().height +
           'px'
         let copyIcon = document.querySelector('.copy-icon')
         copyIcon.style.left =
           this.clickedElement.getBoundingClientRect().left +
+          board.getBoundingClientRect().left +
           parseInt(getComputedStyle(move).width) +
           'px'
         copyIcon.style.top =
-          this.clickedElement.getBoundingClientRect().top -
+          this.clickedElement.getBoundingClientRect().top +
+          board.getBoundingClientRect().top -
           deleteIcon.getBoundingClientRect().height +
           'px'
       }
@@ -449,15 +413,6 @@ export default {
         this.clickedElement.style.filter = 'blur(0)'
         if (this.mouseElem !== null) {
           this.mouseElem.style.backgroundColor = '#3e8ce4'
-          // let i
-          // let classValue = ''
-          // for (i = 0; i < this.clickedElement.classList.length; i++) {
-          //   if (i === this.clickedElement.classList.length - 1) {
-          //     classValue += '.' + this.clickedElement.classList[i]
-          //   } else {
-          //     classValue += '.' + this.clickedElement.classList[i] + ' '
-          //   }
-          // }
           if (this.clickedElement.className === '') {
             console.log('없음')
             var move = {
@@ -473,11 +428,8 @@ export default {
               this.clickedElement.classList.value
             )
             let i
-            // console.log(addComponent)
             for (i = 0; i < addComponent.length; i++) {
               if (addComponent[i] === this.clickedElement) {
-                // console.log(i);
-                // console.log(addComponent[i]);
                 break
               }
             }
@@ -488,23 +440,19 @@ export default {
               afterMovePosition: this.movePosition.target
             }
             this.$emit('stack-push', move)
-            // console.log(addComponent[i])
             this.movePosition.target.appendChild(addComponent[i])
 
             this.$nextTick(() => {
-              // console.log(addComponent);
-              // console.log(e)
-
               // tag가 추가할 element. 자식이 된다.
               // console.log(position)
               // position이 추가할 위치에 있는 element. 부모가 된다.
               // this.movePosition.parentElement
 
               if (
-                e.target.className === 'left-border' ||
-                e.target.className === 'right-border' ||
-                e.target.className === 'top-border' ||
-                e.target.className === 'bottom-border'
+                e.detail.target.className === 'left-border' ||
+                e.detail.target.className === 'right-border' ||
+                e.detail.target.className === 'top-border' ||
+                e.detail.target.className === 'bottom-border'
               ) {
                 // let pos = e.target.className.split('-')[0]
                 let addComponent = document.getElementsByClassName(
@@ -532,6 +480,13 @@ export default {
     })
   },
   methods: {
+    uploadImage() {
+      let uploadImg = document.createElement('input')
+
+      // console.log(editor.parentElement);
+
+      this.clickedElement.appendChild(uploadImg)
+    },
     addCode(e) {
       this.$emit('open-code', e)
     },
@@ -547,6 +502,7 @@ export default {
       //연결안되어있음
     },
     onmouseMove(e) {
+      let board = document.querySelector('.board')
       this.onelementSelected = true
       if (this.selectedElement === null) {
         if (
@@ -579,17 +535,21 @@ export default {
             let tag = document.querySelector('.tagname')
 
             tag.textContent = e.target.tagName
-            tag.style.left = this.selectedElement.left + 'px'
+            tag.style.left =
+              this.selectedElement.left +
+              board.getBoundingClientRect().left +
+              'px'
 
             tag.style.top =
-              this.selectedElement.top -
+              this.selectedElement.top +
+              board.getBoundingClientRect().top -
               tag.getBoundingClientRect().height +
               'px'
             let bottomBord = document.querySelector('.bottom-border')
             let topBord = document.querySelector('.top-border')
             let rightBord = document.querySelector('.right-border')
             let leftBord = document.querySelector('.left-border')
-            let editorBox = document.querySelector('.editor-box')
+            // let editorBox= document.querySelector('.editor-box')
 
             let leftOver = false
             let rightOver = false
@@ -597,31 +557,36 @@ export default {
             let topOver = false
 
             if (
-              e.target.getBoundingClientRect().left <
-              editorBox.getBoundingClientRect().left
+              e.target.getBoundingClientRect().left +
+                board.getBoundingClientRect().left <
+              board.getBoundingClientRect().left
             ) {
               leftOver = true
             }
             if (
-              e.target.getBoundingClientRect().right >
-              editorBox.getBoundingClientRect().right
+              e.target.getBoundingClientRect().right +
+                board.getBoundingClientRect().left >
+              board.getBoundingClientRect().right
             ) {
               rightOver = true
             }
             if (
-              e.target.getBoundingClientRect().top <
-              editorBox.getBoundingClientRect().top
+              e.target.getBoundingClientRect().top +
+                board.getBoundingClientRect().top <
+              board.getBoundingClientRect().top
             ) {
               topOver = true
             }
             if (
-              e.target.getBoundingClientRect().bottom >
-              editorBox.getBoundingClientRect().bottom
+              e.target.getBoundingClientRect().bottom +
+                board.getBoundingClientRect().top >
+              board.getBoundingClientRect().bottom
             ) {
               bottomOver = true
             }
             if (leftOver && topOver && !rightOver && !bottomOver) {
               // left, top 벗어날 때
+              console.log('1')
               tag.style.display = 'none'
               leftBord.style.display = 'none'
               topBord.style.display = 'none'
@@ -630,30 +595,22 @@ export default {
 
               rightBord.style.left =
                 this.selectedElement.left +
+                board.getBoundingClientRect().left +
                 this.selectedElement.width -
                 2 +
                 'px'
-              rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.top = board.getBoundingClientRect().top + 'px'
               rightBord.style.height =
-                this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
-                2 +
-                'px'
-              bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
+              bottomBord.style.left = board.getBoundingClientRect().left + 'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
               bottomBord.style.width =
-                this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
-                  this.selectedElement.left) -
-                2 +
-                'px'
+                this.selectedElement.width + this.selectedElement.left + 'px'
               // 1
             } else if (!leftOver && topOver && !rightOver && !bottomOver) {
               // top 벗어날 때
@@ -665,31 +622,29 @@ export default {
 
               rightBord.style.left =
                 this.selectedElement.left +
+                board.getBoundingClientRect().left +
                 this.selectedElement.width -
                 2 +
                 'px'
-              rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              rightBord.style.top = board.getBoundingClientRect().top + 'px'
               rightBord.style.height =
-                this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
-                2 +
-                'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height =
-                this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
-                2 +
-                'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
 
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
@@ -703,29 +658,35 @@ export default {
               leftBord.style.display = 'block'
               bottomBord.style.display = 'block'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 2 +
                 'px'
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
               // 3
             } else if (!leftOver && !topOver && rightOver && !bottomOver) {
+              console.log('3')
               // right 벗어날 때
               tag.style.display = 'block'
               leftBord.style.display = 'block'
@@ -733,29 +694,42 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'block'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height = this.selectedElement.height + 'px'
 
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 2 +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
 
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
               // 4
@@ -767,21 +741,34 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'none'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 2 +
                 'px'
               // 5
@@ -793,27 +780,47 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'none'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 2 + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
-              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width = this.selectedElement.width + 2 + 'px'
               // 6
             } else if (leftOver && !topOver && !rightOver && bottomOver) {
@@ -825,20 +832,33 @@ export default {
               bottomBord.style.display = 'none'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
-              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 2 +
                 'px'
 
-              topBord.style.left = editorBox.getBoundingClientRect().left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
                 2 +
                 'px'
@@ -852,27 +872,46 @@ export default {
               bottomBord.style.display = 'block'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
-              rightBord.style.top = this.selectedElement.top + 2 + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height = this.selectedElement.height + 'px'
 
               topBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
                 1 +
                 'px'
 
               bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
               bottomBord.style.top =
-                this.selectedElement.top + this.selectedElement.height + 'px'
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                this.selectedElement.height +
+                'px'
               bottomBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
                 1 +
                 'px'
@@ -886,30 +925,40 @@ export default {
               bottomBord.style.display = 'block'
 
               topBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
 
               bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
+                board.getBoundingClientRect().top +
                 this.selectedElement.height -
                 6 +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
               // 9
@@ -922,27 +971,37 @@ export default {
               bottomBord.style.display = 'none'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
+                'px'
               rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
               // 10
@@ -955,15 +1014,20 @@ export default {
               bottomBord.style.display = 'none'
 
               rightBord.style.left =
-                this.selectedElement.left + this.selectedElement.width + 'px'
+                this.selectedElement.left +
+                this.selectedElement.width +
+                board.getBoundingClientRect().left +
+                'px'
               rightBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               rightBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
               // 11
@@ -976,15 +1040,20 @@ export default {
               bottomBord.style.display = 'block'
 
               bottomBord.style.left =
-                editorBox.getBoundingClientRect().left + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
-                this.selectedElement.top + this.selectedElement.height + 'px'
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                this.selectedElement.height +
+                'px'
               bottomBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
               // 12
@@ -996,15 +1065,20 @@ export default {
               topBord.style.display = 'none'
               bottomBord.style.display = 'none'
 
-              leftBord.style.left = this.selectedElement.left + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               leftBord.style.top =
-                editorBox.getBoundingClientRect().top + 2 + 'px'
+                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top +
+                2 +
+                'px'
               leftBord.style.height =
                 this.selectedElement.height -
-                (editorBox.getBoundingClientRect().top -
-                  this.selectedElement.top) -
+                (board.getBoundingClientRect().top - this.selectedElement.top) -
                 (this.selectedElement.bottom -
-                  editorBox.getBoundingClientRect().bottom) -
+                  board.getBoundingClientRect().bottom) -
                 4 +
                 'px'
               // 13
@@ -1017,14 +1091,20 @@ export default {
               bottomBord.style.display = 'none'
 
               topBord.style.left =
-                editorBox.getBoundingClientRect().left + 2 + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+                board.getBoundingClientRect().left +
+                board.getBoundingClientRect().left +
+                2 +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width =
                 this.selectedElement.width -
-                (editorBox.getBoundingClientRect().left -
+                (board.getBoundingClientRect().left -
                   this.selectedElement.left) -
                 (this.selectedElement.right -
-                  editorBox.getBoundingClientRect().right) -
+                  board.getBoundingClientRect().right) -
                 4 +
                 'px'
               // 14
@@ -1035,32 +1115,50 @@ export default {
               rightBord.style.display = 'none'
               topBord.style.display = 'none'
               bottomBord.style.display = 'none'
-              // 14
+              // 15
             } else {
               tag.style.display = 'block'
               leftBord.style.display = 'block'
               topBord.style.display = 'block'
               rightBord.style.display = 'block'
               bottomBord.style.display = 'block'
-              topBord.style.left = this.selectedElement.left + 'px'
-              topBord.style.top = this.selectedElement.top + 'px'
+              topBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              topBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               topBord.style.width = this.selectedElement.width + 'px'
               // bottomBord.style.display = 'none'?
-              leftBord.style.left = this.selectedElement.left + 'px'
-              leftBord.style.top = this.selectedElement.top + 'px'
+              leftBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
+              leftBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
               leftBord.style.height = this.selectedElement.height + 'px'
               rightBord.style.left =
                 this.selectedElement.left +
-                this.selectedElement.width -
-                2 +
+                board.getBoundingClientRect().left +
+                this.selectedElement.width +
                 'px'
-              rightBord.style.top = this.selectedElement.top + 'px'
-              rightBord.style.height = this.selectedElement.height + 'px'
-              bottomBord.style.left = this.selectedElement.left + 'px'
+              rightBord.style.top =
+                this.selectedElement.top +
+                board.getBoundingClientRect().top +
+                'px'
+              rightBord.style.height = this.selectedElement.height + 2 + 'px'
+              bottomBord.style.left =
+                this.selectedElement.left +
+                board.getBoundingClientRect().left +
+                'px'
               bottomBord.style.top =
                 this.selectedElement.top +
-                this.selectedElement.height -
-                2 +
+                board.getBoundingClientRect().top +
+                this.selectedElement.height +
                 'px'
               bottomBord.style.width = this.selectedElement.width + 'px'
             }
@@ -1071,6 +1169,7 @@ export default {
     onmouseClick(e) {
       let board = document.querySelector('.board')
       if (this.multiSelect) {
+        console.log('multi')
         if (this.multiSelectedElement.size === 0) {
           this.$nextTick(() => {
             this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
@@ -1314,25 +1413,37 @@ export default {
             this.$nextTick(() => {
               this.elem = e.target.getBoundingClientRect()
               let moveIcon = document.querySelector('.move-icon')
-              moveIcon.style.left = this.elem.left + 'px'
+              moveIcon.style.left =
+                this.elem.left + board.getBoundingClientRect().left + 'px'
               moveIcon.style.top =
-                this.elem.top - moveIcon.getBoundingClientRect().height + 'px'
+                this.elem.top +
+                board.getBoundingClientRect().top -
+                moveIcon.getBoundingClientRect().height +
+                'px'
 
               let deleteIcon = document.querySelector('.delete-icon')
               deleteIcon.style.left =
                 this.elem.left +
+                board.getBoundingClientRect().left +
                 parseInt(getComputedStyle(moveIcon).width) * 2 +
                 'px'
               deleteIcon.style.top =
-                this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+                this.elem.top +
+                board.getBoundingClientRect().top -
+                deleteIcon.getBoundingClientRect().height +
+                'px'
 
               let copyIcon = document.querySelector('.copy-icon')
               copyIcon.style.left =
                 this.elem.left +
+                board.getBoundingClientRect().left +
                 parseInt(getComputedStyle(moveIcon).widht) +
                 'px'
               copyIcon.style.top =
-                this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
+                this.elem.top +
+                board.getBoundingClientRect().top -
+                deleteIcon.getBoundingClientRect().height +
+                'px'
             })
           }
         } else {
@@ -1345,7 +1456,13 @@ export default {
             e.target.className !== 'editor-box' &&
             e.target.className !== 'scroll-area'
           ) {
-            this.$emit('componentSelected', e)
+            this.multiSelectedElement.add(e.target)
+            if (this.setSize !== this.multiSelectedElement.size) {
+              this.multiElementParent.push(e.target.parentElement)
+            }
+            this.setSize = this.multiSelectedElement.size
+            console.log(this.multiSelectedElement)
+            this.$emit('componentSelected', this.multiSelectedElement)
           }
         }
         if (this.mode) {
@@ -1430,15 +1547,14 @@ export default {
       ) {
         this.isContentEditable = true
         this.targetText = e.target.textContent
-        console.log(this.targetText)
         this.$nextTick(() => {
           const sel = window.getSelection()
           sel.removeAllRanges()
           const range = new Range()
-          range.setStart(this.$refs.dash, 0)
-          range.setEnd(this.$refs.dash, 0)
+          range.setStart(this.$refs.iframe, 0)
+          range.setEnd(this.$refs.iframe, 0)
           sel.addRange(range)
-          this.placeCaretAtEnd(this.$refs.dash)
+          this.placeCaretAtEnd(this.$refs.iframe)
         })
       }
     },
@@ -1457,6 +1573,7 @@ export default {
       }
     },
     placeCaretAtEnd(el) {
+      console.log(el)
       el.focus()
       if (
         typeof window.getSelection !== 'undefined' &&
@@ -1525,12 +1642,17 @@ export default {
       if (this.selectedElement != null) {
         this.onelementSelected = false
       }
-      if (this.clickedElement != null) {
+      if (this.clickedElement !== null) {
+        let board = document.querySelector('.board')
         this.$nextTick(() => {
           let move = document.querySelector('.move-icon')
           let moveHeight = getComputedStyle(move).height
           let deleteIcon = document.querySelector('.delete-icon')
           let copyIcon = document.querySelector('.copy-icon')
+          let left_line = document.querySelector('.boundary-line-left')
+          let right_line = document.querySelector('.boundary-line-right')
+          let top_line = document.querySelector('.boundary-line-top')
+          let bottom_line = document.querySelector('.boundary-line-bottom')
           // move.style.left =
           //   this.clickedElement.getBoundingClientRect().left + 'px'
           let moveTop =
@@ -1538,10 +1660,10 @@ export default {
             parseInt(moveHeight)
           let moveLeft = this.clickedElement.getBoundingClientRect().left
           let moveBottom = this.clickedElement.getBoundingClientRect().bottom
-          // let moveRight = this.clickedElement.getBoundingClientRect().right
+
           if (
-            (moveTop < 210 && moveBottom < 800) ||
-            (moveTop > 210 && moveBottom > 810)
+            (moveTop < 0 && moveBottom < 905) ||
+            (moveTop > 0 && moveBottom > 905)
           ) {
             this.$nextTick(() => {
               this.isContentClicked = false
@@ -1552,19 +1674,45 @@ export default {
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
-            move.style.top = moveTop + 'px'
-            deleteIcon.style.top = moveTop + 'px'
-            copyIcon.style.top = moveTop + 'px'
+            move.style.top = moveTop + board.getBoundingClientRect().top + 'px'
+            deleteIcon.style.top =
+              moveTop + board.getBoundingClientRect().top + 'px'
+            copyIcon.style.top =
+              moveTop + board.getBoundingClientRect().top + 'px'
+            left_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              board.getBoundingClientRect().top +
+              'px'
+            right_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              board.getBoundingClientRect().top +
+              'px'
+            top_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              board.getBoundingClientRect().top +
+              'px'
+            bottom_line.style.top =
+              this.clickedElement.getBoundingClientRect().top +
+              this.clickedElement.getBoundingClientRect().height +
+              board.getBoundingClientRect().top +
+              'px'
           }
-          if (moveLeft > 300) {
+          if (moveLeft > 0) {
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
-            move.style.left = moveLeft + 'px'
+            move.style.left =
+              moveLeft + board.getBoundingClientRect().left + 'px'
             deleteIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) * 2 + 'px'
+              moveLeft +
+              board.getBoundingClientRect().left +
+              parseInt(getComputedStyle(move).width) * 2 +
+              'px'
             copyIcon.style.left =
-              moveLeft + parseInt(getComputedStyle(move).width) + 'px'
+              moveLeft +
+              board.getBoundingClientRect().left +
+              parseInt(getComputedStyle(move).width) +
+              'px'
           } else {
             this.$nextTick(() => {
               this.isContentClicked = false
@@ -1619,499 +1767,535 @@ export default {
       }
       this.$emit('stack-push', add)
     },
-    selectOverview(payload) {
-      let bottomBord = document.querySelector('.bottom-border')
-      let topBord = document.querySelector('.top-border')
-      let rightBord = document.querySelector('.right-border')
-      let leftBord = document.querySelector('.left-border')
-      let editorBox = document.querySelector('.editor-box')
+    // selectOverview(payload) {
+    //   let bottomBord = document.querySelector('.bottom-border')
+    //   let topBord = document.querySelector('.top-border')
+    //   let rightBord = document.querySelector('.right-border')
+    //   let leftBord = document.querySelector('.left-border')
+    //   let board = document.querySelector('.editor-box')
 
-      let tag = document.querySelector('.tagname')
+    //   let tag = document.querySelector('.tagname')
 
-      tag.textContent = payload.tagName
-      tag.style.left = payload.getBoundingClientRect().left + 'px'
+    //   tag.textContent = payload.tagName
+    //   tag.style.left = payload.getBoundingClientRect().left + 'px'
 
-      tag.style.top =
-        payload.getBoundingClientRect().top -
-        tag.getBoundingClientRect().height +
-        'px'
+    //   tag.style.top =
+    //     payload.getBoundingClientRect().top -
+    //     tag.getBoundingClientRect().height +
+    //     'px'
 
-      let leftOver = false
-      let rightOver = false
-      let bottomOver = false
-      let topOver = false
+    //   let leftOver = false
+    //   let rightOver = false
+    //   let bottomOver = false
+    //   let topOver = false
 
-      if (
-        payload.getBoundingClientRect().left <
-        editorBox.getBoundingClientRect().left
-      ) {
-        leftOver = true
-      }
-      if (
-        payload.getBoundingClientRect().right >
-        editorBox.getBoundingClientRect().right
-      ) {
-        rightOver = true
-      }
-      if (
-        payload.getBoundingClientRect().top <
-        editorBox.getBoundingClientRect().top
-      ) {
-        topOver = true
-      }
-      if (
-        payload.getBoundingClientRect().bottom >
-        editorBox.getBoundingClientRect().bottom
-      ) {
-        bottomOver = true
-      }
-      if (leftOver && topOver && !rightOver && !bottomOver) {
-        // left, top 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        topBord.style.display = 'none'
-        rightBord.style.display = 'block'
-        bottomBord.style.display = 'block'
+    //   if (
+    //     payload.getBoundingClientRect().left <
+    //     board.getBoundingClientRect().left
+    //   ) {
+    //     leftOver = true
+    //   }
+    //   if (
+    //     payload.getBoundingClientRect().right >
+    //     board.getBoundingClientRect().right
+    //   ) {
+    //     rightOver = true
+    //   }
+    //   if (
+    //     payload.getBoundingClientRect().top <
+    //     board.getBoundingClientRect().top
+    //   ) {
+    //     topOver = true
+    //   }
+    //   if (
+    //     payload.getBoundingClientRect().bottom >
+    //     board.getBoundingClientRect().bottom
+    //   ) {
+    //     bottomOver = true
+    //   }
+    //   if (leftOver && topOver && !rightOver && !bottomOver) {
+    //     console.log('1')
+    //     // left, top 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     topBord.style.display = 'none'
+    //     rightBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width -
-          2 +
-          'px'
-        rightBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          2 +
-          'px'
-        bottomBord.style.left =
-          editorBox.getBoundingClientRect().left + 2 + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          2 +
-          'px'
-        bottomBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) -
-          2 +
-          'px'
-        // 1
-      } else if (!leftOver && topOver && !rightOver && !bottomOver) {
-        // top 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'block'
-        topBord.style.display = 'none'
-        rightBord.style.display = 'block'
-        bottomBord.style.display = 'block'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width -
+    //       2 +
+    //       'px'
+    //     rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.left =
+    //       board.getBoundingClientRect().left + 2 + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) -
+    //       2 +
+    //       'px'
+    //     // 1
+    //   } else if (!leftOver && topOver && !rightOver && !bottomOver) {
+    //     console.log('2')
+    //     // top 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'block'
+    //     topBord.style.display = 'none'
+    //     rightBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width -
-          2 +
-          'px'
-        rightBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          2 +
-          'px'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width -
+    //       2 +
+    //       'px'
+    //     rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       2 +
+    //       'px'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          2 +
-          'px'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       2 +
+    //       'px'
 
-        bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          2 +
-          'px'
-        bottomBord.style.width = payload.getBoundingClientRect().width + 'px'
-        // 2
-      } else if (!leftOver && topOver && rightOver && !bottomOver) {
-        // right, top 벗어날 때
-        tag.style.display = 'none'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'none'
-        leftBord.style.display = 'block'
-        bottomBord.style.display = 'block'
+    //     bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.width = payload.getBoundingClientRect().width + 'px'
+    //     // 2
+    //   } else if (!leftOver && topOver && rightOver && !bottomOver) {
+    //     console.log('3')
+    //     // right, top 벗어날 때
+    //     tag.style.display = 'none'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'none'
+    //     leftBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          2 +
-          'px'
-        bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          2 +
-          'px'
-        bottomBord.style.width =
-          payload.getBoundingClientRect().width -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          2 +
-          'px'
-        // 3
-      } else if (!leftOver && !topOver && rightOver && !bottomOver) {
-        // right 벗어날 때
-        tag.style.display = 'block'
-        leftBord.style.display = 'block'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'block'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       2 +
+    //       'px'
+    //     // 3
+    //   } else if (!leftOver && !topOver && rightOver && !bottomOver) {
+    //     console.log('4')
+    //     // right 벗어날 때
+    //     tag.style.display = 'block'
+    //     leftBord.style.display = 'block'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height = payload.getBoundingClientRect().height + 'px'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height = payload.getBoundingClientRect().height + 'px'
 
-        bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          2 +
-          'px'
-        bottomBord.style.width =
-          payload.getBoundingClientRect().width -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          2 +
-          'px'
+    //     bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       2 +
+    //       'px'
 
-        topBord.style.left = payload.getBoundingClientRect().left + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width =
-          payload.getBoundingClientRect().width -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          2 +
-          'px'
-        // 4
-      } else if (!leftOver && !topOver && rightOver && bottomOver) {
-        // right, bottom 벗어날 때
-        tag.style.display = 'block'
-        leftBord.style.display = 'block'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'none'
+    //     topBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       2 +
+    //       'px'
+    //     // 4
+    //   } else if (!leftOver && !topOver && rightOver && bottomOver) {
+    //     console.log('5')
+    //     // right, bottom 벗어날 때
+    //     tag.style.display = 'block'
+    //     leftBord.style.display = 'block'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'none'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          2 +
-          'px'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       2 +
+    //       'px'
 
-        topBord.style.left = payload.getBoundingClientRect().left + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width =
-          payload.getBoundingClientRect().width -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          2 +
-          'px'
-        // 5
-      } else if (!leftOver && !topOver && !rightOver && bottomOver) {
-        // bottom 벗어날 때
-        tag.style.display = 'block'
-        leftBord.style.display = 'block'
-        rightBord.style.display = 'block'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'none'
+    //     topBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       2 +
+    //       'px'
+    //     // 5
+    //   } else if (!leftOver && !topOver && !rightOver && bottomOver) {
+    //     console.log('6')
+    //     // bottom 벗어날 때
+    //     tag.style.display = 'block'
+    //     leftBord.style.display = 'block'
+    //     rightBord.style.display = 'block'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'none'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          2 +
-          'px'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       2 +
+    //       'px'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width +
-          'px'
-        rightBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height =
-          payload.getBoundingClientRect().height -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          2 +
-          'px'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width +
+    //       'px'
+    //     rightBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       2 +
+    //       'px'
 
-        topBord.style.left = payload.getBoundingClientRect().left + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width = payload.getBoundingClientRect().width + 2 + 'px'
-        // 6
-      } else if (leftOver && !topOver && !rightOver && bottomOver) {
-        // left, bottom 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'block'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'none'
+    //     topBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width = payload.getBoundingClientRect().width + 2 + 'px'
+    //     // 6
+    //   } else if (leftOver && !topOver && !rightOver && bottomOver) {
+    //     console.log('7')
+    //     // left, bottom 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'block'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'none'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width +
-          'px'
-        rightBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height =
-          payload.getBoundingClientRect().height -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          2 +
-          'px'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width +
+    //       'px'
+    //     rightBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       2 +
+    //       'px'
 
-        topBord.style.left = editorBox.getBoundingClientRect().left + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) +
-          2 +
-          'px'
-        // 7
-      } else if (leftOver && !topOver && !rightOver && !bottomOver) {
-        // left, bottom 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'block'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'block'
+    //     topBord.style.left = board.getBoundingClientRect().left + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) +
+    //       2 +
+    //       'px'
+    //     // 7
+    //   } else if (leftOver && !topOver && !rightOver && !bottomOver) {
+    //     console.log('8')
+    //     // left, bottom 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'block'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width +
-          'px'
-        rightBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height = payload.getBoundingClientRect().height + 'px'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width +
+    //       'px'
+    //     rightBord.style.top = payload.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height = payload.getBoundingClientRect().height + 'px'
 
-        topBord.style.left = editorBox.getBoundingClientRect().left + 2 + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) +
-          1 +
-          'px'
+    //     topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) +
+    //       1 +
+    //       'px'
 
-        bottomBord.style.left =
-          editorBox.getBoundingClientRect().left + 2 + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height +
-          'px'
-        bottomBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) +
-          1 +
-          'px'
-        // 8
-      } else if (leftOver && !topOver && rightOver && !bottomOver) {
-        // left, right 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'block'
+    //     bottomBord.style.left =
+    //       board.getBoundingClientRect().left + 2 + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height +
+    //       'px'
+    //     bottomBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) +
+    //       1 +
+    //       'px'
+    //     // 8
+    //   } else if (leftOver && !topOver && rightOver && !bottomOver) {
+    //     console.log('9')
+    //     // left, right 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
 
-        topBord.style.left = editorBox.getBoundingClientRect().left + 2 + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          4 +
-          'px'
+    //     topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       4 +
+    //       'px'
 
-        bottomBord.style.left =
-          editorBox.getBoundingClientRect().left + 2 + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          6 +
-          'px'
-        bottomBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          4 +
-          'px'
-        // 9
-      } else if (!leftOver && topOver && !rightOver && bottomOver) {
-        // top, bottom 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'block'
-        rightBord.style.display = 'block'
-        topBord.style.display = 'none'
-        bottomBord.style.display = 'none'
+    //     bottomBord.style.left =
+    //       board.getBoundingClientRect().left + 2 + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height -
+    //       6 +
+    //       'px'
+    //     bottomBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       4 +
+    //       'px'
+    //     // 9
+    //   } else if (!leftOver && topOver && !rightOver && bottomOver) {
+    //     console.log('10')
+    //     // top, bottom 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'block'
+    //     rightBord.style.display = 'block'
+    //     topBord.style.display = 'none'
+    //     bottomBord.style.display = 'none'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width +
-          'px'
-        rightBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          4 +
-          'px'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width +
+    //       'px'
+    //     rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       4 +
+    //       'px'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          4 +
-          'px'
-        // 10
-      } else if (leftOver && topOver && !rightOver && bottomOver) {
-        // left, top, bottom 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'block'
-        topBord.style.display = 'none'
-        bottomBord.style.display = 'none'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       4 +
+    //       'px'
+    //     // 10
+    //   } else if (leftOver && topOver && !rightOver && bottomOver) {
+    //     console.log('11')
+    //     // left, top, bottom 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'block'
+    //     topBord.style.display = 'none'
+    //     bottomBord.style.display = 'none'
 
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width +
-          'px'
-        rightBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        rightBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          4 +
-          'px'
-        // 11
-      } else if (leftOver && topOver && rightOver && !bottomOver) {
-        // left, top, right 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'none'
-        bottomBord.style.display = 'block'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width +
+    //       'px'
+    //     rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     rightBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       4 +
+    //       'px'
+    //     // 11
+    //   } else if (leftOver && topOver && rightOver && !bottomOver) {
+    //     console.log('12')
+    //     // left, top, right 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'none'
+    //     bottomBord.style.display = 'block'
 
-        bottomBord.style.left = editorBox.getBoundingClientRect().left + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height +
-          'px'
-        bottomBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          4 +
-          'px'
-        // 12
-      } else if (!leftOver && topOver && rightOver && bottomOver) {
-        // right, top, bottom 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'block'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'none'
-        bottomBord.style.display = 'none'
+    //     bottomBord.style.left = board.getBoundingClientRect().left + 'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height +
+    //       'px'
+    //     bottomBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       4 +
+    //       'px'
+    //     // 12
+    //   } else if (!leftOver && topOver && rightOver && bottomOver) {
+    //     console.log('13')
+    //     // right, top, bottom 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'block'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'none'
+    //     bottomBord.style.display = 'none'
 
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = editorBox.getBoundingClientRect().top + 2 + 'px'
-        leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (editorBox.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          (payload.getBoundingClientRect().bottom -
-            editorBox.getBoundingClientRect().bottom) -
-          4 +
-          'px'
-        // 13
-      } else if (leftOver && !topOver && rightOver && bottomOver) {
-        // right, top, bottom 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'block'
-        bottomBord.style.display = 'none'
+    //     leftBord.style.left = payload.getBoundingClientRect().left + 'px'
+    //     leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
+    //     leftBord.style.height =
+    //       payload.getBoundingClientRect().height -
+    //       (board.getBoundingClientRect().top -
+    //         payload.getBoundingClientRect().top) -
+    //       (payload.getBoundingClientRect().bottom -
+    //         board.getBoundingClientRect().bottom) -
+    //       4 +
+    //       'px'
+    //     // 13
+    //   } else if (leftOver && !topOver && rightOver && bottomOver) {
+    //     console.log('14')
+    //     // right, top, bottom 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'block'
+    //     bottomBord.style.display = 'none'
 
-        topBord.style.left = editorBox.getBoundingClientRect().left + 2 + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width =
-          payload.getBoundingClientRect().width -
-          (editorBox.getBoundingClientRect().left -
-            payload.getBoundingClientRect().left) -
-          (payload.getBoundingClientRect().right -
-            editorBox.getBoundingClientRect().right) -
-          4 +
-          'px'
-        // 14
-      } else if (leftOver && topOver && rightOver && bottomOver) {
-        // 사방 벗어날 때
-        tag.style.display = 'none'
-        leftBord.style.display = 'none'
-        rightBord.style.display = 'none'
-        topBord.style.display = 'none'
-        bottomBord.style.display = 'none'
-        // 14
-      } else {
-        tag.style.display = 'block'
-        leftBord.style.display = 'block'
-        topBord.style.display = 'block'
-        rightBord.style.display = 'block'
-        bottomBord.style.display = 'block'
-        topBord.style.left = payload.getBoundingClientRect().left + 'px'
-        topBord.style.top = payload.getBoundingClientRect().top + 'px'
-        topBord.style.width = payload.getBoundingClientRect().width + 'px'
-        // bottomBord.style.display = 'none'?
-        leftBord.style.left = payload.getBoundingClientRect().left + 'px'
-        leftBord.style.top = payload.getBoundingClientRect().top + 'px'
-        leftBord.style.height = payload.getBoundingClientRect().height + 'px'
-        rightBord.style.left =
-          payload.getBoundingClientRect().left +
-          payload.getBoundingClientRect().width -
-          2 +
-          'px'
-        rightBord.style.top = payload.getBoundingClientRect().top + 'px'
-        rightBord.style.height = payload.getBoundingClientRect().height + 'px'
-        bottomBord.style.left = payload.getBoundingClientRect().left + 'px'
-        bottomBord.style.top =
-          payload.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          2 +
-          'px'
-        bottomBord.style.width = payload.getBoundingClientRect().width + 'px'
-      }
-    },
+    //     topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
+    //     topBord.style.top = payload.getBoundingClientRect().top + 'px'
+    //     topBord.style.width =
+    //       payload.getBoundingClientRect().width -
+    //       (board.getBoundingClientRect().left -
+    //         payload.getBoundingClientRect().left) -
+    //       (payload.getBoundingClientRect().right -
+    //         board.getBoundingClientRect().right) -
+    //       4 +
+    //       'px'
+    //     // 14
+    //   } else if (leftOver && topOver && rightOver && bottomOver) {
+    //     console.log('15')
+    //     // 사방 벗어날 때
+    //     tag.style.display = 'none'
+    //     leftBord.style.display = 'none'
+    //     rightBord.style.display = 'none'
+    //     topBord.style.display = 'none'
+    //     bottomBord.style.display = 'none'
+    //     // 15
+    //   } else {
+    //     console.log('16')
+    //     tag.style.display = 'block'
+    //     leftBord.style.display = 'block'
+    //     topBord.style.display = 'block'
+    //     rightBord.style.display = 'block'
+    //     bottomBord.style.display = 'block'
+    //     topBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       board.getBoundingClientRect().left +
+    //       'px'
+    //     topBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       board.getBoundingClientRect().top +
+    //       'px'
+    //     topBord.style.width = payload.getBoundingClientRect().width + 'px'
+    //     // bottomBord.style.display = 'none'?
+    //     leftBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       board.getBoundingClientRect().left +
+    //       'px'
+    //     leftBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       board.getBoundingClientRect().top +
+    //       'px'
+    //     leftBord.style.height = payload.getBoundingClientRect().height + 'px'
+    //     rightBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       board.getBoundingClientRect().left +
+    //       payload.getBoundingClientRect().width -
+    //       2 +
+    //       'px'
+    //     rightBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       board.getBoundingClientRect().top +
+    //       'px'
+    //     rightBord.style.height = payload.getBoundingClientRect().height + 'px'
+    //     bottomBord.style.left =
+    //       payload.getBoundingClientRect().left +
+    //       board.getBoundingClientRect().left +
+    //       'px'
+    //     bottomBord.style.top =
+    //       payload.getBoundingClientRect().top +
+    //       board.getBoundingClientRect().top +
+    //       payload.getBoundingClientRect().height -
+    //       2 +
+    //       'px'
+    //     bottomBord.style.width = payload.getBoundingClientRect().width + 'px'
+    //   }
+    // },
     moveElement(e) {
       this.clickedElement.style.filter = 'blur(0.8px)'
       this.isContentMovable = true
@@ -2302,24 +2486,23 @@ export default {
       }
     },
     modeSelect(mode) {
-      // console.log(mode)
       this.mode = mode
     },
     onmouserightClick(e) {
       if (e.button === 2) {
-        console.log('right')
+        let board = document.querySelector('.board')
         this.mouseRightClick = true
         this.$nextTick(() => {
           let context = document.querySelector('.context')
-          context.style.left = e.clientX + 'px'
-          context.style.top = e.clientY + 'px'
+          context.style.left =
+            e.clientX + board.getBoundingClientRect().left + 'px'
+          context.style.top =
+            e.clientY + board.getBoundingClientRect().top + 'px'
           this.$refs.context.clickedElement(e.target)
-          // context.style.top = parseInt(getComputedStyle(e.target).top) + parseInt(getComputedStyle(e.target).height) / 2 + 'px'
         })
       }
     },
     loadData(data) {
-      // console.log(data)
       this.$emit('loadData', data)
     }
   }
@@ -2503,14 +2686,14 @@ export default {
   .boundary-line-bottom {
     width: 100%;
     height: 5px;
-    background-color: purple;
+    // background-color: purple;
     position: fixed;
     z-index: 10000;
   }
 
   .boundary-line-left,
   .boundary-line-right {
-    background-color: purple;
+    // background-color: purple;
     width: 5px;
     height: 100%;
     position: fixed;
