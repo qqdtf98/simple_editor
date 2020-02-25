@@ -60,6 +60,14 @@
           </div>
         </div>
         <div class="main-center-panel">
+          <input
+            style="display:none"
+            type="file"
+            @change="onFileSelected"
+            id="getfile"
+            ref="fileInput"
+          />
+
           <div class="main-menu">
             <home
               ref="home"
@@ -913,6 +921,34 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    onFileSelected(e) {
+      var file = e.target
+      var fileList = file.files
+      // 읽기
+      var reader = new FileReader()
+      // console.log(reader)
+      //로드 한 후
+      var vm = this
+      reader.readAsDataURL(fileList[0])
+      reader.onload = function() {
+        vm.onFileApply(reader.result)
+      }
+      this.imageLoder = true
+    },
+    onFileApply(submit) {
+      console.log(submit)
+      let panel = document.querySelector('.main-center-panel')
+      let img = document.createElement('img')
+      img.src = submit
+      panel.insertBefore(img, panel.childNodes[0])
+      // for (let payload of this.payload) {
+      //   this.submitSorce.payload = payload
+      //   this.submitSorce.style = 'background-image'
+      //   this.submitSorce.value = submit
+      //   this.submitSorce.change = 1
+      //   // this.$emit('userSelectedWidth', this.submitSorce)
+      // }
+    },
     testtt(e) {
       console.log(
         window.parent.document

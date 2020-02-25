@@ -481,11 +481,15 @@ export default {
   },
   methods: {
     uploadImage() {
-      let uploadImg = document.createElement('input')
-
-      // console.log(editor.parentElement);
-
+      let input = document.querySelector('#getfile')
+      let uploadImg = input.cloneNode(true)
+      uploadImg.ref = 'img1'
+      console.log(uploadImg)
+      console.log(this.clickedElement)
       this.clickedElement.appendChild(uploadImg)
+      this.$nextTick(() => {
+        $refs.img1.click()
+      })
     },
     addCode(e) {
       this.$emit('open-code', e)
@@ -686,7 +690,6 @@ export default {
                 'px'
               // 3
             } else if (!leftOver && !topOver && rightOver && !bottomOver) {
-              console.log('3')
               // right 벗어날 때
               tag.style.display = 'block'
               leftBord.style.display = 'block'
