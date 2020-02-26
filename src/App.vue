@@ -239,6 +239,7 @@
               @add-js="addJS"
               v-show="!showhtml"
               class="filecontent"
+              ref="filecontent"
             />
             <div class="testYap" data-event="zzzzz"></div>
           </div>
@@ -346,6 +347,15 @@
         >
           취소
         </div>
+        <img
+          v-if="thirdPopUp"
+          @click="backToFirst"
+          class="back"
+          src="./assets/images/back.svg"
+        />
+        <div v-for="title in fileTitles" class="project-list" v-if="thirdPopUp">
+          {{ title }}
+        </div>
         <input
           style="display:none;"
           type="file"
@@ -360,6 +370,9 @@
           multiple
         />
       </div>
+    </div>
+    <div v-if="isPopUp2Active" class="popup2">
+      <div class="bg" @click="deactivatePopUp2" />
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -418,6 +431,7 @@ export default {
       zzzzz: 3,
       firstPopUp: true,
       secondPopUp: false,
+      thirdPopUp: false,
       isPopUpActive: false,
       borderWidth: [
         { text: 'White' },
@@ -532,9 +546,11 @@ export default {
       currentLeftTab: null,
       moveLine: false,
       initialBorder: 0,
+      projectTitles: ['project A', 'project B', 'project C'],
       htmlTitles: [],
       cssTitles: [],
       jsTitles: [],
+      imgTitles: [],
       leftTitles: [
         {
           text: 'index.html',
@@ -987,11 +1003,15 @@ export default {
         this.processFile(e.target.files[i])
       }
       this.isPopUpActive = false
+      this.$refs.filecontent.setFiles(
+        this.htmlTitles,
+        this.cssTitles,
+        this.jsTitles
+      )
     },
     processFile(file) {
       var reader = new FileReader()
-      reader.onload = function() {
-        // console.log(reader.result)
+      reader.onload = e => {
         let title = file.name.split('.')
         var payload = {
           text: file.name,
@@ -1000,12 +1020,13 @@ export default {
         }
         if (title[1] === 'html') {
           this.htmlTitles.push(payload)
-        } else if (titles[1] === 'css') {
+        } else if (title[1] === 'css') {
           this.cssTitles.push(payload)
-        } else if (titles[1] === 'js') {
+        } else if (title[1] === 'js') {
           this.jsTitles.push(payload)
+        } else if (title[1] === 'png') {
+          this.imgTitles.push(payload)
         }
-        console.log(payload)
       }
       reader.readAsText(file)
     },
@@ -1027,10 +1048,12 @@ export default {
     backToFirst() {
       this.secondPopUp = false
       this.firstPopUp = true
+      this.thirdPopUp = false
     },
     newProject() {
       this.firstPopUp = false
       this.secondPopUp = true
+      this.thirdPopUp = true
       console.log('1111111q')
       console.log(this.secondPopUp)
     },
