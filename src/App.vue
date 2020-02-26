@@ -1032,7 +1032,10 @@ export default {
     },
     openServer() {
       this.firstPopUp = false
-      this.secondPopUp = true
+      this.secondPopUp = false
+      this.thirdPopUp = true
+      // 서버로 username 전송하기
+      // response에 따라 프로젝트 list up
     },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
