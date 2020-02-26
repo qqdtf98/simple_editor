@@ -1770,7 +1770,8 @@ export default {
       }
       this.$emit('stack-push', add)
     },
-    selectOverview(payload) {
+    selectOverview(payload) 
+
       {
         let tag = document.querySelector('.tagname')
 
@@ -2413,8 +2414,7 @@ export default {
             board.getBoundingClientRect().top +
             payload.getBoundingClientRect().height +
             'px'
-          bottomBord.style.width = payload.getBoundingClientRect().width + 'px'
-        }
+       
       }
     },
     moveElement(e) {
