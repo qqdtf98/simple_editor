@@ -60,6 +60,14 @@
           </div>
         </div>
         <div class="main-center-panel">
+          <input
+            style="display:none"
+            type="file"
+            @change="onFileSelected"
+            id="getfile"
+            ref="fileInput"
+          />
+
           <div class="main-menu">
             <home
               ref="home"
@@ -231,6 +239,7 @@
               @add-js="addJS"
               v-show="!showhtml"
               class="filecontent"
+              ref="filecontent"
             />
             <div class="testYap" data-event="zzzzz"></div>
           </div>
@@ -268,6 +277,7 @@
 
     <fileList
       @newpage="newPage"
+      @addproject="addProject"
       v-show="isFileTab"
       class="filelist-tab list-tab"
     />
@@ -298,6 +308,71 @@
       <div @click="copyPage" class="copy">Copy</div>
       <div @click="rename" class="rename">Rename</div>
       <div @click="deleteTitle" class="delete">Delete</div>
+    </div>
+    <div v-if="isPopUpActive" class="popup">
+      <div class="bg" @click="deactivatePopUp" />
+      <div class="input-box">
+        <div v-if="firstPopUp" class="new-project" @click="newProject">
+          새로운 프로젝트
+        </div>
+        <div @click="openProject" v-if="firstPopUp" class="open-project">
+          폴더 열기
+        </div>
+        <div @click="openServer" v-if="firstPopUp" class="open-server">
+          서버에서 열기
+        </div>
+
+        <img
+          v-if="secondPopUp"
+          @click="backToFirst"
+          class="back"
+          src="./assets/images/back.svg"
+        />
+        <input
+          v-if="secondPopUp"
+          class="new-project-name"
+          @click="projectName"
+        />
+        <div
+          @click="createNewProject"
+          v-if="secondPopUp"
+          class="new-project-create"
+        >
+          확인
+        </div>
+        <div
+          @click="cancleProject"
+          v-if="secondPopUp"
+          class="new-project-cancel"
+        >
+          취소
+        </div>
+        <img
+          v-if="thirdPopUp"
+          @click="backToFirst"
+          class="back"
+          src="./assets/images/back.svg"
+        />
+        <div v-for="title in fileTitles" class="project-list" v-if="thirdPopUp">
+          {{ title }}
+        </div>
+        <input
+          style="display:none;"
+          type="file"
+          id="flup"
+          ref="folderInput"
+          @change="onFolderSelected"
+          webkitdirectory
+          mozdirectory
+          msdirectory
+          odirectory
+          directory
+          multiple
+        />
+      </div>
+    </div>
+    <div v-if="isPopUp2Active" class="popup2">
+      <div class="bg" @click="deactivatePopUp2" />
     </div>
   </div>
   <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
@@ -354,6 +429,10 @@ export default {
   data() {
     return {
       zzzzz: 3,
+      firstPopUp: true,
+      secondPopUp: false,
+      thirdPopUp: false,
+      isPopUpActive: false,
       borderWidth: [
         { text: 'White' },
         { text: 'Black' },
@@ -468,6 +547,11 @@ export default {
       currentLeftTab: null,
       moveLine: false,
       initialBorder: 0,
+      projectTitles: ['project A', 'project B', 'project C'],
+      htmlTitles: [],
+      cssTitles: [],
+      jsTitles: [],
+      imgTitles: [],
       leftTitles: [
         {
           text: 'index.html',
@@ -1011,6 +1095,108 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    onFolderSelected(e) {
+      let i
+      for (i = 0; i < e.target.files.length; i++) {
+        this.processFile(e.target.files[i])
+      }
+      this.isPopUpActive = false
+      this.$refs.filecontent.setFiles(
+        this.htmlTitles,
+        this.cssTitles,
+        this.jsTitles
+      )
+    },
+    processFile(file) {
+      var reader = new FileReader()
+      reader.onload = e => {
+        let title = file.name.split('.')
+        var payload = {
+          text: file.name,
+          code: reader.result,
+          type: title[1]
+        }
+        if (title[1] === 'html') {
+          this.htmlTitles.push(payload)
+        } else if (title[1] === 'css') {
+          this.cssTitles.push(payload)
+        } else if (title[1] === 'js') {
+          this.jsTitles.push(payload)
+        } else if (title[1] === 'png') {
+          this.imgTitles.push(payload)
+        }
+      }
+      reader.readAsText(file)
+    },
+    openServer() {
+      this.firstPopUp = false
+      this.secondPopUp = false
+      this.thirdPopUp = true
+      // 서버로 username 전송하기
+      // response에 따라 프로젝트 list up
+    },
+    createNewProject() {
+      let title = document.querySelector('.new-project-name')
+      console.log(title.value)
+      this.isPopUpActive = false
+    },
+    cancleProject() {
+      this.isPopUpActive = false
+    },
+    openProject() {
+      this.$refs.folderInput.click()
+    },
+    backToFirst() {
+      this.secondPopUp = false
+      this.firstPopUp = true
+      this.thirdPopUp = false
+    },
+    newProject() {
+      this.firstPopUp = false
+      this.secondPopUp = true
+      this.thirdPopUp = true
+      console.log('1111111q')
+      console.log(this.secondPopUp)
+    },
+    activatePopUp() {
+      this.isPopUpActive = true
+    },
+    deactivatePopUp() {
+      this.isPopUpActive = false
+    },
+    addProject() {
+      this.activatePopUp()
+      this.secondPopUp = false
+      this.firstPopUp = true
+    },
+    onFileSelected(e) {
+      var file = e.target
+      var fileList = file.files
+      // 읽기
+      var reader = new FileReader()
+      // console.log(reader)
+      //로드 한 후
+      var vm = this
+      reader.readAsDataURL(fileList[0])
+      reader.onload = function() {
+        vm.onFileApply(reader.result)
+      }
+      this.imageLoder = true
+    },
+    onFileApply(submit) {
+      console.log(submit)
+      let panel = document.querySelector('.main-center-panel')
+      let img = document.createElement('img')
+      img.src = submit
+      panel.insertBefore(img, panel.childNodes[0])
+      // for (let payload of this.payload) {
+      //   this.submitSorce.payload = payload
+      //   this.submitSorce.style = 'background-image'
+      //   this.submitSorce.value = submit
+      //   this.submitSorce.change = 1
+      //   // this.$emit('userSelectedWidth', this.submitSorce)
+      // }
+    },
     testtt(e) {
       console.log(
         window.parent.document
@@ -2560,6 +2746,88 @@ export default {
       &:hover {
         cursor: pointer;
         background-color: #4b4b57;
+      }
+    }
+  }
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(#000, 0.7);
+    }
+
+    .input-box {
+      background-color: #292931;
+      padding: 1rem;
+      z-index: 1;
+      border-radius: r(3);
+      height: 35rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 45rem;
+      position: relative;
+      .new-project,
+      .open-project,
+      .open-server {
+        width: 12rem;
+        border: 1px solid #525252;
+        height: 17rem;
+        color: #fff;
+        &:hover {
+          cursor: pointer;
+          background-color: #454550;
+        }
+      }
+      .back {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        width: 1rem;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .new-project,
+      .open-project {
+        margin-right: 2rem;
+      }
+      .new-project-name,
+      .new-project-create,
+      .new-project-cancel {
+        background-color: #292931;
+        width: 12rem;
+        border: 1px solid #525252;
+        height: 17rem;
+        color: #fff;
+        &:hover {
+          cursor: pointer;
+          background-color: #454550;
+        }
+      }
+      .new-project-name,
+      .new-project-create {
+        margin-right: 2rem;
+      }
+
+      .input {
+        height: 100%;
+        font-size: 100%;
       }
     }
   }

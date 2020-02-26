@@ -1,13 +1,16 @@
 <template>
   <div id="filelist">
     <div @click="addpage" class="new-file list-tab">New File</div>
-    <div class="new-project list-tab">New Project</div>
+    <div @click="addProject" class="new-project list-tab">New Project</div>
   </div>
 </template>
 
 <script>
 export default {
   methods: {
+    addProject() {
+      this.$emit('addproject')
+    },
     addpage() {
       this.$emit('newpage')
     }

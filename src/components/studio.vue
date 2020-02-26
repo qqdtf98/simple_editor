@@ -203,16 +203,25 @@ export default {
         nest.style.transition = 'all 300ms ease'
         this.parentElement.querySelector('.nested').classList.toggle('active')
         this.classList.toggle('caret-down')
-        if (nest.children[0].className !== 'tag-list-box') {
+        if (nest.classList[0] === 'html') {
+          console.log('html')
+          console.log(nest.classList)
+          console.log(nest)
           for (j = 0; j < nest.children.length; j++) {
-            // wa
             nest.children[j].classList.add('template')
           }
         } else {
-          for (k = 0; k < nest.children[0].children[1].children.length; k++) {
-            nest.children[0].children[1].children[k].classList.add('ui-tag')
-            nest.children[1].children[1].children[k].classList.add('ui-tag')
-            nest.children[2].children[1].children[k].classList.add('ui-tag')
+          if (nest.children[0].className !== 'tag-list-box') {
+            for (j = 0; j < nest.children.length; j++) {
+              // wa
+              nest.children[j].classList.add('template')
+            }
+          } else {
+            for (k = 0; k < nest.children[0].children[1].children.length; k++) {
+              nest.children[0].children[1].children[k].classList.add('ui-tag')
+              nest.children[1].children[1].children[k].classList.add('ui-tag')
+              nest.children[2].children[1].children[k].classList.add('ui-tag')
+            }
           }
         }
       })
@@ -266,9 +275,9 @@ export default {
         oScript.type = 'text/css'
         oScript.innerHTML = `
       .dsadsadsa{
-        color: #fff; 
+        color: #fff;
         background:blue;
-        font-size:2em; 
+        font-size:2em;
         border-radius:0.5em;
         padding:5px 20px;
       }
