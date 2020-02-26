@@ -124,6 +124,7 @@ export default {
     },
     findChildren(child, obj, myParent,intent) {
       if (typeof child.children !== 'undefined') {
+        intent+=10
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
           // console.log(childOFchil)
@@ -189,13 +190,14 @@ export default {
               childOFchil[i],
               newOriginalParentObj,
               this.friendNum,
-              intent+10
+              intent
             )
           }
         }
       }
     },
     domSelection(payload) {
+      console.log(payload)
       console.log(this.dom.length)
       for (var i = 0; i < this.dom.length; i++) {
         // console.log(this.isActiveLabel)
@@ -309,6 +311,7 @@ export default {
     },
     onmouseMove(e) {
       if (e.target.tagName === 'LABEL') {
+        console.log(this.dom[e.target.id])
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }

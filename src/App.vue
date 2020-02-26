@@ -519,6 +519,7 @@ export default {
     this.editor1 = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
+        id: 'editorMonaco1',
         value: '코드를 입력해주세요',
         language: 'html',
         theme: 'vs-dark',
@@ -526,13 +527,96 @@ export default {
         accessibilityPageSize: 4,
         lineDecorationsWidth: 10,
         mouseWheelZoom: true
+        // automaticLayout: true,
+        // wordWrap: 'on'
         // find: 'IEditorFindOptions',
       }
     )
-    this.editor1.onMouseDown(function(e) {
+    this.editor1.onMouseDown(e => {
+      // for (
+      //   var i = 0;
+      //   i <
+      //   this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1]
+      //     .length;
+      //   i++
+      // ) {
+      //   // console.log(this.editor1.getValue()[i])
+      //   console.log(
+      //     this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1][
+      //       i
+      //     ]
+      //   )
+      // }
+      // console.log(e.target)
+      console.log('안녕')
       console.log(e.target.position.lineNumber)
-      if (e.target.element.className == 'view-line')
-        console.log(e.target.position.lineNumber)
+      console.log(e.target.position.column)
+      var elem = ''
+      var length = this.editor1.getValue().split('\n').length
+      console.log(this.editor1.getValue().split('\n').length)
+
+      var clickEle
+      for (var i = e.target.position.lineNumber; i >0 ; i--) {
+        
+      }
+
+
+      for (var i = 0; i < e.target.position.lineNumber; i++) {
+        var j = 0
+        // console.log('바이')
+        if (i != e.target.position.lineNumber) {
+          while (
+            typeof this.editor1.getValue().split('\n')[i][j] !== 'undefined'
+          ) {
+            // console.log(this.editor1.getValue().split('\n')[i][j])
+            elem += this.editor1.getValue().split('\n')[i][j]
+            j++
+          }
+        } else {
+          while (j < e.target.position.column - 1) {
+            // console.log(this.editor1.getValue().split('\n')[i][j])
+            elem += this.editor1.getValue().split('\n')[i][j]
+            j++
+          }
+        }
+        // console.log(i)
+      }
+      console.log(elem)
+      var newDIV = document.createElement('div')
+      // newDIV.innerHTML = child[i].tagName;
+      newDIV.innerHTML = elem
+      console.log(newDIV.children)
+
+      console.log(newDIV.children.length)
+      var selectedDom = newDIV.children[newDIV.children.length - 1]
+      // console.log(selectedDom)
+
+      while (selectedDom.children.length != 0) {
+        if (selectedDom.length != 0) {
+          selectedDom = selectedDom.children[selectedDom.children.length - 1]
+          console.log(selectedDom)
+          // console.log(selectedDom.children.length )
+        } else {
+          break
+        }
+      }
+      console.log(selectedDom)
+      // newDIV.style.backgroundColor="yellow";
+
+      // console.log(
+      //   this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1][
+      //     e.target.position.column - 1
+      //   ]
+      // )
+      // console.log(this.editor1.getValue().split('\n')[20 + 1])
+      // console.log(e.domNode)
+      var elem = e.target.element.innerHTML.replace(/&nbsp;/gi, ' ')
+      elem = elem.replace(/amp;/gi, '')
+      //previousElementSibling
+      // console.log(elem)
+      // console.log(e.target.position.lineNumber)
+      // // if (e.target.element.className == 'view-line')
+      //   console.log(e.target.position.lineNumber)
     })
 
     // this.css = document.querySelector('#board').style
@@ -557,17 +641,21 @@ export default {
         accessibilityPageSize: 4,
         lineDecorationsWidth: 10,
         mouseWheelZoom: true
+
         // find: 'IEditorFindOptions',
       }
     )
-
+    var a = 0
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
       // document.getElementById(
       //   this.idSelected
       // ).innerHTML = this.editor1.getValue()
+      a++
+      console.log(a)
+      console.log(e.changes)
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
-      console.log(e)
+
       this.$refs.overview.printHomeDocument()
       // editor.setValue(editor.getValue())1
       // console.log(document.getElementById(id).innerHTML)
@@ -750,6 +838,14 @@ export default {
         this.$nextTick(() => {
           bord.style.top = parseInt(getComputedStyle(loader).top) + 'px'
         })
+        document.getElementsByClassName(
+          'monaco-editor no-user-select  showUnused vs-dark'
+        )[0].style.height = loader.style.height
+        console.log(
+          document.getElementsByClassName(
+            'monaco-editor no-user-select  showUnused vs-dark'
+          )[0].style.height
+        )
       }
       if (this.isTitle) {
         // let sitemap = document.querySelector("#sitemap");
