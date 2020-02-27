@@ -5,10 +5,10 @@
         <div class="tag-list-box">
           <span class="tag-list">HTML</span>
           <div class="html nested">
-            <div :key="title.key" v-for="(title, index) in htmlTitles">
-              <div v-if="index == 0">
-                {{ title.text }}
-              </div>
+            <div :key="index" v-for="(title, index) in htmlTitles">
+              <!-- <div v-if="index == 0"> -->
+              {{ title.text }}
+              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
 export default {
   data() {
     return {
@@ -44,6 +45,7 @@ export default {
     }
   },
   computed: {},
+  components: { vueCustomScrollbar },
   methods: {
     setFiles(html, css, js) {
       this.htmlTitles = html
