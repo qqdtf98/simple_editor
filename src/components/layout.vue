@@ -370,7 +370,6 @@
                       :options="imageSize"
                       @change="submitChangeImageSize"
                     ></b-form-select>
-                    <!--<button @click="onUpload">Save</button>-->
                   </div>
                 </div>
               </div>
@@ -925,7 +924,6 @@
           </div>
         </div>
 
-        <!--Animation-->
         <div
           @mouseover="mouseOver"
           v-show="tabStep === 2"
@@ -1281,7 +1279,6 @@ export default {
       if (this.layoutMove) {
         this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
         this.moveTarget.style.height = '30rem'
-        // this.moveTarget.style.right= e.clientX - this.xInter + "px";
         this.moveTarget.style.right =
           window.innerWidth -
           e.clientX -
@@ -1289,18 +1286,13 @@ export default {
           'px'
         this.moveTarget.style.top = e.clientY - this.yInter + 'px'
         let rightBorder = document.querySelector('.right-panel-border')
-        // console.log(parseInt(getComputedStyle(this.moveTarget).right))
         if (parseInt(getComputedStyle(this.moveTarget).right) < 30) {
-          // console.log('1')
           rightBorder.style.opacity = '1'
           rightBorder.style.backgroundImage =
             'linear-gradient(to right, #00000000, #68869250)'
-          // rightBorder.style.backgroundColor = "#3a3a50"
           this.isSticky = true
         } else {
-          // console.log('0')
           rightBorder.style.opacity = '0'
-          // rightBorder.style.backgroundColor = "#292931";
           this.isSticky = false
         }
       }
@@ -1310,7 +1302,6 @@ export default {
         let rightBorder = document.querySelector('.right-panel-border')
         let rightTopPanel = document.querySelector('.right-top-panel')
         let rightBottomPanel = document.querySelector('.right-bottom-panel')
-        // rightBorder.style.backgroundColor = "#292931";
         if (this.isSticky) {
           console.log('0')
           rightBorder.style.opacity = '0'
@@ -1386,13 +1377,10 @@ export default {
       this.payload.clear()
       for (let item of payload) {
         this.payload.add(item)
-        // console.log(this.payload)
 
         var margin = getComputedStyle(item)
           .margin.replace(/px/gi, '')
           .split(' ')
-        // console.log(margin)
-        // console.log(this.margin[0])
         if (margin.length !== 1) {
           for (var i = 0; i < margin.length; i++) {
             this.margin[i].value = margin[i]
@@ -1406,8 +1394,6 @@ export default {
         var padding = getComputedStyle(item)
           .padding.replace(/px/gi, '')
           .split(' ')
-        //   console.log(padding)o8
-        //   console.log(this.margin[0])
         if (padding.length !== 1) {
           for (var i = 0; i < padding.length; i++) {
             this.padding[i] = padding[i]
@@ -1447,44 +1433,16 @@ export default {
         this.opacityValue = getComputedStyle(item).opacity
       }
 
-      // console.log(this.opacity)
-      // console.log(margin)
-      // console.log(this.margin[3])
     },
     colorBackgroundpicker() {
       if (this.isBackgroundPicker == true) this.isBackgroundPicker = false
       else this.isBackgroundPicker = true
-      // if(this.isBackgroundPicker==true)
-      //    this.isBackgroundPicker=false
-      // else
-      //    this.isBackgroundPicker=true
-      // console.log("sdas")
+      //
     },
     colorFontpicker() {
       this.isFontPicker = true
     },
-    updateBackgroundValue(colorData) {
-      for (let payload of this.payload) {
-        this.backgroundColor.background = colorData.hex
-        this.submitSorce.payload = payload
-        this.submitSorce.style = 'background'
-        this.submitSorce.value = colorData.hex
-        this.onBackgroundColor = true
-        this.submitSorce.change = 1
-        this.$emit('userSelected', this.submitSorce)
-      }
-    },
-    updateFontValue(colorData) {
-      for (let payload of this.payload) {
-        this.fontColor.background = colorData.hex
-        this.submitSorce.payload = payload
-        this.submitSorce.style = 'color'
-        this.submitSorce.value = colorData.hex
-        this.onColor = true
-        this.submitSorce.change = 1
-        this.$emit('userSelected', this.submitSorce)
-      }
-    },
+
     //보내기
     submitSource(e) {
       for (let payload of this.payload) {
@@ -1502,8 +1460,6 @@ export default {
 
           var margin = e.target.value.replace(/px/gi, '').split(' ')
           var value = ''
-          // console.log(margin)
-          // console.log(this.margin[0])
           if (margin.length !== 1) {
             for (var i = 0; i < margin.length; i++) {
               this.margin[i].value = margin[i]
@@ -1667,7 +1623,6 @@ export default {
         this.submitSorce.payload = payload
         this.submitSorce.style = 'background-size'
         this.submitSorce.value = e
-        // console.log(this.submitSorce)
         this.submitSorce.change = 1
         this.$emit('userSelectedWidth', this.submitSorce)
       }
@@ -1729,7 +1684,6 @@ export default {
         this.submitSorce.style = 'opacity'
         if (typeof e.target !== 'undefined') {
           this.submitSorce.value = e.target.value
-          // this.submitSorce.value=e
         } else {
           this.submitSorce.value = e
         }
@@ -1894,28 +1848,27 @@ export default {
       console.log(e)
     },
     //엔터
-    submitSourceOriginal(e) {
-      // console.log(e.target)
-      console.log('sd')
-      // console.log(e.target.name)
-      this.isBackgroundPicker = false
-      this.isFontPicker = false
-      if (e.target.name == 'backgroundColor') {
-        this.backgroundColor.backgroundColor = e.target.value
-      } else if (e.target.name == 'color') {
-        this.fontColor.backgroundColor = e.target.value
-      }
-      this.submitSorce.payload = this.payload
-      if (typeof e.target !== 'undefined') {
-        this.submitSorce.style = e.target.name
-        this.submitSorce.value = e.target.value
-      } else {
-        // onsole.log(this.submitSorce)
-        this.submitSorce.value = e
-      }
-      this.submitSorce.change = 1
-      this.$emit('userSelected', this.submitSorce)
-    },
+    // submitSourceOriginal(e) {
+    //   // console.log(e.target)
+    //   console.log('sd')
+    //   // console.log(e.target.name)
+    //   this.isBackgroundPicker = false
+    //   this.isFontPicker = false
+    //   if (e.target.name == 'backgroundColor') {
+    //     this.backgroundColor.backgroundColor = e.target.value
+    //   } else if (e.target.name == 'color') {
+    //     this.fontColor.backgroundColor = e.target.value
+    //   }
+    //   this.submitSorce.payload = this.payload
+    //   if (typeof e.target !== 'undefined') {
+    //     this.submitSorce.style = e.target.name
+    //     this.submitSorce.value = e.target.value
+    //   } else {
+    //     this.submitSorce.value = e
+    //   }
+    //   this.submitSorce.change = 1
+    //   this.$emit('userSelected', this.submitSorce)
+    // },
 
     submitSourceWithPX(e) {
       this.submitSorce.payload = this.payload
@@ -1996,26 +1949,25 @@ export default {
       // console.log(this.submitSorce)
       this.$emit('userSelectBorder', this.submitSorce)
     },
-    submitChangeFloat(e) {
-      if (e.target.getAttribute('name') == null) {
-        if (e.target.parentElement.getAttribute('name') === 'left') {
-          this.submitSorce.value = 'left'
-        } else if (e.target.parentElement.getAttribute('name') === 'right') {
-          this.submitSorce.value = 'right'
-        } else if (e.target.parentElement.getAttribute('name') === 'no') {
-          this.submitSorce.value = 'left'
-        } else if (e.target.parentElement.getAttribute('name') === 'center') {
-          this.submitSorce.value = 'center'
-        }
-      } else {
-        this.submitSorce.value = e.target.getAttribute('name')
-      }
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'float'
-      // console.log(this.submitSorce)
-      this.submitSorce.change = 1
-      this.$emit('userSelected', this.submitSorce)
-    },
+    // submitChangeFloat(e) {
+    //   if (e.target.getAttribute('name') == null) {
+    //     if (e.target.parentElement.getAttribute('name') === 'left') {
+    //       this.submitSorce.value = 'left'
+    //     } else if (e.target.parentElement.getAttribute('name') === 'right') {
+    //       this.submitSorce.value = 'right'
+    //     } else if (e.target.parentElement.getAttribute('name') === 'no') {
+    //       this.submitSorce.value = 'left'
+    //     } else if (e.target.parentElement.getAttribute('name') === 'center') {
+    //       this.submitSorce.value = 'center'
+    //     }
+    //   } else {
+    //     this.submitSorce.value = e.target.getAttribute('name')
+    //   }
+    //   this.submitSorce.payload = this.payload
+    //   this.submitSorce.style = 'float'
+    //   this.submitSorce.change = 1
+    //   this.$emit('userSelected', this.submitSorce)
+    // },
     makeTreeParent(payload) {
       var obj = document.getElementById('inParentTreeOption')
       $(obj).empty()
@@ -2077,12 +2029,8 @@ export default {
       }
     },
     loadDataSetting(data) {
-      // console.log("dsda")
-      // console.log(data[0])
     },
     changeProperty(e) {
-      // console.log(this.loadData[0])
-      // console.log(document.getElementById("newLoaderHtml"))
       if (e.target.getAttribute('name') == 'html') {
         this.kindOfLoadDate = 1
       } else if (e.target.getAttribute('name') == 'css') {
@@ -2094,7 +2042,6 @@ export default {
     },
     chageContent() {
       if (this.kindOfLoadDate == 1) {
-        // document.querySelector('#preview').textContent = this.loadData[0]
         this.test = document.getElementById('newLoaderHtml').innerHTML
       } else if (this.kindOfLoadDate == 2) {
         document.querySelector('#preview2').textContent = this.loadData[1]
