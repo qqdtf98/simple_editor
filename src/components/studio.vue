@@ -204,9 +204,6 @@ export default {
         this.parentElement.querySelector('.nested').classList.toggle('active')
         this.classList.toggle('caret-down')
         if (nest.classList[0] === 'html') {
-          console.log('html')
-          console.log(nest.classList)
-          console.log(nest)
           for (j = 0; j < nest.children.length; j++) {
             nest.children[j].classList.add('template')
           }
