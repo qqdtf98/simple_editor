@@ -16,14 +16,14 @@
         @mouseup="mouseRightClick"
         class="title-map"
       >
-        <div :key="title.id" v-for="title in titles" class="titles-box">
-          <span
-            @keydown.enter="isContentNotEditable"
-            :contenteditable="isContentEditable"
-            class="titles"
-          >
-            {{ title.text }}
-          </span>
+        <div
+          @keydown.enter="isContentNotEditable"
+          :contenteditable="isContentEditable"
+          :key="title.id"
+          v-for="title in titles"
+          class="titles"
+        >
+          {{ title.text }}
         </div>
       </div>
     </vue-custom-scrollbar>
@@ -157,30 +157,6 @@ export default {
       if (tar === 'titles') {
         let titles = document.querySelectorAll('.titles')
         let boards = document.querySelectorAll('.board')
-
-        for (i = 0; i < titles.length; i++) {
-          if (titles[i] === payload) {
-            this.positionId = i
-            this.titles[this.targetId].parentID = this.titles[i].id
-            // titles[this.targetId].style.marginLeft = '1rem'
-            break
-          }
-        }
-        let target = this.titles.splice(this.targetId, 1)
-        let parent = boards[this.targetId].parentElement
-        let child = boards[this.targetId]
-        if (this.targetId < i) {
-          parent.removeChild(child)
-          parent.insertBefore(child, parent.childNodes[this.positionId])
-          this.titles.splice(this.positionId, 0, target[0])
-        } else {
-          parent.removeChild(boards[this.targetId])
-          parent.insertBefore(child, parent.childNodes[this.positionId + 1])
-          this.titles.splice(this.positionId + 1, 0, target[0])
-        }
-      } else if (tar === 'titles-box') {
-        let titles = document.querySelectorAll('.titles-box')
-        let boards = document.querySelectorAll('.board')
         for (i = 0; i < titles.length; i++) {
           if (titles[i] === payload) {
             this.positionId = i
@@ -225,15 +201,6 @@ export default {
         if (e.target.className === 'titles') {
           let i
           let titles = document.querySelectorAll('.titles')
-          for (i = 0; i < titles.length; i++) {
-            if (titles[i] === e.target) {
-              this.targetId = i
-              break
-            }
-          }
-        } else if (e.target.className === 'titles-box') {
-          let i
-          let titles = document.querySelectorAll('.titles-box')
           for (i = 0; i < titles.length; i++) {
             if (titles[i] === e.target) {
               this.targetId = i
@@ -285,7 +252,7 @@ export default {
       color: #e7e4e4;
       padding-left: 0.4rem;
       align-items: left;
-      .titles-box {
+      .titles {
         height: 1.5rem;
         display: flex;
         margin-top: 0.2rem;
@@ -294,14 +261,6 @@ export default {
         &:hover {
           background-color: #505557;
           cursor: pointer;
-        }
-        .titles {
-          text-align: left;
-          height: 1.5rem;
-          &:hover {
-            background-color: #505557;
-            cursor: pointer;
-          }
         }
       }
     }
