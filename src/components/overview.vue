@@ -7,13 +7,11 @@
             <input class="checkbox" type="checkbox" id="root" />
             <label for="root">HTML</label>
             <ul
-                  id="bodySource"
-                  @mousemove="onmouseMove"
-                  @click="clickLabelEvent"
-                  style="text-indent:10px"
-                ></ul>
-              </li>
-            </ul>
+              id="bodySource"
+              @mousemove="onmouseMove"
+              @click="clickLabelEvent"
+              style="text-indent:10px"
+            />
           </li>
         </ul>
       </div>
@@ -120,11 +118,11 @@ export default {
       // console.log(obj)
       this.myParent.push(-1)
 
-      this.findChildren(child, newParentObj, 0,intent)
+      this.findChildren(child, newParentObj, 0, intent)
     },
-    findChildren(child, obj, myParent,intent) {
+    findChildren(child, obj, myParent, intent) {
       if (typeof child.children !== 'undefined') {
-        intent+=10
+        intent += 10
         var childOFchil = child.children
         if (childOFchil.length !== 0) {
           // console.log(childOFchil)
@@ -311,7 +309,6 @@ export default {
     },
     onmouseMove(e) {
       if (e.target.tagName === 'LABEL') {
-        console.log(this.dom[e.target.id])
         this.$emit('selectDomElement', this.dom[e.target.id])
       }
     }
