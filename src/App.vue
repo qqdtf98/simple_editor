@@ -581,7 +581,6 @@ export default {
   },
   watch: {},
   mounted() {
-    ///
     this.currentRightTab = 0
     this.currentLeftTab = 0
     let leftTitle = document.querySelector('.left-title')
@@ -604,7 +603,7 @@ export default {
       document.getElementById('leftContainer'),
       {
         id: 'editorMonaco1',
-        value: '코드를 입력해주세요',
+        value: $('iframe').get(0).contentWindow.document.body.innerHTML,
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -617,48 +616,166 @@ export default {
       }
     )
     this.editor1.onMouseDown(e => {
-      // for (
-      //   var i = 0;
-      //   i <
-      //   this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1]
-      //     .length;
-      //   i++
-      // ) {
-      //   // console.log(this.editor1.getValue()[i])
-      //   console.log(
-      //     this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1][
-      //       i
-      //     ]
-      //   )
-      // }
-      // console.log(e.target)
+     
       console.log('안녕')
-      console.log(e.target.position.lineNumber)
-      console.log(e.target.position.column)
+    
       var elem = ''
       var length = this.editor1.getValue().split('\n').length
       console.log(this.editor1.getValue().split('\n').length)
 
-      var clickEle
-      for (var i = e.target.position.lineNumber; i >0 ; i--) {
-        
+      var clickElement = ''
+      var isEnd = 1
+      for (var i = e.target.position.lineNumber - 1; i >= 0; i--) {
+        if (isEnd > 0) {
+          var temp = ''
+          if (i == e.target.position.lineNumber - 1) {
+            var j = e.target.position.column - 2
+            console.log(j)
+            while (j > 0) {
+              // console.log(this.editor1.getValue().split('\n')[i][j])
+              if (this.editor1.getValue().split('\n')[i][j] == '<') {
+                clickElement =
+                  this.editor1.getValue().split('\n')[i][j] + clickElement
+
+                if (temp != '/') {
+                  isEnd--
+                }
+                if (isEnd < 2) {
+                  isEnd--
+                  break
+                }
+                temp = this.editor1.getValue().split('\n')[i][j]
+                j--
+              } else if (this.editor1.getValue().split('\n')[i][j] == '/') {
+                clickElement =
+                  this.editor1.getValue().split('\n')[i][j] + clickElement
+                temp = this.editor1.getValue().split('\n')[i][j]
+                isEnd++
+                j--
+              } else {
+                console.log(this.editor1.getValue().split('\n')[i][j])
+                clickElement =
+                  this.editor1.getValue().split('\n')[i][j] + clickElement
+                temp = this.editor1.getValue().split('\n')[i][j]
+                j--
+              }
+            }
+          } else {
+            var j = this.editor1.getValue().split('\n')[i].length - 1
+            while (j > 0) {
+              if (this.editor1.getValue().split('\n')[i][j] == '<') {
+                clickElement =
+                  this.editor1.getValue().split('\n')[i][j] + clickElement
+
+                if (temp != '/') {
+                  isEnd--
+                }
+                if (isEnd < 2) {
+                  isEnd--
+                  break
+                }
+                temp = this.editor1.getValue().split('\n')[i][j]
+                j--
+              } else if (this.editor1.getValue().split('\n')[i][j] == '/') {
+                clickElement =
+                  this.editor1.getValue().split('\n')[i][j] + clickElement
+                temp = this.editor1.getValue().split('\n')[i][j]
+                isEnd++
+                j--
+              } else {
+                console.log(this.editor1.getValue().split('\n')[i][j])
+                clickElement =
+                  this.editor1.getValue().split('\n')[i][j] + clickElement
+                temp = this.editor1.getValue().split('\n')[i][j]
+                j--
+              }
+            }
+          }
+        } else {
+          break
+        }
+      }
+      var copyclickElement = clickElement
+      var check =
+        '</' +
+        copyclickElement
+          .split('>')[0]
+          .replace('<', '')
+          .split(' ')[0] +
+        '>'
+
+      var isInclude = true
+      var bracketslash = clickElement.match(/<[/]/g)
+      var bracket = clickElement.match(/</g)
+      console.log(bracketslash)
+      if (!clickElement.match(/<[/]/g)) {
+        console.log('짜란')
+      }
+      console.log(clickElement)
+      console.log(bracket)
+      for (var i = e.target.position.lineNumber - 1; i < length; i++) {
+        // while(!clickElement.includes(check)){
+        if (isInclude) {
+          if (i == e.target.position.lineNumber - 1) {
+            var j = e.target.position.column - 1
+            while (j < this.editor1.getValue().split('\n')[i].length) {
+              clickElement += this.editor1.getValue().split('\n')[i][j]
+              if (clickElement.match(/</g)) {
+                var bracket = clickElement.match(/</g).length
+              } else {
+                var bracket = 0
+              }
+              if (clickElement.match(/<[/]/g)) {
+                var bracketslash = clickElement.match(/<[/]/g).length
+              } else {
+                var bracketslash = 0
+              }
+              if (bracketslash == bracket - bracketslash) {
+                console.log('끝났다')
+                isInclude = false
+                break
+              }
+              j++
+            }
+          } else {
+            var j = 0
+            while (j < this.editor1.getValue().split('\n')[i].length) {
+              clickElement += this.editor1.getValue().split('\n')[i][j]
+              if (clickElement.match(/</g)) {
+                var bracket = clickElement.match(/</g).length
+              } else {
+                var bracket = 0
+              }
+              if (clickElement.match(/<[/]/g)) {
+                var bracketslash = clickElement.match(/<[/]/g).length
+              } else {
+                var bracketslash = 0
+              }
+              if (bracketslash == bracket - bracketslash) {
+                isInclude = false
+                break
+              }
+              j++
+            }
+          }
+        }
+        // }
       }
 
+      var clickDom = document.createElement('div')
+      clickDom.innerHTML = clickElement.substring(0, clickElement.length - 2)
 
       for (var i = 0; i < e.target.position.lineNumber; i++) {
         var j = 0
-        // console.log('바이')
         if (i != e.target.position.lineNumber) {
           while (
             typeof this.editor1.getValue().split('\n')[i][j] !== 'undefined'
           ) {
-            // console.log(this.editor1.getValue().split('\n')[i][j])
             elem += this.editor1.getValue().split('\n')[i][j]
             j++
           }
         } else {
           while (j < e.target.position.column - 1) {
-            // console.log(this.editor1.getValue().split('\n')[i][j])
             elem += this.editor1.getValue().split('\n')[i][j]
             j++
           }
@@ -668,45 +785,41 @@ export default {
       console.log(elem)
       var newDIV = document.createElement('div')
       // newDIV.innerHTML = child[i].tagName;
-      newDIV.innerHTML = elem
-      console.log(newDIV.children)
-
-      console.log(newDIV.children.length)
+      newDIV.innerHTML = `<!-- skip_nav -->
+   <div class="sknav">
+      <a href="#contents" class="sknavi">콘텐츠 바로가기</a>
+   </div>
+   <!-- // skip_nav -->
+   
+   <!-- wrap -->
+   <div id="wrap">
+      <!-- container -->
+      <div id="container">
+         
+         <!-- nav -->
+         <nav id="nav">
+            <div class="user_box">
+          </nav>`
+      console.log(newDIV)
       var selectedDom = newDIV.children[newDIV.children.length - 1]
-      // console.log(selectedDom)
 
-      while (selectedDom.children.length != 0) {
-        if (selectedDom.length != 0) {
-          selectedDom = selectedDom.children[selectedDom.children.length - 1]
-          console.log(selectedDom)
-          // console.log(selectedDom.children.length )
-        } else {
-          break
-        }
-      }
+      console.log(clickDom)
+
       console.log(selectedDom)
-      // newDIV.style.backgroundColor="yellow";
 
-      // console.log(
-      //   this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1][
-      //     e.target.position.column - 1
-      //   ]
-      // )
-      // console.log(this.editor1.getValue().split('\n')[20 + 1])
-      // console.log(e.domNode)
+      console.log(clickDom.children[0])
+      console.log('들어갑니다')
+      selectedDom = this.findChildren(selectedDom, clickDom)
+      console.log('나왔습니다')
+    
+      console.log(selectedDom)
+     
       var elem = e.target.element.innerHTML.replace(/&nbsp;/gi, ' ')
       elem = elem.replace(/amp;/gi, '')
-      //previousElementSibling
-      // console.log(elem)
-      // console.log(e.target.position.lineNumber)
-      // // if (e.target.element.className == 'view-line')
-      //   console.log(e.target.position.lineNumber)
+     
     })
 
-    // this.css = document.querySelector('#board').style
-    // console.log(document.querySelector('#board').style)
-
-    //////
+    
     const percentBar = document.querySelector('#board')
     let compStyles = window.getComputedStyle(percentBar)
     for (var key in percentBar.style) {
@@ -729,23 +842,14 @@ export default {
         // find: 'IEditorFindOptions',
       }
     )
-    var a = 0
+    // var a = 0
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
-      // document.getElementById(
-      //   this.idSelected
-      // ).innerHTML = this.editor1.getValue()
-      a++
-      console.log(a)
-      console.log(e.changes)
+      
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
 
       this.$refs.overview.printHomeDocument()
-      // editor.setValue(editor.getValue())1
-      // console.log(document.getElementById(id).innerHTML)
-      // console.log(this.codeReview.get(id).getValue())
-
-      // console.log('시작s')
+   
     })
 
     var oScript = document.createElement('style')
@@ -755,59 +859,17 @@ export default {
     document.getElementsByTagName('head')[0].appendChild(oScript)
 
     var myBinding2 = this.editor2.onDidContentSizeChange(e => {
-      // var sss = document.createElement('link')
-      // sss.setAttribute('rel', 'stylesheet')
-      // sss.setAttribute('href', 'style.css')
-      // sss.setAttribute('type', 'style.css')
-      // sss.innerHTML = this.editor2.getValue()
-      // $('iframe')
-      //   .get(0)
-      //   .contentWindow.document.getElementsByTagName('head')[0]
-      //   .appendChild(sss)
+    
       $('iframe')
         .get(0)
         .contentWindow.document.getElementsByTagName(
           'style'
         )[0].innerHTML = this.editor2.getValue()
       this.css = this.editor2.getValue()
-      // console.log(sss)
-      ///////////
-      // var test = document.querySelector('#jumsimmuk')
-      // var text = this.editor2.getValue()
-      // console.log(text)
-      // text = text.replace(/}/gi, '} #board ')
-      // console.log(text)
-      // test.innerHTML = '#board ' + text
-
-      // console.log(test)
-      ////////////////
-      // const percentBar = document.querySelector("#app");
-      // let compStyles = window.getComputedStyle(percentBar)
-      // for(var key in percentBar.style) {
-      //     if(percentBar.style[key] != "") {
-      //     console.log(key+ ':'+ compStyles.getPropertyValue(key));
-      //     }
-      // }
-
-      // this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
-      // var vScript = document.createElement('script');
-
-      // '<style type="text/css">' + this.editor2.getValue() + '</style>'
-
-      // vScript.type ='text/javascript';
-      // vScript.charset ='utf-8';
-      // vScript.innerHTML=`
-      // open(){
-      //   alert("s")
-      // }
-      // `
-      // document.getElementsByTagName('head')[0].appendChild(vScript)
+      
     })
     this.isData = false
-    // monaco.editor.model.onDidChangeContent(event => {
-    //   render()
-    //   console.log('s')
-    // })
+   
 
     this.$refs.sitemap.loadSitemap(this.titles)
     let title = document.querySelector('.file-name')
@@ -844,14 +906,7 @@ export default {
       this.select = e.target
     })
     document.addEventListener('keydown', e => {
-      // if (e.which === 120) {
-      //   alert('F9 pressed!')
-      //   console.log(this.value)
-      //   monaco.editor.addCommand(monaco.KeyCode.F9, function() {
-      //     alert('F9 pressed!')
-      //     console.log(this.value)
-      //   })
-      // }
+     
       if (e.which === 17) {
         this.isCtrl = true
         this.$refs.home.multiChoice(true)
@@ -1095,6 +1150,30 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    findChildren(selectedDom, clickDom) {
+      var childrenLength = selectedDom.children.length
+      for (var i = 0; i < childrenLength; i++) {
+        var stringDom = document.createElement('div')
+        stringDom.appendChild(selectedDom.children[i])
+        // console.log(a)
+        var B = document.createElement('div')
+        B.appendChild(clickDom.children[0])
+        console.log(B.innerHTML)
+        console.log(stringDom.innerHTML)
+        if (stringDom.innerHTML == B.innerHTML) {
+          console.log('찾았다')
+          return selectedDom
+        } else {
+          console.log('다르다')
+          console.log(selectedDom)
+          console.log(selectedDom.children[i])
+          console.log(selectedDom.children[i].children)
+          if (selectedDom.children[i].children.length != 0) {
+            this.findChildren(selectedDom.children[i], clickDom)
+          }
+        }
+      }
+    },
     onFolderSelected(e) {
       let i
       for (i = 0; i < e.target.files.length; i++) {
