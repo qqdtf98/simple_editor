@@ -28,7 +28,11 @@
       <div class="center-panel">
         <div class="main-top-panel">
           <div class="top-menu">
-            <div class="file-name" :key="title.index" v-for="title in titles">
+            <div
+              class="file-name"
+              :key="title.index"
+              v-for="title in openTitles"
+            >
               <div @click="changePage" class="title">
                 {{ title.text }}
               </div>
@@ -276,7 +280,7 @@
     <div class="right-panel-border"></div>
 
     <fileList
-      @newpage="newPage"
+      @newpage="newPageInput"
       @addproject="addProject"
       v-show="isFileTab"
       class="filelist-tab list-tab"
@@ -332,6 +336,7 @@
           v-if="secondPopUp"
           class="new-project-name"
           @click="projectName"
+          placeholder="프로젝트 제목"
         />
         <div
           @click="createNewProject"
@@ -353,9 +358,17 @@
           class="back"
           src="./assets/images/back.svg"
         />
-        <div v-for="title in fileTitles" class="project-list" v-if="thirdPopUp">
-          {{ title }}
+        <div v-if="thirdPopUp" class="project-wrapper">
+          <div
+            :key="index"
+            @click="selectProject"
+            v-for="(title, index) in projectTitles"
+            class="project-list"
+          >
+            {{ title.title }}
+          </div>
         </div>
+
         <input
           style="display:none;"
           type="file"
@@ -373,14 +386,23 @@
     </div>
     <div v-if="isPopUp2Active" class="popup2">
       <div class="bg" @click="deactivatePopUp2" />
+      <div class="input-wrapper">
+        <input
+          @input="titleInput"
+          class="title-input"
+          placeholder="페이지 제목"
+        />
+        <div @click="newPage" class="o-btn">확인</div>
+        <div @click="closeInput" class="c-btn">취소</div>
+      </div>
     </div>
   </div>
-  <!-- <UndoRedo ref="undoredo" v-show="false"></UndoRedo> -->
 </template>
 
 <script>
 //자
 import Vue from 'vue'
+import axios from 'axios'
 import Ruler from 'vue-component-ruler'
 import 'vue-component-ruler/dist/ruler.min.css'
 ///
@@ -433,6 +455,8 @@ export default {
       secondPopUp: false,
       thirdPopUp: false,
       isPopUpActive: false,
+      isPopUp2Active: false,
+      folders: [],
       borderWidth: [
         { text: 'White' },
         { text: 'Black' },
@@ -441,6 +465,7 @@ export default {
         { text: 'Length' }
       ],
       monacoIndex: 0,
+
       code:
         '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
       // options: {
@@ -451,8 +476,10 @@ export default {
       range: [0, 100],
       payload: '',
       dataPayload: '',
+      openTitles: [],
       data: '',
       homeLayoutLocation: '',
+      newTitle: null,
       isSticklayout: true,
       tagDescription: false,
       childOFchil: [],
@@ -504,25 +531,19 @@ export default {
         }
       ],
       commentTarget: null,
-      titles: [
-        {
-          text: 'Untitled',
-          id: '0',
-          parent_id: null
-        }
-      ],
+      titles: [],
       editorNum: 1,
       isTitle: false,
       copyTitle: null,
       trees: [
         {
-          text: 'HTML'
+          text: 'Files'
         },
         {
-          text: 'Files'
+          text: 'HTML'
         }
       ],
-      showhtml: true,
+      showhtml: false,
       layoutSticky: true,
       treeMove: false,
       isFileTab: false,
@@ -547,7 +568,7 @@ export default {
       currentLeftTab: null,
       moveLine: false,
       initialBorder: 0,
-      projectTitles: ['project A', 'project B', 'project C'],
+      projectTitles: [],
       htmlTitles: [],
       cssTitles: [],
       jsTitles: [],
@@ -593,13 +614,11 @@ export default {
     } else {
       this.vsMode = 'vs'
     }
-    console.log(monaco.editor)
     let container = document.getElementById('leftContainer')
 
     this.code = document.getElementById('filecontainer')
-    console.log('나와라참')
-    console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
-    console.log(document.getElementById('filecontainer').body)
+    // console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
+    // console.log(document.getElementById('filecontainer').body)
     this.editor1 = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
@@ -617,21 +636,6 @@ export default {
       }
     )
     this.editor1.onMouseDown(e => {
-      // for (
-      //   var i = 0;
-      //   i <
-      //   this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1]
-      //     .length;
-      //   i++
-      // ) {
-      //   // console.log(this.editor1.getValue()[i])
-      //   console.log(
-      //     this.editor1.getValue().split('\n')[e.target.position.lineNumber - 1][
-      //       i
-      //     ]
-      //   )
-      // }
-      // console.log(e.target)
       console.log('안녕')
       console.log(e.target.position.lineNumber)
       console.log(e.target.position.column)
@@ -640,10 +644,7 @@ export default {
       console.log(this.editor1.getValue().split('\n').length)
 
       var clickEle
-      for (var i = e.target.position.lineNumber; i >0 ; i--) {
-        
-      }
-
+      for (var i = e.target.position.lineNumber; i > 0; i--) {}
 
       for (var i = 0; i < e.target.position.lineNumber; i++) {
         var j = 0
@@ -731,9 +732,6 @@ export default {
     )
     var a = 0
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
-      // document.getElementById(
-      //   this.idSelected
-      // ).innerHTML = this.editor1.getValue()
       a++
       console.log(a)
       console.log(e.changes)
@@ -741,11 +739,6 @@ export default {
         this.editor1.getValue() + '<style>' + this.css + '</style>'
 
       this.$refs.overview.printHomeDocument()
-      // editor.setValue(editor.getValue())1
-      // console.log(document.getElementById(id).innerHTML)
-      // console.log(this.codeReview.get(id).getValue())
-
-      // console.log('시작s')
     })
 
     var oScript = document.createElement('style')
@@ -755,63 +748,19 @@ export default {
     document.getElementsByTagName('head')[0].appendChild(oScript)
 
     var myBinding2 = this.editor2.onDidContentSizeChange(e => {
-      // var sss = document.createElement('link')
-      // sss.setAttribute('rel', 'stylesheet')
-      // sss.setAttribute('href', 'style.css')
-      // sss.setAttribute('type', 'style.css')
-      // sss.innerHTML = this.editor2.getValue()
-      // $('iframe')
-      //   .get(0)
-      //   .contentWindow.document.getElementsByTagName('head')[0]
-      //   .appendChild(sss)
       $('iframe')
         .get(0)
         .contentWindow.document.getElementsByTagName(
           'style'
         )[0].innerHTML = this.editor2.getValue()
       this.css = this.editor2.getValue()
-      // console.log(sss)
-      ///////////
-      // var test = document.querySelector('#jumsimmuk')
-      // var text = this.editor2.getValue()
-      // console.log(text)
-      // text = text.replace(/}/gi, '} #board ')
-      // console.log(text)
-      // test.innerHTML = '#board ' + text
-
-      // console.log(test)
-      ////////////////
-      // const percentBar = document.querySelector("#app");
-      // let compStyles = window.getComputedStyle(percentBar)
-      // for(var key in percentBar.style) {
-      //     if(percentBar.style[key] != "") {
-      //     console.log(key+ ':'+ compStyles.getPropertyValue(key));
-      //     }
-      // }
-
-      // this.rightTitles[this.currentRightTab].code = this.editor2.getValue()
-      // var vScript = document.createElement('script');
-
-      // '<style type="text/css">' + this.editor2.getValue() + '</style>'
-
-      // vScript.type ='text/javascript';
-      // vScript.charset ='utf-8';
-      // vScript.innerHTML=`
-      // open(){
-      //   alert("s")
-      // }
-      // `
-      // document.getElementsByTagName('head')[0].appendChild(vScript)
     })
+
     this.isData = false
-    // monaco.editor.model.onDidChangeContent(event => {
-    //   render()
-    //   console.log('s')
-    // })
 
     this.$refs.sitemap.loadSitemap(this.titles)
-    let title = document.querySelector('.file-name')
-    title.style.backgroundColor = 'rgb(78, 78, 92)'
+    // let title = document.querySelector('.file-name')
+    // title.style.backgroundColor = 'rgb(78, 78, 92)'
     let htmltree = document.querySelector('.tree-name')
     htmltree.style.backgroundColor = '#4e4e5c'
 
@@ -1095,7 +1044,90 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    selectProject(e) {
+      let i
+      for (i = 0; i < this.projectTitles.length; i++) {
+        if (this.projectTitles[i].title === e.target.textContent.trim()) {
+          console.log(this.projectTitles[i].seq)
+          axios
+            .get('http://192.168.0.86:8580/editor/project/select/', {
+              params: {
+                project_seq: this.projectTitles[i].seq
+              }
+            })
+            .then(res => {
+              if (res.data.responseCode === 'SUCCESS') {
+                this.folders = res.data.data.folders
+                console.log(res.data.data)
+                let i
+                let payload
+                for (i = 0; i < res.data.data.folders.css.length; i++) {
+                  payload = {
+                    text:
+                      res.data.data.folders.css[i].file_name +
+                      '.' +
+                      res.data.data.folders.css[i].file_type,
+                    code: res.data.data.folders.css[i].contents,
+                    type: res.data.data.folders.css[i].file_type
+                  }
+                  this.cssTitles.push(payload)
+                }
+                for (i = 0; i < res.data.data.folders.html.length; i++) {
+                  let replace = res.data.data.folders.html[i].contents.replace(
+                    '../img/image1.png',
+                    'http://192.168.0.86:8580/editor_file_upload/' +
+                      'lsm' +
+                      '/' +
+                      'Project_A' +
+                      '/' +
+                      'img/image1.png'
+                  )
+                  console.log(res.data.data.folders.html[i].contents)
+                  payload = {
+                    text:
+                      res.data.data.folders.html[i].file_name +
+                      '.' +
+                      res.data.data.folders.html[i].file_type,
+                    code: replace,
+                    type: res.data.data.folders.html[i].file_type
+                  }
+                  let title = {
+                    text: res.data.data.folders.html[i].file_name,
+                    code: replace
+                  }
+                  this.titles.push(title)
+                  console.log(title.code)
+                  this.htmlTitles.push(payload)
+                }
+                this.$refs.filecontent.setFiles(
+                  this.htmlTitles,
+                  this.cssTitles,
+                  this.jsTitles
+                )
+                this.$refs.sitemap.loadSitemap(this.titles)
+              }
+            })
+          this.isPopUpActive = false
+          break
+        }
+      }
+    },
+    closeInput() {
+      this.isPopUp2Active = false
+    },
+    titleInput(e) {
+      this.newTitle = e.target.value
+    },
     onFolderSelected(e) {
+      this.htmlTitles = []
+      this.cssTitles = []
+      this.jsTitles = []
+      this.imgTitles = []
+      this.titles = []
+      this.projectTitles = []
+      this.openTitles = []
+      this.leftTitles = []
+      this.rightTitles = []
       let i
       for (i = 0; i < e.target.files.length; i++) {
         this.processFile(e.target.files[i])
@@ -1117,7 +1149,24 @@ export default {
           type: title[1]
         }
         if (title[1] === 'html') {
+          // let editor = document.querySelector('#board')
+          // // let copy = editor.cloneNode(true)
+          // let newEditorBox = document.createElement('div')
+          // newEditorBox.classList.add('board')
+          // newEditorBox.classList.add('hidden')
+          // newEditorBox.setAttribute('id', 'board' + this.editorNum)
+
+          // let sampleCompo = document.createElement('div')
+          // sampleCompo.classList.add('sample-component')
+
+          // let sampleBtn = document.createElement('img')
+          // sampleBtn.classList.add('sample-add-btn')
+          title = {
+            text: file.name.replace('.html', ''),
+            code: reader.result
+          }
           this.htmlTitles.push(payload)
+          this.titles.push(title)
         } else if (title[1] === 'css') {
           this.cssTitles.push(payload)
         } else if (title[1] === 'js') {
@@ -1132,8 +1181,31 @@ export default {
       this.firstPopUp = false
       this.secondPopUp = false
       this.thirdPopUp = true
-      // 서버로 username 전송하기
-      // response에 따라 프로젝트 list up
+      axios
+        .post('http://192.168.0.86:8580/editor/user/login', {
+          user_id: 'lsm'
+        })
+        .then(res => {
+          if (res.data.responseCode === 'SUCCESS') {
+            let i
+            this.htmlTitles = []
+            this.cssTitles = []
+            this.jsTitles = []
+            this.imgTitles = []
+            this.titles = []
+            this.projectTitles = []
+            this.openTitles = []
+            this.leftTitles = []
+            this.rightTitles = []
+            for (i = 0; i < res.data.data.length; i++) {
+              let title = {
+                seq: res.data.data[i].project_seq,
+                title: res.data.data[i].project_name
+              }
+              this.projectTitles.push(title)
+            }
+          }
+        })
     },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
@@ -1154,7 +1226,7 @@ export default {
     newProject() {
       this.firstPopUp = false
       this.secondPopUp = true
-      this.thirdPopUp = true
+      this.thirdPopUp = false
       console.log('1111111q')
       console.log(this.secondPopUp)
     },
@@ -1163,6 +1235,9 @@ export default {
     },
     deactivatePopUp() {
       this.isPopUpActive = false
+    },
+    deactivatePopUp2() {
+      this.isPopUp2Active = false
     },
     addProject() {
       this.activatePopUp()
@@ -1398,8 +1473,7 @@ export default {
       }
       let payload = {
         text: `${this.titles[i].text}`,
-        id: `${++this.titleId}`,
-        parentID: null
+        code: this.titles[i].code
       }
       this.titles.push(payload)
       let editor = document.querySelector('#board')
@@ -1427,51 +1501,64 @@ export default {
       this.$refs.sitemap.loadSitemap(this.titles)
     },
     changePageSitemap(e) {
-      if (this.selectedTitle.className === 'titles') {
-        let titles = document.querySelectorAll('.titles')
-        let editor = document.querySelectorAll('.board')
-        let i
-        for (i = 0; i < titles.length; i++) {
-          if (titles[i] === this.selectedTitle) {
-            break
-          }
-        }
-        let j
-        for (j = 0; j < editor.length; j++) {
-          if (j === i) {
-            editor[j].classList.remove('hidden')
-            editor[j].classList.add('display')
-            console.log(editor[j].getAttribute('id'))
-            this.$refs.overview.setId(editor[j].getAttribute('id'))
-            this.generateCode(editor[j].getAttribute('id'))
-          } else {
-            editor[j].classList.remove('display')
-            editor[j].classList.add('hidden')
-          }
-        }
-      } else if (this.selectedTitle.className === 'titles-box') {
-        let titles = document.querySelectorAll('.titles-box')
-        let editor = document.querySelectorAll('.board')
-        let i
-        for (i = 0; i < titles.length; i++) {
-          if (titles[i] === this.selectedTitle) {
-            break
-          }
-        }
-        let j
-        for (j = 0; j < editor.length; j++) {
-          if (j === i) {
-            editor[j].classList.remove('hidden')
-            editor[j].classList.add('display')
-            console.log(editor[j].getAttribute('id'))
-            this.$refs.overview.setId(editor[j].getAttribute('id'))
-            this.generateCode(editor[j].getAttribute('id'))
-          } else {
-            editor[j].classList.remove('display')
-            editor[j].classList.add('hidden')
-          }
+      let titles = document.querySelectorAll('.titles')
+      let i
+      for (i = 0; i < titles.lenght; i++) {
+        if (titles[i].textContent.trim() === this.selectedTitle) {
+          break
         }
       }
+      this.openTitles.push(this.titles[i])
+      console.log(this.titles[i])
+
+      $('iframe').get(0).contentWindow.document.body.innerHTML = this.titles[
+        i
+      ].code
+      // if (this.selectedTitle.className === 'titles') {
+      //   let titles = document.querySelectorAll('.titles')
+      //   let editor = document.querySelectorAll('.board')
+      //   let i
+      //   for (i = 0; i < titles.length; i++) {
+      //     if (titles[i] === this.selectedTitle) {
+      //       break
+      //     }
+      //   }
+      //   let j
+      //   for (j = 0; j < editor.length; j++) {
+      //     if (j === i) {
+      //       editor[j].classList.remove('hidden')
+      //       editor[j].classList.add('display')
+      //       console.log(editor[j].getAttribute('id'))
+      //       this.$refs.overview.setId(editor[j].getAttribute('id'))
+      //       this.generateCode(editor[j].getAttribute('id'))
+      //     } else {
+      //       editor[j].classList.remove('display')
+      //       editor[j].classList.add('hidden')
+      //     }
+      //   }
+      // } else if (this.selectedTitle.className === 'titles-box') {
+      //   let titles = document.querySelectorAll('.titles-box')
+      //   let editor = document.querySelectorAll('.board')
+      //   let i
+      //   for (i = 0; i < titles.length; i++) {
+      //     if (titles[i] === this.selectedTitle) {
+      //       break
+      //     }
+      //   }
+      //   let j
+      //   for (j = 0; j < editor.length; j++) {
+      //     if (j === i) {
+      //       editor[j].classList.remove('hidden')
+      //       editor[j].classList.add('display')
+      //       console.log(editor[j].getAttribute('id'))
+      //       this.$refs.overview.setId(editor[j].getAttribute('id'))
+      //       this.generateCode(editor[j].getAttribute('id'))
+      //     } else {
+      //       editor[j].classList.remove('display')
+      //       editor[j].classList.add('hidden')
+      //     }
+      //   }
+      // }
     },
     deleteTitle() {
       this.$refs.sitemap.deleteTitle()
@@ -1489,10 +1576,12 @@ export default {
     openSitemapContext(e) {
       this.selectedTitle = e.target
       if (this.isContextMenu) {
+        console.log('1111111111')
         this.isContextMenu = false
       } else {
         this.isContextMenu = true
         this.$nextTick(() => {
+          console.log('22222222')
           let context = document.querySelector('.sitemapContext')
           context.style.left = e.clientX + 'px'
           context.style.top = e.clientY + 'px'
@@ -1579,12 +1668,12 @@ export default {
       console.log(trees)
       //  e.target.parentElement.style.backgroundColor = '#4e4e5c'
       if (e.target.textContent.trim() === 'HTML') {
-        trees[1].style.backgroundColor = '#292931'
-        trees[0].style.backgroundColor = '#4e4e5c'
-        this.showhtml = true
-      } else if (e.target.textContent.trim() === 'Files') {
         trees[0].style.backgroundColor = '#292931'
         trees[1].style.backgroundColor = '#4e4e5c'
+        this.showhtml = true
+      } else if (e.target.textContent.trim() === 'Files') {
+        trees[1].style.backgroundColor = '#292931'
+        trees[0].style.backgroundColor = '#4e4e5c'
         this.showhtml = false
       }
     },
@@ -1743,70 +1832,72 @@ export default {
         }
       }
     },
+    newPageInput() {
+      this.isPopUp2Active = true
+    },
     newPage(e) {
+      this.isPopUp2Active = false
+      // let editor = document.querySelector('#board')
+      // newEditorBox.classList.add('board')
+      // newEditorBox.classList.add('hidden')
+      // newEditorBox.setAttribute('id', 'board' + this.editorNum)
+
+      // let sampleCompo = document.createElement('div')
+      // sampleCompo.classList.add('sample-component')
+
+      // let sampleBtn = document.createElement('img')
+      // sampleBtn.classList.add('sample-add-btn')
+
+      // sampleCompo.appendChild(sampleBtn)
+      // newEditorBox.appendChild(sampleCompo)
       let payload = {
-        text: `${this.titleId}`,
-        id: `${++this.titleId}`,
-        parentID: null
+        text: `${this.newTitle}`,
+        code: ''
       }
       this.titles.push(payload)
-      let editor = document.querySelector('#board')
-      // let copy = editor.cloneNode(true)
-      let newEditorBox = document.createElement('div')
-      newEditorBox.classList.add('board')
-      newEditorBox.classList.add('hidden')
-      newEditorBox.setAttribute('id', 'board' + this.editorNum)
-
-      let sampleCompo = document.createElement('div')
-      sampleCompo.classList.add('sample-component')
-
-      let sampleBtn = document.createElement('img')
-      sampleBtn.classList.add('sample-add-btn')
-
-      // console.log(editor.parentElement);
-
-      sampleCompo.appendChild(sampleBtn)
-      newEditorBox.appendChild(sampleCompo)
-      editor.parentElement.appendChild(newEditorBox)
-
-      // sampleBtn.src = './static/sample/plus.svg'
-      $('.sample-add-btn').attr(
-        'src',
-        sampleBtn.setAttribute(
-          'src',
-          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhlaWdodD0iMzQiIHZpZXdCb3g9IjAgMCAzNSAzNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxyZWN0IHg9IjAuMTAwNTg2IiB5PSIxNC4xNTk0IiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIGZpbGw9IndoaXRlIi8+DQo8cmVjdCB4PSIxNCIgeT0iMzMuOTk4NyIgd2lkdGg9IjMzLjk5ODciIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC05MCAxNCAzMy45OTg3KSIgZmlsbD0id2hpdGUiLz4NCjwvc3ZnPg0K'
-        )
-      )
-
-      console.log(sampleBtn)
-
-      newEditorBox.style.height = '100%'
-      newEditorBox.style.width = '100%'
-      sampleCompo.style.width = '100%'
-      sampleCompo.style.height = '100%'
-      sampleCompo.style.display = 'flex'
-      sampleCompo.style.alignItems = 'center'
-      sampleCompo.style.justifyContent = 'center'
-      sampleBtn.style.width = '5rem'
-      sampleBtn.style.cursor = 'pointer'
-
-      sampleBtn.addEventListener('click', e => {
-        this.openCode()
-      })
-
-      // console.log(newEditorBox.classList);
-      this.editorNum++
-
-      let files = document.querySelectorAll('.file-name')
-      let i
-      // files[files.length-1].style.backgroundColor = '#2c3134'
-      for (i = 0; i < files.length; i++) {
-        if (i === 0) {
-          files[i].style.backgroundColor = '#545e66'
-        } else {
-          files[i].style.backgroundColor = '#2c3134'
-        }
+      payload = {
+        text: this.newTitle + '.html',
+        code: '',
+        type: 'html'
       }
+      this.htmlTitles.push(payload)
+      // editor.parentElement.appendChild(newEditorBox)
+
+      // $('.sample-add-btn').attr(
+      //   'src',
+      //   sampleBtn.setAttribute(
+      //     'src',
+      //     'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhlaWdodD0iMzQiIHZpZXdCb3g9IjAgMCAzNSAzNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxyZWN0IHg9IjAuMTAwNTg2IiB5PSIxNC4xNTk0IiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIGZpbGw9IndoaXRlIi8+DQo8cmVjdCB4PSIxNCIgeT0iMzMuOTk4NyIgd2lkdGg9IjMzLjk5ODciIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC05MCAxNCAzMy45OTg3KSIgZmlsbD0id2hpdGUiLz4NCjwvc3ZnPg0K'
+      //   )
+      // )
+
+      // console.log(sampleBtn)
+
+      // newEditorBox.style.height = '100%'
+      // newEditorBox.style.width = '100%'
+      // sampleCompo.style.width = '100%'
+      // sampleCompo.style.height = '100%'
+      // sampleCompo.style.display = 'flex'
+      // sampleCompo.style.alignItems = 'center'
+      // sampleCompo.style.justifyContent = 'center'
+      // sampleBtn.style.width = '5rem'
+      // sampleBtn.style.cursor = 'pointer'
+
+      // sampleBtn.addEventListener('click', e => {
+      //   this.openCode()
+      // })
+
+      // this.editorNum++
+
+      // let files = document.querySelectorAll('.file-name')
+      // let i
+      // for (i = 0; i < files.length; i++) {
+      //   if (i === 0) {
+      //     files[i].style.backgroundColor = '#545e66'
+      //   } else {
+      //     files[i].style.backgroundColor = '#2c3134'
+      //   }
+      // }
       this.$refs.sitemap.loadSitemap(this.titles)
     },
     addComment() {
@@ -2734,7 +2825,7 @@ export default {
     width: 10rem;
     background-color: #34343c;
     box-shadow: 5px 5px 8px 1px #000000;
-    z-index: 100;
+    z-index: 160;
     .open,
     .copy,
     .rename,
@@ -2774,7 +2865,7 @@ export default {
       background-color: #292931;
       padding: 1rem;
       z-index: 1;
-      border-radius: r(3);
+      border-radius: 0.5rem;
       height: 35rem;
       display: flex;
       flex-direction: row;
@@ -2788,7 +2879,7 @@ export default {
         width: 12rem;
         border: 1px solid #525252;
         height: 17rem;
-        color: #fff;
+        color: #e7e4e4;
         &:hover {
           cursor: pointer;
           background-color: #454550;
@@ -2814,7 +2905,7 @@ export default {
         width: 12rem;
         border: 1px solid #525252;
         height: 17rem;
-        color: #fff;
+        color: #e7e4e4;
         &:hover {
           cursor: pointer;
           background-color: #454550;
@@ -2824,10 +2915,79 @@ export default {
       .new-project-create {
         margin-right: 2rem;
       }
+      .project-wrapper {
+        border: 1px solid #525252;
+        width: 50%;
+        height: 50%;
+        display: flex;
+        flex-direction: column;
+        // justify-content: left;
+        .project-list {
+          color: #e7e4e4;
+          padding-left: 1rem;
+          height: 2rem;
+          padding-top: 0.2rem;
+
+          text-align: left;
+          background-color: #292931;
+          &:hover {
+            cursor: pointer;
+            background-color: #3a3a44;
+          }
+        }
+      }
 
       .input {
         height: 100%;
         font-size: 100%;
+      }
+    }
+  }
+  .popup2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(#000, 0.7);
+    }
+
+    .input-wrapper {
+      background-color: #fff;
+      padding: 0.7rem;
+      z-index: 1;
+      border-radius: 0.5rem;
+      height: 3.5rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 23rem;
+      position: relative;
+
+      .title-input {
+        width: 16.5rem;
+        height: 2rem;
+        border: none;
+      }
+      .o-btn,
+      .c-btn {
+        width: 2.5rem;
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }
