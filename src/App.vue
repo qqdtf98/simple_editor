@@ -241,6 +241,7 @@
             />
             <fileContent
               @add-js="addJS"
+              @right-click="openFileContext"
               v-show="!showhtml"
               class="filecontent"
               ref="filecontent"
@@ -312,6 +313,12 @@
       <div @click="copyPage" class="copy">Copy</div>
       <div @click="rename" class="rename">Rename</div>
       <div @click="deleteTitle" class="delete">Delete</div>
+    </div>
+    <div v-show="isContextMenu2" class="fileContext">
+      <div @click="loadFile" class="open">Open</div>
+      <div class="copy">Copy</div>
+      <div class="rename">Rename</div>
+      <div class="delete">Delete</div>
     </div>
     <div v-if="isPopUpActive" class="popup">
       <div class="bg" @click="deactivatePopUp" />
@@ -554,8 +561,10 @@ export default {
       isSettingTab: false,
       isHelpTab: false,
       isContextMenu: false,
+      isContextMenu2: false,
       titleId: 0,
       selectedTitle: null,
+      selectedFile: null,
       showCode: true,
       codeReview: new Map(),
       overView: new Map(),
@@ -734,7 +743,7 @@ export default {
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
       a++
       console.log(a)
-      console.log(e.changes)
+      console.log(this.editor1.getValue())
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
 
@@ -770,6 +779,7 @@ export default {
     document.addEventListener('click', e => {
       if (e.button === 0) {
         this.isContextMenu = false
+        this.isContextMenu2 = false
       }
     })
     document.addEventListener('mouseover', e => {
@@ -1044,13 +1054,52 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    loadFile(e) {
+      if (this.selectedFile.textContent.trim().split('.')[1] === 'html') {
+        let i
+        for (i = 0; i < this.htmlTitles.length; i++) {
+          if (
+            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
+          ) {
+            console.log('22222222')
+            $('iframe').get(
+              0
+            ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
+            this.editor1.setValue(
+              this.htmlTitles[i].code
+                .split('<body>')[1]
+                .split('</body>')[0]
+                .split('<script ')[0]
+            )
+            break
+          }
+        }
+      } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
+      } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
+      }
+    },
+    openFileContext(e) {
+      this.selectedFile = e.target
+      if (this.isContextMenu2) {
+        console.log('11')
+        this.isContextMenu2 = false
+      } else {
+        console.log('222')
+        this.isContextMenu2 = true
+        this.$nextTick(() => {
+          let context = document.querySelector('.fileContext')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+        })
+      }
+    },
     selectProject(e) {
       let i
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           console.log(this.projectTitles[i].seq)
           axios
-            .get('http://192.168.0.86:8580/editor/project/select/', {
+            .get('http://192.168.0.86:8581/editor/project/select/', {
               params: {
                 project_seq: this.projectTitles[i].seq
               }
@@ -1075,7 +1124,7 @@ export default {
                 for (i = 0; i < res.data.data.folders.html.length; i++) {
                   let replace = res.data.data.folders.html[i].contents.replace(
                     '../img/image1.png',
-                    'http://192.168.0.86:8580/editor_file_upload/' +
+                    'http://192.168.0.86:8581/editor_file_upload/' +
                       'lsm' +
                       '/' +
                       'Project_A' +
@@ -1096,7 +1145,6 @@ export default {
                     code: replace
                   }
                   this.titles.push(title)
-                  console.log(title.code)
                   this.htmlTitles.push(payload)
                 }
                 this.$refs.filecontent.setFiles(
@@ -1133,6 +1181,7 @@ export default {
         this.processFile(e.target.files[i])
       }
       this.isPopUpActive = false
+      this.$refs.sitemap.loadSitemap(this.titles)
       this.$refs.filecontent.setFiles(
         this.htmlTitles,
         this.cssTitles,
@@ -1149,18 +1198,6 @@ export default {
           type: title[1]
         }
         if (title[1] === 'html') {
-          // let editor = document.querySelector('#board')
-          // // let copy = editor.cloneNode(true)
-          // let newEditorBox = document.createElement('div')
-          // newEditorBox.classList.add('board')
-          // newEditorBox.classList.add('hidden')
-          // newEditorBox.setAttribute('id', 'board' + this.editorNum)
-
-          // let sampleCompo = document.createElement('div')
-          // sampleCompo.classList.add('sample-component')
-
-          // let sampleBtn = document.createElement('img')
-          // sampleBtn.classList.add('sample-add-btn')
           title = {
             text: file.name.replace('.html', ''),
             code: reader.result
@@ -1182,7 +1219,7 @@ export default {
       this.secondPopUp = false
       this.thirdPopUp = true
       axios
-        .post('http://192.168.0.86:8580/editor/user/login', {
+        .post('http://192.168.0.86:8581/editor/user/login', {
           user_id: 'lsm'
         })
         .then(res => {
@@ -1243,6 +1280,7 @@ export default {
       this.activatePopUp()
       this.secondPopUp = false
       this.firstPopUp = true
+      this.thirdPopUp = false
     },
     onFileSelected(e) {
       var file = e.target
@@ -2381,93 +2419,6 @@ export default {
         background-color: #535363;
       }
     }
-    // height: 6%;
-    // background-color: #3c474c;
-    // background-image: linear-gradient(to bottom, #48545a, #3d484d);
-    // width: 100%;
-    // display: flex;
-    // align-items: center;
-    // justify-content: left;
-    .switch-box {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      padding: 0.2rem;
-      align-items: center;
-      margin-left: 1rem;
-      font-size: 0.9rem;
-      margin-right: 1rem;
-      border-radius: 0.3rem;
-      .vue-switcher {
-        // transform: scale(1);
-        z-index: 9;
-        // margin-right: 0.5rem;
-        margin: 0;
-        margin-right: 0.5rem;
-        cursor: pointer;
-      }
-      .switch-text {
-        cursor: pointer;
-        color: #fff;
-      }
-      &:hover {
-        background-color: #616c72;
-      }
-    }
-    // .undo-box,
-    // .redo-box,
-    // .new-box,
-    // .open-box,
-    // .save-box,
-    // .export-box,
-    // .setting-box {
-    //   display: flex;
-    //   flex-direction: row;
-    //   justify-content: center;
-    //   align-items: center;
-    //   padding: 0.2rem;
-    //   margin-right: 1rem;
-    //   font-size: 0.9rem;
-    //   border-radius: 0.3rem;
-    //   .undo,
-    //   .redo,
-    //   .new,
-    //   .open,
-    //   .save,
-    //   .export,
-    //   .setting {
-    //     cursor: pointer;
-    //     height: 1.2rem;
-    //     margin-right: 0.5rem;
-    //   }
-    //   .undo-text,
-    //   .redo-text,
-    //   .new-text,
-    //   .open-text,
-    //   .save-text,
-    //   .export-text,
-    //   .setting-text {
-    //     cursor: pointer;
-    //     color: #fff;
-    //   }
-    //   &:hover {
-    //     background-color: #616c72;
-    //   }
-    // }
-    // .new-box {
-    //   margin-left: 1rem;
-    // }
-    // .undo-box {
-    //   .undo {
-    //     -moz-transform: scaleX(-1);
-    //     -o-transform: scaleX(-1);
-    //     -webkit-transform: scaleX(-1);
-    //     transform: scaleX(-1);
-    //     cursor: pointer;
-    //     margin-right: 0.5rem;
-    //     height: 1.2rem;
-    //   }
-    // }
   }
   .main-panel {
     width: 100%;
@@ -2821,6 +2772,26 @@ export default {
     width: 92%;
   }
   .sitemapContext {
+    position: fixed;
+    width: 10rem;
+    background-color: #34343c;
+    box-shadow: 5px 5px 8px 1px #000000;
+    z-index: 160;
+    .open,
+    .copy,
+    .rename,
+    .delete {
+      width: 100%;
+      padding-top: 0.2rem;
+      color: #fff;
+      padding-bottom: 0.2rem;
+      &:hover {
+        cursor: pointer;
+        background-color: #4b4b57;
+      }
+    }
+  }
+  .fileContext {
     position: fixed;
     width: 10rem;
     background-color: #34343c;
