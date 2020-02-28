@@ -5,17 +5,25 @@
         <div class="tag-list-box">
           <span class="tag-list">HTML</span>
           <div class="html nested">
-            <div :key="title.key" v-for="(title, index) in htmlTitles">
-              <div v-if="index == 0">
-                {{ title.text }}
-              </div>
+            <div
+              @mouseup="mouseRightClick"
+              :key="index"
+              v-for="(title, index) in htmlTitles"
+            >
+              <!-- <div v-if="index == 0"> -->
+              {{ title.text }}
+              <!-- </div> -->
             </div>
           </div>
         </div>
         <div class="tag-list-box">
           <span class="tag-list">CSS</span>
           <div class="nested">
-            <div :key="title.key" v-for="title in cssTitles">
+            <div
+              @mouseup="mouseRightClick"
+              :key="title.key"
+              v-for="title in cssTitles"
+            >
               {{ title.text }}
             </div>
           </div>
@@ -23,7 +31,11 @@
         <div class="tag-list-box">
           <span class="tag-list">JS</span>
           <div class="nested">
-            <div :key="title.key" v-for="title in jsTitles">
+            <div
+              @mouseup="mouseRightClick"
+              :key="title.key"
+              v-for="title in jsTitles"
+            >
               {{ title.text }}
             </div>
           </div>
@@ -34,23 +46,29 @@
 </template>
 
 <script>
+import vueCustomScrollbar from 'vue-custom-scrollbar'
 export default {
   data() {
     return {
       htmlTitles: [],
       htmlTitle: null,
       cssTitles: [],
-      jsTitles: []
+      jsTitles: [],
+      contextTarget: null
     }
   },
   computed: {},
+  components: { vueCustomScrollbar },
   methods: {
+    mouseRightClick(e) {
+      if (e.button === 2) {
+        this.contextTarget = e.target
+        this.$emit('right-click', e)
+      }
+    },
     setFiles(html, css, js) {
       this.htmlTitles = html
       this.htmlTitle = this.htmlTitles[0]
-      console.log(html[0])
-      console.log(this.htmlTitles[0])
-      console.log(this.htmlTitle)
       this.cssTitles = css
       this.jsTitles = js
     },

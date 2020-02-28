@@ -14,7 +14,6 @@
           :contenteditable="isContentEditable"
           @dblclick="onmouseDoubleClick"
           @click="onmouseClick"
-          @mousemove="onmouseMove"
         >
           <div id="board" class="board">
             <iframe

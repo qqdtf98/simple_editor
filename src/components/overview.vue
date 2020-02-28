@@ -7,13 +7,11 @@
             <input class="checkbox" type="checkbox" id="root" />
             <label for="root">HTML</label>
             <ul
-                  id="bodySource"
-                  @mousemove="onmouseMove"
-                  @click="clickLabelEvent"
-                  style="text-indent:10px"
-                ></ul>
-              </li>
-            </ul>
+              id="bodySource"
+              @mousemove="onmouseMove"
+              @click="clickLabelEvent"
+              style="text-indent:10px"
+            />
           </li>
         </ul>
       </div>
@@ -99,7 +97,7 @@ export default {
       var newParentObj = document.getElementById(this.childNum)
       this.myParent.push(-1)
 
-      this.findChildren(child, newParentObj, 0,intent)
+      this.findChildren(child, newParentObj, 0, intent)
     },
     findChildren(child, obj, myParent,intent) {
       //아무것도 없지 않을경우
@@ -109,6 +107,7 @@ export default {
         if (childOFchild.length !== 0) {
           for (var i = 0; i < childOFchild.length; i++) {
             this.dom.push(childOFchild[i])
+
             this.isActiveLabel.push(true)
             this.childNum += 1
             var newDIV = document.createElement('li')
