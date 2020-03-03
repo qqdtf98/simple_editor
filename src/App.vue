@@ -631,7 +631,8 @@ export default {
       document.getElementById('leftContainer'),
       {
         id: 'editorMonaco1',
-        value: $('iframe').get(0).contentWindow.document.body.innerHTML,
+        // value: $('iframe').get(0).contentWindow.document.body.innerHTML,
+        value: '코드를 입력해주세요',
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -644,7 +645,6 @@ export default {
       }
     )
     this.editor1.onMouseDown(e => {
-
       console.log('안녕')
     
       var elem = ''
@@ -844,10 +844,8 @@ export default {
      
       var elem = e.target.element.innerHTML.replace(/&nbsp;/gi, ' ')
       elem = elem.replace(/amp;/gi, '')
-     
     })
 
-    
     const percentBar = document.querySelector('#board')
     let compStyles = window.getComputedStyle(percentBar)
     for (var key in percentBar.style) {
@@ -872,12 +870,10 @@ export default {
     )
     // var a = 0
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
-
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
 
       this.$refs.overview.printHomeDocument()
-
     })
 
     var oScript = document.createElement('style')
@@ -887,18 +883,15 @@ export default {
     document.getElementsByTagName('head')[0].appendChild(oScript)
 
     var myBinding2 = this.editor2.onDidContentSizeChange(e => {
-
       $('iframe')
         .get(0)
         .contentWindow.document.getElementsByTagName(
           'style'
         )[0].innerHTML = this.editor2.getValue()
       this.css = this.editor2.getValue()
-
     })
 
     this.isData = false
-
 
     this.$refs.sitemap.loadSitemap(this.titles)
     // let title = document.querySelector('.file-name')
@@ -936,7 +929,6 @@ export default {
       this.select = e.target
     })
     document.addEventListener('keydown', e => {
-     
       if (e.which === 17) {
         this.isCtrl = true
         this.$refs.home.multiChoice(true)
@@ -1691,62 +1683,24 @@ export default {
     changePageSitemap(e) {
       let titles = document.querySelectorAll('.titles')
       let i
-      for (i = 0; i < titles.lenght; i++) {
-        if (titles[i].textContent.trim() === this.selectedTitle) {
+      for (i = 0; i < titles.length; i++) {
+        if (
+          titles[i].textContent.trim() === this.selectedTitle.textContent.trim()
+        ) {
           break
         }
       }
       this.openTitles.push(this.titles[i])
-      console.log(this.titles[i])
+      this.editor1.setValue(
+        this.htmlTitles[i].code
+          .split('<body>')[1]
+          .split('</body>')[0]
+          .split('<script ')[0]
+      )
 
       $('iframe').get(0).contentWindow.document.body.innerHTML = this.titles[
         i
       ].code
-      // if (this.selectedTitle.className === 'titles') {
-      //   let titles = document.querySelectorAll('.titles')
-      //   let editor = document.querySelectorAll('.board')
-      //   let i
-      //   for (i = 0; i < titles.length; i++) {
-      //     if (titles[i] === this.selectedTitle) {
-      //       break
-      //     }
-      //   }
-      //   let j
-      //   for (j = 0; j < editor.length; j++) {
-      //     if (j === i) {
-      //       editor[j].classList.remove('hidden')
-      //       editor[j].classList.add('display')
-      //       console.log(editor[j].getAttribute('id'))
-      //       this.$refs.overview.setId(editor[j].getAttribute('id'))
-      //       this.generateCode(editor[j].getAttribute('id'))
-      //     } else {
-      //       editor[j].classList.remove('display')
-      //       editor[j].classList.add('hidden')
-      //     }
-      //   }
-      // } else if (this.selectedTitle.className === 'titles-box') {
-      //   let titles = document.querySelectorAll('.titles-box')
-      //   let editor = document.querySelectorAll('.board')
-      //   let i
-      //   for (i = 0; i < titles.length; i++) {
-      //     if (titles[i] === this.selectedTitle) {
-      //       break
-      //     }
-      //   }
-      //   let j
-      //   for (j = 0; j < editor.length; j++) {
-      //     if (j === i) {
-      //       editor[j].classList.remove('hidden')
-      //       editor[j].classList.add('display')
-      //       console.log(editor[j].getAttribute('id'))
-      //       this.$refs.overview.setId(editor[j].getAttribute('id'))
-      //       this.generateCode(editor[j].getAttribute('id'))
-      //     } else {
-      //       editor[j].classList.remove('display')
-      //       editor[j].classList.add('hidden')
-      //     }
-      //   }
-      // }
     },
     deleteTitle() {
       this.$refs.sitemap.deleteTitle()

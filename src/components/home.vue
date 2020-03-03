@@ -19,7 +19,7 @@
             <iframe
               name="iframe1"
               id="filecontainer"
-              src="static/test.html"
+              src="static/html/test.html"
               ref="iframe"
               width="100%"
               height="100%"
