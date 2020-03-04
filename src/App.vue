@@ -198,11 +198,13 @@
               </div>
             </div>
           </div>
-          <span class="fileTitle" @click="clickSource" name="html">HTML</span>
-          <span class="fileTitle" @click="clickSource" name="css">CSS</span>
+          <span class="fileTitle" @click="clickSource" name="html"
+            >Code Editor</span
+          >
+          <!-- <span class="fileTitle" @click="clickSource" name="css">CSS</span>
           <span class="fileTitle" @click="clickSource" name="js"
             >JavaScript</span
-          >
+          > -->
         </div>
       </div>
       <div class="right-panel">
@@ -348,7 +350,6 @@
         <input
           v-if="secondPopUp"
           class="new-project-name"
-          @click="projectName"
           placeholder="프로젝트 제목"
         />
         <div
@@ -470,6 +471,8 @@ export default {
       isPopUpActive: false,
       isServer: false,
       isPopUp2Active: false,
+      isEditor1Load: null,
+      isEditor2Load: null,
       folders: [],
       borderWidth: [
         { text: 'White' },
@@ -655,7 +658,7 @@ export default {
     )
     this.editor1.onMouseDown(e => {
       console.log('안녕')
-    
+
       var elem = ''
       var length = this.editor1.getValue().split('\n').length
       console.log(this.editor1.getValue().split('\n').length)
@@ -827,12 +830,12 @@ export default {
       <a href="#contents" class="sknavi">콘텐츠 바로가기</a>
    </div>
    <!-- // skip_nav -->
-   
+
    <!-- wrap -->
    <div id="wrap">
       <!-- container -->
       <div id="container">
-         
+
          <!-- nav -->
          <nav id="nav">
             <div class="user_box">
@@ -848,9 +851,9 @@ export default {
       console.log('들어갑니다')
       selectedDom = this.findChildren(selectedDom, clickDom)
       console.log('나왔습니다')
-    
+
       console.log(selectedDom)
-     
+
       var elem = e.target.element.innerHTML.replace(/&nbsp;/gi, ' ')
       elem = elem.replace(/amp;/gi, '')
     })
@@ -952,7 +955,15 @@ export default {
       if (e.which === 90 && this.isCtrl && this.isShift) {
         this.redoWork()
       }
-      if (e.which === 67 && this.isCtrl) {
+      if (e.which === 83 && this.isCtrl) {
+        e.preventDefault()
+        if (this.isData) {
+          console.log(this.editor1.getValue())
+          console.log(this.editor2.getValue())
+          console.log(this.isEditor1Load)
+          console.log(this.isEditor2Load)
+          // 파일 업데이트
+        }
       }
     })
     document.addEventListener('keyup', e => {
@@ -1200,6 +1211,7 @@ export default {
       // ) {
       // }
     },
+    deleteFile() {},
     folderClick(e) {
       this.selectedFolder = e.target
       if (this.isContextMenu3) {
@@ -1214,6 +1226,24 @@ export default {
           context.style.top = e.clientY + 'px'
         })
       }
+    },
+    renameFile(e) {
+      console.log(this.selectedFile)
+      // var oriVal
+      // oriVal = $(this.selectedFile).text()
+      // $(this.selectedFile).text('')
+      // $("<input type='text' @keyup.enter='enterPressed' id='titleInput'>")
+      //   .appendTo(this.selectedFile)
+      //   .focus()
+
+      // $('#titleInput').on('keyup', function(e) {
+      //   if (e.keyCode == 13) {
+      //     this.selectedFile.textContent = e.target.value
+      //     // var $this = $(this.selectedFile)
+      //     // $this.text($this.val() || oriVal)
+      //     $('#titleInput').remove() // Don't just hide, remove the element.
+      //   }
+      // })
     },
     findChildren(selectedDom, clickDom) {
       var childrenLength = selectedDom.children.length
@@ -1246,7 +1276,6 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            console.log('22222222')
             $('iframe').get(
               0
             ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
@@ -1254,12 +1283,12 @@ export default {
               this.editor1.setValue(this.htmlTitles[i].code)
               this.isEditor1Load = this.htmlTitles[i]
             } else {
-            this.editor1.setValue(
-              this.htmlTitles[i].code
-                .split('<body>')[1]
-                .split('</body>')[0]
-                .split('<script ')[0]
-            )
+              this.editor1.setValue(
+                this.htmlTitles[i].code
+                  .split('<body>')[1]
+                  .split('</body>')[0]
+                  .split('<script ')[0]
+              )
               this.isEditor1Load = this.htmlTitles[i]
             }
 
@@ -1299,9 +1328,8 @@ export default {
       let i
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
-          console.log(this.projectTitles[i].seq)
           axios
-            .get('http://192.168.0.86:8581/editor/project/select/', {
+            .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
                 project_seq: this.projectTitles[i].seq
               }
@@ -1309,11 +1337,13 @@ export default {
             .then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 this.folders = res.data.data.folders
-                console.log(res.data.data)
                 let i
                 let payload
                 for (i = 0; i < res.data.data.folders.css.length; i++) {
                   payload = {
+                    seq: res.data.data.folders.css[i].file_seq,
+                    path: res.data.data.folders.css[i].file_path,
+                    name: res.data.data.folders.css[i].file_name,
                     text:
                       res.data.data.folders.css[i].file_name +
                       '.' +
@@ -1333,8 +1363,15 @@ export default {
                       '/' +
                       'img/image1.png'
                   )
-                  console.log(res.data.data.folders.html[i].contents)
+                  replace =
+                    '<!DOCTYPE html><html><head><link href="http://192.168.0.86:8581/editor_file_upload/lsm/Project_A/css/pretty.css" type="text/css" rel="stylesheet" /></head><body>' +
+                    replace +
+                    '</body></html>'
+                  console.log(replace)
                   payload = {
+                    seq: res.data.data.folders.html[i].file_seq,
+                    path: res.data.data.folders.html[i].file_path,
+                    name: res.data.data.folders.html[i].file_name,
                     text:
                       res.data.data.folders.html[i].file_name +
                       '.' +
@@ -1343,7 +1380,11 @@ export default {
                     type: res.data.data.folders.html[i].file_type
                   }
                   let title = {
+                    seq: res.data.data.folders.html[i].file_seq,
+                    path: res.data.data.folders.html[i].file_path,
+                    name: res.data.data.folders.html[i].file_name,
                     text: res.data.data.folders.html[i].file_name,
+                    type: res.data.data.folders.html[i].file_type,
                     code: replace
                   }
                   this.titles.push(title)
@@ -1378,6 +1419,68 @@ export default {
       this.openTitles = []
       this.leftTitles = []
       this.rightTitles = []
+      var fs = require('fs')
+      var file = require('file-system')
+      console.log(file)
+      let data = 'eeeeeeeeeeeeeeee'
+
+      // file.copyFile(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   'C:/Users/anylogic/Desktop/any-editor/static/html'
+      // )
+      // file.writeFileSync(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   '<div>eeeeeeeeeee</div>'
+      // )
+
+      // file.writeFile(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   data,
+      //   'utf8',
+      //   function(err) {
+      //     console.log('비동기적 파일 쓰기 완료')
+      //   }
+      // )
+
+      // file.writeFileSync(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   data,
+      //   'utf8',
+      //   function(err) {
+      //     console.log('sd 파일 쓰기 완료')
+      //   }
+      // )
+
+      // const copyFile = require('fs-copy-file')
+
+      // copyFile(
+      //   'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
+      //   'C:/Users/anylogic/Desktop/any-editor/static/img/back.png',
+      //   err => {
+      //     if (err) throw err
+
+      //     console.log('source.txt was copied to destination.txt')
+      //   }
+      // )
+
+      // var fs = require('fs')
+      // fs.copyFileSync(
+      //   'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
+      //   'C:/Users/anylogic/Desktop/any-editor/static/img/back.png'
+      // )
+
+      // const CopyPlugin = require('copy-webpack-plugin')
+      // module.exports = {
+      //   plugins: [
+      //     new CopyPlugin([
+      //       {
+      //         from: 'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
+      //         to: 'C:/Users/anylogic/Desktop/any-editor/static/img/back.png'
+      //       }
+      //     ])
+      //   ]
+      // }
+
       let i
       for (i = 0; i < e.target.files.length; i++) {
         this.processFile(e.target.files[i])
@@ -1417,14 +1520,18 @@ export default {
       reader.readAsText(file)
     },
     openServer() {
+      this.isServer = true
       this.firstPopUp = false
       this.secondPopUp = false
       this.thirdPopUp = true
       axios
-        .post('http://192.168.0.86:8581/editor/user/login', {
-          user_id: 'lsm'
+        .get('http://192.168.0.86:8581/editor/project/selectProject', {
+          params: {
+            user_id: 'lsm'
+          }
         })
         .then(res => {
+          console.log(res)
           if (res.data.responseCode === 'SUCCESS') {
             let i
             this.htmlTitles = []
@@ -1469,6 +1576,7 @@ export default {
       this.isPopUpActive = false
     },
     openProject() {
+      this.isServer = false
       this.$refs.folderInput.click()
     },
     backToFirst() {
@@ -1477,6 +1585,7 @@ export default {
       this.thirdPopUp = false
     },
     newProject() {
+      this.isServer = false
       this.firstPopUp = false
       this.secondPopUp = true
       this.thirdPopUp = false
@@ -1769,12 +1878,12 @@ export default {
         this.editor1.setValue(this.htmlTitles[i].code)
         this.isEditor1Load = this.htmlTitles[i]
       } else {
-      this.editor1.setValue(
-        this.htmlTitles[i].code
-          .split('<body>')[1]
-          .split('</body>')[0]
-          .split('<script ')[0]
-      )
+        this.editor1.setValue(
+          this.htmlTitles[i].code
+            .split('<body>')[1]
+            .split('</body>')[0]
+            .split('<script ')[0]
+        )
         this.isEditor1Load = this.htmlTitles[i]
       }
       this.isData = true
@@ -2995,6 +3104,25 @@ export default {
       }
     }
   }
+  .folderContext {
+    position: fixed;
+    width: 10rem;
+    background-color: #34343c;
+    box-shadow: 5px 5px 8px 1px #000000;
+    z-index: 160;
+    .addFolder,
+    .addFile,
+    .rename {
+      width: 100%;
+      padding-top: 0.2rem;
+      color: #fff;
+      padding-bottom: 0.2rem;
+      &:hover {
+        cursor: pointer;
+        background-color: #4b4b57;
+      }
+    }
+  }
   .popup {
     position: fixed;
     top: 0;
@@ -3159,6 +3287,8 @@ export default {
     float: none;
     margin: 0;
     border: none;
+    padding-right: 0.3rem;
+    padding-left: 0.3rem;
     height: 100%;
     background-color: #666666;
     &:hover {
