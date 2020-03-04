@@ -1448,7 +1448,21 @@ export default {
     },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
-      console.log(title.value)
+      axios
+        .post('http://192.168.0.86:8581/editor/project/createProject', {
+          projects: [
+            {
+              user_seq: 1,
+              project_name: title.value
+            }
+          ]
+        })
+        .then(res => {
+          console.log(res)
+          if (res.data.responseCode === 'SUCCESS') {
+            console.log(res.data.message)
+          }
+        })
       this.isPopUpActive = false
     },
     cancleProject() {
