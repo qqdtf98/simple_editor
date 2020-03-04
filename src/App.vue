@@ -241,6 +241,7 @@
             />
             <fileContent
               @add-js="addJS"
+              @folder-click="folderClick"
               @right-click="openFileContext"
               v-show="!showhtml"
               class="filecontent"
@@ -311,14 +312,19 @@
     <div v-show="isContextMenu" class="sitemapContext">
       <div @click="changePageSitemap" class="open">Open</div>
       <div @click="copyPage" class="copy">Copy</div>
-      <div @click="rename" class="rename">Rename</div>
+      <div @click="renameTitle" class="rename">Rename</div>
       <div @click="deleteTitle" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu2" class="fileContext">
       <div @click="loadFile" class="open">Open</div>
       <div class="copy">Copy</div>
+      <div @click="renameFile" class="rename">Rename</div>
+      <div @click="deleteFile" class="delete">Delete</div>
+    </div>
+    <div v-show="isContextMenu3" class="folderContext">
+      <div class="addFolder">Add Folder</div>
+      <div @click="addFile" class="addFile">Add File</div>
       <div class="rename">Rename</div>
-      <div class="delete">Delete</div>
     </div>
     <div v-if="isPopUpActive" class="popup">
       <div class="bg" @click="deactivatePopUp" />
@@ -462,6 +468,7 @@ export default {
       secondPopUp: false,
       thirdPopUp: false,
       isPopUpActive: false,
+      isServer: false,
       isPopUp2Active: false,
       folders: [],
       borderWidth: [
@@ -562,9 +569,11 @@ export default {
       isHelpTab: false,
       isContextMenu: false,
       isContextMenu2: false,
+      isContextMenu3: false,
       titleId: 0,
       selectedTitle: null,
       selectedFile: null,
+      selectedFolder: null,
       showCode: true,
       codeReview: new Map(),
       overView: new Map(),
@@ -906,6 +915,7 @@ export default {
       if (e.button === 0) {
         this.isContextMenu = false
         this.isContextMenu2 = false
+        this.isContextMenu3 = false
       }
     })
     document.addEventListener('mouseover', e => {
@@ -1172,6 +1182,39 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    addFile() {
+      this.$refs.filecontent.addFile(
+        this.projectTitles[0].title,
+        this.selectedFolder,
+        this.selectedFolder.textContent.trim().toLowerCase()
+      )
+      // console.log(this.projectTitles[0].title)
+      // let filePath
+      // if (this.selectedFolder.textContent.trim().toLowerCase() === 'html') {
+      //   filePath = this.projectTitles[0].title + '/html/'
+      // } else if (
+      //   this.selectedFolder.textContent.trim().toLowerCase() === 'css'
+      // ) {
+      // } else if (
+      //   this.selectedFolder.textContent.trim().toLowerCase() === 'js'
+      // ) {
+      // }
+    },
+    folderClick(e) {
+      this.selectedFolder = e.target
+      if (this.isContextMenu3) {
+        this.isContextMenu3 = false
+      } else {
+        this.isContextMenu3 = true
+        this.isContextMenu2 = false
+        this.isContextMenu = false
+        this.$nextTick(() => {
+          let context = document.querySelector('.folderContext')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+        })
+      }
+    },
     findChildren(selectedDom, clickDom) {
       var childrenLength = selectedDom.children.length
       for (var i = 0; i < childrenLength; i++) {
@@ -1207,27 +1250,44 @@ export default {
             $('iframe').get(
               0
             ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
+            if (this.isServer) {
+              this.editor1.setValue(this.htmlTitles[i].code)
+              this.isEditor1Load = this.htmlTitles[i]
+            } else {
             this.editor1.setValue(
               this.htmlTitles[i].code
                 .split('<body>')[1]
                 .split('</body>')[0]
                 .split('<script ')[0]
             )
+              this.isEditor1Load = this.htmlTitles[i]
+            }
+
+            this.isData = true
             break
           }
         }
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
+        let i
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            this.editor2.setValue(this.cssTitles[i].code)
+            this.isEditor2Load = this.cssTitles[i]
+          }
+          this.isData = true
+          break
+        }
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
       }
     },
     openFileContext(e) {
       this.selectedFile = e.target
       if (this.isContextMenu2) {
-        console.log('11')
         this.isContextMenu2 = false
       } else {
-        console.log('222')
         this.isContextMenu2 = true
+        this.isContextMenu = false
+        this.isContextMenu3 = false
         this.$nextTick(() => {
           let context = document.querySelector('.fileContext')
           context.style.left = e.clientX + 'px'
@@ -1691,13 +1751,19 @@ export default {
         }
       }
       this.openTitles.push(this.titles[i])
+      if (this.isServer) {
+        this.editor1.setValue(this.htmlTitles[i].code)
+        this.isEditor1Load = this.htmlTitles[i]
+      } else {
       this.editor1.setValue(
         this.htmlTitles[i].code
           .split('<body>')[1]
           .split('</body>')[0]
           .split('<script ')[0]
       )
-
+        this.isEditor1Load = this.htmlTitles[i]
+      }
+      this.isData = true
       $('iframe').get(0).contentWindow.document.body.innerHTML = this.titles[
         i
       ].code
@@ -1712,18 +1778,18 @@ export default {
       // console.log(this.titles)
       let topMenu = document.querySelector('.top-menu')
     },
-    rename() {
+    renameTitle() {
       this.$refs.sitemap.renameTitle()
     },
     openSitemapContext(e) {
       this.selectedTitle = e.target
       if (this.isContextMenu) {
-        console.log('1111111111')
         this.isContextMenu = false
       } else {
         this.isContextMenu = true
+        this.isContextMenu3 = false
+        this.isContextMenu2 = false
         this.$nextTick(() => {
-          console.log('22222222')
           let context = document.querySelector('.sitemapContext')
           context.style.left = e.clientX + 'px'
           context.style.top = e.clientY + 'px'
