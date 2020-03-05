@@ -981,6 +981,30 @@ export default {
           console.log(this.isEditor1Load)
           console.log(this.isEditor2Load)
           // 파일 업데이트
+          axios
+            .post('http://192.168.0.86:8581/editor/file/updateFile', {
+              files: [
+                {
+                  file_seq: this.isEditor1Load.seq,
+                  folder_seq: this.isEditor1Load.folder,
+                  file_name: this.isEditor1Load.name,
+                  file_path: this.isEditor1Load.path,
+                  file_type: this.isEditor1Load.type,
+                  contents: this.editor1.getValue()
+                },
+                {
+                  file_seq: this.isEditor2Load.seq,
+                  folder_seq: this.isEditor2Load.folder,
+                  file_name: this.isEditor2Load.name,
+                  file_path: this.isEditor2Load.path,
+                  file_type: this.isEditor2Load.type,
+                  contents: this.editor2.getValue()
+                }
+              ]
+            })
+            .then(res => {
+              console.log(res)
+            })
         }
       }
     })
@@ -1367,9 +1391,11 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            $('iframe').get(
-              0
-            ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
+            console.log(
+              this.htmlTitles[i].code + '<style>div{color:yellow;}' + '</style>'
+            )
+            $('iframe').get(0).contentWindow.document.body.innerHTML =
+              this.htmlTitles[i].code + '<style>div{color:yellow;}' + '</style>'
             if (this.isServer) {
               this.editor1.setValue(this.htmlTitles[i].code)
               this.isEditor1Load = this.htmlTitles[i]
