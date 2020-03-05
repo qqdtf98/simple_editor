@@ -295,7 +295,11 @@
       v-show="isEditTab"
       class="editlist-tab list-tab"
     />
-    <saveList v-show="isSaveTab" class="savelist-tab list-tab" />
+    <saveList
+      @save-all="saveAll"
+      v-show="isSaveTab"
+      class="savelist-tab list-tab"
+    />
     <settingList v-show="isSettingTab" class="settinglist-tab list-tab" />
     <helpList v-show="isHelpTab" class="helplist-tab list-tab" />
 
@@ -884,7 +888,19 @@ export default {
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
-
+      let i
+      for (i = 0; i < this.htmlTitles.length; i++) {
+        if (this.htmlTitles[i] === this.isEditor1Load) {
+          console.log(this.htmlTitles[i])
+          console.log(this.isEditor1Load)
+          this.htmlTitles[i].isEdited = true
+        }
+      }
+      this.$refs.filecontent.setFiles(
+        this.htmlTitles,
+        this.cssTitles,
+        this.jsTitles
+      )
       this.$refs.overview.printHomeDocument()
     })
 
@@ -1193,6 +1209,14 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    saveAll() {
+      let i
+      for (i = 0; i < this.htmlTitles.length; i++) {
+        if (this.htmlTitles[i].isEdited === true) {
+          console.log(this.htmlTitles[i].text)
+        }
+      }
+    },
     addFile() {
       this.$refs.filecontent.addFile(
         this.projectTitles[0].title,

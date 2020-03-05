@@ -1,8 +1,8 @@
 <template>
   <div id="savelist">
     <div @click="saveFile" class="save list-tab">Save</div>
-    <div class="save-as list-tab">Save As</div>
-    <div @click="exportFile" class="save-all list-tab">Save All</div>
+    <div @click="exportFile" class="save-as list-tab">Save As</div>
+    <div @click="saveAll" class="save-all list-tab">Save All</div>
   </div>
 </template>
 
@@ -23,6 +23,9 @@ export default {
           console.log('SUCCESS!!!')
         }
       })
+    },
+    saveAll() {
+      this.$emit('save-all')
     },
     exportFile() {
       // this.$emit('export')
