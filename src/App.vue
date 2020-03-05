@@ -1235,7 +1235,71 @@ export default {
       // ) {
       // }
     },
-    deleteFile() {},
+    deleteFile() {
+      console.log(this.selectedFile.textContent.split('.')[1].trim())
+      let i
+      if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
+        for (i = 0; i < this.htmlTitles.length; i++) {
+          if (
+            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
+          ) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/deleteFile', {
+                files: [
+                  {
+                    file_seq: this.htmlTitles[i].seq
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+                if (res.data.responseCode === 'SUCCESS') {
+                  this.$nextTick(() => {
+                    this.htmlTitles.splice(i, 1)
+                    console.log(this.htmlTitles)
+                    this.$refs.filecontent.setFiles(
+                      this.htmlTitles,
+                      this.cssTitles,
+                      this.jsTitles
+                    )
+                    this.titles.splice(i, 1)
+                    this.$refs.sitemap.loadSitemap(this.titles)
+                  })
+
+                  console.log(res.data.message)
+                }
+              })
+          }
+        }
+      } else if (this.selectedFile.textContent.split('.')[1].trim() === 'css') {
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/deleteFile', {
+                files: [
+                  {
+                    file_seq: this.cssTitles[i].seq
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+                if (res.data.responseCode === 'SUCCESS') {
+                  this.$nextTick(() => {
+                    this.cssTitles.splice(i, 1)
+                    this.$refs.filecontent.setFiles(
+                      this.htmlTitles,
+                      this.cssTitles,
+                      this.jsTitles
+                    )
+                  })
+                  console.log(res.data.message)
+                }
+              })
+          }
+        }
+      }
+    },
     folderClick(e) {
       this.selectedFolder = e.target
       if (this.isContextMenu3) {
