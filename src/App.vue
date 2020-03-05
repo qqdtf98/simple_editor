@@ -198,11 +198,13 @@
               </div>
             </div>
           </div>
-          <span class="fileTitle" @click="clickSource" name="html">HTML</span>
-          <span class="fileTitle" @click="clickSource" name="css">CSS</span>
+          <span class="fileTitle" @click="clickSource" name="html"
+            >Code Editor</span
+          >
+          <!-- <span class="fileTitle" @click="clickSource" name="css">CSS</span>
           <span class="fileTitle" @click="clickSource" name="js"
             >JavaScript</span
-          >
+          > -->
         </div>
       </div>
       <div class="right-panel">
@@ -241,6 +243,7 @@
             />
             <fileContent
               @add-js="addJS"
+              @folder-click="folderClick"
               @right-click="openFileContext"
               v-show="!showhtml"
               class="filecontent"
@@ -292,7 +295,11 @@
       v-show="isEditTab"
       class="editlist-tab list-tab"
     />
-    <saveList v-show="isSaveTab" class="savelist-tab list-tab" />
+    <saveList
+      @save-all="saveAll"
+      v-show="isSaveTab"
+      class="savelist-tab list-tab"
+    />
     <settingList v-show="isSettingTab" class="settinglist-tab list-tab" />
     <helpList v-show="isHelpTab" class="helplist-tab list-tab" />
 
@@ -311,14 +318,19 @@
     <div v-show="isContextMenu" class="sitemapContext">
       <div @click="changePageSitemap" class="open">Open</div>
       <div @click="copyPage" class="copy">Copy</div>
-      <div @click="rename" class="rename">Rename</div>
+      <div @click="renameTitle" class="rename">Rename</div>
       <div @click="deleteTitle" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu2" class="fileContext">
       <div @click="loadFile" class="open">Open</div>
       <div class="copy">Copy</div>
+      <div @click="renameFile" class="rename">Rename</div>
+      <div @click="deleteFile" class="delete">Delete</div>
+    </div>
+    <div v-show="isContextMenu3" class="folderContext">
+      <div class="addFolder">Add Folder</div>
+      <div @click="addFile" class="addFile">Add File</div>
       <div class="rename">Rename</div>
-      <div class="delete">Delete</div>
     </div>
     <div v-if="isPopUpActive" class="popup">
       <div class="bg" @click="deactivatePopUp" />
@@ -342,7 +354,6 @@
         <input
           v-if="secondPopUp"
           class="new-project-name"
-          @click="projectName"
           placeholder="프로젝트 제목"
         />
         <div
@@ -459,10 +470,15 @@ export default {
     return {
       zzzzz: 3,
       firstPopUp: true,
+      projectFileList: [],
       secondPopUp: false,
       thirdPopUp: false,
+      folder_seq: [],
       isPopUpActive: false,
+      isServer: false,
       isPopUp2Active: false,
+      isEditor1Load: null,
+      isEditor2Load: null,
       folders: [],
       borderWidth: [
         { text: 'White' },
@@ -562,9 +578,11 @@ export default {
       isHelpTab: false,
       isContextMenu: false,
       isContextMenu2: false,
+      isContextMenu3: false,
       titleId: 0,
       selectedTitle: null,
       selectedFile: null,
+      selectedFolder: null,
       showCode: true,
       codeReview: new Map(),
       overView: new Map(),
@@ -646,7 +664,7 @@ export default {
     )
     this.editor1.onMouseDown(e => {
       console.log('안녕')
-    
+
       var elem = ''
       var length = this.editor1.getValue().split('\n').length
       console.log(this.editor1.getValue().split('\n').length)
@@ -818,12 +836,12 @@ export default {
       <a href="#contents" class="sknavi">콘텐츠 바로가기</a>
    </div>
    <!-- // skip_nav -->
-   
+
    <!-- wrap -->
    <div id="wrap">
       <!-- container -->
       <div id="container">
-         
+
          <!-- nav -->
          <nav id="nav">
             <div class="user_box">
@@ -839,9 +857,9 @@ export default {
       console.log('들어갑니다')
       selectedDom = this.findChildren(selectedDom, clickDom)
       console.log('나왔습니다')
-    
+
       console.log(selectedDom)
-     
+
       var elem = e.target.element.innerHTML.replace(/&nbsp;/gi, ' ')
       elem = elem.replace(/amp;/gi, '')
     })
@@ -872,7 +890,19 @@ export default {
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
-
+      let i
+      for (i = 0; i < this.htmlTitles.length; i++) {
+        if (this.htmlTitles[i] === this.isEditor1Load) {
+          console.log(this.htmlTitles[i])
+          console.log(this.isEditor1Load)
+          this.htmlTitles[i].isEdited = true
+        }
+      }
+      this.$refs.filecontent.setFiles(
+        this.htmlTitles,
+        this.cssTitles,
+        this.jsTitles
+      )
       this.$refs.overview.printHomeDocument()
     })
 
@@ -906,6 +936,7 @@ export default {
       if (e.button === 0) {
         this.isContextMenu = false
         this.isContextMenu2 = false
+        this.isContextMenu3 = false
       }
     })
     document.addEventListener('mouseover', e => {
@@ -942,7 +973,39 @@ export default {
       if (e.which === 90 && this.isCtrl && this.isShift) {
         this.redoWork()
       }
-      if (e.which === 67 && this.isCtrl) {
+      if (e.which === 83 && this.isCtrl) {
+        e.preventDefault()
+        if (this.isData) {
+          console.log(this.editor1.getValue())
+          console.log(this.editor2.getValue())
+          console.log(this.isEditor1Load)
+          console.log(this.isEditor2Load)
+          // 파일 업데이트
+          axios
+            .post('http://192.168.0.86:8581/editor/file/updateFile', {
+              files: [
+                {
+                  file_seq: this.isEditor1Load.seq,
+                  folder_seq: this.isEditor1Load.folder,
+                  file_name: this.isEditor1Load.name,
+                  file_path: this.isEditor1Load.path,
+                  file_type: this.isEditor1Load.type,
+                  contents: this.editor1.getValue()
+                },
+                {
+                  file_seq: this.isEditor2Load.seq,
+                  folder_seq: this.isEditor2Load.folder,
+                  file_name: this.isEditor2Load.name,
+                  file_path: this.isEditor2Load.path,
+                  file_type: this.isEditor2Load.type,
+                  contents: this.editor2.getValue()
+                }
+              ]
+            })
+            .then(res => {
+              console.log(res)
+            })
+        }
       }
     })
     document.addEventListener('keyup', e => {
@@ -1172,6 +1235,131 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    saveAll() {
+      let i
+      for (i = 0; i < this.htmlTitles.length; i++) {
+        if (this.htmlTitles[i].isEdited === true) {
+          console.log(this.htmlTitles[i].text)
+        }
+      }
+    },
+    addFile() {
+      this.$refs.filecontent.addFile(
+        this.projectTitles[0].title,
+        this.selectedFolder,
+        this.selectedFolder.textContent.trim().toLowerCase()
+      )
+      // console.log(this.projectTitles[0].title)
+      // let filePath
+      // if (this.selectedFolder.textContent.trim().toLowerCase() === 'html') {
+      //   filePath = this.projectTitles[0].title + '/html/'
+      // } else if (
+      //   this.selectedFolder.textContent.trim().toLowerCase() === 'css'
+      // ) {
+      // } else if (
+      //   this.selectedFolder.textContent.trim().toLowerCase() === 'js'
+      // ) {
+      // }
+    },
+    deleteFile() {
+      console.log(this.selectedFile.textContent.split('.')[1].trim())
+      let i
+      if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
+        for (i = 0; i < this.htmlTitles.length; i++) {
+          if (
+            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
+          ) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/deleteFile', {
+                files: [
+                  {
+                    file_seq: this.htmlTitles[i].seq
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+                if (res.data.responseCode === 'SUCCESS') {
+                  this.$nextTick(() => {
+                    this.htmlTitles.splice(i, 1)
+                    console.log(this.htmlTitles)
+                    this.$refs.filecontent.setFiles(
+                      this.htmlTitles,
+                      this.cssTitles,
+                      this.jsTitles
+                    )
+                    this.titles.splice(i, 1)
+                    this.$refs.sitemap.loadSitemap(this.titles)
+                  })
+
+                  console.log(res.data.message)
+                }
+              })
+          }
+        }
+      } else if (this.selectedFile.textContent.split('.')[1].trim() === 'css') {
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/deleteFile', {
+                files: [
+                  {
+                    file_seq: this.cssTitles[i].seq
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+                if (res.data.responseCode === 'SUCCESS') {
+                  this.$nextTick(() => {
+                    this.cssTitles.splice(i, 1)
+                    this.$refs.filecontent.setFiles(
+                      this.htmlTitles,
+                      this.cssTitles,
+                      this.jsTitles
+                    )
+                  })
+                  console.log(res.data.message)
+                }
+              })
+          }
+        }
+      }
+    },
+    folderClick(e) {
+      this.selectedFolder = e.target
+      if (this.isContextMenu3) {
+        this.isContextMenu3 = false
+      } else {
+        this.isContextMenu3 = true
+        this.isContextMenu2 = false
+        this.isContextMenu = false
+        this.$nextTick(() => {
+          let context = document.querySelector('.folderContext')
+          context.style.left = e.clientX + 'px'
+          context.style.top = e.clientY + 'px'
+        })
+      }
+    },
+    renameFile() {
+      console.log(this.selectedFile)
+      this.$refs.filecontent.focusInput(this.selectedFile)
+      // var oriVal
+      // oriVal = $(this.selectedFile).text()
+      // $(this.selectedFile).text('')
+      // $("<input type='text' @keyup.enter='enterPressed' id='titleInput'>")
+      //   .appendTo(this.selectedFile)
+      //   .focus()
+
+      // $('#titleInput').on('keyup', function(e) {
+      //   if (e.keyCode == 13) {
+      //     this.selectedFile.textContent = e.target.value
+      //     // var $this = $(this.selectedFile)
+      //     // $this.text($this.val() || oriVal)
+      //     $('#titleInput').remove() // Don't just hide, remove the element.
+      //   }
+      // })
+    },
     findChildren(selectedDom, clickDom) {
       var childrenLength = selectedDom.children.length
       for (var i = 0; i < childrenLength; i++) {
@@ -1203,31 +1391,49 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            console.log('22222222')
-            $('iframe').get(
-              0
-            ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
-            this.editor1.setValue(
-              this.htmlTitles[i].code
-                .split('<body>')[1]
-                .split('</body>')[0]
-                .split('<script ')[0]
+            console.log(
+              this.htmlTitles[i].code + '<style>div{color:yellow;}' + '</style>'
             )
+            $('iframe').get(0).contentWindow.document.body.innerHTML =
+              this.htmlTitles[i].code + '<style>div{color:yellow;}' + '</style>'
+            if (this.isServer) {
+              this.editor1.setValue(this.htmlTitles[i].code)
+              this.isEditor1Load = this.htmlTitles[i]
+            } else {
+              this.editor1.setValue(
+                this.htmlTitles[i].code
+                  .split('<body>')[1]
+                  .split('</body>')[0]
+                  .split('<script ')[0]
+              )
+              this.isEditor1Load = this.htmlTitles[i]
+            }
+
+            this.isData = true
             break
           }
         }
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
+        let i
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            this.editor2.setValue(this.cssTitles[i].code)
+            this.isEditor2Load = this.cssTitles[i]
+          }
+          this.isData = true
+          break
+        }
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
       }
     },
     openFileContext(e) {
       this.selectedFile = e.target
       if (this.isContextMenu2) {
-        console.log('11')
         this.isContextMenu2 = false
       } else {
-        console.log('222')
         this.isContextMenu2 = true
+        this.isContextMenu = false
+        this.isContextMenu3 = false
         this.$nextTick(() => {
           let context = document.querySelector('.fileContext')
           context.style.left = e.clientX + 'px'
@@ -1239,9 +1445,9 @@ export default {
       let i
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
-          console.log(this.projectTitles[i].seq)
+          // 해당 프로젝트의 파일 받아오기
           axios
-            .get('http://192.168.0.86:8581/editor/project/select/', {
+            .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
                 project_seq: this.projectTitles[i].seq
               }
@@ -1249,20 +1455,37 @@ export default {
             .then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 this.folders = res.data.data.folders
-                console.log(res.data.data)
+
                 let i
+                let folder
+                folder = {
+                  type: 'css',
+                  seq: res.data.data.folders.css[0].folder_seq
+                }
+                this.folder_seq.push(folder)
+                folder = {
+                  type: 'html',
+                  seq: res.data.data.folders.html[0].folder_seq
+                }
+                this.folder_seq.push(folder)
+                this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 let payload
                 for (i = 0; i < res.data.data.folders.css.length; i++) {
                   payload = {
+                    seq: res.data.data.folders.css[i].file_seq,
+                    path: res.data.data.folders.css[i].file_path,
+                    name: res.data.data.folders.css[i].file_name,
                     text:
                       res.data.data.folders.css[i].file_name +
                       '.' +
                       res.data.data.folders.css[i].file_type,
                     code: res.data.data.folders.css[i].contents,
-                    type: res.data.data.folders.css[i].file_type
+                    type: res.data.data.folders.css[i].file_type,
+                    isEdited: false
                   }
                   this.cssTitles.push(payload)
                 }
+
                 for (i = 0; i < res.data.data.folders.html.length; i++) {
                   let replace = res.data.data.folders.html[i].contents.replace(
                     '../img/image1.png',
@@ -1273,17 +1496,31 @@ export default {
                       '/' +
                       'img/image1.png'
                   )
-                  console.log(res.data.data.folders.html[i].contents)
+                  replace =
+                    '<!DOCTYPE html><html><head><link href="http://192.168.0.86:8581/editor_file_upload/lsm/Project_A/css/pretty.css" type="text/css" rel="stylesheet" /></head><body>' +
+                    replace +
+                    '</body></html>'
                   payload = {
+                    seq: res.data.data.folders.html[i].file_seq,
+                    path: res.data.data.folders.html[i].file_path,
+                    folder: res.data.data.folders.html[i].folder_seq,
+
+                    name: res.data.data.folders.html[i].file_name,
                     text:
                       res.data.data.folders.html[i].file_name +
                       '.' +
                       res.data.data.folders.html[i].file_type,
                     code: replace,
-                    type: res.data.data.folders.html[i].file_type
+                    type: res.data.data.folders.html[i].file_type,
+                    isEdited: false
                   }
                   let title = {
+                    seq: res.data.data.folders.html[i].file_seq,
+                    path: res.data.data.folders.html[i].file_path,
+                    folder: res.data.data.folders.html[i].folder_seq,
+                    name: res.data.data.folders.html[i].file_name,
                     text: res.data.data.folders.html[i].file_name,
+                    type: res.data.data.folders.html[i].file_type,
                     code: replace
                   }
                   this.titles.push(title)
@@ -1318,6 +1555,68 @@ export default {
       this.openTitles = []
       this.leftTitles = []
       this.rightTitles = []
+      var fs = require('fs')
+      var file = require('file-system')
+      console.log(file)
+      let data = 'eeeeeeeeeeeeeeee'
+
+      // file.copyFile(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   'C:/Users/anylogic/Desktop/any-editor/static/html'
+      // )
+      // file.writeFileSync(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   '<div>eeeeeeeeeee</div>'
+      // )
+
+      // file.writeFile(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   data,
+      //   'utf8',
+      //   function(err) {
+      //     console.log('비동기적 파일 쓰기 완료')
+      //   }
+      // )
+
+      // file.writeFileSync(
+      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
+      //   data,
+      //   'utf8',
+      //   function(err) {
+      //     console.log('sd 파일 쓰기 완료')
+      //   }
+      // )
+
+      // const copyFile = require('fs-copy-file')
+
+      // copyFile(
+      //   'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
+      //   'C:/Users/anylogic/Desktop/any-editor/static/img/back.png',
+      //   err => {
+      //     if (err) throw err
+
+      //     console.log('source.txt was copied to destination.txt')
+      //   }
+      // )
+
+      // var fs = require('fs')
+      // fs.copyFileSync(
+      //   'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
+      //   'C:/Users/anylogic/Desktop/any-editor/static/img/back.png'
+      // )
+
+      // const CopyPlugin = require('copy-webpack-plugin')
+      // module.exports = {
+      //   plugins: [
+      //     new CopyPlugin([
+      //       {
+      //         from: 'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
+      //         to: 'C:/Users/anylogic/Desktop/any-editor/static/img/back.png'
+      //       }
+      //     ])
+      //   ]
+      // }
+
       let i
       for (i = 0; i < e.target.files.length; i++) {
         this.processFile(e.target.files[i])
@@ -1357,14 +1656,18 @@ export default {
       reader.readAsText(file)
     },
     openServer() {
+      this.isServer = true
       this.firstPopUp = false
       this.secondPopUp = false
       this.thirdPopUp = true
       axios
-        .post('http://192.168.0.86:8581/editor/user/login', {
-          user_id: 'lsm'
+        .get('http://192.168.0.86:8581/editor/project/selectProject', {
+          params: {
+            user_id: 'lsm'
+          }
         })
         .then(res => {
+          console.log(res)
           if (res.data.responseCode === 'SUCCESS') {
             let i
             this.htmlTitles = []
@@ -1388,13 +1691,28 @@ export default {
     },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
-      console.log(title.value)
+      axios
+        .post('http://192.168.0.86:8581/editor/project/createProject', {
+          projects: [
+            {
+              user_seq: 1,
+              project_name: title.value
+            }
+          ]
+        })
+        .then(res => {
+          console.log(res)
+          if (res.data.responseCode === 'SUCCESS') {
+            console.log(res.data.message)
+          }
+        })
       this.isPopUpActive = false
     },
     cancleProject() {
       this.isPopUpActive = false
     },
     openProject() {
+      this.isServer = false
       this.$refs.folderInput.click()
     },
     backToFirst() {
@@ -1403,6 +1721,7 @@ export default {
       this.thirdPopUp = false
     },
     newProject() {
+      this.isServer = false
       this.firstPopUp = false
       this.secondPopUp = true
       this.thirdPopUp = false
@@ -1691,13 +2010,19 @@ export default {
         }
       }
       this.openTitles.push(this.titles[i])
-      this.editor1.setValue(
-        this.htmlTitles[i].code
-          .split('<body>')[1]
-          .split('</body>')[0]
-          .split('<script ')[0]
-      )
-
+      if (this.isServer) {
+        this.editor1.setValue(this.htmlTitles[i].code)
+        this.isEditor1Load = this.htmlTitles[i]
+      } else {
+        this.editor1.setValue(
+          this.htmlTitles[i].code
+            .split('<body>')[1]
+            .split('</body>')[0]
+            .split('<script ')[0]
+        )
+        this.isEditor1Load = this.htmlTitles[i]
+      }
+      this.isData = true
       $('iframe').get(0).contentWindow.document.body.innerHTML = this.titles[
         i
       ].code
@@ -1712,18 +2037,18 @@ export default {
       // console.log(this.titles)
       let topMenu = document.querySelector('.top-menu')
     },
-    rename() {
+    renameTitle() {
       this.$refs.sitemap.renameTitle()
     },
     openSitemapContext(e) {
       this.selectedTitle = e.target
       if (this.isContextMenu) {
-        console.log('1111111111')
         this.isContextMenu = false
       } else {
         this.isContextMenu = true
+        this.isContextMenu3 = false
+        this.isContextMenu2 = false
         this.$nextTick(() => {
-          console.log('22222222')
           let context = document.querySelector('.sitemapContext')
           context.style.left = e.clientX + 'px'
           context.style.top = e.clientY + 'px'
@@ -2915,6 +3240,25 @@ export default {
       }
     }
   }
+  .folderContext {
+    position: fixed;
+    width: 10rem;
+    background-color: #34343c;
+    box-shadow: 5px 5px 8px 1px #000000;
+    z-index: 160;
+    .addFolder,
+    .addFile,
+    .rename {
+      width: 100%;
+      padding-top: 0.2rem;
+      color: #fff;
+      padding-bottom: 0.2rem;
+      &:hover {
+        cursor: pointer;
+        background-color: #4b4b57;
+      }
+    }
+  }
   .popup {
     position: fixed;
     top: 0;
@@ -3079,6 +3423,8 @@ export default {
     float: none;
     margin: 0;
     border: none;
+    padding-right: 0.3rem;
+    padding-left: 0.3rem;
     height: 100%;
     background-color: #666666;
     &:hover {
