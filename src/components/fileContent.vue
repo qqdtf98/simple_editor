@@ -21,10 +21,11 @@
         </div>
         <div class="tag-list-box">
           <span @mouseup="openFolderContext" class="tag-list">CSS</span>
-          <div class="nested">
+          <div class="css nested">
             <div
               ref="cssName"
               @mouseup="mouseRightClick"
+              @keyup.enter="setNewTitle"
               :contenteditable="isContentEditable"
               :key="title.key"
               v-for="title in cssTitles"
@@ -35,10 +36,11 @@
         </div>
         <div class="tag-list-box">
           <span @mouseup="openFolderContext" class="tag-list">JS</span>
-          <div class="nested">
+          <div class="js nested">
             <div
               ref="jsName"
               @mouseup="mouseRightClick"
+              @keyup.enter="setNewTitle"
               :contenteditable="isContentEditable"
               :key="title.key"
               v-for="title in jsTitles"
@@ -64,7 +66,12 @@ export default {
       cssTitles: [],
       jsTitles: [],
       contextTarget: null,
-      isContentEditable: false
+      isContentEditable: false,
+      project: null,
+      folderSeq: [],
+      beforeTitle: null,
+      isNewFileAdd: false,
+      sameTitle: false
     }
   },
   computed: {},
@@ -73,7 +80,127 @@ export default {
     setNewTitle(e) {
       e.preventDefault()
       if (e) {
-        console.log(e.target.textContent)
+        e.target.textContent = e.target.textContent.trim()
+        let i
+        if (this.type === 'html') {
+          for (i = 0; i < this.htmlTitles.length; i++) {
+            if (
+              this.htmlTitles[i].name === e.target.textContent.split('.')[0]
+            ) {
+              this.sameTitle = true
+            }
+          }
+        } else if (this.type === 'css') {
+          for (i = 0; i < this.htmlTitles.length; i++) {
+            if (this.cssTitles[i].name === e.target.textContent.split('.')[0]) {
+              this.sameTitle = true
+            }
+          }
+        }
+        if (this.sameTitle) {
+          console.log('sameme')
+          e.target.classList.add('same-title')
+          e.target.textContent = this.beforeTitle
+          this.sameTitle = false
+        } else {
+          // 서버에 이름 중복검사 요청
+          //this.type e.target.textcontent.split('.')[0]
+          let i
+          for (i = 0; i < this.folderSeq.length; i++) {
+            if (this.folderSeq[i].type === this.type) {
+              break
+            }
+          }
+          axios
+            .get('http://192.168.0.86:8581/editor/file/checkFileName', {
+              params: {
+                folder_seq: this.folderSeq[i].seq,
+                file_type: this.type,
+                file_name: e.target.textContent.split('.')[0]
+              }
+            })
+            .then(res => {
+              if (res.data.responseCode === 'SUCCESS') {
+                if (this.isNewFileAdd) {
+                  let data
+                  let i
+                  for (i = 0; i < this.folderSeq.length; i++) {
+                    if (this.folderSeq[i].type === this.type) {
+                      break
+                    }
+                  }
+                  data = {
+                    folder_seq: this.folderSeq[i].seq,
+                    file_name: e.target.textContent.split('.')[0],
+                    file_path:
+                      this.project +
+                      '/' +
+                      this.type +
+                      '/' +
+                      e.target.textContent.split('.')[0] +
+                      '.' +
+                      this.type,
+                    file_type: this.type,
+                    contents: ''
+                  }
+                  axios
+                    .post('http://192.168.0.86:8581/editor/file/createFile', {
+                      files: [data]
+                    })
+                    .then(res => {
+                      if (res.data.responseCode === 'SUCCESS') {
+                        console.log(res.data.message)
+                      }
+                    })
+                  this.isNewFileAdd = false
+                } else {
+                  console.log(this.contextTarget)
+                  let html = document.querySelector('.html')
+                  let i
+                  for (i = 0; i < html.children.length; i++) {
+                    if (html.children[i] === this.contextTarget) break
+                  }
+                  let j
+                  for (j = 0; j < this.folderSeq.length; j++) {
+                    if (this.folderSeq[j].type === this.type) {
+                      break
+                    }
+                  }
+                  axios
+                    .post('http://192.168.0.86:8581/editor/file/updateFile', {
+                      files: [
+                        {
+                          folder_seq: this.folderSeq[j].seq,
+                          file_seq: this.htmlTitles[i].seq,
+                          file_name: e.target.textContent.split('.')[0],
+                          file_path:
+                            this.htmlTitles[i].path.split(
+                              this.htmlTitles[i].text
+                            )[0] +
+                            e.target.textContent.split('.')[0] +
+                            '.' +
+                            this.type
+                        }
+                      ]
+                    })
+                    .then(res => {
+                      console.log(res)
+                    })
+                  this.htmlTitles[i].text = e.target.textContent.split('.')[0]
+                  this.htmlTitles[i].path =
+                    this.htmlTitles[i].path.split(this.htmlTitles[i].text)[0] +
+                    e.target.textContent.split('.')[0] +
+                    '.' +
+                    this.type
+                }
+              } else {
+                console.log('sameme')
+                e.target.classList.add('same-title')
+                e.target.textContent = this.beforeTitle
+                this.sameTitle = false
+              }
+            })
+        }
         this.isContentEditable = false
       }
     },
@@ -117,6 +244,11 @@ export default {
       }
     },
     focusInput(target) {
+      target.classList.remove('same-title')
+      if (!this.isNewFileAdd) {
+        this.type = target.textContent.split('.')[1].trim()
+      }
+      this.beforeTitle = target.textContent.trim()
       this.isContentEditable = true
       this.$nextTick(() => {
         const sel = window.getSelection()
@@ -128,13 +260,21 @@ export default {
         this.placeCaretAtEnd(target)
       })
     },
-    newFileName(type) {
-      if (type === 'html') {
+    newFileName() {
+      if (this.type === 'html') {
         let html = document.querySelector('.html')
         html.parentElement.children[0].classList.add('caret-down')
         html.children[html.children.length - 1].classList.add('template')
         html.classList.add('active')
+        this.isNewFileAdd = true
         this.focusInput(html.children[html.children.length - 1])
+      } else if (this.type === 'css') {
+        let css = document.querySelector('.css')
+        css.parentElement.children[0].classList.add('caret-down')
+        css.children[css.children.length - 1].classList.add('template')
+        css.classList.add('active')
+        this.isNewFileAdd = true
+        this.focusInput(css.children[css.children.length - 1])
       }
     },
     addFile(project, folder, type) {
@@ -229,6 +369,34 @@ export default {
         }
       }
     }
+  }
+}
+.same-title {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(4px, 0, 0);
   }
 }
 </style>

@@ -1317,8 +1317,9 @@ export default {
         })
       }
     },
-    renameFile(e) {
+    renameFile() {
       console.log(this.selectedFile)
+      this.$refs.filecontent.focusInput(this.selectedFile)
       // var oriVal
       // oriVal = $(this.selectedFile).text()
       // $(this.selectedFile).text('')
