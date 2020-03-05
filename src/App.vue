@@ -470,8 +470,10 @@ export default {
     return {
       zzzzz: 3,
       firstPopUp: true,
+      projectFileList: [],
       secondPopUp: false,
       thirdPopUp: false,
+      folder_seq: [],
       isPopUpActive: false,
       isServer: false,
       isPopUp2Active: false,
@@ -1416,6 +1418,7 @@ export default {
       let i
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
+          // 해당 프로젝트의 파일 받아오기
           axios
             .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
@@ -1425,7 +1428,20 @@ export default {
             .then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 this.folders = res.data.data.folders
+
                 let i
+                let folder
+                folder = {
+                  type: 'css',
+                  seq: res.data.data.folders.css[0].folder_seq
+                }
+                this.folder_seq.push(folder)
+                folder = {
+                  type: 'html',
+                  seq: res.data.data.folders.html[0].folder_seq
+                }
+                this.folder_seq.push(folder)
+                this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 let payload
                 for (i = 0; i < res.data.data.folders.css.length; i++) {
                   payload = {
@@ -1437,10 +1453,12 @@ export default {
                       '.' +
                       res.data.data.folders.css[i].file_type,
                     code: res.data.data.folders.css[i].contents,
-                    type: res.data.data.folders.css[i].file_type
+                    type: res.data.data.folders.css[i].file_type,
+                    isEdited: false
                   }
                   this.cssTitles.push(payload)
                 }
+
                 for (i = 0; i < res.data.data.folders.html.length; i++) {
                   let replace = res.data.data.folders.html[i].contents.replace(
                     '../img/image1.png',
@@ -1455,21 +1473,24 @@ export default {
                     '<!DOCTYPE html><html><head><link href="http://192.168.0.86:8581/editor_file_upload/lsm/Project_A/css/pretty.css" type="text/css" rel="stylesheet" /></head><body>' +
                     replace +
                     '</body></html>'
-                  console.log(replace)
                   payload = {
                     seq: res.data.data.folders.html[i].file_seq,
                     path: res.data.data.folders.html[i].file_path,
+                    folder: res.data.data.folders.html[i].folder_seq,
+
                     name: res.data.data.folders.html[i].file_name,
                     text:
                       res.data.data.folders.html[i].file_name +
                       '.' +
                       res.data.data.folders.html[i].file_type,
                     code: replace,
-                    type: res.data.data.folders.html[i].file_type
+                    type: res.data.data.folders.html[i].file_type,
+                    isEdited: false
                   }
                   let title = {
                     seq: res.data.data.folders.html[i].file_seq,
                     path: res.data.data.folders.html[i].file_path,
+                    folder: res.data.data.folders.html[i].folder_seq,
                     name: res.data.data.folders.html[i].file_name,
                     text: res.data.data.folders.html[i].file_name,
                     type: res.data.data.folders.html[i].file_type,

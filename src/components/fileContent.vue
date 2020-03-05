@@ -77,6 +77,9 @@ export default {
         this.isContentEditable = false
       }
     },
+    setFolderSeq(seq) {
+      this.folderSeq = seq
+    },
     openFolderContext(e) {
       if (e.button === 2) {
         this.$emit('folder-click', e)
@@ -135,7 +138,10 @@ export default {
       }
     },
     addFile(project, folder, type) {
+      console.log(folder)
+      this.project = project
       let payload
+      this.type = type
       if (type === 'html') {
         payload = {
           path: project + '/html/',
@@ -146,9 +152,20 @@ export default {
         }
         this.htmlTitles.push(payload)
         this.$nextTick(() => {
-          this.newFileName('html')
+          this.newFileName()
         })
       } else if (type === 'css') {
+        payload = {
+          path: '',
+          name: '',
+          text: '',
+          code: '',
+          type: 'css'
+        }
+        this.cssTitles.push(payload)
+        this.$nextTick(() => {
+          this.newFileName()
+        })
       } else if (type === 'js') {
       }
     },
