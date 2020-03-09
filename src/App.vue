@@ -977,11 +977,8 @@ export default {
       if (e.which === 83 && this.isCtrl) {
         e.preventDefault()
         if (this.isData) {
-          console.log(this.editor1.getValue())
-          console.log(this.editor2.getValue())
-          console.log(this.isEditor1Load)
-          console.log(this.isEditor2Load)
           // 파일 업데이트
+          if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
           axios
             .post('http://192.168.0.86:8581/editor/file/updateFile', {
               files: [
@@ -1006,6 +1003,47 @@ export default {
             .then(res => {
               console.log(res)
             })
+          } else if (
+            this.isEditor1Load !== null &&
+            this.isEditor2Load === null
+          ) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+                files: [
+                  {
+                    file_seq: this.isEditor1Load.seq,
+                    folder_seq: this.isEditor1Load.folder,
+                    file_name: this.isEditor1Load.name,
+                    file_path: this.isEditor1Load.path,
+                    file_type: this.isEditor1Load.type,
+                    contents: this.editor1.getValue()
+        }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+              })
+          } else if (
+            this.isEditor1Load === null &&
+            this.isEditor2Load !== null
+          ) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+                files: [
+                  {
+                    file_seq: this.isEditor2Load.seq,
+                    folder_seq: this.isEditor2Load.folder,
+                    file_name: this.isEditor2Load.name,
+                    file_path: this.isEditor2Load.path,
+                    file_type: this.isEditor2Load.type,
+                    contents: this.editor2.getValue()
+      }
+                ]
+    })
+              .then(res => {
+                console.log(res)
+              })
+          }
         }
       }
     })
@@ -1023,7 +1061,6 @@ export default {
         let leftBox = document.querySelector('.left-box')
         let rightBox = document.querySelector('.right-box')
         let bord = document.querySelector('.center-border')
-        console.log(bord)
         if (
           this.initialLeftWidth + (e.clientX - this.initialBorder) > 300 &&
           this.initialRightWidth - (e.clientX - this.initialBorder) > 300
@@ -1244,11 +1281,43 @@ export default {
     },
     saveAll() {
       let i
+      let changedFile = []
+      let payload
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i].isEdited === true) {
-          console.log(this.htmlTitles[i].text)
+          payload = {
+            file_seq: this.htmlTitles[i].seq,
+            folder_seq: this.htmlTitles[i].folder,
+            file_name: this.htmlTitles[i].name,
+            file_path: this.htmlTitles[i].path,
+            file_type: this.htmlTitles[i].type,
+            contents: this.htmlTitles[i].code
+        }
+          changedFile.push(payload)
+      }
+      }
+      for (i = 0; i < this.cssTitles.length; i++) {
+        if (this.cssTitles[i].isEdited === true) {
+          payload = {
+            file_seq: this.cssTitles[i].seq,
+            folder_seq: this.cssTitles[i].folder,
+            file_name: this.cssTitles[i].name,
+            file_path: this.cssTitles[i].path,
+            file_type: this.cssTitles[i].type,
+            contents: this.cssTitles[i].code
+          }
+          changedFile.push(payload)
         }
       }
+      console.log(changedFile)
+
+      axios
+        .post('http://192.168.0.86:8581/editor/file/updateFile', {
+          files: changedFile
+        })
+        .then(res => {
+          console.log(res.data.message)
+        })
     },
     addFile() {
       this.$refs.filecontent.addFile(
