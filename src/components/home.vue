@@ -1481,16 +1481,15 @@ export default {
         var style = {
           work: 'style',
           elem: this.clickedElement,
-          style: this.style,
+          style: data.style,
           afterValue: data.value,
-          value: getComputedStyle(data.payload)[this.style]
+          value: getComputedStyle(data.payload)[data.style]
         }
         this.$emit('stack-push', style)
 
         this.value = data.value
 
-        // console.log(element)
-        data.payload.style[this.style] = this.value
+        data.payload.style[data.style] = this.value
       } else {
         this.style = data.style
         this.value = data.value

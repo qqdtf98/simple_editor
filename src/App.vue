@@ -378,14 +378,16 @@
           src="./assets/images/back.svg"
         />
         <div v-if="thirdPopUp" class="project-wrapper">
-          <div
-            :key="index"
-            @click="selectProject"
-            v-for="(title, index) in projectTitles"
-            class="project-list"
-          >
-            {{ title.title }}
-          </div>
+          <vue-custom-scrollbar class="project-scroll-area">
+            <div
+              :key="index"
+              @click="selectProject"
+              v-for="(title, index) in projectTitles"
+              class="project-list"
+            >
+              {{ title.title }}
+            </div>
+          </vue-custom-scrollbar>
         </div>
 
         <input
@@ -477,6 +479,8 @@ export default {
       folder_seq: [],
       isPopUpActive: false,
       isServer: false,
+      isProject: null,
+      deleteFileNum: null,
       isPopUp2Active: false,
       isEditor1Load: null,
       isEditor2Load: null,
@@ -883,20 +887,18 @@ export default {
         accessibilityPageSize: 4,
         lineDecorationsWidth: 10,
         mouseWheelZoom: true
-
-        // find: 'IEditorFindOptions',
       }
     )
-    // var a = 0
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
       $('iframe').get(0).contentWindow.document.body.innerHTML =
         this.editor1.getValue() + '<style>' + this.css + '</style>'
       let i
+      console.log(this.isEditor1Load)
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i] === this.isEditor1Load) {
-          console.log(this.htmlTitles[i])
-          console.log(this.isEditor1Load)
+          this.htmlTitles[i].code = this.editor1.getValue()
           this.htmlTitles[i].isEdited = true
+          console.log(this.htmlTitles[i])
         }
       }
       this.$refs.filecontent.setFiles(
@@ -919,6 +921,18 @@ export default {
         .contentWindow.document.getElementsByTagName(
           'style'
         )[0].innerHTML = this.editor2.getValue()
+      let i
+      for (i = 0; i < this.cssTitles.length; i++) {
+        if (this.cssTitles[i] === this.isEditor2Load) {
+          this.cssTitles[i].contents = this.editor2.getValue()
+          this.cssTitles[i].isEdited = true
+        }
+      }
+      this.$refs.filecontent.setFiles(
+        this.htmlTitles,
+        this.cssTitles,
+        this.jsTitles
+      )
       this.css = this.editor2.getValue()
     })
 
@@ -977,35 +991,73 @@ export default {
       if (e.which === 83 && this.isCtrl) {
         e.preventDefault()
         if (this.isData) {
-          console.log(this.editor1.getValue())
-          console.log(this.editor2.getValue())
-          console.log(this.isEditor1Load)
-          console.log(this.isEditor2Load)
           // 파일 업데이트
-          axios
-            .post('http://192.168.0.86:8581/editor/file/updateFile', {
-              files: [
-                {
-                  file_seq: this.isEditor1Load.seq,
-                  folder_seq: this.isEditor1Load.folder,
-                  file_name: this.isEditor1Load.name,
-                  file_path: this.isEditor1Load.path,
-                  file_type: this.isEditor1Load.type,
-                  contents: this.editor1.getValue()
-                },
-                {
-                  file_seq: this.isEditor2Load.seq,
-                  folder_seq: this.isEditor2Load.folder,
-                  file_name: this.isEditor2Load.name,
-                  file_path: this.isEditor2Load.path,
-                  file_type: this.isEditor2Load.type,
-                  contents: this.editor2.getValue()
-                }
-              ]
-            })
-            .then(res => {
-              console.log(res)
-            })
+          if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+                files: [
+                  {
+                    file_seq: this.isEditor1Load.seq,
+                    folder_seq: this.isEditor1Load.folder,
+                    file_name: this.isEditor1Load.name,
+                    file_path: this.isEditor1Load.path,
+                    file_type: this.isEditor1Load.type,
+                    contents: this.editor1.getValue()
+                  },
+                  {
+                    file_seq: this.isEditor2Load.seq,
+                    folder_seq: this.isEditor2Load.folder,
+                    file_name: this.isEditor2Load.name,
+                    file_path: this.isEditor2Load.path,
+                    file_type: this.isEditor2Load.type,
+                    contents: this.editor2.getValue()
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+              })
+          } else if (
+            this.isEditor1Load !== null &&
+            this.isEditor2Load === null
+          ) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+                files: [
+                  {
+                    file_seq: this.isEditor1Load.seq,
+                    folder_seq: this.isEditor1Load.folder,
+                    file_name: this.isEditor1Load.name,
+                    file_path: this.isEditor1Load.path,
+                    file_type: this.isEditor1Load.type,
+                    contents: this.editor1.getValue()
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+              })
+          } else if (
+            this.isEditor1Load === null &&
+            this.isEditor2Load !== null
+          ) {
+            axios
+              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+                files: [
+                  {
+                    file_seq: this.isEditor2Load.seq,
+                    folder_seq: this.isEditor2Load.folder,
+                    file_name: this.isEditor2Load.name,
+                    file_path: this.isEditor2Load.path,
+                    file_type: this.isEditor2Load.type,
+                    contents: this.editor2.getValue()
+                  }
+                ]
+              })
+              .then(res => {
+                console.log(res)
+              })
+          }
         }
       }
     })
@@ -1023,7 +1075,6 @@ export default {
         let leftBox = document.querySelector('.left-box')
         let rightBox = document.querySelector('.right-box')
         let bord = document.querySelector('.center-border')
-        console.log(bord)
         if (
           this.initialLeftWidth + (e.clientX - this.initialBorder) > 300 &&
           this.initialRightWidth - (e.clientX - this.initialBorder) > 300
@@ -1244,15 +1295,48 @@ export default {
     },
     saveAll() {
       let i
+      let changedFile = []
+      let payload
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i].isEdited === true) {
-          console.log(this.htmlTitles[i].text)
+          payload = {
+            file_seq: this.htmlTitles[i].seq,
+            folder_seq: this.htmlTitles[i].folder,
+            file_name: this.htmlTitles[i].name,
+            file_path: this.htmlTitles[i].path,
+            file_type: this.htmlTitles[i].type,
+            contents: this.htmlTitles[i].code
+          }
+          changedFile.push(payload)
         }
       }
+      for (i = 0; i < this.cssTitles.length; i++) {
+        if (this.cssTitles[i].isEdited === true) {
+          payload = {
+            file_seq: this.cssTitles[i].seq,
+            folder_seq: this.cssTitles[i].folder,
+            file_name: this.cssTitles[i].name,
+            file_path: this.cssTitles[i].path,
+            file_type: this.cssTitles[i].type,
+            contents: this.cssTitles[i].code
+          }
+          changedFile.push(payload)
+        }
+      }
+      console.log(changedFile)
+
+      axios
+        .post('http://192.168.0.86:8581/editor/file/updateFile', {
+          files: changedFile
+        })
+        .then(res => {
+          console.log(res.data.message)
+        })
     },
     addFile() {
+      console.log(this.isProject)
       this.$refs.filecontent.addFile(
-        this.projectTitles[0].title,
+        this.isProject.title,
         this.selectedFolder,
         this.selectedFolder.textContent.trim().toLowerCase()
       )
@@ -1276,6 +1360,9 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
+            console.log(this.htmlTitles[i])
+            this.deleteFileNum = i
+            console.log(i)
             axios
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
@@ -1287,16 +1374,20 @@ export default {
               .then(res => {
                 console.log(res)
                 if (res.data.responseCode === 'SUCCESS') {
+                  console.log(this.deleteFileNum)
                   this.$nextTick(() => {
-                    this.htmlTitles.splice(i, 1)
-                    console.log(this.htmlTitles)
-                    this.$refs.filecontent.setFiles(
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
-                    this.titles.splice(i, 1)
-                    this.$refs.sitemap.loadSitemap(this.titles)
+                    this.htmlTitles.splice(this.deleteFileNum, 1)
+                    this.titles.splice(this.deleteFileNum, 1)
+                    this.$nextTick(() => {
+                      console.log(this.htmlTitles)
+                      this.$refs.filecontent.setFiles(
+                        this.htmlTitles,
+                        this.cssTitles,
+                        this.jsTitles
+                      )
+
+                      this.$refs.sitemap.loadSitemap(this.titles)
+                    })
                   })
 
                   console.log(res.data.message)
@@ -1398,22 +1489,20 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            console.log(
-              this.htmlTitles[i].code + '<style>div{color:yellow;}' + '</style>'
-            )
-            $('iframe').get(0).contentWindow.document.body.innerHTML =
-              this.htmlTitles[i].code + '<style>div{color:yellow;}' + '</style>'
+            // $('iframe').get(
+            //   0
+            // ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
             if (this.isServer) {
-              this.editor1.setValue(this.htmlTitles[i].code)
               this.isEditor1Load = this.htmlTitles[i]
+              this.editor1.setValue(this.htmlTitles[i].code)
             } else {
+              this.isEditor1Load = this.htmlTitles[i]
               this.editor1.setValue(
                 this.htmlTitles[i].code
                   .split('<body>')[1]
                   .split('</body>')[0]
                   .split('<script ')[0]
               )
-              this.isEditor1Load = this.htmlTitles[i]
             }
 
             this.isData = true
@@ -1454,6 +1543,7 @@ export default {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           // 해당 프로젝트의 파일 받아오기
           this.isProject = this.projectTitles[i]
+          console.log(this.projectTitles[i])
           axios
             .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
@@ -1464,12 +1554,12 @@ export default {
               console.log(res)
               if (res.data.responseCode === 'SUCCESS') {
                 this.folders = res.data.data.folders
-
                 let i
                 let folder
                 folder = {
                   type: 'css',
                   seq: res.data.data.folders.css[0].folder_seq
+                  // folder_seq를 파일에서 가져오지 않고 따로 보내주는걸 저장
                 }
                 this.folder_seq.push(folder)
                 folder = {
@@ -1477,6 +1567,7 @@ export default {
                   seq: res.data.data.folders.html[0].folder_seq
                 }
                 this.folder_seq.push(folder)
+                console.log(this.folder_seq)
                 this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 let payload
                 for (i = 0; i < res.data.data.folders.css.length; i++) {
@@ -1496,15 +1587,6 @@ export default {
                 }
 
                 for (i = 0; i < res.data.data.folders.html.length; i++) {
-                  // let replace = res.data.data.folders.html[i].contents.replace(
-                  //   '../img/image1.png',
-                  //   'http://192.168.0.86:8581/editor_file_upload/' +
-                  //     'lsm' +
-                  //     '/' +
-                  //     'Project_A' +
-                  //     '/' +
-                  //     'img/image1.png'
-                  // )
                   payload = {
                     seq: res.data.data.folders.html[i].file_seq,
                     path: res.data.data.folders.html[i].file_path,
@@ -1709,10 +1791,30 @@ export default {
         .then(res => {
           console.log(res)
           if (res.data.responseCode === 'SUCCESS') {
-            console.log(res.data.message)
+            console.log(res.data)
             // 프로젝트 seq 받아서 저장하기
-            this.isProject.title = res.data.data[0].project_name
-            this.isProject.seq = res.data.data[0].project_seq
+
+            this.$nextTick(() => {
+              let project = {
+                title: res.data.data[0].project_name,
+                seq: res.data.data[0].project_seq
+              }
+              console.log(project)
+              this.isProject = project
+              console.log(this.isProject)
+              let folder_seq = []
+              let payload
+              let i
+              for (i = 0; i < res.data.data[0].folders.length; i++) {
+                payload = {
+                  type: res.data.data[0].folders[i].folder_name,
+                  seq: res.data.data[0].folders[i].folder_seq
+                }
+                folder_seq.push(payload)
+              }
+              console.log(folder_seq)
+              this.$refs.filecontent.setFolderSeq(folder_seq)
+            })
           }
         })
       this.isPopUpActive = false
@@ -3349,17 +3451,21 @@ export default {
         display: flex;
         flex-direction: column;
         // justify-content: left;
-        .project-list {
-          color: #e7e4e4;
-          padding-left: 1rem;
-          height: 2rem;
-          padding-top: 0.2rem;
+        .project-scroll-area {
+          width: 100%;
+          height: 100%;
+          .project-list {
+            color: #e7e4e4;
+            padding-left: 1rem;
+            height: 2rem;
+            padding-top: 0.2rem;
 
-          text-align: left;
-          background-color: #292931;
-          &:hover {
-            cursor: pointer;
-            background-color: #3a3a44;
+            text-align: left;
+            background-color: #292931;
+            &:hover {
+              cursor: pointer;
+              background-color: #3a3a44;
+            }
           }
         }
       }
