@@ -1453,6 +1453,7 @@ export default {
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           // 해당 프로젝트의 파일 받아오기
+          this.isProject = this.projectTitles[i]
           axios
             .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
@@ -1460,6 +1461,7 @@ export default {
               }
             })
             .then(res => {
+              console.log(res)
               if (res.data.responseCode === 'SUCCESS') {
                 this.folders = res.data.data.folders
 
@@ -1699,7 +1701,7 @@ export default {
         .post('http://192.168.0.86:8581/editor/project/createProject', {
           projects: [
             {
-              user_seq: 1,
+              user_seq: 2,
               project_name: title.value
             }
           ]
@@ -1708,6 +1710,9 @@ export default {
           console.log(res)
           if (res.data.responseCode === 'SUCCESS') {
             console.log(res.data.message)
+            // 프로젝트 seq 받아서 저장하기
+            this.isProject.title = res.data.data[0].project_name
+            this.isProject.seq = res.data.data[0].project_seq
           }
         })
       this.isPopUpActive = false
@@ -2136,7 +2141,6 @@ export default {
     },
     changeTab(e) {
       let trees = document.querySelectorAll('.tree-name')
-      console.log(trees)
       //  e.target.parentElement.style.backgroundColor = '#4e4e5c'
       if (e.target.textContent.trim() === 'HTML') {
         trees[0].style.backgroundColor = '#292931'
