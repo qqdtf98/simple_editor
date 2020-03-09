@@ -242,6 +242,7 @@
               class="htmlcontent"
             />
             <fileContent
+              @reset-titles="resetAllTitle"
               @add-js="addJS"
               @folder-click="folderClick"
               @right-click="openFileContext"
@@ -1235,6 +1236,12 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    resetAllTitle(html, css, js) {
+      this.htmlTitles = html
+      this.cssTitles = css
+      this.jsTitles = js
+      console.log(this.htmlTitles)
+    },
     saveAll() {
       let i
       for (i = 0; i < this.htmlTitles.length; i++) {
@@ -1446,6 +1453,7 @@ export default {
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           // 해당 프로젝트의 파일 받아오기
+          this.isProject = this.projectTitles[i]
           axios
             .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
@@ -1453,6 +1461,7 @@ export default {
               }
             })
             .then(res => {
+              console.log(res)
               if (res.data.responseCode === 'SUCCESS') {
                 this.folders = res.data.data.folders
 
@@ -1487,19 +1496,15 @@ export default {
                 }
 
                 for (i = 0; i < res.data.data.folders.html.length; i++) {
-                  let replace = res.data.data.folders.html[i].contents.replace(
-                    '../img/image1.png',
-                    'http://192.168.0.86:8581/editor_file_upload/' +
-                      'lsm' +
-                      '/' +
-                      'Project_A' +
-                      '/' +
-                      'img/image1.png'
-                  )
-                  replace =
-                    '<!DOCTYPE html><html><head><link href="http://192.168.0.86:8581/editor_file_upload/lsm/Project_A/css/pretty.css" type="text/css" rel="stylesheet" /></head><body>' +
-                    replace +
-                    '</body></html>'
+                  // let replace = res.data.data.folders.html[i].contents.replace(
+                  //   '../img/image1.png',
+                  //   'http://192.168.0.86:8581/editor_file_upload/' +
+                  //     'lsm' +
+                  //     '/' +
+                  //     'Project_A' +
+                  //     '/' +
+                  //     'img/image1.png'
+                  // )
                   payload = {
                     seq: res.data.data.folders.html[i].file_seq,
                     path: res.data.data.folders.html[i].file_path,
@@ -1510,7 +1515,8 @@ export default {
                       res.data.data.folders.html[i].file_name +
                       '.' +
                       res.data.data.folders.html[i].file_type,
-                    code: replace,
+                    // code: replace,
+                    code: res.data.data.folders.html[i].contents,
                     type: res.data.data.folders.html[i].file_type,
                     isEdited: false
                   }
@@ -1521,7 +1527,7 @@ export default {
                     name: res.data.data.folders.html[i].file_name,
                     text: res.data.data.folders.html[i].file_name,
                     type: res.data.data.folders.html[i].file_type,
-                    code: replace
+                    code: res.data.data.folders.html[i].contents
                   }
                   this.titles.push(title)
                   this.htmlTitles.push(payload)
@@ -1695,7 +1701,7 @@ export default {
         .post('http://192.168.0.86:8581/editor/project/createProject', {
           projects: [
             {
-              user_seq: 1,
+              user_seq: 2,
               project_name: title.value
             }
           ]
@@ -1704,6 +1710,9 @@ export default {
           console.log(res)
           if (res.data.responseCode === 'SUCCESS') {
             console.log(res.data.message)
+            // 프로젝트 seq 받아서 저장하기
+            this.isProject.title = res.data.data[0].project_name
+            this.isProject.seq = res.data.data[0].project_seq
           }
         })
       this.isPopUpActive = false
@@ -2132,7 +2141,6 @@ export default {
     },
     changeTab(e) {
       let trees = document.querySelectorAll('.tree-name')
-      console.log(trees)
       //  e.target.parentElement.style.backgroundColor = '#4e4e5c'
       if (e.target.textContent.trim() === 'HTML') {
         trees[0].style.backgroundColor = '#292931'
