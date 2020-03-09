@@ -477,6 +477,8 @@ export default {
       folder_seq: [],
       isPopUpActive: false,
       isServer: false,
+      isProject: null,
+      deleteFileNum: null,
       isPopUp2Active: false,
       isEditor1Load: null,
       isEditor2Load: null,
@@ -1345,6 +1347,9 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
+            console.log(this.htmlTitles[i])
+            this.deleteFileNum = i
+            console.log(i)
             axios
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
@@ -1356,16 +1361,20 @@ export default {
               .then(res => {
                 console.log(res)
                 if (res.data.responseCode === 'SUCCESS') {
+                  console.log(this.deleteFileNum)
                   this.$nextTick(() => {
-                    this.htmlTitles.splice(i, 1)
+                    this.htmlTitles.splice(this.deleteFileNum, 1)
+                    this.titles.splice(this.deleteFileNum, 1)
+                    this.$nextTick(() => {
                     console.log(this.htmlTitles)
                     this.$refs.filecontent.setFiles(
                       this.htmlTitles,
                       this.cssTitles,
                       this.jsTitles
                     )
-                    this.titles.splice(i, 1)
+
                     this.$refs.sitemap.loadSitemap(this.titles)
+                  })
                   })
 
                   console.log(res.data.message)
