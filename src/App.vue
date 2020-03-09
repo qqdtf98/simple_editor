@@ -242,6 +242,7 @@
               class="htmlcontent"
             />
             <fileContent
+              @reset-titles="resetAllTitle"
               @add-js="addJS"
               @folder-click="folderClick"
               @right-click="openFileContext"
@@ -1235,6 +1236,12 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    resetAllTitle(html, css, js) {
+      this.htmlTitles = html
+      this.cssTitles = css
+      this.jsTitles = js
+      console.log(this.htmlTitles)
+    },
     saveAll() {
       let i
       for (i = 0; i < this.htmlTitles.length; i++) {

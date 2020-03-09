@@ -98,13 +98,14 @@ export default {
           }
         }
         if (this.sameTitle) {
+          // 프론트에서 체크 - 중복 O
           console.log('sameme')
           e.target.classList.add('same-title')
           e.target.textContent = this.beforeTitle
           this.sameTitle = false
         } else {
+          // 프론트에서 체크 - 중복 X
           // 서버에 이름 중복검사 요청
-          //this.type e.target.textcontent.split('.')[0]
           let i
           for (i = 0; i < this.folderSeq.length; i++) {
             if (this.folderSeq[i].type === this.type) {
@@ -121,7 +122,9 @@ export default {
             })
             .then(res => {
               if (res.data.responseCode === 'SUCCESS') {
+                // 서버에서 체크 - 중복 X
                 if (this.isNewFileAdd) {
+                  // 새로운 파일 추가일때
                   let data
                   let i
                   for (i = 0; i < this.folderSeq.length; i++) {
@@ -143,17 +146,64 @@ export default {
                     file_type: this.type,
                     contents: ''
                   }
+                  console.log(data)
                   axios
                     .post('http://192.168.0.86:8581/editor/file/createFile', {
                       files: [data]
                     })
                     .then(res => {
+                      console.log(res)
                       if (res.data.responseCode === 'SUCCESS') {
+                        if (res.data.data[0].file_type === 'html') {
+                          this.htmlTitles[this.htmlTitles.length - 1].seq =
+                            res.data.data[0].file_seq
+                          this.htmlTitles[this.htmlTitles.length - 1].folder =
+                            res.data.data[0].folder_seq
+                          this.htmlTitles[this.htmlTitles.length - 1].path =
+                            res.data.data[0].file_path
+                          this.htmlTitles[this.htmlTitles.length - 1].name =
+                            res.data.data[0].file_name
+                          this.htmlTitles[this.htmlTitles.length - 1].type =
+                            res.data.data[0].file_type
+                          this.htmlTitles[this.htmlTitles.length - 1].text =
+                            e.target.textContent.split('.')[0] + '.html'
+                          this.htmlTitles[this.htmlTitles.length - 1].code =
+                            res.data.data[0].contents
+                          this.htmlTitles[
+                            this.htmlTitles.length - 1
+                          ].isEdited = false
+                        } else if (res.data.data[0].file_type === 'css') {
+                          this.cssTitles[this.cssTitles.length - 1].seq =
+                            res.data.data[0].file_seq
+                          this.cssTitles[this.cssTitles.length - 1].folder =
+                            res.data.data[0].folder_seq
+                          this.cssTitles[this.cssTitles.length - 1].path =
+                            res.data.data[0].file_path
+                          this.cssTitles[this.cssTitles.length - 1].name =
+                            res.data.data[0].file_name
+                          this.cssTitles[this.cssTitles.length - 1].type =
+                            res.data.data[0].file_type
+                          this.cssTitles[this.cssTitles.length - 1].text =
+                            e.target.textContent.split('.')[0] + '.css'
+                          this.cssTitles[this.cssTitles.length - 1].code =
+                            res.data.data[0].contents
+                          this.cssTitles[
+                            this.cssTitles.length - 1
+                          ].isEdited = false
+                        }
+
+                        this.$emit(
+                          'reset-titles',
+                          this.htmlTitles,
+                          this.cssTitles,
+                          this.jsTitles
+                        )
                         console.log(res.data.message)
                       }
                     })
                   this.isNewFileAdd = false
                 } else {
+                  // 기존 파일 수정일 때
                   console.log(this.contextTarget)
                   let html = document.querySelector('.html')
                   let i
@@ -186,14 +236,22 @@ export default {
                     .then(res => {
                       console.log(res)
                     })
-                  this.htmlTitles[i].text = e.target.textContent.split('.')[0]
+                  this.htmlTitles[i].text =
+                    e.target.textContent.split('.')[0] + '.html'
                   this.htmlTitles[i].path =
                     this.htmlTitles[i].path.split(this.htmlTitles[i].text)[0] +
                     e.target.textContent.split('.')[0] +
                     '.' +
                     this.type
+                  this.$emit(
+                    'reset-titles',
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
                 }
               } else {
+                // 서버에서 체크 - 중복 O
                 console.log('sameme')
                 e.target.classList.add('same-title')
                 e.target.textContent = this.beforeTitle
@@ -284,6 +342,8 @@ export default {
       this.type = type
       if (type === 'html') {
         payload = {
+          seq: '',
+          folder: '',
           path: project + '/html/',
           name: '',
           text: '',
@@ -291,11 +351,19 @@ export default {
           type: 'html'
         }
         this.htmlTitles.push(payload)
+        this.$emit(
+          'reset-titles',
+          this.htmlTitles,
+          this.cssTitles,
+          this.jsTitles
+        )
         this.$nextTick(() => {
           this.newFileName()
         })
       } else if (type === 'css') {
         payload = {
+          seq: '',
+          folder: '',
           path: '',
           name: '',
           text: '',
@@ -303,6 +371,12 @@ export default {
           type: 'css'
         }
         this.cssTitles.push(payload)
+        this.$emit(
+          'reset-titles',
+          this.htmlTitles,
+          this.cssTitles,
+          this.jsTitles
+        )
         this.$nextTick(() => {
           this.newFileName()
         })
@@ -319,6 +393,7 @@ export default {
 <style lang="scss">
 #fileContent {
   .file-scroll-area {
+    height: 100%;
     .file-box {
       .tag-list-box {
         // float: left;
