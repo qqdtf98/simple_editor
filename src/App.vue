@@ -1487,19 +1487,15 @@ export default {
                 }
 
                 for (i = 0; i < res.data.data.folders.html.length; i++) {
-                  let replace = res.data.data.folders.html[i].contents.replace(
-                    '../img/image1.png',
-                    'http://192.168.0.86:8581/editor_file_upload/' +
-                      'lsm' +
-                      '/' +
-                      'Project_A' +
-                      '/' +
-                      'img/image1.png'
-                  )
-                  replace =
-                    '<!DOCTYPE html><html><head><link href="http://192.168.0.86:8581/editor_file_upload/lsm/Project_A/css/pretty.css" type="text/css" rel="stylesheet" /></head><body>' +
-                    replace +
-                    '</body></html>'
+                  // let replace = res.data.data.folders.html[i].contents.replace(
+                  //   '../img/image1.png',
+                  //   'http://192.168.0.86:8581/editor_file_upload/' +
+                  //     'lsm' +
+                  //     '/' +
+                  //     'Project_A' +
+                  //     '/' +
+                  //     'img/image1.png'
+                  // )
                   payload = {
                     seq: res.data.data.folders.html[i].file_seq,
                     path: res.data.data.folders.html[i].file_path,
@@ -1510,7 +1506,8 @@ export default {
                       res.data.data.folders.html[i].file_name +
                       '.' +
                       res.data.data.folders.html[i].file_type,
-                    code: replace,
+                    // code: replace,
+                    code: res.data.data.folders.html[i].contents,
                     type: res.data.data.folders.html[i].file_type,
                     isEdited: false
                   }
@@ -1521,7 +1518,7 @@ export default {
                     name: res.data.data.folders.html[i].file_name,
                     text: res.data.data.folders.html[i].file_name,
                     type: res.data.data.folders.html[i].file_type,
-                    code: replace
+                    code: res.data.data.folders.html[i].contents
                   }
                   this.titles.push(title)
                   this.htmlTitles.push(payload)
