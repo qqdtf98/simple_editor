@@ -472,8 +472,13 @@ export default {
   data() {
     return {
       zzzzz: 3,
+      isUsed: false,
       firstPopUp: true,
       projectFileList: [],
+      isSetEditor2: false,
+      cssLink: [],
+      usedPair: null,
+      stylePair: [],
       secondPopUp: false,
       thirdPopUp: false,
       folder_seq: [],
@@ -484,7 +489,6 @@ export default {
       isPopUp2Active: false,
       isEditor1Load: null,
       isEditor2Load: null,
-      folders: [],
       borderWidth: [
         { text: 'White' },
         { text: 'Black' },
@@ -648,13 +652,10 @@ export default {
     let container = document.getElementById('leftContainer')
 
     this.code = document.getElementById('filecontainer')
-    // console.log($('iframe').get(0).contentWindow.document.body.innerHTML)
-    // console.log(document.getElementById('filecontainer').body)
     this.editor1 = monaco.editor.create(
       document.getElementById('leftContainer'),
       {
         id: 'editorMonaco1',
-        // value: $('iframe').get(0).contentWindow.document.body.innerHTML,
         value: '코드를 입력해주세요',
         language: 'html',
         theme: 'vs-dark',
@@ -662,9 +663,6 @@ export default {
         accessibilityPageSize: 4,
         lineDecorationsWidth: 10,
         mouseWheelZoom: true
-        // automaticLayout: true,
-        // wordWrap: 'on'
-        // find: 'IEditorFindOptions',
       }
     )
     this.editor1.onMouseDown(e => {
@@ -683,7 +681,6 @@ export default {
             var j = e.target.position.column - 2
             console.log(j)
             while (j > 0) {
-              // console.log(this.editor1.getValue().split('\n')[i][j])
               if (this.editor1.getValue().split('\n')[i][j] == '<') {
                 clickElement =
                   this.editor1.getValue().split('\n')[i][j] + clickElement
@@ -765,7 +762,6 @@ export default {
       console.log(clickElement)
       console.log(bracket)
       for (var i = e.target.position.lineNumber - 1; i < length; i++) {
-        // while(!clickElement.includes(check)){
         if (isInclude) {
           if (i == e.target.position.lineNumber - 1) {
             var j = e.target.position.column - 1
@@ -831,11 +827,9 @@ export default {
             j++
           }
         }
-        // console.log(i)
       }
       console.log(elem)
       var newDIV = document.createElement('div')
-      // newDIV.innerHTML = child[i].tagName;
       newDIV.innerHTML = `<!-- skip_nav -->
    <div class="sknav">
       <a href="#contents" class="sknavi">콘텐츠 바로가기</a>
@@ -1337,28 +1331,12 @@ export default {
       let payload
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i].isEdited === true) {
-          // payload = {
-          //   file_seq: this.htmlTitles[i].file_seq,
-          //   folder_seq: this.htmlTitles[i].folder_seq,
-          //   file_name: this.htmlTitles[i].file_name,
-          //   file_path: this.htmlTitles[i].file_path,
-          //   file_type: this.htmlTitles[i].file_type,
-          //   contents: this.htmlTitles[i].contents
-          // }
           payload = this.htmlTitles[i]
           changedFile.push(payload)
         }
       }
       for (i = 0; i < this.cssTitles.length; i++) {
         if (this.cssTitles[i].isEdited === true) {
-          // payload = {
-          //   file_seq: this.cssTitles[i].file_seq,
-          //   folder_seq: this.cssTitles[i].folder_seq,
-          //   file_name: this.cssTitles[i].file_name,
-          //   file_path: this.cssTitles[i].file_path,
-          //   file_type: this.cssTitles[i].file_type,
-          //   contents: this.cssTitles[i].contents
-          // }
           payload = this.cssTitles[i]
           changedFile.push(payload)
         }
@@ -1745,7 +1723,15 @@ export default {
           if (res.data.responseCode === 'SUCCESS') {
             console.log(res.data)
             // 프로젝트 seq 받아서 저장하기
-
+            this.htmlTitles = []
+            this.cssTitles = []
+            this.jsTitles = []
+            this.imgTitles = []
+            this.titles = []
+            this.projectTitles = []
+            this.openTitles = []
+            this.leftTitles = []
+            this.rightTitles = []
             this.$nextTick(() => {
               let project = {
                 title: res.data.data[0].project_name,
@@ -1938,51 +1924,31 @@ export default {
       }
     },
     changeSourceTab(e) {
-      let i
-      let num
-      for (
-        i = 0;
-        i < e.target.parentElement.parentElement.children.length;
-        i++
-      ) {
-        if (
-          e.target.parentElement.parentElement.children[i] ===
-          e.target.parentElement
-        ) {
-          num = i
-          e.target.parentElement.style.backgroundColor = '#3f3f3f'
-        } else {
-          e.target.parentElement.parentElement.children[
-            i
-          ].style.backgroundColor = '#23282b'
-        }
-      }
-      this.currentRightTab = num
-      if (e.target.parentElement.className === 'right-title') {
-        this.editor2.setValue(this.rightTitles[num].code)
-        // let source = document.querySelectorAll('.rightSource')
-        // for (j = 0; j < source.length; j++) {
-        //   if (j === num) {
-        //     source[j].classList.remove('hidden')
-        //     source[j].classList.add('display')
+      // let i
+      // let num
+      // for (
+      //   i = 0;
+      //   i < e.target.parentElement.parentElement.children.length;
+      //   i++
+      // ) {
+      //   if (
+      //     e.target.parentElement.parentElement.children[i] ===
+      //     e.target.parentElement
+      //   ) {
+      //     num = i
+      //     e.target.parentElement.style.backgroundColor = '#3f3f3f'
         //   } else {
-        //     source[j].classList.remove('display')
-        //     source[j].classList.add('hidden')
+      //     e.target.parentElement.parentElement.children[
+      //       i
+      //     ].style.backgroundColor = '#23282b'
         //   }
         // }
-      } else if (e.target.parentElement.className === 'left-title') {
-        this.editor1.setValue(this.leftTitles[num].code)
-        // let source = document.querySelectorAll('.leftSource')
-        // for (j = 0; j < source.length; j++) {
-        //   if (j === num) {
-        //     source[j].classList.remove('hidden')
-        //     source[j].classList.add('display')
-        //   } else {
-        //     source[j].classList.remove('display')
-        //     source[j].classList.add('hidden')
-        //   }
+      // this.currentRightTab = num
+      // if (e.target.parentElement.className === 'right-title') {
+      //   this.editor2.setValue(this.rightTitles[num].code)
+      // } else if (e.target.parentElement.className === 'left-title') {
+      //   this.editor1.setValue(this.leftTitles[num].code)
         // }
-      }
     },
     generateCode(id) {
       this.idSelected = id
@@ -1993,25 +1959,12 @@ export default {
       document.getElementById(id).innerHTML = this.editor1.getValue()
     },
     addJS() {
-      var example = {
-        text: 'sample',
-        code: '',
-        type: null
-      }
-      this.rightTitles.push(example)
-
-      // let rightSource = document.querySelector('.rightSource')
-
-      // let source = document.querySelector('#rightSource')
-      // let newRightTitle = source.cloneNode(true)
-
-      // newRightTitle.classList.add('rightSource')
-      // newRightTitle.classList.add('hidden')
-      // newRightTitle.setAttribute('id', 'rightSource' + this.rightSourceIndex)
-
-      // rightSource.parentElement.appendChild(newRightTitle)
-
-      // this.rightSourceIndex++
+      // var example = {
+      //   text: 'sample',
+      //   code: '',
+      //   type: null
+      // }
+      // this.rightTitles.push(example)
     },
     moveBorder(e) {
       this.moveLine = true
@@ -2039,20 +1992,16 @@ export default {
       }
       this.titles.push(payload)
       let editor = document.querySelector('#board')
-      // let copy = editor.cloneNode(true)
       let newEditorBox = document.createElement('div')
       newEditorBox.classList.add('board')
       newEditorBox.classList.add('hidden')
       newEditorBox.setAttribute('id', 'board' + this.editorNum)
-      // console.log(editor.parentElement);
 
       editor.parentElement.appendChild(newEditorBox)
 
-      // console.log(newEditorBox.classList);
       this.editorNum++
 
       let files = document.querySelectorAll('.file-name')
-      // files[files.length-1].style.backgroundColor = '#2c3134'
       for (i = 0; i < files.length; i++) {
         if (i === 0) {
           files[i].style.backgroundColor = '#545e66'
@@ -2074,7 +2023,7 @@ export default {
       }
       this.openTitles.push(this.titles[i])
       if (this.isServer) {
-        this.stylePair = this.htmlTitles[i].html_css_pair
+        this.usedPair = this.htmlTitles[i].html_css_pair
         this.editor1.setValue(this.htmlTitles[i].contents)
         this.isEditor1Load = this.htmlTitles[i]
       } else {
@@ -2090,12 +2039,10 @@ export default {
     },
     deleteTitle() {
       this.$refs.sitemap.deleteTitle()
-      // this.closePage()
     },
     resetTitle(titles) {
       console.log('reset')
       this.titles = titles
-      // console.log(this.titles)
       let topMenu = document.querySelector('.top-menu')
     },
     renameTitle() {
@@ -2363,69 +2310,8 @@ export default {
       this.isPopUp2Active = true
     },
     newPage(e) {
-      this.isPopUp2Active = false
-      // let editor = document.querySelector('#board')
-      // newEditorBox.classList.add('board')
-      // newEditorBox.classList.add('hidden')
-      // newEditorBox.setAttribute('id', 'board' + this.editorNum)
-
-      // let sampleCompo = document.createElement('div')
-      // sampleCompo.classList.add('sample-component')
-
-      // let sampleBtn = document.createElement('img')
-      // sampleBtn.classList.add('sample-add-btn')
-
-      // sampleCompo.appendChild(sampleBtn)
-      // newEditorBox.appendChild(sampleCompo)
-      let payload = {
-        text: `${this.newTitle}`,
-        code: ''
-      }
-      this.titles.push(payload)
-      payload = {
-        text: this.newTitle + '.html',
-        code: '',
-        type: 'html'
-      }
-      this.htmlTitles.push(payload)
-      // editor.parentElement.appendChild(newEditorBox)
-
-      // $('.sample-add-btn').attr(
-      //   'src',
-      //   sampleBtn.setAttribute(
-      //     'src',
-      //     'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhlaWdodD0iMzQiIHZpZXdCb3g9IjAgMCAzNSAzNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxyZWN0IHg9IjAuMTAwNTg2IiB5PSIxNC4xNTk0IiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIGZpbGw9IndoaXRlIi8+DQo8cmVjdCB4PSIxNCIgeT0iMzMuOTk4NyIgd2lkdGg9IjMzLjk5ODciIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC05MCAxNCAzMy45OTg3KSIgZmlsbD0id2hpdGUiLz4NCjwvc3ZnPg0K'
-      //   )
-      // )
-
-      // console.log(sampleBtn)
-
-      // newEditorBox.style.height = '100%'
-      // newEditorBox.style.width = '100%'
-      // sampleCompo.style.width = '100%'
-      // sampleCompo.style.height = '100%'
-      // sampleCompo.style.display = 'flex'
-      // sampleCompo.style.alignItems = 'center'
-      // sampleCompo.style.justifyContent = 'center'
-      // sampleBtn.style.width = '5rem'
-      // sampleBtn.style.cursor = 'pointer'
-
-      // sampleBtn.addEventListener('click', e => {
-      //   this.openCode()
-      // })
-
-      // this.editorNum++
-
-      // let files = document.querySelectorAll('.file-name')
-      // let i
-      // for (i = 0; i < files.length; i++) {
-      //   if (i === 0) {
-      //     files[i].style.backgroundColor = '#545e66'
-      //   } else {
-      //     files[i].style.backgroundColor = '#2c3134'
-      //   }
-      // }
-      this.$refs.sitemap.loadSitemap(this.titles)
+      // this.isPopUp2Active = false
+      // this.$refs.sitemap.loadSitemap(this.titles)
     },
     addComment() {
       let text = document.querySelector('.comment-input')

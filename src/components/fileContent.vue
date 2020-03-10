@@ -71,12 +71,16 @@ export default {
       folderSeq: [],
       beforeTitle: null,
       isNewFileAdd: false,
-      sameTitle: false
+      sameTitle: false,
+      stylePair: null
     }
   },
   computed: {},
   components: { vueCustomScrollbar },
   methods: {
+    setStylePair(pair) {
+      this.stylePair = pair
+    },
     setNewTitle(e) {
       e.preventDefault()
       if (e) {
