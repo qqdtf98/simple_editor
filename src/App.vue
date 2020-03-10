@@ -1299,27 +1299,29 @@ export default {
       let payload
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i].isEdited === true) {
-          payload = {
-            file_seq: this.htmlTitles[i].seq,
-            folder_seq: this.htmlTitles[i].folder,
-            file_name: this.htmlTitles[i].name,
-            file_path: this.htmlTitles[i].path,
-            file_type: this.htmlTitles[i].type,
-            contents: this.htmlTitles[i].code
-          }
+          // payload = {
+          //   file_seq: this.htmlTitles[i].file_seq,
+          //   folder_seq: this.htmlTitles[i].folder_seq,
+          //   file_name: this.htmlTitles[i].file_name,
+          //   file_path: this.htmlTitles[i].file_path,
+          //   file_type: this.htmlTitles[i].file_type,
+          //   contents: this.htmlTitles[i].contents
+          // }
+          payload = this.htmlTitles[i]
           changedFile.push(payload)
         }
       }
       for (i = 0; i < this.cssTitles.length; i++) {
         if (this.cssTitles[i].isEdited === true) {
-          payload = {
-            file_seq: this.cssTitles[i].seq,
-            folder_seq: this.cssTitles[i].folder,
-            file_name: this.cssTitles[i].name,
-            file_path: this.cssTitles[i].path,
-            file_type: this.cssTitles[i].type,
-            contents: this.cssTitles[i].code
-          }
+          // payload = {
+          //   file_seq: this.cssTitles[i].file_seq,
+          //   folder_seq: this.cssTitles[i].folder_seq,
+          //   file_name: this.cssTitles[i].file_name,
+          //   file_path: this.cssTitles[i].file_path,
+          //   file_type: this.cssTitles[i].file_type,
+          //   contents: this.cssTitles[i].contents
+          // }
+          payload = this.cssTitles[i]
           changedFile.push(payload)
         }
       }
@@ -1340,17 +1342,6 @@ export default {
         this.selectedFolder,
         this.selectedFolder.textContent.trim().toLowerCase()
       )
-      // console.log(this.projectTitles[0].title)
-      // let filePath
-      // if (this.selectedFolder.textContent.trim().toLowerCase() === 'html') {
-      //   filePath = this.projectTitles[0].title + '/html/'
-      // } else if (
-      //   this.selectedFolder.textContent.trim().toLowerCase() === 'css'
-      // ) {
-      // } else if (
-      //   this.selectedFolder.textContent.trim().toLowerCase() === 'js'
-      // ) {
-      // }
     },
     deleteFile() {
       console.log(this.selectedFile.textContent.split('.')[1].trim())
@@ -1367,7 +1358,7 @@ export default {
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
                   {
-                    file_seq: this.htmlTitles[i].seq
+                    file_seq: this.htmlTitles[i].file_seq
                   }
                 ]
               })
@@ -1402,7 +1393,7 @@ export default {
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
                   {
-                    file_seq: this.cssTitles[i].seq
+                    file_seq: this.cssTitles[i].file_seq
                   }
                 ]
               })
@@ -1442,28 +1433,12 @@ export default {
     renameFile() {
       console.log(this.selectedFile)
       this.$refs.filecontent.focusInput(this.selectedFile)
-      // var oriVal
-      // oriVal = $(this.selectedFile).text()
-      // $(this.selectedFile).text('')
-      // $("<input type='text' @keyup.enter='enterPressed' id='titleInput'>")
-      //   .appendTo(this.selectedFile)
-      //   .focus()
-
-      // $('#titleInput').on('keyup', function(e) {
-      //   if (e.keyCode == 13) {
-      //     this.selectedFile.textContent = e.target.value
-      //     // var $this = $(this.selectedFile)
-      //     // $this.text($this.val() || oriVal)
-      //     $('#titleInput').remove() // Don't just hide, remove the element.
-      //   }
-      // })
     },
     findChildren(selectedDom, clickDom) {
       var childrenLength = selectedDom.children.length
       for (var i = 0; i < childrenLength; i++) {
         var stringDom = document.createElement('div')
         stringDom.appendChild(selectedDom.children[i])
-        // console.log(a)
         var B = document.createElement('div')
         B.appendChild(clickDom.children[0])
         console.log(B.innerHTML)
@@ -1489,22 +1464,19 @@ export default {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            // $('iframe').get(
-            //   0
-            // ).contentWindow.document.body.innerHTML = this.htmlTitles[i].code
             if (this.isServer) {
+              this.stylePair = this.htmlTitles[i].html_css_pair
               this.isEditor1Load = this.htmlTitles[i]
-              this.editor1.setValue(this.htmlTitles[i].code)
+              this.editor1.setValue(this.htmlTitles[i].contents)
             } else {
               this.isEditor1Load = this.htmlTitles[i]
               this.editor1.setValue(
-                this.htmlTitles[i].code
+                this.htmlTitles[i].contents
                   .split('<body>')[1]
                   .split('</body>')[0]
                   .split('<script ')[0]
               )
             }
-
             this.isData = true
             break
           }
@@ -1513,11 +1485,14 @@ export default {
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
-            this.editor2.setValue(this.cssTitles[i].code)
+            console.log('select')
+            this.isSetEditor2 = true
             this.isEditor2Load = this.cssTitles[i]
-          }
+            this.editor2.setValue(this.cssTitles[i].contents)
+
           this.isData = true
           break
+        }
         }
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
       }
@@ -1543,7 +1518,6 @@ export default {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           // 해당 프로젝트의 파일 받아오기
           this.isProject = this.projectTitles[i]
-          console.log(this.projectTitles[i])
           axios
             .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
               params: {
@@ -1553,67 +1527,40 @@ export default {
             .then(res => {
               console.log(res)
               if (res.data.responseCode === 'SUCCESS') {
-                this.folders = res.data.data.folders
+                // this.folders = res.data.data.folders
                 let i
                 let folder
+                let j
+                let title
+
+                for (i = 0; i < res.data.data.folders.length; i++) {
                 folder = {
-                  type: 'css',
-                  seq: res.data.data.folders.css[0].folder_seq
-                  // folder_seq를 파일에서 가져오지 않고 따로 보내주는걸 저장
+                    type: res.data.data.folders[i].folder_name,
+                    seq: res.data.data.folders[i].folder_seq
                 }
                 this.folder_seq.push(folder)
-                folder = {
-                  type: 'html',
-                  seq: res.data.data.folders.html[0].folder_seq
+                  for (j = 0; j < res.data.data.folders[i].files.length; j++) {
+                    title = res.data.data.folders[i].files[j]
+                    title.isEdited = false
+                    title.text =
+                      res.data.data.folders[i].files[j].file_name +
+                      '.' +
+                      res.data.data.folders[i].files[j].file_type
+                    if (res.data.data.folders[i].folder_name === 'html') {
+                      this.titles.push(title)
+                      this.htmlTitles.push(title)
+                    } else if (res.data.data.folders[i].folder_name === 'css') {
+                      this.cssTitles.push(title)
+                    } else if (res.data.data.folders[i].folder_name === 'js') {
+                      this.jsTitles.push(title)
+                    }
+                    // 이미지는??
+                  }
                 }
-                this.folder_seq.push(folder)
                 console.log(this.folder_seq)
                 this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 let payload
-                for (i = 0; i < res.data.data.folders.css.length; i++) {
-                  payload = {
-                    seq: res.data.data.folders.css[i].file_seq,
-                    path: res.data.data.folders.css[i].file_path,
-                    name: res.data.data.folders.css[i].file_name,
-                    text:
-                      res.data.data.folders.css[i].file_name +
-                      '.' +
-                      res.data.data.folders.css[i].file_type,
-                    code: res.data.data.folders.css[i].contents,
-                    type: res.data.data.folders.css[i].file_type,
-                    isEdited: false
-                  }
-                  this.cssTitles.push(payload)
-                }
 
-                for (i = 0; i < res.data.data.folders.html.length; i++) {
-                  payload = {
-                    seq: res.data.data.folders.html[i].file_seq,
-                    path: res.data.data.folders.html[i].file_path,
-                    folder: res.data.data.folders.html[i].folder_seq,
-
-                    name: res.data.data.folders.html[i].file_name,
-                    text:
-                      res.data.data.folders.html[i].file_name +
-                      '.' +
-                      res.data.data.folders.html[i].file_type,
-                    // code: replace,
-                    code: res.data.data.folders.html[i].contents,
-                    type: res.data.data.folders.html[i].file_type,
-                    isEdited: false
-                  }
-                  let title = {
-                    seq: res.data.data.folders.html[i].file_seq,
-                    path: res.data.data.folders.html[i].file_path,
-                    folder: res.data.data.folders.html[i].folder_seq,
-                    name: res.data.data.folders.html[i].file_name,
-                    text: res.data.data.folders.html[i].file_name,
-                    type: res.data.data.folders.html[i].file_type,
-                    code: res.data.data.folders.html[i].contents
-                  }
-                  this.titles.push(title)
-                  this.htmlTitles.push(payload)
-                }
                 this.$refs.filecontent.setFiles(
                   this.htmlTitles,
                   this.cssTitles,
@@ -1647,63 +1594,6 @@ export default {
       var file = require('file-system')
       console.log(file)
       let data = 'eeeeeeeeeeeeeeee'
-
-      // file.copyFile(
-      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
-      //   'C:/Users/anylogic/Desktop/any-editor/static/html'
-      // )
-      // file.writeFileSync(
-      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
-      //   '<div>eeeeeeeeeee</div>'
-      // )
-
-      // file.writeFile(
-      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
-      //   data,
-      //   'utf8',
-      //   function(err) {
-      //     console.log('비동기적 파일 쓰기 완료')
-      //   }
-      // )
-
-      // file.writeFileSync(
-      //   'C:/Users/anylogic/Desktop/sampleCode/HTML/index.html',
-      //   data,
-      //   'utf8',
-      //   function(err) {
-      //     console.log('sd 파일 쓰기 완료')
-      //   }
-      // )
-
-      // const copyFile = require('fs-copy-file')
-
-      // copyFile(
-      //   'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
-      //   'C:/Users/anylogic/Desktop/any-editor/static/img/back.png',
-      //   err => {
-      //     if (err) throw err
-
-      //     console.log('source.txt was copied to destination.txt')
-      //   }
-      // )
-
-      // var fs = require('fs')
-      // fs.copyFileSync(
-      //   'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
-      //   'C:/Users/anylogic/Desktop/any-editor/static/img/back.png'
-      // )
-
-      // const CopyPlugin = require('copy-webpack-plugin')
-      // module.exports = {
-      //   plugins: [
-      //     new CopyPlugin([
-      //       {
-      //         from: 'C:/Users/anylogic/Desktop/sampleCode/img/back.png',
-      //         to: 'C:/Users/anylogic/Desktop/any-editor/static/img/back.png'
-      //       }
-      //     ])
-      //   ]
-      // }
 
       let i
       for (i = 0; i < e.target.files.length; i++) {
@@ -2122,11 +2012,12 @@ export default {
       }
       this.openTitles.push(this.titles[i])
       if (this.isServer) {
-        this.editor1.setValue(this.htmlTitles[i].code)
+        this.stylePair = this.htmlTitles[i].html_css_pair
+        this.editor1.setValue(this.htmlTitles[i].contents)
         this.isEditor1Load = this.htmlTitles[i]
       } else {
         this.editor1.setValue(
-          this.htmlTitles[i].code
+          this.htmlTitles[i].contents
             .split('<body>')[1]
             .split('</body>')[0]
             .split('<script ')[0]
@@ -2134,9 +2025,6 @@ export default {
         this.isEditor1Load = this.htmlTitles[i]
       }
       this.isData = true
-      $('iframe').get(0).contentWindow.document.body.innerHTML = this.titles[
-        i
-      ].code
     },
     deleteTitle() {
       this.$refs.sitemap.deleteTitle()
