@@ -915,17 +915,35 @@ export default {
     oScript.type = 'text/css'
     document.getElementsByTagName('head')[0].appendChild(oScript)
 
-    var myBinding2 = this.editor2.onDidContentSizeChange(e => {
-      $('iframe')
-        .get(0)
-        .contentWindow.document.getElementsByTagName(
-          'style'
-        )[0].innerHTML = this.editor2.getValue()
+    var myBinding2 = this.editor2.onDidChangeModelContent(e => {
+      if (this.isSetEditor2) {
+        axios
+          .get('http://192.168.0.86:8581/editor/file/selectHtmlCssPair', {
+            params: {
+              css_file_seq: this.isEditor2Load.file_seq
+            }
+          })
+          .then(res => {
+            if (res.data.responseCode === 'SUCCESS') {
+              if (
+                res.data.data[0].html_file_seq === this.isEditor1Load.file_seq
+              ) {
+                this.isUsed = true
+              } else {
+                this.isUsed = false
+              }
+            } else {
+              this.isUsed = false
+            }
+          })
+        this.isSetEditor2 = false
+      } else {
       let i
       for (i = 0; i < this.cssTitles.length; i++) {
         if (this.cssTitles[i] === this.isEditor2Load) {
           this.cssTitles[i].contents = this.editor2.getValue()
           this.cssTitles[i].isEdited = true
+            break
         }
       }
       this.$refs.filecontent.setFiles(
@@ -933,14 +951,34 @@ export default {
         this.cssTitles,
         this.jsTitles
       )
-      this.css = this.editor2.getValue()
+        if (this.isUsed) {
+          let cssCode = ''
+          for (
+            i = 0;
+            i <
+            this.stylePair.find(c => c.html === this.isEditor1Load.file_seq).css
+              .length;
+            i++
+          ) {
+            cssCode += this.cssTitles.find(
+              t =>
+                t.file_seq ===
+                this.stylePair.find(c => c.html === this.isEditor1Load.file_seq)
+                  .css[i]
+            ).contents
+          }
+          $('iframe')
+            .get(0)
+            .contentWindow.document.getElementsByTagName(
+              'style'
+            )[0].innerHTML = cssCode
+        }
+      }
     })
 
     this.isData = false
 
     this.$refs.sitemap.loadSitemap(this.titles)
-    // let title = document.querySelector('.file-name')
-    // title.style.backgroundColor = 'rgb(78, 78, 92)'
     let htmltree = document.querySelector('.tree-name')
     htmltree.style.backgroundColor = '#4e4e5c'
 
@@ -1465,7 +1503,7 @@ export default {
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
             if (this.isServer) {
-              this.stylePair = this.htmlTitles[i].html_css_pair
+              this.usedPair = this.htmlTitles[i].html_css_pair
               this.isEditor1Load = this.htmlTitles[i]
               this.editor1.setValue(this.htmlTitles[i].contents)
             } else {
@@ -1489,7 +1527,6 @@ export default {
             this.isSetEditor2 = true
             this.isEditor2Load = this.cssTitles[i]
             this.editor2.setValue(this.cssTitles[i].contents)
-
           this.isData = true
           break
         }
@@ -1531,7 +1568,9 @@ export default {
                 let i
                 let folder
                 let j
+                let k
                 let title
+                let pair
 
                 for (i = 0; i < res.data.data.folders.length; i++) {
                 folder = {
@@ -1540,6 +1579,7 @@ export default {
                 }
                 this.folder_seq.push(folder)
                   for (j = 0; j < res.data.data.folders[i].files.length; j++) {
+                    let css_list = []
                     title = res.data.data.folders[i].files[j]
                     title.isEdited = false
                     title.text =
@@ -1547,6 +1587,29 @@ export default {
                       '.' +
                       res.data.data.folders[i].files[j].file_type
                     if (res.data.data.folders[i].folder_name === 'html') {
+                      console.log(res.data.data.folders[i].files[j])
+                      if (
+                        res.data.data.folders[i].files[j].html_css_pair.length >
+                        0
+                      ) {
+                        for (
+                          k = 0;
+                          k <
+                          res.data.data.folders[i].files[j].html_css_pair
+                            .length;
+                          k++
+                        ) {
+                          css_list.push(
+                            res.data.data.folders[i].files[j].html_css_pair[k]
+                              .css_file_seq
+                          )
+                        }
+                        pair = {
+                          html: res.data.data.folders[i].files[j].file_seq,
+                          css: css_list
+                        }
+                        this.stylePair.push(pair)
+                      }
                       this.titles.push(title)
                       this.htmlTitles.push(title)
                     } else if (res.data.data.folders[i].folder_name === 'css') {
@@ -1554,13 +1617,12 @@ export default {
                     } else if (res.data.data.folders[i].folder_name === 'js') {
                       this.jsTitles.push(title)
                     }
-                    // 이미지는??
                   }
                 }
-                console.log(this.folder_seq)
+                console.log(this.stylePair)
+                this.$props
                 this.$refs.filecontent.setFolderSeq(this.folder_seq)
-                let payload
-
+                this.$refs.filecontent.setStylePair(this.stylePair)
                 this.$refs.filecontent.setFiles(
                   this.htmlTitles,
                   this.cssTitles,
