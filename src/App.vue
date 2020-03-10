@@ -884,15 +884,43 @@ export default {
       }
     )
     var myBinding1 = this.editor1.onDidChangeModelContent(e => {
-      $('iframe').get(0).contentWindow.document.body.innerHTML =
-        this.editor1.getValue() + '<style>' + this.css + '</style>'
       let i
-      console.log(this.isEditor1Load)
+      let j
+      let style = ''
+      let link = $('iframe')
+        .get(0)
+        .contentWindow.document.head.getElementsByTagName('link')
+      if (this.cssLink !== link) {
+        // 링크가 추가되거나 삭제된 경우 서버에 통신해야함.
+        this.cssLink = link
+      }
+      for (i = 0; i < link.length; i++) {
+        for (j = 0; j < link[i].attributes.href.value.split('/').length; j++) {
+          if (link[i].attributes.href.value.split('/')[j] === '..') {
+            console.log(
+              // ../css/.css 일때 project/css/.css로 변환
+              this.isEditor1Load.file_path.split('/')[0] +
+                '/' +
+                link[i].attributes.href.value.split('/')[1] +
+                '/' +
+                link[i].attributes.href.value.split('/')[2]
+            )
+          }
+        }
+      }
+      for (i = 0; i < this.usedPair.length; i++) {
+        for (j = 0; j < this.cssTitles.length; j++) {
+          if (this.cssTitles[j].file_seq === this.usedPair[i].css_file_seq) {
+            style += this.cssTitles[j].contents
+          }
+        }
+      }
+      $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
+        this.editor1.getValue() + '<style>' + style + '</style>'
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i] === this.isEditor1Load) {
-          this.htmlTitles[i].code = this.editor1.getValue()
+          this.htmlTitles[i].contents = this.editor1.getValue()
           this.htmlTitles[i].isEdited = true
-          console.log(this.htmlTitles[i])
         }
       }
       this.$refs.filecontent.setFiles(
@@ -932,19 +960,19 @@ export default {
           })
         this.isSetEditor2 = false
       } else {
-      let i
-      for (i = 0; i < this.cssTitles.length; i++) {
-        if (this.cssTitles[i] === this.isEditor2Load) {
-          this.cssTitles[i].contents = this.editor2.getValue()
-          this.cssTitles[i].isEdited = true
+        let i
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i] === this.isEditor2Load) {
+            this.cssTitles[i].contents = this.editor2.getValue()
+            this.cssTitles[i].isEdited = true
             break
+          }
         }
-      }
-      this.$refs.filecontent.setFiles(
-        this.htmlTitles,
-        this.cssTitles,
-        this.jsTitles
-      )
+        this.$refs.filecontent.setFiles(
+          this.htmlTitles,
+          this.cssTitles,
+          this.jsTitles
+        )
         if (this.isUsed) {
           let cssCode = ''
           for (
@@ -1505,9 +1533,9 @@ export default {
             this.isSetEditor2 = true
             this.isEditor2Load = this.cssTitles[i]
             this.editor2.setValue(this.cssTitles[i].contents)
-          this.isData = true
-          break
-        }
+            this.isData = true
+            break
+          }
         }
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
       }
@@ -1551,11 +1579,11 @@ export default {
                 let pair
 
                 for (i = 0; i < res.data.data.folders.length; i++) {
-                folder = {
+                  folder = {
                     type: res.data.data.folders[i].folder_name,
                     seq: res.data.data.folders[i].folder_seq
-                }
-                this.folder_seq.push(folder)
+                  }
+                  this.folder_seq.push(folder)
                   for (j = 0; j < res.data.data.folders[i].files.length; j++) {
                     let css_list = []
                     title = res.data.data.folders[i].files[j]
@@ -1937,18 +1965,18 @@ export default {
       //   ) {
       //     num = i
       //     e.target.parentElement.style.backgroundColor = '#3f3f3f'
-        //   } else {
+      //   } else {
       //     e.target.parentElement.parentElement.children[
       //       i
       //     ].style.backgroundColor = '#23282b'
-        //   }
-        // }
+      //   }
+      // }
       // this.currentRightTab = num
       // if (e.target.parentElement.className === 'right-title') {
       //   this.editor2.setValue(this.rightTitles[num].code)
       // } else if (e.target.parentElement.className === 'left-title') {
       //   this.editor1.setValue(this.leftTitles[num].code)
-        // }
+      // }
     },
     generateCode(id) {
       this.idSelected = id
