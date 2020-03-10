@@ -1057,19 +1057,19 @@ export default {
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
                   {
-                    file_seq: this.isEditor1Load.seq,
-                    folder_seq: this.isEditor1Load.folder,
-                    file_name: this.isEditor1Load.name,
-                    file_path: this.isEditor1Load.path,
-                    file_type: this.isEditor1Load.type,
+                    file_seq: this.isEditor1Load.file_seq,
+                    folder_seq: this.isEditor1Load.folder_seq,
+                    file_name: this.isEditor1Load.file_name,
+                    file_path: this.isEditor1Load.file_path,
+                    file_type: this.isEditor1Load.file_type,
                     contents: this.editor1.getValue()
                   },
                   {
-                    file_seq: this.isEditor2Load.seq,
-                    folder_seq: this.isEditor2Load.folder,
-                    file_name: this.isEditor2Load.name,
-                    file_path: this.isEditor2Load.path,
-                    file_type: this.isEditor2Load.type,
+                    file_seq: this.isEditor2Load.file_seq,
+                    folder_seq: this.isEditor2Load.folder_seq,
+                    file_name: this.isEditor2Load.file_name,
+                    file_path: this.isEditor2Load.file_path,
+                    file_type: this.isEditor2Load.file_type,
                     contents: this.editor2.getValue()
                   }
                 ]
@@ -1085,11 +1085,11 @@ export default {
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
                   {
-                    file_seq: this.isEditor1Load.seq,
-                    folder_seq: this.isEditor1Load.folder,
-                    file_name: this.isEditor1Load.name,
-                    file_path: this.isEditor1Load.path,
-                    file_type: this.isEditor1Load.type,
+                    file_seq: this.isEditor1Load.file_seq,
+                    folder_seq: this.isEditor1Load.folder_seq,
+                    file_name: this.isEditor1Load.file_name,
+                    file_path: this.isEditor1Load.file_path,
+                    file_type: this.isEditor1Load.file_type,
                     contents: this.editor1.getValue()
                   }
                 ]
@@ -1105,11 +1105,11 @@ export default {
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
                   {
-                    file_seq: this.isEditor2Load.seq,
-                    folder_seq: this.isEditor2Load.folder,
-                    file_name: this.isEditor2Load.name,
-                    file_path: this.isEditor2Load.path,
-                    file_type: this.isEditor2Load.type,
+                    file_seq: this.isEditor2Load.file_seq,
+                    folder_seq: this.isEditor2Load.folder_seq,
+                    file_name: this.isEditor2Load.file_name,
+                    file_path: this.isEditor2Load.file_path,
+                    file_type: this.isEditor2Load.file_type,
                     contents: this.editor2.getValue()
                   }
                 ]
@@ -1626,7 +1626,6 @@ export default {
                   }
                 }
                 console.log(this.stylePair)
-                this.$props
                 this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 this.$refs.filecontent.setStylePair(this.stylePair)
                 this.$refs.filecontent.setFiles(
@@ -1798,7 +1797,7 @@ export default {
       this.thirdPopUp = false
     },
     newProject() {
-      this.isServer = false
+      this.isServer = true
       this.firstPopUp = false
       this.secondPopUp = true
       this.thirdPopUp = false
@@ -2202,12 +2201,10 @@ export default {
     },
     clickSource(e) {
       this.isData = true
-      console.log('s')
       // console.log(document.getElementById("newLoaderHtml").innerHTML)
       if (e.target.getAttribute('name') == 'html') {
         this.tabStep = 1
         // this.chageContent()
-        console.log('s')
       } else if (e.target.getAttribute('name') == 'css') {
         this.tabStep = 2
       } else if (e.target.getAttribute('name') == 'js') {

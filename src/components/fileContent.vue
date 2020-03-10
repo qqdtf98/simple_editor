@@ -96,7 +96,7 @@ export default {
             }
           }
         } else if (this.type === 'css') {
-          for (i = 0; i < this.htmlTitles.length; i++) {
+          for (i = 0; i < this.cssTitles.length; i++) {
             if (
               this.cssTitles[i].file_name === e.target.textContent.split('.')[0]
             ) {
