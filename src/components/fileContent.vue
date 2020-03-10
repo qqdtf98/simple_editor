@@ -71,12 +71,16 @@ export default {
       folderSeq: [],
       beforeTitle: null,
       isNewFileAdd: false,
-      sameTitle: false
+      sameTitle: false,
+      stylePair: null
     }
   },
   computed: {},
   components: { vueCustomScrollbar },
   methods: {
+    setStylePair(pair) {
+      this.stylePair = pair
+    },
     setNewTitle(e) {
       e.preventDefault()
       if (e) {
@@ -85,14 +89,17 @@ export default {
         if (this.type === 'html') {
           for (i = 0; i < this.htmlTitles.length; i++) {
             if (
-              this.htmlTitles[i].name === e.target.textContent.split('.')[0]
+              this.htmlTitles[i].file_name ===
+              e.target.textContent.split('.')[0]
             ) {
               this.sameTitle = true
             }
           }
         } else if (this.type === 'css') {
           for (i = 0; i < this.htmlTitles.length; i++) {
-            if (this.cssTitles[i].name === e.target.textContent.split('.')[0]) {
+            if (
+              this.cssTitles[i].file_name === e.target.textContent.split('.')[0]
+            ) {
               this.sameTitle = true
             }
           }
@@ -146,7 +153,6 @@ export default {
                     file_type: this.type,
                     contents: ''
                   }
-                  console.log(data)
                   axios
                     .post('http://192.168.0.86:8581/editor/file/createFile', {
                       files: [data]
@@ -155,38 +161,18 @@ export default {
                       console.log(res)
                       if (res.data.responseCode === 'SUCCESS') {
                         if (res.data.data[0].file_type === 'html') {
-                          this.htmlTitles[this.htmlTitles.length - 1].seq =
-                            res.data.data[0].file_seq
-                          this.htmlTitles[this.htmlTitles.length - 1].folder =
-                            res.data.data[0].folder_seq
-                          this.htmlTitles[this.htmlTitles.length - 1].path =
-                            res.data.data[0].file_path
-                          this.htmlTitles[this.htmlTitles.length - 1].name =
-                            res.data.data[0].file_name
-                          this.htmlTitles[this.htmlTitles.length - 1].type =
-                            res.data.data[0].file_type
+                          this.htmlTitles[this.htmlTitles.length - 1] =
+                            res.data.data[0]
                           this.htmlTitles[this.htmlTitles.length - 1].text =
                             e.target.textContent.split('.')[0] + '.html'
-                          this.htmlTitles[this.htmlTitles.length - 1].code =
-                            res.data.data[0].contents
                           this.htmlTitles[
                             this.htmlTitles.length - 1
                           ].isEdited = false
                         } else if (res.data.data[0].file_type === 'css') {
-                          this.cssTitles[this.cssTitles.length - 1].seq =
-                            res.data.data[0].file_seq
-                          this.cssTitles[this.cssTitles.length - 1].folder =
-                            res.data.data[0].folder_seq
-                          this.cssTitles[this.cssTitles.length - 1].path =
-                            res.data.data[0].file_path
-                          this.cssTitles[this.cssTitles.length - 1].name =
-                            res.data.data[0].file_name
-                          this.cssTitles[this.cssTitles.length - 1].type =
-                            res.data.data[0].file_type
+                          this.cssTitles[this.cssTitles.length - 1] =
+                            res.data.data[0]
                           this.cssTitles[this.cssTitles.length - 1].text =
                             e.target.textContent.split('.')[0] + '.css'
-                          this.cssTitles[this.cssTitles.length - 1].code =
-                            res.data.data[0].contents
                           this.cssTitles[
                             this.cssTitles.length - 1
                           ].isEdited = false
@@ -199,6 +185,12 @@ export default {
                           this.jsTitles
                         )
                         console.log(res.data.message)
+                      } else {
+                        if (res.data.data[0].file_type === 'html') {
+                          this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
+                        } else if (res.data.data[0].file_type === 'css') {
+                          this.cssTitles.splice(this.cssTitles.length - 1, 1)
+                        }
                       }
                     })
                   this.isNewFileAdd = false
@@ -221,10 +213,10 @@ export default {
                       files: [
                         {
                           folder_seq: this.folderSeq[j].seq,
-                          file_seq: this.htmlTitles[i].seq,
+                          file_seq: this.htmlTitles[i].folder_seq,
                           file_name: e.target.textContent.split('.')[0],
                           file_path:
-                            this.htmlTitles[i].path.split(
+                            this.htmlTitles[i].file_path.split(
                               this.htmlTitles[i].text
                             )[0] +
                             e.target.textContent.split('.')[0] +
@@ -238,8 +230,10 @@ export default {
                     })
                   this.htmlTitles[i].text =
                     e.target.textContent.split('.')[0] + '.html'
-                  this.htmlTitles[i].path =
-                    this.htmlTitles[i].path.split(this.htmlTitles[i].text)[0] +
+                  this.htmlTitles[i].file_path =
+                    this.htmlTitles[i].file_path.split(
+                      this.htmlTitles[i].text
+                    )[0] +
                     e.target.textContent.split('.')[0] +
                     '.' +
                     this.type
