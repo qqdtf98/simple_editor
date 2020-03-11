@@ -1463,7 +1463,6 @@ export default {
               this.multiElementParent.push(e.target.parentElement)
             }
             this.setSize = this.multiSelectedElement.size
-            console.log(this.multiSelectedElement)
             this.$emit('componentSelected', this.multiSelectedElement)
           }
         }
@@ -1504,9 +1503,9 @@ export default {
         this.$emit('stack-push', style)
         data.payload.style[data.style] = data.value
       }
-      console.log(
-        $('iframe').get(0).contentWindow.document.documentElement.innerHTML
-      )
+      // console.log(
+      //   $('iframe').get(0).contentWindow.document.documentElement.innerHTML
+      // )
     },
     borderStyleChanged(data) {
       // console.log(data)

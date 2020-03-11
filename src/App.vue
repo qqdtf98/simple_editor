@@ -1061,7 +1061,8 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: this.editor1.getValue()
+                    contents: $('iframe').get(0).contentWindow.document
+                      .documentElement.innerHTML
                   },
                   {
                     file_seq: this.isEditor2Load.file_seq,
@@ -1089,7 +1090,8 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: this.editor1.getValue()
+                    contents: $('iframe').get(0).contentWindow.document
+                      .documentElement.innerHTML
                   }
                 ]
               })
@@ -1586,7 +1588,6 @@ export default {
                       '.' +
                       res.data.data.folders[i].files[j].file_type
                     if (res.data.data.folders[i].folder_name === 'html') {
-                      console.log(res.data.data.folders[i].files[j])
                       if (
                         res.data.data.folders[i].files[j].html_css_pair.length >
                         0
@@ -1618,7 +1619,6 @@ export default {
                     }
                   }
                 }
-                console.log(this.stylePair)
                 this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 this.$refs.filecontent.setStylePair(this.stylePair)
                 this.$refs.filecontent.setFiles(
@@ -1717,6 +1717,8 @@ export default {
             this.openTitles = []
             this.leftTitles = []
             this.rightTitles = []
+            this.isEditor1Load = null
+            this.isEditor2Load = null
             for (i = 0; i < res.data.data.length; i++) {
               let title = {
                 seq: res.data.data[i].project_seq,
@@ -1752,6 +1754,13 @@ export default {
             this.openTitles = []
             this.leftTitles = []
             this.rightTitles = []
+            this.isEditor1Load = null
+            this.isEditor2Load = null
+            this.editor1.setValue('코드를 입력해주세요')
+            this.editor2.setValue('코드를 입력해주세요')
+            $('iframe').get(
+              0
+            ).contentWindow.document.documentElement.innerHTML = ''
             this.$nextTick(() => {
               let project = {
                 title: res.data.data[0].project_name,
@@ -1875,21 +1884,6 @@ export default {
       )
       console.log($('iframe'))
       console.log($('iframe').get(0).parentElement)
-      // this.editor1 = monaco.editor.create(
-      //   document.getElementById('leftContainer'),
-      //   {
-      //     value: this.code,
-      //     language: 'html',
-      //     theme: 'vs-dark',
-      //     height: 100,
-      //     accessibilityPageSize: 4,
-      //     lineDecorationsWidth: 10,
-      //     mouseWheelZoom: true
-      //     // find: 'IEditorFindOptions',
-      //   }
-      // )
-      // this.css = document.querySelector('#board').style
-      // console.log(document.querySelector('#board').style)
     },
     closeSource(e) {
       console.log('close')
@@ -2555,7 +2549,7 @@ export default {
       }
       this.$refs.overview.domSelection(this.dataPayload)
       this.$refs.layout.isData = true
-      this.$refs.layout.makeTreeParent(this.payload)
+      // this.$refs.layout.makeTreeParent(this.payload)
     },
     userSelectedWidth(data) {
       console.log(data)

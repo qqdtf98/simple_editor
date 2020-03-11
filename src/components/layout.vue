@@ -1432,7 +1432,6 @@ export default {
         )
         this.opacityValue = getComputedStyle(item).opacity
       }
-
     },
     colorBackgroundpicker() {
       if (this.isBackgroundPicker == true) this.isBackgroundPicker = false
@@ -2028,8 +2027,7 @@ export default {
         }
       }
     },
-    loadDataSetting(data) {
-    },
+    loadDataSetting(data) {},
     changeProperty(e) {
       if (e.target.getAttribute('name') == 'html') {
         this.kindOfLoadDate = 1
@@ -2129,11 +2127,10 @@ export default {
         // this.$emit('manualSelet', e.target.tagName)
       }
     },
-    mouseOverFilter(e){
+    mouseOverFilter(e) {
       console.log(e.target.tagName)
       
       this.$emit('manualSelet', e)
-      
     },
     onCodeChange(e) {
       console.log(e)
