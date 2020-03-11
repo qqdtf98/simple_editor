@@ -1967,44 +1967,42 @@ export default {
     //   this.submitSorce.change = 1
     //   this.$emit('userSelected', this.submitSorce)
     // },
-    makeTreeParent(payload) {
-      var obj = document.getElementById('inParentTreeOption')
-      $(obj).empty()
-      var newDIV = document.createElement('button')
-      newDIV.innerHTML = 'HTML'
-      obj.appendChild(newDIV)
-      var newDIV = document.createElement('button')
-      newDIV.innerHTML = 'Body'
-      obj.appendChild(newDIV)
-      var a = 0
-      var print = []
-      for (var i = 0; i < this.parentDom.length; i++) {
-        if (payload == this.domWithTree[i]) {
-          a = i
-          break
-        }
-      }
-      // console.log(a)
-      print.push(a)
-      // console.log(this.parentDom)
-      while (true) {
-        if (this.parentDom[a] != '-1') {
-          a = this.parentDom[a]
-          print.push(a)
-        } else {
-          break
-        }
-      }
-      for (var i = print.length - 1; i >= 0; i--) {
-        var obj = document.getElementById('inParentTreeOption')
-        var newDIV = document.createElement('button')
-        newDIV.setAttribute('id', print[i])
-        newDIV.innerHTML = document.querySelector(
-          `label[for="${print[i]}"]`
-        ).innerHTML
-        obj.appendChild(newDIV)
-      }
-    },
+    // makeTreeParent(payload) {
+    //   var obj = document.getElementById('inParentTreeOption')
+    //   $(obj).empty()
+    //   var newDIV = document.createElement('button')
+    //   newDIV.innerHTML = 'HTML'
+    //   obj.appendChild(newDIV)
+    //   var newDIV = document.createElement('button')
+    //   newDIV.innerHTML = 'Body'
+    //   obj.appendChild(newDIV)
+    //   var a = 0
+    //   var print = []
+    //   for (var i = 0; i < this.parentDom.length; i++) {
+    //     if (payload == this.domWithTree[i]) {
+    //       a = i
+    //       break
+    //     }
+    //   }
+    //   print.push(a)
+    //   while (true) {
+    //     if (this.parentDom[a] != '-1') {
+    //       a = this.parentDom[a]
+    //       print.push(a)
+    //     } else {
+    //       break
+    //     }
+    //   }
+    //   for (var i = print.length - 1; i >= 0; i--) {
+    //     var obj = document.getElementById('inParentTreeOption')
+    //     var newDIV = document.createElement('button')
+    //     newDIV.setAttribute('id', print[i])
+    //     newDIV.innerHTML = document.querySelector(
+    //       `label[for="${print[i]}"]`
+    //     ).innerHTML
+    //     obj.appendChild(newDIV)
+    //   }
+    // },
     onUpload() {
       /// 서버에 저장
     },

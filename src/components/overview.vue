@@ -60,7 +60,7 @@ export default {
       var newDIV = document.createElement('li')
       newDIV.setAttribute('id', this.childNum)
       obj.appendChild(newDIV)
-      
+
       var obj = document.getElementById(this.childNum)
       var newDIV = document.createElement('input')
       newDIV.setAttribute('class', 'checkbox')
@@ -163,7 +163,8 @@ export default {
         if (this.isActiveLabel[i]) $(`label[for="${i}"]`).trigger('click')
       }
       for (var i = 0; i < this.dom.length; i++) {
-        if (payload === this.dom[i]) {
+        var obj = document.querySelector(`label[for="${i}"]`)
+        if (payload === this.dom[i] && obj !== null) {
           var a = i
           while (true) {
             if (this.myParent[a] != '-1') {
@@ -184,7 +185,7 @@ export default {
 
           document.querySelector(`label[for="${i}"]`).scrollIntoView()
           document.querySelector(`label[for="${i}"]`).style['color'] = '#3bc0f7'
-        } else {
+        } else if (obj !== null) {
           var obj = document.querySelector(`label[for="${i}"]`)
           obj.style['color'] = ''
         }
