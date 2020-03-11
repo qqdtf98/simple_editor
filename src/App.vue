@@ -79,6 +79,7 @@
               @stack-push="stackPush"
               @loadData="loadData"
               @open-code="openCode"
+              @every-select="setEverySelectedElement"
               class="home"
             ></home>
             <div v-show="isCommentOn" class="comment-board">
@@ -319,7 +320,6 @@
     <div v-show="isContextMenu" class="sitemapContext">
       <div @click="changePageSitemap" class="open">Open</div>
       <div @click="copyPage" class="copy">Copy</div>
-      <div @click="renameTitle" class="rename">Rename</div>
       <div @click="deleteTitle" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu2" class="fileContext">
@@ -473,6 +473,7 @@ export default {
     return {
       zzzzz: 3,
       isUsed: false,
+      everySelectedElement: null,
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
@@ -639,6 +640,7 @@ export default {
   watch: {},
   mounted() {
     this.currentRightTab = 0
+    this.everySelectedElement = new Set()
     this.currentLeftTab = 0
     let leftTitle = document.querySelector('.left-title')
     let rightTitle = document.querySelector('.right-title')
@@ -1051,8 +1053,15 @@ export default {
       if (e.which === 83 && this.isCtrl) {
         e.preventDefault()
         if (this.isData) {
+          const iterator1 = this.everySelectedElement[Symbol.iterator]()
           // 파일 업데이트
           if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
+            let i
+            for (i = 0; i < this.everySelectedElement.size; i++) {
+              let val = iterator1.next().value
+              $(val).css('border', '')
+              $(val).css('border-radius', '')
+            }
             axios
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
@@ -1062,7 +1071,8 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: this.editor1.getValue()
+                    contents: $('iframe').get(0).contentWindow.document
+                      .documentElement.innerHTML
                   },
                   {
                     file_seq: this.isEditor2Load.file_seq,
@@ -1081,6 +1091,16 @@ export default {
             this.isEditor1Load !== null &&
             this.isEditor2Load === null
           ) {
+            let i
+            for (i = 0; i < this.everySelectedElement.size; i++) {
+              let val = iterator1.next().value
+              $(val).css('border', '')
+              $(val).css('border-radius', '')
+            }
+            console.log(
+              $('iframe').get(0).contentWindow.document.documentElement
+                .innerHTML
+            )
             axios
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
@@ -1090,7 +1110,8 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: this.editor1.getValue()
+                    contents: $('iframe').get(0).contentWindow.document
+                      .documentElement.innerHTML
                   }
                 ]
               })
@@ -1166,8 +1187,6 @@ export default {
       if (this.resizeLoader) {
         let loader = document.querySelector('.loadDataPanel')
         let bord = document.querySelector('.loader-bord')
-        console.log(loader)
-        console.log(bord)
         loader.style.height =
           this.initialHeight - (e.clientY - this.initialY) + 'px'
         // document.getElementById('monacoContainer').removeChildAll()
@@ -1347,11 +1366,13 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    setEverySelectedElement(select) {
+      this.everySelectedElement = select
+    },
     resetAllTitle(html, css, js) {
       this.htmlTitles = html
       this.cssTitles = css
       this.jsTitles = js
-      console.log(this.htmlTitles)
     },
     saveAll() {
       let i
@@ -1380,7 +1401,6 @@ export default {
         })
     },
     addFile() {
-      console.log(this.isProject)
       this.$refs.filecontent.addFile(
         this.isProject.title,
         this.selectedFolder,
@@ -1388,7 +1408,6 @@ export default {
       )
     },
     deleteFile() {
-      console.log(this.selectedFile.textContent.split('.')[1].trim())
       let i
       if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
         for (i = 0; i < this.htmlTitles.length; i++) {
@@ -1475,7 +1494,6 @@ export default {
       }
     },
     renameFile() {
-      console.log(this.selectedFile)
       this.$refs.filecontent.focusInput(this.selectedFile)
     },
     findChildren(selectedDom, clickDom) {
@@ -1593,7 +1611,6 @@ export default {
                       '.' +
                       res.data.data.folders[i].files[j].file_type
                     if (res.data.data.folders[i].folder_name === 'html') {
-                      console.log(res.data.data.folders[i].files[j])
                       if (
                         res.data.data.folders[i].files[j].html_css_pair.length >
                         0
@@ -1625,7 +1642,6 @@ export default {
                     }
                   }
                 }
-                console.log(this.stylePair)
                 this.$refs.filecontent.setFolderSeq(this.folder_seq)
                 this.$refs.filecontent.setStylePair(this.stylePair)
                 this.$refs.filecontent.setFiles(
@@ -1724,6 +1740,8 @@ export default {
             this.openTitles = []
             this.leftTitles = []
             this.rightTitles = []
+            this.isEditor1Load = null
+            this.isEditor2Load = null
             for (i = 0; i < res.data.data.length; i++) {
               let title = {
                 seq: res.data.data[i].project_seq,
@@ -1759,6 +1777,13 @@ export default {
             this.openTitles = []
             this.leftTitles = []
             this.rightTitles = []
+            this.isEditor1Load = null
+            this.isEditor2Load = null
+            this.editor1.setValue('코드를 입력해주세요')
+            this.editor2.setValue('코드를 입력해주세요')
+            $('iframe').get(
+              0
+            ).contentWindow.document.documentElement.innerHTML = ''
             this.$nextTick(() => {
               let project = {
                 title: res.data.data[0].project_name,
@@ -1882,21 +1907,6 @@ export default {
       )
       console.log($('iframe'))
       console.log($('iframe').get(0).parentElement)
-      // this.editor1 = monaco.editor.create(
-      //   document.getElementById('leftContainer'),
-      //   {
-      //     value: this.code,
-      //     language: 'html',
-      //     theme: 'vs-dark',
-      //     height: 100,
-      //     accessibilityPageSize: 4,
-      //     lineDecorationsWidth: 10,
-      //     mouseWheelZoom: true
-      //     // find: 'IEditorFindOptions',
-      //   }
-      // )
-      // this.css = document.querySelector('#board').style
-      // console.log(document.querySelector('#board').style)
     },
     closeSource(e) {
       console.log('close')
@@ -2054,13 +2064,13 @@ export default {
         this.editor1.setValue(this.htmlTitles[i].contents)
         this.isEditor1Load = this.htmlTitles[i]
       } else {
+        this.isEditor1Load = this.htmlTitles[i]
         this.editor1.setValue(
           this.htmlTitles[i].contents
             .split('<body>')[1]
             .split('</body>')[0]
             .split('<script ')[0]
         )
-        this.isEditor1Load = this.htmlTitles[i]
       }
       this.isData = true
     },
@@ -2071,9 +2081,6 @@ export default {
       console.log('reset')
       this.titles = titles
       let topMenu = document.querySelector('.top-menu')
-    },
-    renameTitle() {
-      this.$refs.sitemap.renameTitle()
     },
     openSitemapContext(e) {
       this.selectedTitle = e.target
@@ -2542,7 +2549,7 @@ export default {
     },
     componentSelected(payload) {
       this.$refs.layout.isData = true
-      this.payload = payload.target
+      this.payload = payload
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
@@ -2565,7 +2572,7 @@ export default {
       }
       this.$refs.overview.domSelection(this.dataPayload)
       this.$refs.layout.isData = true
-      this.$refs.layout.makeTreeParent(this.payload)
+      // this.$refs.layout.makeTreeParent(this.payload)
     },
     userSelectedWidth(data) {
       console.log(data)

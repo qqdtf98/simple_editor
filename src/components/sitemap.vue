@@ -16,13 +16,7 @@
         @mouseup="mouseRightClick"
         class="title-map"
       >
-        <div
-          @keydown.enter="isContentNotEditable"
-          :contenteditable="isContentEditable"
-          :key="title.id"
-          v-for="title in titles"
-          class="titles"
-        >
+        <div :key="title.id" v-for="title in titles" class="titles">
           {{ title.text }}
         </div>
       </div>
@@ -39,6 +33,7 @@ export default {
     return {
       titles: [],
       sitemapMove: false,
+      sameTitle: null,
       xInter: 0,
       yInter: 0,
       moveTarget: null,
@@ -46,8 +41,7 @@ export default {
       targetId: null,
       position: null,
       positionId: null,
-      contextTarget: null,
-      isContentEditable: false
+      contextTarget: null
     }
   },
   mounted() {
@@ -75,9 +69,6 @@ export default {
         }
         this.sitemapMove = false
       }
-      if (this.isContentEditable) {
-        this.isContentNotEditable()
-      }
     })
   },
   methods: {
@@ -95,61 +86,6 @@ export default {
       this.titles.splice(i, 1)
       console.log(this.titles)
       this.$emit('reset-title', this.titles)
-    },
-    isContentNotEditable(e) {
-      if (e) {
-        console.log(e)
-        e.preventDefault()
-      }
-
-      let titles = document.querySelectorAll('.titles')
-      let i
-      for (i = 0; i < titles.length; i++) {
-        if (titles[i] === this.contextTarget) {
-          console.log(this.contextTarget.textContent.trim())
-          this.titles[i].text = this.contextTarget.textContent.trim()
-          break
-        }
-      }
-      console.log(titles)
-      this.$emit('reset-title', this.titles)
-      this.isContentEditable = false
-    },
-    renameTitle() {
-      console.log(this.contextTarget)
-      this.focusInput(this.contextTarget)
-    },
-    focusInput(e) {
-      this.isContentEditable = true
-      this.$nextTick(() => {
-        const sel = window.getSelection()
-        sel.removeAllRanges()
-        const range = new Range()
-        range.setStart(this.$refs.dash, 0)
-        range.setEnd(this.$refs.dash, 0)
-        sel.addRange(range)
-        // console.log(this.$ref.dash)
-        this.placeCaretAtEnd(e)
-      })
-    },
-    placeCaretAtEnd(el) {
-      el.focus()
-      if (
-        typeof window.getSelection !== 'undefined' &&
-        typeof document.createRange !== 'undefined'
-      ) {
-        const range = document.createRange()
-        range.selectNodeContents(el)
-        range.collapse(false)
-        const sel = window.getSelection()
-        sel.removeAllRanges()
-        sel.addRange(range)
-      } else if (typeof document.body.createTextRange !== 'undefined') {
-        const textRange = document.body.createTextRange()
-        textRange.moveToElementText(el)
-        textRange.collapse(false)
-        textRange.select()
-      }
     },
     movePosition(payload, tar) {
       this.position = payload
@@ -265,5 +201,11 @@ export default {
       }
     }
   }
+}
+.same-title {
+  animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 </style>
