@@ -68,6 +68,7 @@ export default {
       contextTarget: null,
       isContentEditable: false,
       project: null,
+      type: null,
       folderSeq: [],
       beforeTitle: null,
       isNewFileAdd: false,

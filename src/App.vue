@@ -319,7 +319,6 @@
     <div v-show="isContextMenu" class="sitemapContext">
       <div @click="changePageSitemap" class="open">Open</div>
       <div @click="copyPage" class="copy">Copy</div>
-      <div @click="renameTitle" class="rename">Rename</div>
       <div @click="deleteTitle" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu2" class="fileContext">
@@ -1166,8 +1165,6 @@ export default {
       if (this.resizeLoader) {
         let loader = document.querySelector('.loadDataPanel')
         let bord = document.querySelector('.loader-bord')
-        console.log(loader)
-        console.log(bord)
         loader.style.height =
           this.initialHeight - (e.clientY - this.initialY) + 'px'
         // document.getElementById('monacoContainer').removeChildAll()
@@ -1351,7 +1348,6 @@ export default {
       this.htmlTitles = html
       this.cssTitles = css
       this.jsTitles = js
-      console.log(this.htmlTitles)
     },
     saveAll() {
       let i
@@ -1380,7 +1376,6 @@ export default {
         })
     },
     addFile() {
-      console.log(this.isProject)
       this.$refs.filecontent.addFile(
         this.isProject.title,
         this.selectedFolder,
@@ -1388,7 +1383,6 @@ export default {
       )
     },
     deleteFile() {
-      console.log(this.selectedFile.textContent.split('.')[1].trim())
       let i
       if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
         for (i = 0; i < this.htmlTitles.length; i++) {
@@ -1475,7 +1469,6 @@ export default {
       }
     },
     renameFile() {
-      console.log(this.selectedFile)
       this.$refs.filecontent.focusInput(this.selectedFile)
     },
     findChildren(selectedDom, clickDom) {
@@ -2054,13 +2047,13 @@ export default {
         this.editor1.setValue(this.htmlTitles[i].contents)
         this.isEditor1Load = this.htmlTitles[i]
       } else {
+        this.isEditor1Load = this.htmlTitles[i]
         this.editor1.setValue(
           this.htmlTitles[i].contents
             .split('<body>')[1]
             .split('</body>')[0]
             .split('<script ')[0]
         )
-        this.isEditor1Load = this.htmlTitles[i]
       }
       this.isData = true
     },
@@ -2071,9 +2064,6 @@ export default {
       console.log('reset')
       this.titles = titles
       let topMenu = document.querySelector('.top-menu')
-    },
-    renameTitle() {
-      this.$refs.sitemap.renameTitle()
     },
     openSitemapContext(e) {
       this.selectedTitle = e.target
