@@ -79,6 +79,7 @@
               @stack-push="stackPush"
               @loadData="loadData"
               @open-code="openCode"
+              @every-select="setEverySelectedElement"
               class="home"
             ></home>
             <div v-show="isCommentOn" class="comment-board">
@@ -472,6 +473,7 @@ export default {
     return {
       zzzzz: 3,
       isUsed: false,
+      everySelectedElement: null,
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
@@ -638,6 +640,7 @@ export default {
   watch: {},
   mounted() {
     this.currentRightTab = 0
+    this.everySelectedElement = new Set()
     this.currentLeftTab = 0
     let leftTitle = document.querySelector('.left-title')
     let rightTitle = document.querySelector('.right-title')
@@ -1050,8 +1053,15 @@ export default {
       if (e.which === 83 && this.isCtrl) {
         e.preventDefault()
         if (this.isData) {
+          const iterator1 = this.everySelectedElement[Symbol.iterator]()
           // 파일 업데이트
           if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
+            let i
+            for (i = 0; i < this.everySelectedElement.size; i++) {
+              let val = iterator1.next().value
+              $(val).css('border', '')
+              $(val).css('border-radius', '')
+            }
             axios
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
@@ -1081,6 +1091,16 @@ export default {
             this.isEditor1Load !== null &&
             this.isEditor2Load === null
           ) {
+            let i
+            for (i = 0; i < this.everySelectedElement.size; i++) {
+              let val = iterator1.next().value
+              $(val).css('border', '')
+              $(val).css('border-radius', '')
+            }
+            console.log(
+              $('iframe').get(0).contentWindow.document.documentElement
+                .innerHTML
+            )
             axios
               .post('http://192.168.0.86:8581/editor/file/updateFile', {
                 files: [
@@ -1346,6 +1366,9 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    setEverySelectedElement(select) {
+      this.everySelectedElement = select
+    },
     resetAllTitle(html, css, js) {
       this.htmlTitles = html
       this.cssTitles = css
@@ -2526,7 +2549,7 @@ export default {
     },
     componentSelected(payload) {
       this.$refs.layout.isData = true
-      this.payload = payload.target
+      this.payload = payload
       // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
       // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document

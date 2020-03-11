@@ -13,7 +13,6 @@
           class="editor-component"
           :contenteditable="isContentEditable"
           @dblclick="onmouseDoubleClick"
-          @click="onmouseClick"
         >
           <div id="board" class="board">
             <iframe
@@ -130,6 +129,7 @@ export default {
     return {
       sample: 'aaaaaaaaaaaaaaaff',
       selectedElement: null,
+      everySelectedElement: null,
       borderstyle: null,
       onelementSelected: false,
       target: '',
@@ -242,6 +242,7 @@ export default {
     // let b = document.querySelector('.3')
 
     this.multiSelectedElement = new Set()
+    this.everySelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
       e.preventDefault()
     })
@@ -1169,6 +1170,8 @@ export default {
       }
     },
     onmouseClick(e) {
+      this.everySelectedElement.add(e.target)
+      this.$emit('every-select', this.everySelectedElement)
       let board = document.querySelector('.board')
       if (this.multiSelect) {
         console.log('multi')
@@ -1188,7 +1191,6 @@ export default {
             // this.multiSelectedElement.add(this.clickedElement)
             // this.multiElementParent.push(this.clickedElement.parentElement)
             // this.setSize = this.multiSelectedElement.size
-
             this.multiSelectedElement.add(e.target)
             if (this.setSize !== this.multiSelectedElement.size) {
               this.multiElementParent.push(e.target.parentElement)
