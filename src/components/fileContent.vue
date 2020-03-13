@@ -8,13 +8,13 @@
             <div
               ref="htmlName"
               @keydown.enter="setNewTitle"
+              @dblclick="dblClick"
+              @mouseup="mouseRightClick($event, index)"
               :key="index"
               :contenteditable="isContentEditable"
               v-for="(title, index) in htmlTitles"
             >
-              <!-- <div v-if="index == 0"> -->
               {{ title.text }}
-              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -23,10 +23,12 @@
           <div class="css nested">
             <div
               ref="cssName"
+              @mouseup="mouseRightClick($event, index)"
+              @dblclick="dblClick"
               @keydown.enter="setNewTitle"
               :contenteditable="isContentEditable"
-              :key="title.key"
-              v-for="title in cssTitles"
+              :key="index"
+              v-for="(title, index) in cssTitles"
             >
               {{ title.text }}
             </div>
@@ -37,10 +39,12 @@
           <div class="js nested">
             <div
               ref="jsName"
+              @mouseup="mouseRightClick($event, index)"
               @keydown.enter="setNewTitle"
+              @dblclick="dblClick"
               :contenteditable="isContentEditable"
-              :key="title.key"
-              v-for="title in jsTitles"
+              :key="index"
+              v-for="(title, index) in jsTitles"
             >
               {{ title.text }}
             </div>
@@ -70,12 +74,17 @@ export default {
       beforeTitle: null,
       isNewFileAdd: false,
       sameTitle: false,
-      stylePair: null
+      stylePair: null,
+      targetIndex: null
     }
   },
   computed: {},
   components: { vueCustomScrollbar },
   methods: {
+    dblClick(e) {
+      console.log(e.target)
+      this.$emit('dbl-click', e)
+    },
     setStylePair(pair) {
       this.stylePair = pair
     },
@@ -312,9 +321,10 @@ export default {
         this.$emit('folder-click', e)
       }
     },
-    mouseRightClick(e) {
+    mouseRightClick(e, key) {
       if (e.button === 2) {
         this.contextTarget = e.target
+        this.targetIndex = key
         this.$emit('right-click', e)
       }
     },
@@ -346,6 +356,7 @@ export default {
     focusInput(target) {
       target.classList.remove('same-title')
       if (!this.isNewFileAdd) {
+        // 기존 파일의 이름을 수정할 때
         this.type = target.textContent.split('.')[1].trim()
       }
       this.beforeTitle = target.textContent.trim()

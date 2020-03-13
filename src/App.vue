@@ -245,6 +245,7 @@
             <fileContent
               @reset-titles="resetAllTitle"
               @add-js="addJS"
+              @dbl-click="setSelectedFile"
               @folder-click="folderClick"
               @right-click="openFileContext"
               v-show="!showhtml"
@@ -941,6 +942,7 @@ export default {
 
     var myBinding2 = this.editor2.onDidChangeModelContent(e => {
       if (this.isSetEditor2) {
+        console.log('set')
         axios
           .get('http://192.168.0.86:8581/editor/file/selectHtmlCssPair', {
             params: {
@@ -952,16 +954,20 @@ export default {
               if (
                 res.data.data[0].html_file_seq === this.isEditor1Load.file_seq
               ) {
+                console.log('111')
                 this.isUsed = true
               } else {
+                console.log('2222')
                 this.isUsed = false
               }
             } else {
+              console.log('3333')
               this.isUsed = false
             }
           })
         this.isSetEditor2 = false
       } else {
+        console.log('chanann')
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i] === this.isEditor2Load) {
@@ -975,7 +981,9 @@ export default {
           this.cssTitles,
           this.jsTitles
         )
+        console.log(this.isUsed)
         if (this.isUsed) {
+          console.log('usee')
           let cssCode = ''
           for (
             i = 0;
@@ -991,6 +999,7 @@ export default {
                   .css[i]
             ).contents
           }
+          console.log(cssCode)
           $('iframe')
             .get(0)
             .contentWindow.document.getElementsByTagName(
@@ -1366,6 +1375,10 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    setSelectedFile(e) {
+      this.selectedFile = e.target
+      this.loadFile(e)
+    },
     setEverySelectedElement(select) {
       this.everySelectedElement = select
     },
@@ -1742,6 +1755,11 @@ export default {
             this.rightTitles = []
             this.isEditor1Load = null
             this.isEditor2Load = null
+            this.editor1.setValue('코드를 입력해주세요')
+            this.editor2.setValue('코드를 입력해주세요')
+            $('iframe').get(
+              0
+            ).contentWindow.document.documentElement.innerHTML = ''
             for (i = 0; i < res.data.data.length; i++) {
               let title = {
                 seq: res.data.data[i].project_seq,
