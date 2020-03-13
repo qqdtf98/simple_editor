@@ -7,15 +7,14 @@
           <div class="html nested">
             <div
               ref="htmlName"
-              @keyup.enter="setNewTitle"
-              @mouseup="mouseRightClick"
+              @keydown.enter="setNewTitle"
+              @dblclick="dblClick"
+              @mouseup="mouseRightClick($event, index)"
               :key="index"
               :contenteditable="isContentEditable"
               v-for="(title, index) in htmlTitles"
             >
-              <!-- <div v-if="index == 0"> -->
               {{ title.text }}
-              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -24,11 +23,12 @@
           <div class="css nested">
             <div
               ref="cssName"
-              @mouseup="mouseRightClick"
-              @keyup.enter="setNewTitle"
+              @mouseup="mouseRightClick($event, index)"
+              @dblclick="dblClick"
+              @keydown.enter="setNewTitle"
               :contenteditable="isContentEditable"
-              :key="title.key"
-              v-for="title in cssTitles"
+              :key="index"
+              v-for="(title, index) in cssTitles"
             >
               {{ title.text }}
             </div>
@@ -39,11 +39,12 @@
           <div class="js nested">
             <div
               ref="jsName"
-              @mouseup="mouseRightClick"
-              @keyup.enter="setNewTitle"
+              @mouseup="mouseRightClick($event, index)"
+              @keydown.enter="setNewTitle"
+              @dblclick="dblClick"
               :contenteditable="isContentEditable"
-              :key="title.key"
-              v-for="title in jsTitles"
+              :key="index"
+              v-for="(title, index) in jsTitles"
             >
               {{ title.text }}
             </div>
@@ -73,33 +74,42 @@ export default {
       beforeTitle: null,
       isNewFileAdd: false,
       sameTitle: false,
-      stylePair: null
+      stylePair: null,
+      targetIndex: null
     }
   },
   computed: {},
   components: { vueCustomScrollbar },
   methods: {
+    dblClick(e) {
+      console.log(e.target)
+      this.$emit('dbl-click', e)
+    },
     setStylePair(pair) {
       this.stylePair = pair
     },
     setNewTitle(e) {
       e.preventDefault()
       if (e) {
-        e.target.textContent = e.target.textContent.trim()
+        e.target.textContent =
+          e.target.textContent.split('.')[0].trim() + '.' + this.type
         let i
         if (this.type === 'html') {
           for (i = 0; i < this.htmlTitles.length; i++) {
             if (
               this.htmlTitles[i].file_name ===
-              e.target.textContent.split('.')[0]
+              e.target.textContent.split('.')[0].trim()
             ) {
+              console.log(this.htmlTitles[i].file_name)
+              console.log(e.target.textContent.split('.')[0])
               this.sameTitle = true
             }
           }
         } else if (this.type === 'css') {
           for (i = 0; i < this.cssTitles.length; i++) {
             if (
-              this.cssTitles[i].file_name === e.target.textContent.split('.')[0]
+              this.cssTitles[i].file_name ===
+              e.target.textContent.split('.')[0].trim()
             ) {
               this.sameTitle = true
             }
@@ -111,6 +121,17 @@ export default {
           e.target.classList.add('same-title')
           e.target.textContent = this.beforeTitle
           this.sameTitle = false
+          // if (this.type === 'html') {
+          //   this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
+          // } else if (this.type === 'css') {
+          //   this.cssTitles.splice(this.cssTitles.length - 1, 1)
+          // }
+          // this.$emit(
+          //   'reset-titles',
+          //   this.htmlTitles,
+          //   this.cssTitles,
+          //   this.jsTitles
+          // )
         } else {
           // 프론트에서 체크 - 중복 X
           // 서버에 이름 중복검사 요청
@@ -125,11 +146,12 @@ export default {
               params: {
                 folder_seq: this.folderSeq[i].seq,
                 file_type: this.type,
-                file_name: e.target.textContent.split('.')[0]
+                file_name: e.target.textContent.split('.')[0].trim()
               }
             })
             .then(res => {
               if (res.data.responseCode === 'SUCCESS') {
+                console.log('succ')
                 // 서버에서 체크 - 중복 X
                 if (this.isNewFileAdd) {
                   // 새로운 파일 추가일때
@@ -142,13 +164,13 @@ export default {
                   }
                   data = {
                     folder_seq: this.folderSeq[i].seq,
-                    file_name: e.target.textContent.split('.')[0],
+                    file_name: e.target.textContent.split('.')[0].trim(),
                     file_path:
                       this.project +
                       '/' +
                       this.type +
                       '/' +
-                      e.target.textContent.split('.')[0] +
+                      e.target.textContent.split('.')[0].trim() +
                       '.' +
                       this.type,
                     file_type: this.type,
@@ -161,11 +183,13 @@ export default {
                     .then(res => {
                       console.log(res)
                       if (res.data.responseCode === 'SUCCESS') {
+                        console.log('succeseee')
                         if (res.data.data[0].file_type === 'html') {
+                          console.log(res.data.data[0])
                           this.htmlTitles[this.htmlTitles.length - 1] =
                             res.data.data[0]
                           this.htmlTitles[this.htmlTitles.length - 1].text =
-                            e.target.textContent.split('.')[0] + '.html'
+                            e.target.textContent.split('.')[0].trim() + '.html'
                           this.htmlTitles[
                             this.htmlTitles.length - 1
                           ].isEdited = false
@@ -178,6 +202,7 @@ export default {
                             this.cssTitles.length - 1
                           ].isEdited = false
                         }
+                        console.log(this.htmlTitles)
 
                         this.$emit(
                           'reset-titles',
@@ -185,13 +210,21 @@ export default {
                           this.cssTitles,
                           this.jsTitles
                         )
-                        console.log(res.data.message)
+                        e.target.textContent =
+                          e.target.textContent.split('.')[0] + '.' + this.type
                       } else {
+                        console.log('ffffs')
                         if (res.data.data[0].file_type === 'html') {
                           this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
                         } else if (res.data.data[0].file_type === 'css') {
                           this.cssTitles.splice(this.cssTitles.length - 1, 1)
                         }
+                        this.$emit(
+                          'reset-titles',
+                          this.htmlTitles,
+                          this.cssTitles,
+                          this.jsTitles
+                        )
                       }
                     })
                   this.isNewFileAdd = false
@@ -209,18 +242,19 @@ export default {
                       break
                     }
                   }
+                  console.log()
                   axios
                     .post('http://192.168.0.86:8581/editor/file/updateFile', {
                       files: [
                         {
                           folder_seq: this.folderSeq[j].seq,
-                          file_seq: this.htmlTitles[i].folder_seq,
-                          file_name: e.target.textContent.split('.')[0],
+                          file_seq: this.htmlTitles[i].file_seq,
+                          file_name: e.target.textContent.split('.')[0].trim(),
                           file_path:
                             this.htmlTitles[i].file_path.split(
                               this.htmlTitles[i].text
                             )[0] +
-                            e.target.textContent.split('.')[0] +
+                            e.target.textContent.split('.')[0].trim() +
                             '.' +
                             this.type
                         }
@@ -228,6 +262,16 @@ export default {
                     })
                     .then(res => {
                       console.log(res)
+                      if (res.data.responseCode === 'SUCCESS') {
+                        e.target.textContent =
+                          e.target.textContent.split('.')[0] + '.' + this.type
+                      } else {
+                        if (res.data.data[0].file_type === 'html') {
+                          this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
+                        } else if (res.data.data[0].file_type === 'css') {
+                          this.cssTitles.splice(this.cssTitles.length - 1, 1)
+                        }
+                      }
                     })
                   this.htmlTitles[i].text =
                     e.target.textContent.split('.')[0] + '.html'
@@ -246,11 +290,23 @@ export default {
                   )
                 }
               } else {
+                console.log(res.data)
+                console.log('failll')
                 // 서버에서 체크 - 중복 O
-                console.log('sameme')
                 e.target.classList.add('same-title')
                 e.target.textContent = this.beforeTitle
                 this.sameTitle = false
+                if (this.type === 'html') {
+                  this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
+                } else if (this.type === 'css') {
+                  this.cssTitles.splice(this.cssTitles.length - 1, 1)
+                }
+                this.$emit(
+                  'reset-titles',
+                  this.htmlTitles,
+                  this.cssTitles,
+                  this.jsTitles
+                )
               }
             })
         }
@@ -265,9 +321,10 @@ export default {
         this.$emit('folder-click', e)
       }
     },
-    mouseRightClick(e) {
+    mouseRightClick(e, key) {
       if (e.button === 2) {
         this.contextTarget = e.target
+        this.targetIndex = key
         this.$emit('right-click', e)
       }
     },
@@ -299,6 +356,7 @@ export default {
     focusInput(target) {
       target.classList.remove('same-title')
       if (!this.isNewFileAdd) {
+        // 기존 파일의 이름을 수정할 때
         this.type = target.textContent.split('.')[1].trim()
       }
       this.beforeTitle = target.textContent.trim()

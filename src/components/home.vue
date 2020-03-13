@@ -22,6 +22,7 @@
               ref="iframe"
               width="100%"
               height="100%"
+              style="background-color: #fff;"
             ></iframe>
             <!--
             <div class="sample-component">
