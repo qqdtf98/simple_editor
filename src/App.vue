@@ -72,7 +72,7 @@
             ref="fileInput"
           />
 
-          <div class="main-menu">
+          <div v-show="isProjectLoaded" class="main-menu">
             <home
               ref="home"
               @componentSelected="componentSelected"
@@ -104,6 +104,15 @@
                 <div class="comment-text">{{ comment.text }}</div>
               </div>
             </div>
+          </div>
+          <div v-show="!isProjectLoaded" class="empty-iframe">
+            <div class="sample-component">
+              <img
+                src="./assets/images/plus.svg"
+                @click="addProject"
+                class="sample-add-btn"
+              />
+        </div>
           </div>
         </div>
         <div class="row bottom-panel">
@@ -218,7 +227,7 @@
             class="layout"
           />
         </div>
-        <div class="right-bottom-panel">
+        <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
             <div @mousedown="moveTree" class="tree-name-box">
               <div
@@ -659,7 +668,7 @@ export default {
       document.getElementById('leftContainer'),
       {
         id: 'editorMonaco1',
-        value: '코드를 입력해주세요',
+        value: 'html 파일을 로드해주세요.',
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -877,7 +886,7 @@ export default {
     this.editor2 = monaco.editor.create(
       document.getElementById('rightContainer'),
       {
-        value: '코드를 입력해주세요',
+        value: 'css 파일을 로드해주세요.',
         language: 'css',
         theme: 'vs-dark',
         height: 100,
@@ -1751,15 +1760,18 @@ export default {
             this.titles = []
             this.projectTitles = []
             this.openTitles = []
-            this.leftTitles = []
-            this.rightTitles = []
+            this.leftTitles = new Set()
+            this.rightTitles = new Set()
+            this.leftTitlesArr = []
+            this.rightTitlesArr = []
             this.isEditor1Load = null
             this.isEditor2Load = null
-            this.editor1.setValue('코드를 입력해주세요')
-            this.editor2.setValue('코드를 입력해주세요')
+            this.editor1.setValue('html 파일을 로드해주세요.')
+            this.editor2.setValue('css 파일을 로드해주세요.')
             $('iframe').get(
               0
-            ).contentWindow.document.documentElement.innerHTML = ''
+            ).contentWindow.document.documentElement.innerHTML =
+              '파일을 로드해주세요.'
             for (i = 0; i < res.data.data.length; i++) {
               let title = {
                 seq: res.data.data[i].project_seq,
@@ -1793,12 +1805,14 @@ export default {
             this.titles = []
             this.projectTitles = []
             this.openTitles = []
-            this.leftTitles = []
-            this.rightTitles = []
+            this.leftTitles = new Set()
+            this.rightTitles = new Set()
+            this.leftTitlesArr = []
+            this.rightTitlesArr = []
             this.isEditor1Load = null
             this.isEditor2Load = null
-            this.editor1.setValue('코드를 입력해주세요')
-            this.editor2.setValue('코드를 입력해주세요')
+            this.editor1.setValue('html 파일을 로드해주세요.')
+            this.editor2.setValue('css 파일을 로드해주세요.')
             $('iframe').get(
               0
             ).contentWindow.document.documentElement.innerHTML = ''
@@ -3073,6 +3087,26 @@ export default {
           }
           .display {
             display: block;
+          }
+        }
+        .empty-iframe {
+          height: 781px;
+          width: 1200px;
+          bottom: 0;
+          display: flex;
+          flex-direction: row;
+          border: 3px solid #545e66;
+          .sample-component {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .sample-add-btn {
+              width: 5rem;
+              cursor: pointer;
+              height: 5rem;
+            }
           }
         }
       }
