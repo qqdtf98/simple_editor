@@ -139,12 +139,13 @@
             <div class="code-box">
               <div class="left-box">
                 <div class="leftTitle">
+                  <vue-custom-scrollbar class="left-title-scroll">
                   <div
                     class="left-title"
-                    v-for="leftTitle in leftTitles"
+                      v-for="leftTitle in leftTitlesArr"
                     :key="leftTitle.id"
                   >
-                    <div @click="changeSourceTab" class="title-text">
+                      <div @click="changeSourceTab" class="left-title-text">
                       {{ leftTitle.text }}
                     </div>
                     <img
@@ -153,6 +154,7 @@
                       src="./assets/images/close.svg"
                     />
                   </div>
+                  </vue-custom-scrollbar>
                 </div>
                 <div class="leftSource" id="leftSource">
                   <div
@@ -174,20 +176,23 @@
               <div @mousedown="moveBorder" class="center-border"></div>
               <div class="right-box">
                 <div class="rightTitle">
+                  <vue-custom-scrollbar class="right-title-scroll">
                   <div
                     class="right-title"
-                    v-for="rightTitle in rightTitles"
+                      v-for="rightTitle in rightTitlesArr"
                     :key="rightTitle.id"
                   >
-                    <div @click="changeSourceTab" class="title-text">
+                      <div @click="changeSourceTab" class="right-title-text">
                       {{ rightTitle.text }}
                     </div>
+
                     <img
                       @click="closeSource"
                       class="close-icon"
                       src="./assets/images/close.svg"
                     />
                   </div>
+                  </vue-custom-scrollbar>
                 </div>
                 <div class="rightSource" id="rightSource">
                   <div
@@ -253,7 +258,6 @@
             />
             <fileContent
               @reset-titles="resetAllTitle"
-              @add-js="addJS"
               @dbl-click="setSelectedFile"
               @folder-click="folderClick"
               @right-click="openFileContext"
@@ -620,21 +624,11 @@ export default {
       cssTitles: [],
       jsTitles: [],
       imgTitles: [],
-      leftTitles: [
-        {
-          text: 'index.html',
-          code: '',
-          type: 'html'
+      leftTitles: null,
+      rightTitles: null,
+      leftTitlesArr: [],
+      rightTitlesArr: []
         }
-      ],
-      rightTitles: [
-        {
-          text: 'style.css',
-          code: '',
-          type: 'css'
-        }
-      ]
-    }
   },
   computed: {
     testMessage: function() {
@@ -652,10 +646,6 @@ export default {
     this.currentRightTab = 0
     this.everySelectedElement = new Set()
     this.currentLeftTab = 0
-    let leftTitle = document.querySelector('.left-title')
-    let rightTitle = document.querySelector('.right-title')
-    leftTitle.style.backgroundColor = '#3f3f3f'
-    rightTitle.style.backgroundColor = '#3f3f3f'
     if (this.enabled) {
       this.vsMode = 'vs-dark'
     } else {
@@ -1550,26 +1540,33 @@ export default {
           ) {
             if (this.isServer) {
               this.usedPair = this.htmlTitles[i].html_css_pair
+              this.leftTitles.add(this.htmlTitles[i])
               this.isEditor1Load = this.htmlTitles[i]
               this.editor1.setValue(this.htmlTitles[i].contents)
-            } else {
-              this.isEditor1Load = this.htmlTitles[i]
-              this.editor1.setValue(
-                this.htmlTitles[i].contents
-                  .split('<body>')[1]
-                  .split('</body>')[0]
-                  .split('<script ')[0]
-              )
+              this.leftTitlesArr = Array.from(this.leftTitles)
             }
             this.isData = true
             break
           }
         }
+        this.$nextTick(() => {
+          let titles = document.querySelectorAll('.left-title')
+          let j
+          for (j = 0; j < titles.length; j++) {
+            if (titles[j].textContent.trim() === this.htmlTitles[i].text) {
+              titles[j].style.backgroundColor = '#545e66'
+            } else {
+              titles[j].style.backgroundColor = '#2c3134'
+            }
+          }
+        })
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
             console.log('select')
+            this.rightTitles.add(this.cssTitles[i])
+            this.rightTitlesArr = Array.from(this.rightTitles)
             this.isSetEditor2 = true
             this.isEditor2Load = this.cssTitles[i]
             this.editor2.setValue(this.cssTitles[i].contents)
@@ -1577,6 +1574,17 @@ export default {
             break
           }
         }
+        this.$nextTick(() => {
+          let titles = document.querySelectorAll('.right-title')
+          let j
+          for (j = 0; j < titles.length; j++) {
+            if (titles[j].textContent.trim() === this.cssTitles[i].text) {
+              titles[j].style.backgroundColor = '#545e66'
+            } else {
+              titles[j].style.backgroundColor = '#2c3134'
+            }
+          }
+        })
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
       }
     },
@@ -3535,30 +3543,39 @@ export default {
       height: 100%;
       width: 49.8%;
       display: flex;
+      position: relative;
       align-items: center;
       flex-direction: column;
       justify-content: center;
       .leftTitle,
       .rightTitle {
+        position: absolute;
+        top: 0;
         display: flex;
         flex-direction: row;
         align-items: left;
-        height: 1.7rem;
+        height: 2.5rem;
         width: 100%;
         cursor: pointer;
+        .right-title-scroll,
+        .left-title-scroll {
+          height: 100%;
+          display: flex;
+          flex-direction: row;
         .left-title,
         .right-title {
           // background-color: #3f3f3f;
           padding-right: 0.25rem;
           padding-left: 0.25rem;
           display: flex;
-          // border: 2px solid #3f3f3f;
-          // border-top-left-radius: 0.3rem;
-          // border-top-right-radius: 0.3rem;
           flex-direction: row;
-          height: 100%;
-          .title-text {
+            height: 1.7rem;
+
+            .right-title-text,
+            .left-title-text {
             margin-right: 0.3rem;
+              padding-left: 0.15rem;
+              padding-right: 0.15rem;
             color: #ccc;
           }
           .close-icon {
@@ -3567,10 +3584,13 @@ export default {
           }
         }
       }
+      }
       .leftSource,
       .rightSource {
-        height: calc(100% - 1.7rem);
+        height: calc(100% - 2.5rem);
         width: 100%;
+        position: absolute;
+        bottom: 0;
         .tab-pane {
           .showCode {
             height: 100%;
