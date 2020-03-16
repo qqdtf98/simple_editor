@@ -112,7 +112,7 @@
                 @click="addProject"
                 class="sample-add-btn"
               />
-        </div>
+            </div>
           </div>
         </div>
         <div class="row bottom-panel">
@@ -140,20 +140,20 @@
               <div class="left-box">
                 <div class="leftTitle">
                   <vue-custom-scrollbar class="left-title-scroll">
-                  <div
-                    class="left-title"
+                    <div
+                      class="left-title"
                       v-for="leftTitle in leftTitlesArr"
-                    :key="leftTitle.id"
-                  >
+                      :key="leftTitle.id"
+                    >
                       <div @click="changeSourceTab" class="left-title-text">
-                      {{ leftTitle.text }}
+                        {{ leftTitle.text }}
+                      </div>
+                      <img
+                        @click="closeSource"
+                        class="close-icon"
+                        src="./assets/images/close.svg"
+                      />
                     </div>
-                    <img
-                      @click="closeSource"
-                      class="close-icon"
-                      src="./assets/images/close.svg"
-                    />
-                  </div>
                   </vue-custom-scrollbar>
                 </div>
                 <div class="leftSource" id="leftSource">
@@ -177,21 +177,21 @@
               <div class="right-box">
                 <div class="rightTitle">
                   <vue-custom-scrollbar class="right-title-scroll">
-                  <div
-                    class="right-title"
+                    <div
+                      class="right-title"
                       v-for="rightTitle in rightTitlesArr"
-                    :key="rightTitle.id"
-                  >
+                      :key="rightTitle.id"
+                    >
                       <div @click="changeSourceTab" class="right-title-text">
-                      {{ rightTitle.text }}
-                    </div>
+                        {{ rightTitle.text }}
+                      </div>
 
-                    <img
-                      @click="closeSource"
-                      class="close-icon"
-                      src="./assets/images/close.svg"
-                    />
-                  </div>
+                      <img
+                        @click="closeSource"
+                        class="close-icon"
+                        src="./assets/images/close.svg"
+                      />
+                    </div>
                   </vue-custom-scrollbar>
                 </div>
                 <div class="rightSource" id="rightSource">
@@ -351,13 +351,16 @@
       <div class="bg" @click="deactivatePopUp" />
       <div class="input-box">
         <div v-if="firstPopUp" class="new-project" @click="newProject">
-          새로운 프로젝트
+          <img class="project-btn-icon" src="./assets/images/delete.svg" />
+          <div class="new-project-text">새로운 프로젝트</div>
         </div>
         <div @click="openProject" v-if="firstPopUp" class="open-project">
-          폴더 열기
+          <img class="project-btn-icon" src="./assets/images/delete.svg" />
+          <div class="open-project-text">폴더 열기</div>
         </div>
         <div @click="openServer" v-if="firstPopUp" class="open-server">
-          서버에서 열기
+          <img class="project-btn-icon" src="./assets/images/delete.svg" />
+          <div class="open-server-text">서버에서 열기</div>
         </div>
 
         <img
@@ -439,7 +442,7 @@
         <div class="btn-wrapper">
           <div @click="deleteFile" class="o-btn">확인</div>
           <div @click="deactivatePopUp3" class="c-btn">취소</div>
-  </div>
+        </div>
       </div>
     </div>
   </div>
@@ -641,7 +644,7 @@ export default {
       rightTitles: null,
       leftTitlesArr: [],
       rightTitlesArr: []
-        }
+    }
   },
   computed: {
     testMessage: function() {
@@ -963,14 +966,18 @@ export default {
           })
           .then(res => {
             if (res.data.responseCode === 'SUCCESS') {
-              if (
-                res.data.data[0].html_file_seq === this.isEditor1Load.file_seq
-              ) {
-                console.log('111')
-                this.isUsed = true
-              } else {
-                console.log('2222')
-                this.isUsed = false
+              console.log(res.data)
+              let i
+              for (i = 0; i < res.data.data.length; i++) {
+                if (
+                  res.data.data[i].html_file_seq === this.isEditor1Load.file_seq
+                ) {
+                  console.log('111')
+                  this.isUsed = true
+                } else {
+                  console.log('2222')
+                  this.isUsed = false
+                }
               }
             } else {
               console.log('3333')
@@ -979,7 +986,6 @@ export default {
           })
         this.isSetEditor2 = false
       } else {
-        console.log('chanann')
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i] === this.isEditor2Load) {
@@ -993,9 +999,7 @@ export default {
           this.cssTitles,
           this.jsTitles
         )
-        console.log(this.isUsed)
         if (this.isUsed) {
-          console.log('usee')
           let cssCode = ''
           for (
             i = 0;
@@ -1092,8 +1096,12 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: $('iframe').get(0).contentWindow.document
-                      .documentElement.innerHTML
+                    contents:
+                      $('iframe')
+                        .get(0)
+                        .contentWindow.document.documentElement.innerHTML.split(
+                          '<style>'
+                        )[0] + '</body>'
                   },
                   {
                     file_seq: this.isEditor2Load.file_seq,
@@ -1131,8 +1139,12 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: $('iframe').get(0).contentWindow.document
-                      .documentElement.innerHTML
+                    contents:
+                      $('iframe')
+                        .get(0)
+                        .contentWindow.document.documentElement.innerHTML.split(
+                          '<style>'
+                        )[0] + '</body>'
                   }
                 ]
               })
@@ -1497,12 +1509,12 @@ export default {
                   this.$nextTick(() => {
                     this.cssTitles.splice(this.deleteFileNum, 1)
                     this.$nextTick(() => {
-                    this.$refs.filecontent.setFiles(
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
-                  })
+                      this.$refs.filecontent.setFiles(
+                        this.htmlTitles,
+                        this.cssTitles,
+                        this.jsTitles
+                      )
+                    })
                   })
                 }
               })
@@ -1624,6 +1636,7 @@ export default {
       }
     },
     selectProject(e) {
+      this.folder_seq = []
       let i
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
@@ -1638,6 +1651,7 @@ export default {
             .then(res => {
               console.log(res)
               if (res.data.responseCode === 'SUCCESS') {
+                this.isProjectLoaded = true
                 // this.folders = res.data.data.folders
                 let i
                 let folder
@@ -1645,7 +1659,6 @@ export default {
                 let k
                 let title
                 let pair
-
                 for (i = 0; i < res.data.data.folders.length; i++) {
                   folder = {
                     type: res.data.data.folders[i].folder_name,
@@ -1721,8 +1734,10 @@ export default {
       this.titles = []
       this.projectTitles = []
       this.openTitles = []
-      this.leftTitles = []
-      this.rightTitles = []
+      this.leftTitles = new Set()
+      this.rightTitles = new Set()
+      this.leftTitlesArr = []
+      this.rightTitlesArr = []
       var fs = require('fs')
       var file = require('file-system')
       console.log(file)
@@ -1976,12 +1991,12 @@ export default {
         e.target.parentElement.children[0].textContent.trim().split('.')[1] ===
         'html'
       ) {
-      let i
+        let i
         for (i = 0; i < this.leftTitlesArr.length; i++) {
           if (
             this.leftTitlesArr[i].text ===
             e.target.parentElement.children[0].textContent.trim()
-      ) {
+          ) {
             this.leftTitles.delete(this.leftTitlesArr[i])
             this.leftTitlesArr.splice(i, 1)
             if (this.leftTitlesArr.length === 0) {
@@ -2002,10 +2017,10 @@ export default {
       ) {
         let i
         for (i = 0; i < this.rightTitlesArr.length; i++) {
-        if (
+          if (
             this.rightTitlesArr[i].text ===
             e.target.parentElement.children[0].textContent.trim()
-        ) {
+          ) {
             this.rightTitles.delete(this.rightTitlesArr[i])
             this.rightTitlesArr.splice(i, 1)
             if (this.rightTitlesArr.length === 0) {
@@ -2014,7 +2029,7 @@ export default {
             } else if (i === this.rightTitlesArr.length) {
               this.isEditor2Load = this.rightTitlesArr[i - 1]
               this.editor2.setValue(this.rightTitlesArr[i - 1].contents)
-          } else {
+            } else {
               this.isEditor2Load = this.rightTitlesArr[i]
               this.editor2.setValue(this.rightTitlesArr[i].contents)
             }
@@ -2033,7 +2048,7 @@ export default {
             console.log(this.leftTitlesArr)
             this.editor1.setValue(this.leftTitlesArr[i].contents)
             titles[i].style.backgroundColor = '#545e66'
-        } else {
+          } else {
             titles[i].style.backgroundColor = '#2c3134'
           }
         }
@@ -2045,7 +2060,7 @@ export default {
             this.isEditor2Load = this.rightTitlesArr[i]
             this.editor2.setValue(this.rightTitlesArr[i].contents)
             titles[i].style.backgroundColor = '#545e66'
-        } else {
+          } else {
             titles[i].style.backgroundColor = '#2c3134'
           }
         }
@@ -2338,6 +2353,9 @@ export default {
       } else {
         this.sitemapOn = true
         this.studioOn = false
+        this.uiDescription = false
+        this.tagDescription = false
+        this.viewTemplate = false
       }
     },
     closePage(e) {
@@ -2459,6 +2477,9 @@ export default {
     studioBtn() {
       if (this.studioOn === true) {
         this.studioOn = false
+        this.uiDescription = false
+        this.tagDescription = false
+        this.viewTemplate = false
       } else {
         this.studioOn = true
       }
@@ -3353,9 +3374,23 @@ export default {
         border: 1px solid #525252;
         height: 17rem;
         color: #e7e4e4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         &:hover {
           cursor: pointer;
           background-color: #454550;
+        }
+        .project-btn-icon {
+          width: 7rem;
+          height: 7rem;
+        }
+        .new-project-text,
+        .open-project-text,
+        .open-server-text {
+          font-size: 1.1rem;
+          color: #d8d8d8;
         }
       }
       .back {
@@ -3637,28 +3672,28 @@ export default {
           height: 100%;
           display: flex;
           flex-direction: row;
-        .left-title,
-        .right-title {
-          // background-color: #3f3f3f;
-          padding-right: 0.25rem;
-          padding-left: 0.25rem;
-          display: flex;
-          flex-direction: row;
+          .left-title,
+          .right-title {
+            // background-color: #3f3f3f;
+            padding-right: 0.25rem;
+            padding-left: 0.25rem;
+            display: flex;
+            flex-direction: row;
             height: 1.7rem;
 
             .right-title-text,
             .left-title-text {
-            margin-right: 0.3rem;
+              margin-right: 0.3rem;
               padding-left: 0.15rem;
               padding-right: 0.15rem;
-            color: #ccc;
-          }
-          .close-icon {
-            width: 0.7rem;
-            padding-right: 0.1rem;
+              color: #ccc;
+            }
+            .close-icon {
+              width: 0.7rem;
+              padding-right: 0.1rem;
+            }
           }
         }
-      }
       }
       .leftSource,
       .rightSource {
