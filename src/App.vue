@@ -1972,83 +1972,84 @@ export default {
       console.log($('iframe').get(0).parentElement)
     },
     closeSource(e) {
-      console.log('close')
-      let i
-      let num
-      for (
-        i = 0;
-        i < e.target.parentElement.parentElement.children.length;
-        i++
+      if (
+        e.target.parentElement.children[0].textContent.trim().split('.')[1] ===
+        'html'
       ) {
-        if (
-          e.target.parentElement.parentElement.children[i] ===
-          e.target.parentElement
-        ) {
-          if (i === 0) {
-            // e.target.parentElement.parentElement.children[
-            //   i + 1
-            // ].style.backgroundColor = '#3f3f3f'
-            // e.target.parentElement.parentElement.children[
-            //   i
-            // ].style.backgroundColor = '#23282b'
-          } else {
-            e.target.parentElement.parentElement.children[
-              i - 1
-            ].style.backgroundColor = '#3f3f3f'
-            e.target.parentElement.parentElement.children[
-              i
-            ].style.backgroundColor = '#23282b'
+      let i
+        for (i = 0; i < this.leftTitlesArr.length; i++) {
+          if (
+            this.leftTitlesArr[i].text ===
+            e.target.parentElement.children[0].textContent.trim()
+      ) {
+            this.leftTitles.delete(this.leftTitlesArr[i])
+            this.leftTitlesArr.splice(i, 1)
+            if (this.leftTitlesArr.length === 0) {
+              this.isEditor1Load = null
+              this.editor1.setValue('파일오픈')
+            } else if (i === this.leftTitlesArr.length) {
+              this.isEditor1Load = this.leftTitlesArr[i - 1]
+              this.editor1.setValue(this.leftTitlesArr[i - 1].contents)
+            } else {
+              this.isEditor1Load = this.leftTitlesArr[i]
+              this.editor1.setValue(this.leftTitlesArr[i].contents)
+            }
           }
-
-          break
         }
-      }
-      if (e.target.parentElement.className === 'right-title') {
-        this.rightTitles.splice(i, 1)
-        if (i === 0) {
-          this.currentRightTab = i
-          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
-        } else {
-          this.currentRightTab = i - 1
-          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
-        }
-      } else if (e.target.parentElement.className === 'left-title') {
-        this.leftTitles.splice(i, 1)
-        if (i === 0) {
-          this.currentLeftTab = i
-          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
-        } else {
-          this.currentLeftTab = i - 1
-          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+      } else if (
+        e.target.parentElement.children[0].textContent.trim().split('.')[1] ===
+        'css'
+      ) {
+        let i
+        for (i = 0; i < this.rightTitlesArr.length; i++) {
+        if (
+            this.rightTitlesArr[i].text ===
+            e.target.parentElement.children[0].textContent.trim()
+        ) {
+            this.rightTitles.delete(this.rightTitlesArr[i])
+            this.rightTitlesArr.splice(i, 1)
+            if (this.rightTitlesArr.length === 0) {
+              this.isEditor2Load = null
+              this.editor2.setValue('파일오픈')
+            } else if (i === this.rightTitlesArr.length) {
+              this.isEditor2Load = this.rightTitlesArr[i - 1]
+              this.editor2.setValue(this.rightTitlesArr[i - 1].contents)
+          } else {
+              this.isEditor2Load = this.rightTitlesArr[i]
+              this.editor2.setValue(this.rightTitlesArr[i].contents)
+            }
+          }
         }
       }
     },
     changeSourceTab(e) {
-      // let i
-      // let num
-      // for (
-      //   i = 0;
-      //   i < e.target.parentElement.parentElement.children.length;
-      //   i++
-      // ) {
-      //   if (
-      //     e.target.parentElement.parentElement.children[i] ===
-      //     e.target.parentElement
-      //   ) {
-      //     num = i
-      //     e.target.parentElement.style.backgroundColor = '#3f3f3f'
-      //   } else {
-      //     e.target.parentElement.parentElement.children[
-      //       i
-      //     ].style.backgroundColor = '#23282b'
-      //   }
-      // }
-      // this.currentRightTab = num
-      // if (e.target.parentElement.className === 'right-title') {
-      //   this.editor2.setValue(this.rightTitles[num].code)
-      // } else if (e.target.parentElement.className === 'left-title') {
-      //   this.editor1.setValue(this.leftTitles[num].code)
-      // }
+      if (e.target.textContent.trim().split('.')[1] === 'html') {
+        let i
+        let titles = document.querySelectorAll('.left-title')
+        for (i = 0; i < this.leftTitlesArr.length; i++) {
+          if (this.leftTitlesArr[i].text === e.target.textContent.trim()) {
+            this.isEditor1Load = this.leftTitlesArr[i]
+            this.usedPair = this.leftTitlesArr[i].html_css_pair
+            console.log(this.leftTitlesArr)
+            this.editor1.setValue(this.leftTitlesArr[i].contents)
+            titles[i].style.backgroundColor = '#545e66'
+        } else {
+            titles[i].style.backgroundColor = '#2c3134'
+          }
+        }
+      } else if (e.target.textContent.trim().split('.')[1] === 'css') {
+        let i
+        let titles = document.querySelectorAll('.right-title')
+        for (i = 0; i < this.rightTitlesArr.length; i++) {
+          if (this.rightTitlesArr[i].text === e.target.textContent.trim()) {
+            this.isEditor2Load = this.rightTitlesArr[i]
+            this.editor2.setValue(this.rightTitlesArr[i].contents)
+            titles[i].style.backgroundColor = '#545e66'
+        } else {
+            titles[i].style.backgroundColor = '#2c3134'
+          }
+        }
+      }
     },
     generateCode(id) {
       this.idSelected = id
@@ -2057,14 +2058,6 @@ export default {
       // editor.setValue(this.code)
       this.editor1.setValue(this.code)
       document.getElementById(id).innerHTML = this.editor1.getValue()
-    },
-    addJS() {
-      // var example = {
-      //   text: 'sample',
-      //   code: '',
-      //   type: null
-      // }
-      // this.rightTitles.push(example)
     },
     moveBorder(e) {
       this.moveLine = true
