@@ -340,7 +340,7 @@
       <div @click="loadFile" class="open">Open</div>
       <div class="copy">Copy</div>
       <div @click="renameFile" class="rename">Rename</div>
-      <div @click="deleteFile" class="delete">Delete</div>
+      <div @click="deletePopUp" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu3" class="folderContext">
       <div class="addFolder">Add Folder</div>
@@ -431,6 +431,17 @@
         <div @click="closeInput" class="c-btn">취소</div>
       </div>
     </div>
+    <div v-if="isPopUp3Active" class="popup3">
+      <div class="bg" @click="deactivatePopUp3" />
+
+      <div class="popup-wrapper">
+        <div class="delete-text"></div>
+        <div class="btn-wrapper">
+          <div @click="deleteFile" class="o-btn">확인</div>
+          <div @click="deactivatePopUp3" class="c-btn">취소</div>
+  </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -486,6 +497,7 @@ export default {
   data() {
     return {
       zzzzz: 3,
+      isProjectLoaded: false,
       isUsed: false,
       everySelectedElement: null,
       firstPopUp: true,
@@ -502,6 +514,7 @@ export default {
       isProject: null,
       deleteFileNum: null,
       isPopUp2Active: false,
+      isPopUp3Active: false,
       isEditor1Load: null,
       isEditor2Load: null,
       borderWidth: [
@@ -1419,16 +1432,23 @@ export default {
         this.selectedFolder.textContent.trim().toLowerCase()
       )
     },
+    deletePopUp() {
+      console.log(this.selectedFile)
+      this.isPopUp3Active = true
+      this.$nextTick(() => {
+        let text = document.querySelector('.delete-text')
+        text.textContent = `${this.selectedFile.textContent.trim()}를 삭제하시겠습니까?`
+      })
+    },
     deleteFile() {
+      this.isPopUp3Active = false
       let i
       if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
         for (i = 0; i < this.htmlTitles.length; i++) {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            console.log(this.htmlTitles[i])
             this.deleteFileNum = i
-            console.log(i)
             axios
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
@@ -1440,12 +1460,10 @@ export default {
               .then(res => {
                 console.log(res)
                 if (res.data.responseCode === 'SUCCESS') {
-                  console.log(this.deleteFileNum)
                   this.$nextTick(() => {
                     this.htmlTitles.splice(this.deleteFileNum, 1)
                     this.titles.splice(this.deleteFileNum, 1)
                     this.$nextTick(() => {
-                      console.log(this.htmlTitles)
                       this.$refs.filecontent.setFiles(
                         this.htmlTitles,
                         this.cssTitles,
@@ -1464,6 +1482,7 @@ export default {
       } else if (this.selectedFile.textContent.split('.')[1].trim() === 'css') {
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            this.deleteFileNum = i
             axios
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
@@ -1476,14 +1495,15 @@ export default {
                 console.log(res)
                 if (res.data.responseCode === 'SUCCESS') {
                   this.$nextTick(() => {
-                    this.cssTitles.splice(i, 1)
+                    this.cssTitles.splice(this.deleteFileNum, 1)
+                    this.$nextTick(() => {
                     this.$refs.filecontent.setFiles(
                       this.htmlTitles,
                       this.cssTitles,
                       this.jsTitles
                     )
                   })
-                  console.log(res.data.message)
+                  })
                 }
               })
           }
@@ -1877,6 +1897,9 @@ export default {
     },
     deactivatePopUp2() {
       this.isPopUp2Active = false
+    },
+    deactivatePopUp3() {
+      this.isPopUp3Active = false
     },
     addProject() {
       this.activatePopUp()
@@ -3448,6 +3471,65 @@ export default {
         width: 2.5rem;
         &:hover {
           cursor: pointer;
+        }
+      }
+    }
+  }
+  .popup3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(#000, 0.7);
+    }
+
+    .popup-wrapper {
+      background-color: #292931;
+      padding: 0.7rem;
+      z-index: 1;
+      border-radius: 0.5rem;
+      height: 9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 23rem;
+      position: relative;
+      .delete-text {
+        color: #dddddd;
+        height: 3rem;
+      }
+      .btn-wrapper {
+        display: flex;
+        flex-direction: row;
+        .o-btn,
+        .c-btn {
+          color: #cecece;
+          border: 1px solid #525252;
+          height: 1.5rem;
+          border-radius: 0.2rem;
+          width: 3.2rem;
+          font-size: 0.95rem;
+          &:hover {
+            cursor: pointer;
+            background-color: #464650;
+          }
+        }
+        .o-btn {
+          margin-right: 1.5rem;
         }
       }
     }
