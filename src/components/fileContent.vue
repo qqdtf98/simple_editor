@@ -289,6 +289,7 @@ export default {
                     this.jsTitles
                   )
                 }
+                this.isContentEditable = false
               } else {
                 console.log(res.data)
                 console.log('failll')
@@ -310,7 +311,6 @@ export default {
               }
             })
         }
-        this.isContentEditable = false
       }
     },
     setFolderSeq(seq) {
@@ -333,6 +333,21 @@ export default {
       this.htmlTitle = this.htmlTitles[0]
       this.cssTitles = css
       this.jsTitles = js
+      this.$nextTick(() => {
+        let htmlList = document.querySelector('.html')
+        htmlList.parentElement.children[0].classList.add('caret-down')
+        let i
+        for (i = 0; i < htmlList.children.length; i++) {
+          htmlList.children[i].classList.add('template')
+        }
+        htmlList.classList.add('active')
+        let cssList = document.querySelector('.css')
+        cssList.parentElement.children[0].classList.add('caret-down')
+        for (i = 0; i < cssList.children.length; i++) {
+          cssList.children[i].classList.add('template')
+        }
+        cssList.classList.add('active')
+      })
     },
     placeCaretAtEnd(el) {
       el.focus()

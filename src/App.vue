@@ -72,7 +72,7 @@
             ref="fileInput"
           />
 
-          <div class="main-menu">
+          <div v-show="isProjectLoaded" class="main-menu">
             <home
               ref="home"
               @componentSelected="componentSelected"
@@ -105,6 +105,15 @@
               </div>
             </div>
           </div>
+          <div v-show="!isProjectLoaded" class="empty-iframe">
+            <div class="sample-component">
+              <img
+                src="./assets/images/plus.svg"
+                @click="addProject"
+                class="sample-add-btn"
+              />
+            </div>
+          </div>
         </div>
         <div class="row bottom-panel">
           <div v-show="isData" class="loadDataPanel">
@@ -130,20 +139,22 @@
             <div class="code-box">
               <div class="left-box">
                 <div class="leftTitle">
-                  <div
-                    class="left-title"
-                    v-for="leftTitle in leftTitles"
-                    :key="leftTitle.id"
-                  >
-                    <div @click="changeSourceTab" class="title-text">
-                      {{ leftTitle.text }}
+                  <vue-custom-scrollbar class="left-title-scroll">
+                    <div
+                      class="left-title"
+                      v-for="leftTitle in leftTitlesArr"
+                      :key="leftTitle.id"
+                    >
+                      <div @click="changeSourceTab" class="left-title-text">
+                        {{ leftTitle.text }}
+                      </div>
+                      <img
+                        @click="closeSource"
+                        class="close-icon"
+                        src="./assets/images/close.svg"
+                      />
                     </div>
-                    <img
-                      @click="closeSource"
-                      class="close-icon"
-                      src="./assets/images/close.svg"
-                    />
-                  </div>
+                  </vue-custom-scrollbar>
                 </div>
                 <div class="leftSource" id="leftSource">
                   <div
@@ -165,20 +176,23 @@
               <div @mousedown="moveBorder" class="center-border"></div>
               <div class="right-box">
                 <div class="rightTitle">
-                  <div
-                    class="right-title"
-                    v-for="rightTitle in rightTitles"
-                    :key="rightTitle.id"
-                  >
-                    <div @click="changeSourceTab" class="title-text">
-                      {{ rightTitle.text }}
+                  <vue-custom-scrollbar class="right-title-scroll">
+                    <div
+                      class="right-title"
+                      v-for="rightTitle in rightTitlesArr"
+                      :key="rightTitle.id"
+                    >
+                      <div @click="changeSourceTab" class="right-title-text">
+                        {{ rightTitle.text }}
+                      </div>
+
+                      <img
+                        @click="closeSource"
+                        class="close-icon"
+                        src="./assets/images/close.svg"
+                      />
                     </div>
-                    <img
-                      @click="closeSource"
-                      class="close-icon"
-                      src="./assets/images/close.svg"
-                    />
-                  </div>
+                  </vue-custom-scrollbar>
                 </div>
                 <div class="rightSource" id="rightSource">
                   <div
@@ -218,7 +232,7 @@
             class="layout"
           />
         </div>
-        <div class="right-bottom-panel">
+        <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
             <div @mousedown="moveTree" class="tree-name-box">
               <div
@@ -244,7 +258,6 @@
             />
             <fileContent
               @reset-titles="resetAllTitle"
-              @add-js="addJS"
               @dbl-click="setSelectedFile"
               @folder-click="folderClick"
               @right-click="openFileContext"
@@ -327,7 +340,7 @@
       <div @click="loadFile" class="open">Open</div>
       <div class="copy">Copy</div>
       <div @click="renameFile" class="rename">Rename</div>
-      <div @click="deleteFile" class="delete">Delete</div>
+      <div @click="deletePopUp" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu3" class="folderContext">
       <div class="addFolder">Add Folder</div>
@@ -338,13 +351,16 @@
       <div class="bg" @click="deactivatePopUp" />
       <div class="input-box">
         <div v-if="firstPopUp" class="new-project" @click="newProject">
-          새로운 프로젝트
+          <img class="project-btn-icon" src="./assets/images/delete.svg" />
+          <div class="new-project-text">새로운 프로젝트</div>
         </div>
         <div @click="openProject" v-if="firstPopUp" class="open-project">
-          폴더 열기
+          <img class="project-btn-icon" src="./assets/images/delete.svg" />
+          <div class="open-project-text">폴더 열기</div>
         </div>
         <div @click="openServer" v-if="firstPopUp" class="open-server">
-          서버에서 열기
+          <img class="project-btn-icon" src="./assets/images/delete.svg" />
+          <div class="open-server-text">서버에서 열기</div>
         </div>
 
         <img
@@ -418,6 +434,17 @@
         <div @click="closeInput" class="c-btn">취소</div>
       </div>
     </div>
+    <div v-if="isPopUp3Active" class="popup3">
+      <div class="bg" @click="deactivatePopUp3" />
+
+      <div class="popup-wrapper">
+        <div class="delete-text"></div>
+        <div class="btn-wrapper">
+          <div @click="deleteFile" class="o-btn">확인</div>
+          <div @click="deactivatePopUp3" class="c-btn">취소</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -473,6 +500,7 @@ export default {
   data() {
     return {
       zzzzz: 3,
+      isProjectLoaded: false,
       isUsed: false,
       everySelectedElement: null,
       firstPopUp: true,
@@ -489,6 +517,7 @@ export default {
       isProject: null,
       deleteFileNum: null,
       isPopUp2Active: false,
+      isPopUp3Active: false,
       isEditor1Load: null,
       isEditor2Load: null,
       borderWidth: [
@@ -611,20 +640,10 @@ export default {
       cssTitles: [],
       jsTitles: [],
       imgTitles: [],
-      leftTitles: [
-        {
-          text: 'index.html',
-          code: '',
-          type: 'html'
-        }
-      ],
-      rightTitles: [
-        {
-          text: 'style.css',
-          code: '',
-          type: 'css'
-        }
-      ]
+      leftTitles: null,
+      rightTitles: null,
+      leftTitlesArr: [],
+      rightTitlesArr: []
     }
   },
   computed: {
@@ -643,10 +662,6 @@ export default {
     this.currentRightTab = 0
     this.everySelectedElement = new Set()
     this.currentLeftTab = 0
-    let leftTitle = document.querySelector('.left-title')
-    let rightTitle = document.querySelector('.right-title')
-    leftTitle.style.backgroundColor = '#3f3f3f'
-    rightTitle.style.backgroundColor = '#3f3f3f'
     if (this.enabled) {
       this.vsMode = 'vs-dark'
     } else {
@@ -659,7 +674,7 @@ export default {
       document.getElementById('leftContainer'),
       {
         id: 'editorMonaco1',
-        value: '코드를 입력해주세요',
+        value: 'html 파일을 로드해주세요.',
         language: 'html',
         theme: 'vs-dark',
         height: 100,
@@ -877,7 +892,7 @@ export default {
     this.editor2 = monaco.editor.create(
       document.getElementById('rightContainer'),
       {
-        value: '코드를 입력해주세요',
+        value: 'css 파일을 로드해주세요.',
         language: 'css',
         theme: 'vs-dark',
         height: 100,
@@ -951,14 +966,18 @@ export default {
           })
           .then(res => {
             if (res.data.responseCode === 'SUCCESS') {
-              if (
-                res.data.data[0].html_file_seq === this.isEditor1Load.file_seq
-              ) {
-                console.log('111')
-                this.isUsed = true
-              } else {
-                console.log('2222')
-                this.isUsed = false
+              console.log(res.data)
+              let i
+              for (i = 0; i < res.data.data.length; i++) {
+                if (
+                  res.data.data[i].html_file_seq === this.isEditor1Load.file_seq
+                ) {
+                  console.log('111')
+                  this.isUsed = true
+                } else {
+                  console.log('2222')
+                  this.isUsed = false
+                }
               }
             } else {
               console.log('3333')
@@ -967,7 +986,6 @@ export default {
           })
         this.isSetEditor2 = false
       } else {
-        console.log('chanann')
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i] === this.isEditor2Load) {
@@ -981,9 +999,7 @@ export default {
           this.cssTitles,
           this.jsTitles
         )
-        console.log(this.isUsed)
         if (this.isUsed) {
-          console.log('usee')
           let cssCode = ''
           for (
             i = 0;
@@ -1080,8 +1096,12 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: $('iframe').get(0).contentWindow.document
-                      .documentElement.innerHTML
+                    contents:
+                      $('iframe')
+                        .get(0)
+                        .contentWindow.document.documentElement.innerHTML.split(
+                          '<style>'
+                        )[0] + '</body>'
                   },
                   {
                     file_seq: this.isEditor2Load.file_seq,
@@ -1119,8 +1139,12 @@ export default {
                     file_name: this.isEditor1Load.file_name,
                     file_path: this.isEditor1Load.file_path,
                     file_type: this.isEditor1Load.file_type,
-                    contents: $('iframe').get(0).contentWindow.document
-                      .documentElement.innerHTML
+                    contents:
+                      $('iframe')
+                        .get(0)
+                        .contentWindow.document.documentElement.innerHTML.split(
+                          '<style>'
+                        )[0] + '</body>'
                   }
                 ]
               })
@@ -1420,16 +1444,23 @@ export default {
         this.selectedFolder.textContent.trim().toLowerCase()
       )
     },
+    deletePopUp() {
+      console.log(this.selectedFile)
+      this.isPopUp3Active = true
+      this.$nextTick(() => {
+        let text = document.querySelector('.delete-text')
+        text.textContent = `${this.selectedFile.textContent.trim()}를 삭제하시겠습니까?`
+      })
+    },
     deleteFile() {
+      this.isPopUp3Active = false
       let i
       if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
         for (i = 0; i < this.htmlTitles.length; i++) {
           if (
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
-            console.log(this.htmlTitles[i])
             this.deleteFileNum = i
-            console.log(i)
             axios
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
@@ -1441,12 +1472,10 @@ export default {
               .then(res => {
                 console.log(res)
                 if (res.data.responseCode === 'SUCCESS') {
-                  console.log(this.deleteFileNum)
                   this.$nextTick(() => {
                     this.htmlTitles.splice(this.deleteFileNum, 1)
                     this.titles.splice(this.deleteFileNum, 1)
                     this.$nextTick(() => {
-                      console.log(this.htmlTitles)
                       this.$refs.filecontent.setFiles(
                         this.htmlTitles,
                         this.cssTitles,
@@ -1465,6 +1494,7 @@ export default {
       } else if (this.selectedFile.textContent.split('.')[1].trim() === 'css') {
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            this.deleteFileNum = i
             axios
               .post('http://192.168.0.86:8581/editor/file/deleteFile', {
                 files: [
@@ -1477,14 +1507,15 @@ export default {
                 console.log(res)
                 if (res.data.responseCode === 'SUCCESS') {
                   this.$nextTick(() => {
-                    this.cssTitles.splice(i, 1)
-                    this.$refs.filecontent.setFiles(
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
+                    this.cssTitles.splice(this.deleteFileNum, 1)
+                    this.$nextTick(() => {
+                      this.$refs.filecontent.setFiles(
+                        this.htmlTitles,
+                        this.cssTitles,
+                        this.jsTitles
+                      )
+                    })
                   })
-                  console.log(res.data.message)
                 }
               })
           }
@@ -1541,26 +1572,33 @@ export default {
           ) {
             if (this.isServer) {
               this.usedPair = this.htmlTitles[i].html_css_pair
+              this.leftTitles.add(this.htmlTitles[i])
               this.isEditor1Load = this.htmlTitles[i]
               this.editor1.setValue(this.htmlTitles[i].contents)
-            } else {
-              this.isEditor1Load = this.htmlTitles[i]
-              this.editor1.setValue(
-                this.htmlTitles[i].contents
-                  .split('<body>')[1]
-                  .split('</body>')[0]
-                  .split('<script ')[0]
-              )
+              this.leftTitlesArr = Array.from(this.leftTitles)
             }
             this.isData = true
             break
           }
         }
+        this.$nextTick(() => {
+          let titles = document.querySelectorAll('.left-title')
+          let j
+          for (j = 0; j < titles.length; j++) {
+            if (titles[j].textContent.trim() === this.htmlTitles[i].text) {
+              titles[j].style.backgroundColor = '#545e66'
+            } else {
+              titles[j].style.backgroundColor = '#2c3134'
+            }
+          }
+        })
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
             console.log('select')
+            this.rightTitles.add(this.cssTitles[i])
+            this.rightTitlesArr = Array.from(this.rightTitles)
             this.isSetEditor2 = true
             this.isEditor2Load = this.cssTitles[i]
             this.editor2.setValue(this.cssTitles[i].contents)
@@ -1568,6 +1606,17 @@ export default {
             break
           }
         }
+        this.$nextTick(() => {
+          let titles = document.querySelectorAll('.right-title')
+          let j
+          for (j = 0; j < titles.length; j++) {
+            if (titles[j].textContent.trim() === this.cssTitles[i].text) {
+              titles[j].style.backgroundColor = '#545e66'
+            } else {
+              titles[j].style.backgroundColor = '#2c3134'
+            }
+          }
+        })
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
       }
     },
@@ -1587,6 +1636,7 @@ export default {
       }
     },
     selectProject(e) {
+      this.folder_seq = []
       let i
       for (i = 0; i < this.projectTitles.length; i++) {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
@@ -1601,6 +1651,7 @@ export default {
             .then(res => {
               console.log(res)
               if (res.data.responseCode === 'SUCCESS') {
+                this.isProjectLoaded = true
                 // this.folders = res.data.data.folders
                 let i
                 let folder
@@ -1608,7 +1659,6 @@ export default {
                 let k
                 let title
                 let pair
-
                 for (i = 0; i < res.data.data.folders.length; i++) {
                   folder = {
                     type: res.data.data.folders[i].folder_name,
@@ -1684,8 +1734,10 @@ export default {
       this.titles = []
       this.projectTitles = []
       this.openTitles = []
-      this.leftTitles = []
-      this.rightTitles = []
+      this.leftTitles = new Set()
+      this.rightTitles = new Set()
+      this.leftTitlesArr = []
+      this.rightTitlesArr = []
       var fs = require('fs')
       var file = require('file-system')
       console.log(file)
@@ -1751,15 +1803,18 @@ export default {
             this.titles = []
             this.projectTitles = []
             this.openTitles = []
-            this.leftTitles = []
-            this.rightTitles = []
+            this.leftTitles = new Set()
+            this.rightTitles = new Set()
+            this.leftTitlesArr = []
+            this.rightTitlesArr = []
             this.isEditor1Load = null
             this.isEditor2Load = null
-            this.editor1.setValue('코드를 입력해주세요')
-            this.editor2.setValue('코드를 입력해주세요')
+            this.editor1.setValue('html 파일을 로드해주세요.')
+            this.editor2.setValue('css 파일을 로드해주세요.')
             $('iframe').get(
               0
-            ).contentWindow.document.documentElement.innerHTML = ''
+            ).contentWindow.document.documentElement.innerHTML =
+              '파일을 로드해주세요.'
             for (i = 0; i < res.data.data.length; i++) {
               let title = {
                 seq: res.data.data[i].project_seq,
@@ -1793,12 +1848,14 @@ export default {
             this.titles = []
             this.projectTitles = []
             this.openTitles = []
-            this.leftTitles = []
-            this.rightTitles = []
+            this.leftTitles = new Set()
+            this.rightTitles = new Set()
+            this.leftTitlesArr = []
+            this.rightTitlesArr = []
             this.isEditor1Load = null
             this.isEditor2Load = null
-            this.editor1.setValue('코드를 입력해주세요')
-            this.editor2.setValue('코드를 입력해주세요')
+            this.editor1.setValue('html 파일을 로드해주세요.')
+            this.editor2.setValue('css 파일을 로드해주세요.')
             $('iframe').get(
               0
             ).contentWindow.document.documentElement.innerHTML = ''
@@ -1855,6 +1912,9 @@ export default {
     },
     deactivatePopUp2() {
       this.isPopUp2Active = false
+    },
+    deactivatePopUp3() {
+      this.isPopUp3Active = false
     },
     addProject() {
       this.activatePopUp()
@@ -1927,83 +1987,84 @@ export default {
       console.log($('iframe').get(0).parentElement)
     },
     closeSource(e) {
-      console.log('close')
-      let i
-      let num
-      for (
-        i = 0;
-        i < e.target.parentElement.parentElement.children.length;
-        i++
+      if (
+        e.target.parentElement.children[0].textContent.trim().split('.')[1] ===
+        'html'
       ) {
-        if (
-          e.target.parentElement.parentElement.children[i] ===
-          e.target.parentElement
-        ) {
-          if (i === 0) {
-            // e.target.parentElement.parentElement.children[
-            //   i + 1
-            // ].style.backgroundColor = '#3f3f3f'
-            // e.target.parentElement.parentElement.children[
-            //   i
-            // ].style.backgroundColor = '#23282b'
-          } else {
-            e.target.parentElement.parentElement.children[
-              i - 1
-            ].style.backgroundColor = '#3f3f3f'
-            e.target.parentElement.parentElement.children[
-              i
-            ].style.backgroundColor = '#23282b'
+        let i
+        for (i = 0; i < this.leftTitlesArr.length; i++) {
+          if (
+            this.leftTitlesArr[i].text ===
+            e.target.parentElement.children[0].textContent.trim()
+          ) {
+            this.leftTitles.delete(this.leftTitlesArr[i])
+            this.leftTitlesArr.splice(i, 1)
+            if (this.leftTitlesArr.length === 0) {
+              this.isEditor1Load = null
+              this.editor1.setValue('파일오픈')
+            } else if (i === this.leftTitlesArr.length) {
+              this.isEditor1Load = this.leftTitlesArr[i - 1]
+              this.editor1.setValue(this.leftTitlesArr[i - 1].contents)
+            } else {
+              this.isEditor1Load = this.leftTitlesArr[i]
+              this.editor1.setValue(this.leftTitlesArr[i].contents)
+            }
           }
-
-          break
         }
-      }
-      if (e.target.parentElement.className === 'right-title') {
-        this.rightTitles.splice(i, 1)
-        if (i === 0) {
-          this.currentRightTab = i
-          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
-        } else {
-          this.currentRightTab = i - 1
-          this.editor2.setValue(this.rightTitles[this.currentRightTab].code)
-        }
-      } else if (e.target.parentElement.className === 'left-title') {
-        this.leftTitles.splice(i, 1)
-        if (i === 0) {
-          this.currentLeftTab = i
-          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
-        } else {
-          this.currentLeftTab = i - 1
-          this.editor1.setValue(this.leftTitles[this.currentLeftTab].code)
+      } else if (
+        e.target.parentElement.children[0].textContent.trim().split('.')[1] ===
+        'css'
+      ) {
+        let i
+        for (i = 0; i < this.rightTitlesArr.length; i++) {
+          if (
+            this.rightTitlesArr[i].text ===
+            e.target.parentElement.children[0].textContent.trim()
+          ) {
+            this.rightTitles.delete(this.rightTitlesArr[i])
+            this.rightTitlesArr.splice(i, 1)
+            if (this.rightTitlesArr.length === 0) {
+              this.isEditor2Load = null
+              this.editor2.setValue('파일오픈')
+            } else if (i === this.rightTitlesArr.length) {
+              this.isEditor2Load = this.rightTitlesArr[i - 1]
+              this.editor2.setValue(this.rightTitlesArr[i - 1].contents)
+            } else {
+              this.isEditor2Load = this.rightTitlesArr[i]
+              this.editor2.setValue(this.rightTitlesArr[i].contents)
+            }
+          }
         }
       }
     },
     changeSourceTab(e) {
-      // let i
-      // let num
-      // for (
-      //   i = 0;
-      //   i < e.target.parentElement.parentElement.children.length;
-      //   i++
-      // ) {
-      //   if (
-      //     e.target.parentElement.parentElement.children[i] ===
-      //     e.target.parentElement
-      //   ) {
-      //     num = i
-      //     e.target.parentElement.style.backgroundColor = '#3f3f3f'
-      //   } else {
-      //     e.target.parentElement.parentElement.children[
-      //       i
-      //     ].style.backgroundColor = '#23282b'
-      //   }
-      // }
-      // this.currentRightTab = num
-      // if (e.target.parentElement.className === 'right-title') {
-      //   this.editor2.setValue(this.rightTitles[num].code)
-      // } else if (e.target.parentElement.className === 'left-title') {
-      //   this.editor1.setValue(this.leftTitles[num].code)
-      // }
+      if (e.target.textContent.trim().split('.')[1] === 'html') {
+        let i
+        let titles = document.querySelectorAll('.left-title')
+        for (i = 0; i < this.leftTitlesArr.length; i++) {
+          if (this.leftTitlesArr[i].text === e.target.textContent.trim()) {
+            this.isEditor1Load = this.leftTitlesArr[i]
+            this.usedPair = this.leftTitlesArr[i].html_css_pair
+            console.log(this.leftTitlesArr)
+            this.editor1.setValue(this.leftTitlesArr[i].contents)
+            titles[i].style.backgroundColor = '#545e66'
+          } else {
+            titles[i].style.backgroundColor = '#2c3134'
+          }
+        }
+      } else if (e.target.textContent.trim().split('.')[1] === 'css') {
+        let i
+        let titles = document.querySelectorAll('.right-title')
+        for (i = 0; i < this.rightTitlesArr.length; i++) {
+          if (this.rightTitlesArr[i].text === e.target.textContent.trim()) {
+            this.isEditor2Load = this.rightTitlesArr[i]
+            this.editor2.setValue(this.rightTitlesArr[i].contents)
+            titles[i].style.backgroundColor = '#545e66'
+          } else {
+            titles[i].style.backgroundColor = '#2c3134'
+          }
+        }
+      }
     },
     generateCode(id) {
       this.idSelected = id
@@ -2012,14 +2073,6 @@ export default {
       // editor.setValue(this.code)
       this.editor1.setValue(this.code)
       document.getElementById(id).innerHTML = this.editor1.getValue()
-    },
-    addJS() {
-      // var example = {
-      //   text: 'sample',
-      //   code: '',
-      //   type: null
-      // }
-      // this.rightTitles.push(example)
     },
     moveBorder(e) {
       this.moveLine = true
@@ -2300,6 +2353,9 @@ export default {
       } else {
         this.sitemapOn = true
         this.studioOn = false
+        this.uiDescription = false
+        this.tagDescription = false
+        this.viewTemplate = false
       }
     },
     closePage(e) {
@@ -2421,6 +2477,9 @@ export default {
     studioBtn() {
       if (this.studioOn === true) {
         this.studioOn = false
+        this.uiDescription = false
+        this.tagDescription = false
+        this.viewTemplate = false
       } else {
         this.studioOn = true
       }
@@ -3075,6 +3134,26 @@ export default {
             display: block;
           }
         }
+        .empty-iframe {
+          height: 781px;
+          width: 1200px;
+          bottom: 0;
+          display: flex;
+          flex-direction: row;
+          border: 3px solid #545e66;
+          .sample-component {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .sample-add-btn {
+              width: 5rem;
+              cursor: pointer;
+              height: 5rem;
+            }
+          }
+        }
       }
       .bottom-panel {
         z-index: 10000;
@@ -3295,9 +3374,23 @@ export default {
         border: 1px solid #525252;
         height: 17rem;
         color: #e7e4e4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         &:hover {
           cursor: pointer;
           background-color: #454550;
+        }
+        .project-btn-icon {
+          width: 7rem;
+          height: 7rem;
+        }
+        .new-project-text,
+        .open-project-text,
+        .open-server-text {
+          font-size: 1.1rem;
+          color: #d8d8d8;
         }
       }
       .back {
@@ -3410,6 +3503,65 @@ export default {
       }
     }
   }
+  .popup3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+
+    .bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(#000, 0.7);
+    }
+
+    .popup-wrapper {
+      background-color: #292931;
+      padding: 0.7rem;
+      z-index: 1;
+      border-radius: 0.5rem;
+      height: 9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 23rem;
+      position: relative;
+      .delete-text {
+        color: #dddddd;
+        height: 3rem;
+      }
+      .btn-wrapper {
+        display: flex;
+        flex-direction: row;
+        .o-btn,
+        .c-btn {
+          color: #cecece;
+          border: 1px solid #525252;
+          height: 1.5rem;
+          border-radius: 0.2rem;
+          width: 3.2rem;
+          font-size: 0.95rem;
+          &:hover {
+            cursor: pointer;
+            background-color: #464650;
+          }
+        }
+        .o-btn {
+          margin-right: 1.5rem;
+        }
+      }
+    }
+  }
 
   .fileTitle {
     // font-size: 15px;
@@ -3501,42 +3653,54 @@ export default {
       height: 100%;
       width: 49.8%;
       display: flex;
+      position: relative;
       align-items: center;
       flex-direction: column;
       justify-content: center;
       .leftTitle,
       .rightTitle {
+        position: absolute;
+        top: 0;
         display: flex;
         flex-direction: row;
         align-items: left;
-        height: 1.7rem;
+        height: 2.5rem;
         width: 100%;
         cursor: pointer;
-        .left-title,
-        .right-title {
-          // background-color: #3f3f3f;
-          padding-right: 0.25rem;
-          padding-left: 0.25rem;
-          display: flex;
-          // border: 2px solid #3f3f3f;
-          // border-top-left-radius: 0.3rem;
-          // border-top-right-radius: 0.3rem;
-          flex-direction: row;
+        .right-title-scroll,
+        .left-title-scroll {
           height: 100%;
-          .title-text {
-            margin-right: 0.3rem;
-            color: #ccc;
-          }
-          .close-icon {
-            width: 0.7rem;
-            padding-right: 0.1rem;
+          display: flex;
+          flex-direction: row;
+          .left-title,
+          .right-title {
+            // background-color: #3f3f3f;
+            padding-right: 0.25rem;
+            padding-left: 0.25rem;
+            display: flex;
+            flex-direction: row;
+            height: 1.7rem;
+
+            .right-title-text,
+            .left-title-text {
+              margin-right: 0.3rem;
+              padding-left: 0.15rem;
+              padding-right: 0.15rem;
+              color: #ccc;
+            }
+            .close-icon {
+              width: 0.7rem;
+              padding-right: 0.1rem;
+            }
           }
         }
       }
       .leftSource,
       .rightSource {
-        height: calc(100% - 1.7rem);
+        height: calc(100% - 2.5rem);
         width: 100%;
+        position: absolute;
+        bottom: 0;
         .tab-pane {
           .showCode {
             height: 100%;
