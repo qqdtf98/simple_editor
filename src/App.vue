@@ -216,10 +216,6 @@
           <span class="fileTitle" @click="clickSource" name="html"
             >Code Editor</span
           >
-          <!-- <span class="fileTitle" @click="clickSource" name="css">CSS</span>
-          <span class="fileTitle" @click="clickSource" name="js"
-            >JavaScript</span
-          > -->
         </div>
       </div>
       <div class="right-panel">
@@ -234,6 +230,11 @@
         </div>
         <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
+            <!-- <div class="tree-top-border"></div>
+            <div class="tree-left-border"></div>
+            <div class="tree-right-border"></div>
+            <div class="tree-bottom-border"></div> -->
+            <!-- resize용 border -->
             <div @mousedown="moveTree" class="tree-name-box">
               <div
                 @mousedown.stop
@@ -449,12 +450,11 @@
 </template>
 
 <script>
-//자
+import apiUrl from './modules/api-url'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
 import 'vue-component-ruler/dist/ruler.min.css'
-///
 import htmlLoader from './components/htmlLoader'
 import home from './components/home'
 import layout from './components/layout'
@@ -958,32 +958,31 @@ export default {
     var myBinding2 = this.editor2.onDidChangeModelContent(e => {
       if (this.isSetEditor2) {
         console.log('set')
-        axios
-          .get('http://192.168.0.86:8581/editor/file/selectHtmlCssPair', {
-            params: {
-              css_file_seq: this.isEditor2Load.file_seq
-            }
-          })
-          .then(res => {
-            if (res.data.responseCode === 'SUCCESS') {
-              console.log(res.data)
-              let i
-              for (i = 0; i < res.data.data.length; i++) {
-                if (
-                  res.data.data[i].html_file_seq === this.isEditor1Load.file_seq
-                ) {
-                  console.log('111')
-                  this.isUsed = true
-                } else {
-                  console.log('2222')
-                  this.isUsed = false
-                }
+        axios({
+          ...apiUrl.file.pair,
+          params: {
+            css_file_seq: this.isEditor2Load.file_seq
+          }
+        }).then(res => {
+          if (res.data.responseCode === 'SUCCESS') {
+            console.log(res.data)
+            let i
+            for (i = 0; i < res.data.data.length; i++) {
+              if (
+                res.data.data[i].html_file_seq === this.isEditor1Load.file_seq
+              ) {
+                console.log('111')
+                this.isUsed = true
+              } else {
+                console.log('2222')
+                this.isUsed = false
               }
-            } else {
-              console.log('3333')
-              this.isUsed = false
             }
-          })
+          } else {
+            console.log('3333')
+            this.isUsed = false
+          }
+        })
         this.isSetEditor2 = false
       } else {
         let i
@@ -1087,8 +1086,9 @@ export default {
               $(val).css('border', '')
               $(val).css('border-radius', '')
             }
-            axios
-              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+            axios({
+              ...apiUrl.file.update,
+              data: {
                 files: [
                   {
                     file_seq: this.isEditor1Load.file_seq,
@@ -1112,10 +1112,10 @@ export default {
                     contents: this.editor2.getValue()
                   }
                 ]
-              })
-              .then(res => {
-                console.log(res)
-              })
+              }
+            }).then(res => {
+              console.log(res)
+            })
           } else if (
             this.isEditor1Load !== null &&
             this.isEditor2Load === null
@@ -1130,8 +1130,9 @@ export default {
               $('iframe').get(0).contentWindow.document.documentElement
                 .innerHTML
             )
-            axios
-              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+            axios({
+              ...apiUrl.file.update,
+              data: {
                 files: [
                   {
                     file_seq: this.isEditor1Load.file_seq,
@@ -1147,16 +1148,17 @@ export default {
                         )[0] + '</body>'
                   }
                 ]
-              })
-              .then(res => {
-                console.log(res)
-              })
+              }
+            }).then(res => {
+              console.log(res)
+            })
           } else if (
             this.isEditor1Load === null &&
             this.isEditor2Load !== null
           ) {
-            axios
-              .post('http://192.168.0.86:8581/editor/file/updateFile', {
+            axios({
+              ...apiUrl.file.update,
+              data: {
                 files: [
                   {
                     file_seq: this.isEditor2Load.file_seq,
@@ -1167,10 +1169,10 @@ export default {
                     contents: this.editor2.getValue()
                   }
                 ]
-              })
-              .then(res => {
-                console.log(res)
-              })
+              }
+            }).then(res => {
+              console.log(res)
+            })
           }
         }
       }
@@ -1429,13 +1431,14 @@ export default {
       }
       console.log(changedFile)
 
-      axios
-        .post('http://192.168.0.86:8581/editor/file/updateFile', {
+      axios({
+        ...apiUrl.file.update,
+        data: {
           files: changedFile
-        })
-        .then(res => {
-          console.log(res.data.message)
-        })
+        }
+      }).then(res => {
+        console.log(res.data.message)
+      })
     },
     addFile() {
       this.$refs.filecontent.addFile(
@@ -1461,63 +1464,65 @@ export default {
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
             this.deleteFileNum = i
-            axios
-              .post('http://192.168.0.86:8581/editor/file/deleteFile', {
+            axios({
+              ...apiUrl.file.delete,
+              data: {
                 files: [
                   {
                     file_seq: this.htmlTitles[i].file_seq
                   }
                 ]
-              })
-              .then(res => {
-                console.log(res)
-                if (res.data.responseCode === 'SUCCESS') {
+              }
+            }).then(res => {
+              console.log(res)
+              if (res.data.responseCode === 'SUCCESS') {
+                this.$nextTick(() => {
+                  this.htmlTitles.splice(this.deleteFileNum, 1)
+                  this.titles.splice(this.deleteFileNum, 1)
                   this.$nextTick(() => {
-                    this.htmlTitles.splice(this.deleteFileNum, 1)
-                    this.titles.splice(this.deleteFileNum, 1)
-                    this.$nextTick(() => {
-                      this.$refs.filecontent.setFiles(
-                        this.htmlTitles,
-                        this.cssTitles,
-                        this.jsTitles
-                      )
+                    this.$refs.filecontent.setFiles(
+                      this.htmlTitles,
+                      this.cssTitles,
+                      this.jsTitles
+                    )
 
-                      this.$refs.sitemap.loadSitemap(this.titles)
-                    })
+                    this.$refs.sitemap.loadSitemap(this.titles)
                   })
+                })
 
-                  console.log(res.data.message)
-                }
-              })
+                console.log(res.data.message)
+              }
+            })
           }
         }
       } else if (this.selectedFile.textContent.split('.')[1].trim() === 'css') {
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
             this.deleteFileNum = i
-            axios
-              .post('http://192.168.0.86:8581/editor/file/deleteFile', {
+            axios({
+              ...apiUrl.file.delete,
+              data: {
                 files: [
                   {
                     file_seq: this.cssTitles[i].file_seq
                   }
                 ]
-              })
-              .then(res => {
-                console.log(res)
-                if (res.data.responseCode === 'SUCCESS') {
+              }
+            }).then(res => {
+              console.log(res)
+              if (res.data.responseCode === 'SUCCESS') {
+                this.$nextTick(() => {
+                  this.cssTitles.splice(this.deleteFileNum, 1)
                   this.$nextTick(() => {
-                    this.cssTitles.splice(this.deleteFileNum, 1)
-                    this.$nextTick(() => {
-                      this.$refs.filecontent.setFiles(
-                        this.htmlTitles,
-                        this.cssTitles,
-                        this.jsTitles
-                      )
-                    })
+                    this.$refs.filecontent.setFiles(
+                      this.htmlTitles,
+                      this.cssTitles,
+                      this.jsTitles
+                    )
                   })
-                }
-              })
+                })
+              }
+            })
           }
         }
       }
@@ -1642,79 +1647,76 @@ export default {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           // 해당 프로젝트의 파일 받아오기
           this.isProject = this.projectTitles[i]
-          axios
-            .get('http://192.168.0.86:8581/editor/project/selectProjectAll', {
-              params: {
-                project_seq: this.projectTitles[i].seq
-              }
-            })
-            .then(res => {
-              console.log(res)
-              if (res.data.responseCode === 'SUCCESS') {
-                this.isProjectLoaded = true
-                // this.folders = res.data.data.folders
-                let i
-                let folder
-                let j
-                let k
-                let title
-                let pair
-                for (i = 0; i < res.data.data.folders.length; i++) {
-                  folder = {
-                    type: res.data.data.folders[i].folder_name,
-                    seq: res.data.data.folders[i].folder_seq
-                  }
-                  this.folder_seq.push(folder)
-                  for (j = 0; j < res.data.data.folders[i].files.length; j++) {
-                    let css_list = []
-                    title = res.data.data.folders[i].files[j]
-                    title.isEdited = false
-                    title.text =
-                      res.data.data.folders[i].files[j].file_name +
-                      '.' +
-                      res.data.data.folders[i].files[j].file_type
-                    if (res.data.data.folders[i].folder_name === 'html') {
-                      if (
-                        res.data.data.folders[i].files[j].html_css_pair.length >
-                        0
+          axios({
+            ...apiUrl.project.get,
+            params: {
+              project_seq: this.projectTitles[i].seq
+            }
+          }).then(res => {
+            console.log(res)
+            if (res.data.responseCode === 'SUCCESS') {
+              this.isProjectLoaded = true
+              // this.folders = res.data.data.folders
+              let i
+              let folder
+              let j
+              let k
+              let title
+              let pair
+              for (i = 0; i < res.data.data.folders.length; i++) {
+                folder = {
+                  type: res.data.data.folders[i].folder_name,
+                  seq: res.data.data.folders[i].folder_seq
+                }
+                this.folder_seq.push(folder)
+                for (j = 0; j < res.data.data.folders[i].files.length; j++) {
+                  let css_list = []
+                  title = res.data.data.folders[i].files[j]
+                  title.isEdited = false
+                  title.text =
+                    res.data.data.folders[i].files[j].file_name +
+                    '.' +
+                    res.data.data.folders[i].files[j].file_type
+                  if (res.data.data.folders[i].folder_name === 'html') {
+                    if (
+                      res.data.data.folders[i].files[j].html_css_pair.length > 0
+                    ) {
+                      for (
+                        k = 0;
+                        k <
+                        res.data.data.folders[i].files[j].html_css_pair.length;
+                        k++
                       ) {
-                        for (
-                          k = 0;
-                          k <
-                          res.data.data.folders[i].files[j].html_css_pair
-                            .length;
-                          k++
-                        ) {
-                          css_list.push(
-                            res.data.data.folders[i].files[j].html_css_pair[k]
-                              .css_file_seq
-                          )
-                        }
-                        pair = {
-                          html: res.data.data.folders[i].files[j].file_seq,
-                          css: css_list
-                        }
-                        this.stylePair.push(pair)
+                        css_list.push(
+                          res.data.data.folders[i].files[j].html_css_pair[k]
+                            .css_file_seq
+                        )
                       }
-                      this.titles.push(title)
-                      this.htmlTitles.push(title)
-                    } else if (res.data.data.folders[i].folder_name === 'css') {
-                      this.cssTitles.push(title)
-                    } else if (res.data.data.folders[i].folder_name === 'js') {
-                      this.jsTitles.push(title)
+                      pair = {
+                        html: res.data.data.folders[i].files[j].file_seq,
+                        css: css_list
+                      }
+                      this.stylePair.push(pair)
                     }
+                    this.titles.push(title)
+                    this.htmlTitles.push(title)
+                  } else if (res.data.data.folders[i].folder_name === 'css') {
+                    this.cssTitles.push(title)
+                  } else if (res.data.data.folders[i].folder_name === 'js') {
+                    this.jsTitles.push(title)
                   }
                 }
-                this.$refs.filecontent.setFolderSeq(this.folder_seq)
-                this.$refs.filecontent.setStylePair(this.stylePair)
-                this.$refs.filecontent.setFiles(
-                  this.htmlTitles,
-                  this.cssTitles,
-                  this.jsTitles
-                )
-                this.$refs.sitemap.loadSitemap(this.titles)
               }
-            })
+              this.$refs.filecontent.setFolderSeq(this.folder_seq)
+              this.$refs.filecontent.setStylePair(this.stylePair)
+              this.$refs.filecontent.setFiles(
+                this.htmlTitles,
+                this.cssTitles,
+                this.jsTitles
+              )
+              this.$refs.sitemap.loadSitemap(this.titles)
+            }
+          })
           this.isPopUpActive = false
           break
         }
@@ -1786,102 +1788,99 @@ export default {
       this.firstPopUp = false
       this.secondPopUp = false
       this.thirdPopUp = true
-      axios
-        .get('http://192.168.0.86:8581/editor/project/selectProject', {
-          params: {
-            user_id: 'lsm'
-          }
-        })
-        .then(res => {
-          console.log(res)
-          if (res.data.responseCode === 'SUCCESS') {
-            let i
-            this.htmlTitles = []
-            this.cssTitles = []
-            this.jsTitles = []
-            this.imgTitles = []
-            this.titles = []
-            this.projectTitles = []
-            this.openTitles = []
-            this.leftTitles = new Set()
-            this.rightTitles = new Set()
-            this.leftTitlesArr = []
-            this.rightTitlesArr = []
-            this.isEditor1Load = null
-            this.isEditor2Load = null
-            this.editor1.setValue('html 파일을 로드해주세요.')
-            this.editor2.setValue('css 파일을 로드해주세요.')
-            $('iframe').get(
-              0
-            ).contentWindow.document.documentElement.innerHTML =
-              '파일을 로드해주세요.'
-            for (i = 0; i < res.data.data.length; i++) {
-              let title = {
-                seq: res.data.data[i].project_seq,
-                title: res.data.data[i].project_name
-              }
-              this.projectTitles.push(title)
+      axios({
+        ...apiUrl.project.list,
+        params: {
+          user_id: 'lsm'
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data.responseCode === 'SUCCESS') {
+          let i
+          this.htmlTitles = []
+          this.cssTitles = []
+          this.jsTitles = []
+          this.imgTitles = []
+          this.titles = []
+          this.projectTitles = []
+          this.openTitles = []
+          this.leftTitles = new Set()
+          this.rightTitles = new Set()
+          this.leftTitlesArr = []
+          this.rightTitlesArr = []
+          this.isEditor1Load = null
+          this.isEditor2Load = null
+          this.editor1.setValue('html 파일을 로드해주세요.')
+          this.editor2.setValue('css 파일을 로드해주세요.')
+          $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
+            '파일을 로드해주세요.'
+          for (i = 0; i < res.data.data.length; i++) {
+            let title = {
+              seq: res.data.data[i].project_seq,
+              title: res.data.data[i].project_name
             }
+            this.projectTitles.push(title)
           }
-        })
+        }
+      })
     },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
-      axios
-        .post('http://192.168.0.86:8581/editor/project/createProject', {
+      axios({
+        ...apiUrl.project.create,
+        data: {
           projects: [
             {
               user_seq: 2,
               project_name: title.value
             }
           ]
-        })
-        .then(res => {
-          console.log(res)
-          if (res.data.responseCode === 'SUCCESS') {
-            console.log(res.data)
-            // 프로젝트 seq 받아서 저장하기
-            this.htmlTitles = []
-            this.cssTitles = []
-            this.jsTitles = []
-            this.imgTitles = []
-            this.titles = []
-            this.projectTitles = []
-            this.openTitles = []
-            this.leftTitles = new Set()
-            this.rightTitles = new Set()
-            this.leftTitlesArr = []
-            this.rightTitlesArr = []
-            this.isEditor1Load = null
-            this.isEditor2Load = null
-            this.editor1.setValue('html 파일을 로드해주세요.')
-            this.editor2.setValue('css 파일을 로드해주세요.')
-            $('iframe').get(
-              0
-            ).contentWindow.document.documentElement.innerHTML = ''
-            this.$nextTick(() => {
-              let project = {
-                title: res.data.data[0].project_name,
-                seq: res.data.data[0].project_seq
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data.responseCode === 'SUCCESS') {
+          console.log(res.data)
+          // 프로젝트 seq 받아서 저장하기
+          this.htmlTitles = []
+          this.cssTitles = []
+          this.jsTitles = []
+          this.imgTitles = []
+          this.titles = []
+          this.projectTitles = []
+          this.openTitles = []
+          this.leftTitles = new Set()
+          this.rightTitles = new Set()
+          this.leftTitlesArr = []
+          this.rightTitlesArr = []
+          this.isEditor1Load = null
+          this.isEditor2Load = null
+          this.editor1.setValue('html 파일을 로드해주세요.')
+          this.editor2.setValue('css 파일을 로드해주세요.')
+          $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
+            ''
+          this.$nextTick(() => {
+            let project = {
+              title: res.data.data[0].project_name,
+              seq: res.data.data[0].project_seq
+            }
+            console.log(project)
+            this.isProject = project
+            console.log(this.isProject)
+            let folder_seq = []
+            let payload
+            let i
+            for (i = 0; i < res.data.data[0].folders.length; i++) {
+              payload = {
+                type: res.data.data[0].folders[i].folder_name,
+                seq: res.data.data[0].folders[i].folder_seq
               }
-              console.log(project)
-              this.isProject = project
-              console.log(this.isProject)
-              let folder_seq = []
-              let payload
-              let i
-              for (i = 0; i < res.data.data[0].folders.length; i++) {
-                payload = {
-                  type: res.data.data[0].folders[i].folder_name,
-                  seq: res.data.data[0].folders[i].folder_seq
-                }
-                folder_seq.push(payload)
-              }
-              console.log(folder_seq)
-              this.$refs.filecontent.setFolderSeq(folder_seq)
-            })
-          }
-        })
+              folder_seq.push(payload)
+            }
+            console.log(folder_seq)
+            this.$refs.filecontent.setFolderSeq(folder_seq)
+          })
+        }
+      })
       this.isPopUpActive = false
     },
     cancleProject() {
@@ -2983,7 +2982,6 @@ export default {
           height: 100%;
           border: 1px solid #525252;
           z-index: 150;
-          // border-top : none;
           .tree-name-box {
             background-color: #292931;
             display: flex;
