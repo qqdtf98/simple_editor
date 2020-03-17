@@ -669,10 +669,7 @@ export default {
                 'px'
               leftBord.style.top = board.getBoundingClientRect().top + 'px'
               leftBord.style.height =
-                this.selectedElement.height -
-                (board.getBoundingClientRect().top - this.selectedElement.top) -
-                2 +
-                'px'
+                this.selectedElement.height + this.selectedElement.top + 'px'
               bottomBord.style.left =
                 this.selectedElement.left +
                 board.getBoundingClientRect().left +
@@ -680,14 +677,13 @@ export default {
               bottomBord.style.top =
                 this.selectedElement.top +
                 board.getBoundingClientRect().top +
-                this.selectedElement.height -
-                2 +
+                this.selectedElement.height +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
                 (this.selectedElement.right -
                   board.getBoundingClientRect().right) -
-                2 +
+                board.getBoundingClientRect().left +
                 'px'
               // 3
             } else if (!leftOver && !topOver && rightOver && !bottomOver) {
@@ -702,7 +698,10 @@ export default {
                 this.selectedElement.left +
                 board.getBoundingClientRect().left +
                 'px'
-              leftBord.style.top = board.getBoundingClientRect().top + 'px'
+              leftBord.style.top =
+                board.getBoundingClientRect().top +
+                this.selectedElement.top +
+                'px'
               leftBord.style.height = this.selectedElement.height + 'px'
 
               bottomBord.style.left =
@@ -719,7 +718,7 @@ export default {
                 this.selectedElement.width -
                 (this.selectedElement.right -
                   board.getBoundingClientRect().right) -
-                2 +
+                board.getBoundingClientRect().left +
                 'px'
 
               topBord.style.left =
@@ -734,7 +733,7 @@ export default {
                 this.selectedElement.width -
                 (this.selectedElement.right -
                   board.getBoundingClientRect().right) -
-                2 +
+                board.getBoundingClientRect().left +
                 'px'
               // 4
             } else if (!leftOver && !topOver && rightOver && bottomOver) {
@@ -758,9 +757,8 @@ export default {
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
                   board.getBoundingClientRect().bottom) -
-                2 +
+                board.getBoundingClientRect().top +
                 'px'
-
               topBord.style.left =
                 this.selectedElement.left +
                 board.getBoundingClientRect().left +
@@ -773,7 +771,7 @@ export default {
                 this.selectedElement.width -
                 (this.selectedElement.right -
                   board.getBoundingClientRect().right) -
-                2 +
+                board.getBoundingClientRect().left +
                 'px'
               // 5
             } else if (!leftOver && !topOver && !rightOver && bottomOver) {
@@ -797,7 +795,7 @@ export default {
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
                   board.getBoundingClientRect().bottom) -
-                2 +
+                board.getBoundingClientRect().top +
                 'px'
 
               rightBord.style.left =
@@ -814,7 +812,7 @@ export default {
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
                   board.getBoundingClientRect().bottom) -
-                2 +
+                board.getBoundingClientRect().top +
                 'px'
 
               topBord.style.left =
@@ -849,13 +847,10 @@ export default {
                 this.selectedElement.height -
                 (this.selectedElement.bottom -
                   board.getBoundingClientRect().bottom) -
-                2 +
+                board.getBoundingClientRect().top +
                 'px'
 
-              topBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                'px'
+              topBord.style.left = board.getBoundingClientRect().left + 'px'
               topBord.style.top =
                 this.selectedElement.top +
                 board.getBoundingClientRect().top +
@@ -864,11 +859,11 @@ export default {
                 this.selectedElement.width -
                 (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
-                2 +
+                board.getBoundingClientRect().left +
                 'px'
               // 7
             } else if (leftOver && !topOver && !rightOver && !bottomOver) {
-              // left, bottom 벗어날 때
+              // left 벗어날 때
               tag.style.display = 'none'
               leftBord.style.display = 'none'
               rightBord.style.display = 'block'
@@ -887,11 +882,7 @@ export default {
                 'px'
               rightBord.style.height = this.selectedElement.height + 'px'
 
-              topBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                2 +
-                'px'
+              topBord.style.left = board.getBoundingClientRect().left + 'px'
               topBord.style.top =
                 this.selectedElement.top +
                 board.getBoundingClientRect().top +
@@ -900,14 +891,10 @@ export default {
                 this.selectedElement.width -
                 (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
-                1 +
+                board.getBoundingClientRect().left +
                 'px'
 
-              bottomBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                2 +
-                'px'
+              bottomBord.style.left = board.getBoundingClientRect().left + 'px'
               bottomBord.style.top =
                 this.selectedElement.top +
                 board.getBoundingClientRect().top +
@@ -917,7 +904,7 @@ export default {
                 this.selectedElement.width -
                 (board.getBoundingClientRect().left -
                   this.selectedElement.left) +
-                1 +
+                board.getBoundingClientRect().left +
                 'px'
               // 8
             } else if (leftOver && !topOver && rightOver && !bottomOver) {
@@ -928,14 +915,11 @@ export default {
               topBord.style.display = 'block'
               bottomBord.style.display = 'block'
 
-              topBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                2 +
-                'px'
+              topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
               topBord.style.top =
                 this.selectedElement.top +
-                board.getBoundingClientRect().top +
+                board.getBoundingClientRect().top -
+                2 +
                 'px'
               topBord.style.width =
                 this.selectedElement.width -
@@ -947,15 +931,12 @@ export default {
                 'px'
 
               bottomBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                2 +
-                'px'
+                board.getBoundingClientRect().left + 2 + 'px'
               bottomBord.style.top =
                 this.selectedElement.top +
-                board.getBoundingClientRect().top +
-                this.selectedElement.height -
-                6 +
+                board.getBoundingClientRect().top -
+                2 +
+                this.selectedElement.height +
                 'px'
               bottomBord.style.width =
                 this.selectedElement.width -
@@ -979,11 +960,7 @@ export default {
                 board.getBoundingClientRect().left +
                 this.selectedElement.width +
                 'px'
-              rightBord.style.top =
-                board.getBoundingClientRect().top +
-                board.getBoundingClientRect().top +
-                2 +
-                'px'
+              rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
               rightBord.style.height =
                 this.selectedElement.height -
                 (board.getBoundingClientRect().top - this.selectedElement.top) -
@@ -996,11 +973,7 @@ export default {
                 this.selectedElement.left +
                 board.getBoundingClientRect().left +
                 'px'
-              leftBord.style.top =
-                board.getBoundingClientRect().top +
-                board.getBoundingClientRect().top +
-                2 +
-                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
               leftBord.style.height =
                 this.selectedElement.height -
                 (board.getBoundingClientRect().top - this.selectedElement.top) -
@@ -1022,11 +995,7 @@ export default {
                 this.selectedElement.width +
                 board.getBoundingClientRect().left +
                 'px'
-              rightBord.style.top =
-                board.getBoundingClientRect().top +
-                board.getBoundingClientRect().top +
-                2 +
-                'px'
+              rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
               rightBord.style.height =
                 this.selectedElement.height -
                 (board.getBoundingClientRect().top - this.selectedElement.top) -
@@ -1043,10 +1012,7 @@ export default {
               topBord.style.display = 'none'
               bottomBord.style.display = 'block'
 
-              bottomBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                'px'
+              bottomBord.style.left = board.getBoundingClientRect().left + 'px'
               bottomBord.style.top =
                 this.selectedElement.top +
                 board.getBoundingClientRect().top +
@@ -1073,11 +1039,7 @@ export default {
                 this.selectedElement.left +
                 board.getBoundingClientRect().left +
                 'px'
-              leftBord.style.top =
-                board.getBoundingClientRect().top +
-                board.getBoundingClientRect().top +
-                2 +
-                'px'
+              leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
               leftBord.style.height =
                 this.selectedElement.height -
                 (board.getBoundingClientRect().top - this.selectedElement.top) -
@@ -1087,18 +1049,14 @@ export default {
                 'px'
               // 13
             } else if (leftOver && !topOver && rightOver && bottomOver) {
-              // right, top, bottom 벗어날 때
+              // left, right, bottom 벗어날 때
               tag.style.display = 'none'
               leftBord.style.display = 'none'
               rightBord.style.display = 'none'
               topBord.style.display = 'block'
               bottomBord.style.display = 'none'
 
-              topBord.style.left =
-                board.getBoundingClientRect().left +
-                board.getBoundingClientRect().left +
-                2 +
-                'px'
+              topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
               topBord.style.top =
                 this.selectedElement.top +
                 board.getBoundingClientRect().top +
@@ -1824,7 +1782,6 @@ export default {
       }
       if (leftOver && topOver && !rightOver && !bottomOver) {
         // left, top 벗어날 때
-        console.log('1')
         tag.style.display = 'none'
         leftBord.style.display = 'none'
         topBord.style.display = 'none'
@@ -1910,10 +1867,8 @@ export default {
           'px'
         leftBord.style.top = board.getBoundingClientRect().top + 'px'
         leftBord.style.height =
-          payload.getBoundingClientRect().height -
-          (board.getBoundingClientRect().top -
-            payload.getBoundingClientRect().top) -
-          2 +
+          payload.getBoundingClientRect().height +
+          payload.getBoundingClientRect().top +
           'px'
         bottomBord.style.left =
           payload.getBoundingClientRect().left +
@@ -1922,14 +1877,13 @@ export default {
         bottomBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          2 +
+          payload.getBoundingClientRect().height +
           'px'
         bottomBord.style.width =
           payload.getBoundingClientRect().width -
           (payload.getBoundingClientRect().right -
             board.getBoundingClientRect().right) -
-          2 +
+          board.getBoundingClientRect().left +
           'px'
         // 3
       } else if (!leftOver && !topOver && rightOver && !bottomOver) {
@@ -1944,7 +1898,10 @@ export default {
           payload.getBoundingClientRect().left +
           board.getBoundingClientRect().left +
           'px'
-        leftBord.style.top = board.getBoundingClientRect().top + 'px'
+        leftBord.style.top =
+          board.getBoundingClientRect().top +
+          payload.getBoundingClientRect().top +
+          'px'
         leftBord.style.height = payload.getBoundingClientRect().height + 'px'
 
         bottomBord.style.left =
@@ -1961,7 +1918,7 @@ export default {
           payload.getBoundingClientRect().width -
           (payload.getBoundingClientRect().right -
             board.getBoundingClientRect().right) -
-          2 +
+          board.getBoundingClientRect().left +
           'px'
 
         topBord.style.left =
@@ -1976,7 +1933,7 @@ export default {
           payload.getBoundingClientRect().width -
           (payload.getBoundingClientRect().right -
             board.getBoundingClientRect().right) -
-          2 +
+          board.getBoundingClientRect().left +
           'px'
         // 4
       } else if (!leftOver && !topOver && rightOver && bottomOver) {
@@ -2000,7 +1957,7 @@ export default {
           payload.getBoundingClientRect().height -
           (payload.getBoundingClientRect().bottom -
             board.getBoundingClientRect().bottom) -
-          2 +
+          board.getBoundingClientRect().top +
           'px'
 
         topBord.style.left =
@@ -2015,7 +1972,7 @@ export default {
           payload.getBoundingClientRect().width -
           (payload.getBoundingClientRect().right -
             board.getBoundingClientRect().right) -
-          2 +
+          board.getBoundingClientRect().left +
           'px'
         // 5
       } else if (!leftOver && !topOver && !rightOver && bottomOver) {
@@ -2039,7 +1996,7 @@ export default {
           payload.getBoundingClientRect().height -
           (payload.getBoundingClientRect().bottom -
             board.getBoundingClientRect().bottom) -
-          2 +
+          board.getBoundingClientRect().top +
           'px'
 
         rightBord.style.left =
@@ -2056,7 +2013,7 @@ export default {
           payload.getBoundingClientRect().height -
           (payload.getBoundingClientRect().bottom -
             board.getBoundingClientRect().bottom) -
-          2 +
+          board.getBoundingClientRect().top +
           'px'
 
         topBord.style.left =
@@ -2091,13 +2048,10 @@ export default {
           payload.getBoundingClientRect().height -
           (payload.getBoundingClientRect().bottom -
             board.getBoundingClientRect().bottom) -
-          2 +
+          board.getBoundingClientRect().top +
           'px'
 
-        topBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          'px'
+        topBord.style.left = board.getBoundingClientRect().left + 'px'
         topBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
@@ -2106,6 +2060,7 @@ export default {
           payload.getBoundingClientRect().width -
           (board.getBoundingClientRect().left -
             payload.getBoundingClientRect().left) +
+          board.getBoundingClientRect().left +
           2 +
           'px'
         // 7
@@ -2129,11 +2084,7 @@ export default {
           'px'
         rightBord.style.height = payload.getBoundingClientRect().height + 'px'
 
-        topBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          2 +
-          'px'
+        topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
         topBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
@@ -2142,14 +2093,10 @@ export default {
           payload.getBoundingClientRect().width -
           (board.getBoundingClientRect().left -
             payload.getBoundingClientRect().left) +
-          1 +
+          board.getBoundingClientRect().left +
           'px'
 
-        bottomBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          2 +
-          'px'
+        bottomBord.style.left = board.getBoundingClientRect().left + 'px'
         bottomBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
@@ -2159,7 +2106,7 @@ export default {
           payload.getBoundingClientRect().width -
           (board.getBoundingClientRect().left -
             payload.getBoundingClientRect().left) +
-          1 +
+          board.getBoundingClientRect().left +
           'px'
         // 8
       } else if (leftOver && !topOver && rightOver && !bottomOver) {
@@ -2170,11 +2117,7 @@ export default {
         topBord.style.display = 'block'
         bottomBord.style.display = 'block'
 
-        topBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          2 +
-          'px'
+        topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
         topBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
@@ -2188,16 +2131,12 @@ export default {
           4 +
           'px'
 
-        bottomBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          2 +
-          'px'
+        bottomBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
         bottomBord.style.top =
           payload.getBoundingClientRect().top +
-          board.getBoundingClientRect().top +
-          payload.getBoundingClientRect().height -
-          6 +
+          board.getBoundingClientRect().top -
+          2 +
+          payload.getBoundingClientRect().height +
           'px'
         bottomBord.style.width =
           payload.getBoundingClientRect().width -
@@ -2221,11 +2160,7 @@ export default {
           board.getBoundingClientRect().left +
           payload.getBoundingClientRect().width +
           'px'
-        rightBord.style.top =
-          board.getBoundingClientRect().top +
-          board.getBoundingClientRect().top +
-          2 +
-          'px'
+        rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
         rightBord.style.height =
           payload.getBoundingClientRect().height -
           (board.getBoundingClientRect().top -
@@ -2239,11 +2174,7 @@ export default {
           payload.getBoundingClientRect().left +
           board.getBoundingClientRect().left +
           'px'
-        leftBord.style.top =
-          board.getBoundingClientRect().top +
-          board.getBoundingClientRect().top +
-          2 +
-          'px'
+        leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
         leftBord.style.height =
           payload.getBoundingClientRect().height -
           (board.getBoundingClientRect().top -
@@ -2266,11 +2197,7 @@ export default {
           payload.getBoundingClientRect().width +
           board.getBoundingClientRect().left +
           'px'
-        rightBord.style.top =
-          board.getBoundingClientRect().top +
-          board.getBoundingClientRect().top +
-          2 +
-          'px'
+        rightBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
         rightBord.style.height =
           payload.getBoundingClientRect().height -
           (board.getBoundingClientRect().top -
@@ -2288,10 +2215,7 @@ export default {
         topBord.style.display = 'none'
         bottomBord.style.display = 'block'
 
-        bottomBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          'px'
+        bottomBord.style.left = board.getBoundingClientRect().left + 'px'
         bottomBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
@@ -2318,11 +2242,7 @@ export default {
           payload.getBoundingClientRect().left +
           board.getBoundingClientRect().left +
           'px'
-        leftBord.style.top =
-          board.getBoundingClientRect().top +
-          board.getBoundingClientRect().top +
-          2 +
-          'px'
+        leftBord.style.top = board.getBoundingClientRect().top + 2 + 'px'
         leftBord.style.height =
           payload.getBoundingClientRect().height -
           (board.getBoundingClientRect().top -
@@ -2340,11 +2260,7 @@ export default {
         topBord.style.display = 'block'
         bottomBord.style.display = 'none'
 
-        topBord.style.left =
-          board.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          2 +
-          'px'
+        topBord.style.left = board.getBoundingClientRect().left + 2 + 'px'
         topBord.style.top =
           payload.getBoundingClientRect().top +
           board.getBoundingClientRect().top +
@@ -2535,13 +2451,6 @@ export default {
     },
     splitBorder(e) {
       this.borderClicked = true
-      // let bottomBord = document.querySelector('.bottom-border')
-      // let topBord = document.querySelector('.top-border')
-      // let rightBord = document.querySelector('.right-border')
-      // let leftBord = document.querySelector('.left-border')
-
-      // topBord.style.backgroundColor = '#34d6c1'
-      // bottomBord.style.backgroundColor = '#34d6c1'
 
       let elemWidth = getComputedStyle(this.clickedElement).width
       let elemHeight = getComputedStyle(this.clickedElement).height
@@ -2549,7 +2458,6 @@ export default {
       let initialX = e.clientX
       let initialY = e.clientY
       this.borderElem = e.target
-      // let initialLeft = getComputedStyle(this.clickedElement).left
 
       let edit = document.querySelector('.editor')
 
