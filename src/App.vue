@@ -75,6 +75,7 @@
           <div v-show="isProjectLoaded" class="main-menu">
             <home
               ref="home"
+              @iframe-changed="iframeChanged"
               @componentSelected="componentSelected"
               @stack-push="stackPush"
               @loadData="loadData"
@@ -1401,6 +1402,9 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    iframeChanged(change) {
+      this.editor1.setValue(change)
+    },
     setSelectedFile(e) {
       this.selectedFile = e.target
       this.loadFile(e)

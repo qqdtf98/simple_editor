@@ -1464,9 +1464,16 @@ export default {
         this.$emit('stack-push', style)
         data.payload.style[data.style] = data.value
       }
-      // console.log(
-      //   $('iframe').get(0).contentWindow.document.documentElement.innerHTML
-      // )
+      $(data.payload).css('border', '')
+      $(data.payload).css('border-radius', '')
+      this.$emit(
+        'iframe-changed',
+        $('iframe')
+          .get(0)
+          .contentWindow.document.documentElement.innerHTML.split(
+            '<style>'
+          )[0] + '</body>'
+      )
     },
     borderStyleChanged(data) {
       // console.log(data)
