@@ -36,5 +36,19 @@ export default {
       method: 'post',
       url: `${host}/file/createFile`
     }
+  },
+  pair: {
+    create: {
+      method: 'post',
+      url: `${host}/file/createHtmlCssPair`
+    },
+    get: {
+      method: 'get',
+      url: `${host}/file/selectHtmlCssPair`
+    },
+    delete: {
+      method: 'post',
+      url: `${host}/file/deleteHtmlCssPair`
+    }
   }
 }

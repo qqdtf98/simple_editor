@@ -340,7 +340,7 @@
     </div>
     <div v-show="isContextMenu2" class="fileContext">
       <div @click="loadFile" class="open">Open</div>
-      <div class="copy">Copy</div>
+      <div @click="copyFile" class="copy">Copy</div>
       <div @click="renameFile" class="rename">Rename</div>
       <div @click="deletePopUp" class="delete">Delete</div>
     </div>
@@ -960,7 +960,7 @@ export default {
       if (this.isSetEditor2) {
         console.log('set')
         axios({
-          ...apiUrl.file.pair,
+          ...apiUrl.pair.get,
           params: {
             css_file_seq: this.isEditor2Load.file_seq
           }
@@ -1404,6 +1404,161 @@ export default {
   methods: {
     iframeChanged(change) {
       this.editor1.setValue(change)
+    },
+    copyFile() {
+      if (this.selectedFile.textContent.trim().split('.')[1] === 'html') {
+        let i
+        for (i = 0; i < this.htmlTitles.length; i++) {
+          if (
+            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
+          ) {
+            break
+          }
+        }
+        let copyFileTitle =
+          this.selectedFile.textContent.trim().split('.')[0] + '_copy'
+        axios({
+          ...apiUrl.file.checkName,
+          params: {
+            folder_seq: this.htmlTitles[i].folder_seq,
+            file_type: this.htmlTitles[i].file_type,
+            file_name: copyFileTitle
+          }
+        }).then(res => {
+          console.log(res.data)
+          if (res.data.responseCode === 'SUCCESS') {
+            let data = {
+              folder_seq: this.htmlTitles[i].folder_seq,
+              file_name: copyFileTitle,
+              file_path:
+                this.htmlTitles[i].file_path.split(
+                  this.htmlTitles[i].file_name
+                )[0] +
+                copyFileTitle +
+                '.' +
+                this.htmlTitles[i].file_type,
+              file_type: this.htmlTitles[i].file_type,
+              contents: this.htmlTitles[i].contents
+            }
+            axios({
+              ...apiUrl.file.create,
+              data: {
+                files: [data]
+              }
+            }).then(res => {
+              console.log(res.data)
+              let copiedFile = res.data.data[0]
+              if (res.data.responseCode === 'SUCCESS') {
+                // htmltitles에 있는 pair정보 가지고 pair생성
+                let title
+                if (this.htmlTitles[i].html_css_pair.length > 0) {
+                  let data = []
+                  let j
+                  for (
+                    j = 0;
+                    j < this.htmlTitles[i].html_css_pair.length;
+                    j++
+                  ) {
+                    data.push({
+                      html_file_seq: copiedFile.file_seq,
+                      css_file_seq: this.htmlTitles[i].html_css_pair[j]
+                        .css_file_seq
+                    })
+                  }
+                  axios({
+                    ...apiUrl.pair.create,
+                    data: {
+                      html_css_pairs: data
+                    }
+                  }).then(res => {
+                    console.log(res.data)
+                    if (res.data.responseCode === 'SUCCESS') {
+                      title = copiedFile
+                      title.html_css_pair = res.data.data
+                      title.isEdited = false
+                      title.text =
+                        copiedFile.file_name + '.' + copiedFile.file_type
+                    }
+                  })
+                } else {
+                  title = copiedFile
+                  title.isEdited = false
+                  title.text = copiedFile.file_name + '.' + copiedFile.file_type
+                }
+                this.stylePair.push(res.data.data)
+                this.titles.push(title)
+                this.htmlTitles.push(title)
+                this.$refs.filecontent.setStylePair(this.stylePair)
+                this.$refs.filecontent.setFiles(
+                  this.htmlTitles,
+                  this.cssTitles,
+                  this.jsTitles
+                )
+                this.$refs.sitemap.loadSitemap(this.titles)
+              }
+            })
+          }
+        })
+      } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
+        console.log('cssss')
+        let i
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            break
+          }
+        }
+        let copyFileTitle =
+          this.selectedFile.textContent.trim().split('.')[0] + '_copy'
+        axios({
+          ...apiUrl.file.checkName,
+          params: {
+            folder_seq: this.cssTitles[i].folder_seq,
+            file_type: this.cssTitles[i].file_type,
+            file_name: copyFileTitle
+          }
+        }).then(res => {
+          console.log(res.data)
+          if (res.data.responseCode === 'SUCCESS') {
+            let data = {
+              folder_seq: this.cssTitles[i].folder_seq,
+              file_name: copyFileTitle,
+              file_path:
+                this.cssTitles[i].file_path.split(
+                  this.cssTitles[i].file_name
+                )[0] +
+                copyFileTitle +
+                '.' +
+                this.cssTitles[i].file_type,
+              file_type: this.cssTitles[i].file_type,
+              contents: this.cssTitles[i].contents
+            }
+            axios({
+              ...apiUrl.file.create,
+              data: {
+                files: [data]
+              }
+            }).then(res => {
+              console.log(res.data)
+
+              if (res.data.responseCode === 'SUCCESS') {
+                console.log(res.data.data[0])
+                let copiedFile = res.data.data[0]
+                copiedFile.isEdited = false
+                copiedFile.text =
+                  res.data.data[0].file_name + '.' + res.data.data[0].file_type
+                this.cssTitles.push(copiedFile)
+                this.$nextTick(() => {
+                  this.$refs.filecontent.setFiles(
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                })
+              }
+            })
+          }
+        })
+      }
     },
     setSelectedFile(e) {
       this.selectedFile = e.target
