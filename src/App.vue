@@ -231,42 +231,44 @@
         </div>
         <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
-            <!-- <div class="tree-top-border"></div>
-            <div class="tree-left-border"></div>
-            <div class="tree-right-border"></div>
-            <div class="tree-bottom-border"></div> -->
-            <!-- resize용 border -->
-            <div @mousedown="moveTree" class="tree-name-box">
-              <div
-                @mousedown.stop
-                @click="changeTab"
-                class="tree-name"
-                :key="tree.index"
-                v-for="tree in trees"
-              >
-                <div @mousedown.stop class="tree">
-                  {{ tree.text }}
+            <div class="tree-wrap">
+              <div @mousedown="resizeTree" class="tree-top-border"></div>
+              <div @mousedown="resizeTree" class="tree-left-border"></div>
+              <div @mousedown="resizeTree" class="tree-right-border"></div>
+              <div @mousedown="resizeTree" class="tree-bottom-border"></div>
+              <div @mousedown="moveTree" class="tree-name-box">
+                <div
+                  @mousedown.stop
+                  @click="changeTab"
+                  class="tree-name"
+                  :key="tree.index"
+                  v-for="tree in trees"
+                >
+                  <div @mousedown.stop class="tree">
+                    {{ tree.text }}
+                  </div>
                 </div>
               </div>
+              <overview
+                v-show="showhtml"
+                ref="overview"
+                @selectDomElement="selectDomElemented"
+                @inParentTreeOption="inParentTreeOption"
+                @domWithTree="domPushWithTree"
+                :getDocument="homeDocument"
+                class="htmlcontent"
+              />
+              <fileContent
+                @reset-titles="resetAllTitle"
+                @dbl-click="setSelectedFile"
+                @folder-click="folderClick"
+                @right-click="openFileContext"
+                v-show="!showhtml"
+                class="filecontent"
+                ref="filecontent"
+              />
             </div>
-            <overview
-              v-show="showhtml"
-              ref="overview"
-              @selectDomElement="selectDomElemented"
-              @inParentTreeOption="inParentTreeOption"
-              @domWithTree="domPushWithTree"
-              :getDocument="homeDocument"
-              class="htmlcontent"
-            />
-            <fileContent
-              @reset-titles="resetAllTitle"
-              @dbl-click="setSelectedFile"
-              @folder-click="folderClick"
-              @right-click="openFileContext"
-              v-show="!showhtml"
-              class="filecontent"
-              ref="filecontent"
-            />
+
             <div class="testYap" data-event="zzzzz"></div>
           </div>
         </div>
@@ -500,6 +502,16 @@ export default {
   name: 'App',
   data() {
     return {
+      treeElem: null,
+      treeTab: null,
+      fileContent: null,
+      htmlContent: null,
+      elemWidth: null,
+      initX: null,
+      initY: null,
+      elemLeft: null,
+      elemRight: null,
+      elemHeight: null,
       zzzzz: 3,
       isProjectLoaded: false,
       isUsed: false,
@@ -507,6 +519,7 @@ export default {
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
+      isResizeTree: false,
       cssLink: [],
       usedPair: null,
       stylePair: [],
@@ -528,8 +541,8 @@ export default {
         { text: 'Thin' },
         { text: 'Length' }
       ],
+      borderElem: null,
       monacoIndex: 0,
-
       code:
         '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
       // options: {
@@ -1187,7 +1200,35 @@ export default {
         this.$refs.home.multiChoice(false)
       }
     })
-    document.addEventListener('mousemove', e => {
+    window.addEventListener('mousemove', e => {
+      if (this.isResizeTree) {
+        if (this.borderElem.className === 'tree-right-border') {
+          this.treeElem.style.width =
+            parseInt(this.elemWidth) + (e.clientX - this.initX) + 'px'
+          this.treeElem.style.left = this.elemLeft
+        } else if (this.borderElem.className === 'tree-left-border') {
+          this.treeElem.style.width =
+            parseInt(this.elemWidth) - (e.clientX - this.initX) + 'px'
+          this.treeElem.style.left =
+            parseInt(this.elemLeft) + (e.clientX - this.initX) + 'px'
+        } else if (this.borderElem.className === 'tree-top-border') {
+          this.treeElem.style.height =
+            parseInt(this.elemHeight) - (e.clientY - this.initY) * 2 + 'px'
+        } else if (this.borderElem.className === 'tree-bottom-border') {
+          this.treeElem.style.height =
+            parseInt(this.elemHeight) - (this.initY - e.clientY) + 'px'
+          this.fileContent.style.height =
+            parseInt(this.elemHeight) -
+            parseInt(getComputedStyle(this.treeTab).height) -
+            (this.initY - e.clientY) +
+            'px'
+          this.htmlContent.style.height =
+            parseInt(this.elemHeight) -
+            parseInt(getComputedStyle(this.treeTab).height) -
+            (this.initY - e.clientY) +
+            'px'
+        }
+      }
       if (this.moveLine) {
         let leftBox = document.querySelector('.left-box')
         let rightBox = document.querySelector('.right-box')
@@ -1247,32 +1288,30 @@ export default {
         copy.style.top = e.clientY + 10 + 'px'
       }
       if (this.treeMove) {
-        this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
-        this.moveTarget.style.height = '25rem'
-        // this.moveTarget.style.right= e.clientX - this.xInter + "px";
-        this.moveTarget.style.right =
-          window.innerWidth -
-          e.clientX -
-          (parseInt(getComputedStyle(this.moveTarget).width) - this.xInter) +
-          'px'
+        this.moveTarget.style.left = e.clientX - this.xInter + 'px'
         this.moveTarget.style.top = e.clientY - this.yInter + 'px'
         let rightBorder = document.querySelector('.right-panel-border')
-        if (parseInt(getComputedStyle(this.moveTarget).right) < 30) {
+        if (
+          e.clientX -
+            this.xInter +
+            parseInt(getComputedStyle(this.moveTarget).width) >
+          parseInt(getComputedStyle(rightBorder).left)
+        ) {
           rightBorder.style.opacity = '1'
           rightBorder.style.backgroundImage =
             'linear-gradient(to right, #00000000, #68869250)'
-          // rightBorder.style.backgroundColor = "#3a3a50"
-
           this.isSticklayout = true
         } else {
           rightBorder.style.opacity = '0'
-          // rightBorder.style.backgroundColor = "#292931";
           this.isSticklayout = false
         }
       }
     })
     this.homeDocument = document.getElementById('dashboard')
     document.addEventListener('mouseup', e => {
+      if (this.isResizeTree) {
+        this.isResizeTree = false
+      }
       this.resizeLoader = false
       this.viewTemplate = false
       this.moveLine = false
@@ -1308,15 +1347,19 @@ export default {
         if (this.isSticklayout) {
           rightBorder.style.opacity = '0'
           this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
-          this.moveTarget.style.right = '0'
           this.moveTarget.style.top = 'calc(30rem + 3.5%)'
           this.moveTarget.style.height = '25rem'
           rightTopPanel.style.height = '30rem'
           rightBottomPanel.style.height = '25rem'
+          this.htmlContent.style.height = '22.8rem'
+          this.fileContent.style.height = '22.8rem'
+          this.htmlContent.style.width = '16.5vw'
+          this.fileContent.style.width = '16.5vw'
           let rightPanel = document.querySelector('.right-panel')
           let centerPanel = document.querySelector('.center-panel')
           rightPanel.style.width = '16.5%'
           centerPanel.style.width = '80%'
+          this.moveTarget.style.left = '83.5%'
           this.$refs.layout.treeStick(0)
         } else {
           if (this.layoutSticky === false) {
@@ -1559,6 +1602,20 @@ export default {
           }
         })
       }
+    },
+    resizeTree(e) {
+      this.treeElem = document.querySelector('.tree-name-wrapper')
+      this.fileContent = document.querySelector('.filecontent')
+      this.htmlContent = document.querySelector('.htmlcontent')
+      this.treeTab = document.querySelector('.tree-name-box')
+      this.elemWidth = getComputedStyle(this.treeElem).width
+      this.elemHeight = getComputedStyle(this.treeElem).height
+      this.elemLeft = getComputedStyle(this.treeElem).left
+      this.elemRight = getComputedStyle(this.treeElem).right
+      this.initX = e.clientX
+      this.initY = e.clientY
+      this.borderElem = e.target
+      this.isResizeTree = true
     },
     setSelectedFile(e) {
       this.selectedFile = e.target
@@ -2415,17 +2472,19 @@ export default {
       }
     },
     moveTree(e) {
-      e.target.parentElement.style.position = 'fixed'
+      e.target.parentElement.parentElement.style.position = 'fixed'
       let initX = e.clientX
       let initY = e.clientY
-      let initLeft = parseInt(getComputedStyle(e.target.parentElement).left)
-      let initTop = parseInt(getComputedStyle(e.target.parentElement).top)
+      let initLeft = e.target.parentElement.parentElement.getBoundingClientRect()
+        .left
+      let initTop = parseInt(
+        getComputedStyle(e.target.parentElement.parentElement).top
+      )
       this.xInter = initX - initLeft
       this.yInter = initY - initTop
       this.treeMove = true
-      console.log(e.target)
-      this.moveTarget = e.target.parentElement
-      this.moveTarget.style.height = '25rem'
+      this.moveTarget = e.target.parentElement.parentElement
+      // this.moveTarget.style.height = '25rem'
     },
     layoutStick(payload) {
       console.log(payload)
@@ -3133,65 +3192,103 @@ export default {
       .right-bottom-panel {
         background-color: #292931;
         width: 100%;
-        // height: 25rem;
         display: flex;
         flex-direction: column;
         .tree-name-wrapper {
-          width: 100%;
-          height: 100%;
+          width: 16.5vw;
+          height: 25rem;
           border: 1px solid #525252;
           z-index: 150;
-          .tree-name-box {
-            background-color: #292931;
-            display: flex;
-            //  border: 1px solid black;
-            cursor: move;
-            flex-direction: row;
-            .tree-name {
+          .tree-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            .tree-top-border,
+            .tree-bottom-border {
+              position: absolute;
+              width: 100%;
               left: 0;
-              height: 2rem;
-              cursor: pointer;
-              // background-color: #545e66;
-              top: 0;
-              width: 3.5rem;
-
-              display: flex;
-              // background-color: #4e4e5c;
-              // border: 1px solid black;
-              align-items: center;
-              justify-content: center;
-              flex-direction: row;
-              border-top-left-radius: 0.3rem;
-              border-top-right-radius: 0.3rem;
-              padding-left: 0.15rem;
-              padding-right: 0.15rem;
-
-              .tree {
-                text-align: center;
-                padding: 0.1rem;
-                padding-left: 0.4rem;
-                padding-right: 0.3rem;
-                color: #fff;
-                width: 3.5rem;
-                height: auto;
+              height: 5px;
+              z-index: 500;
+              &:hover {
+                cursor: ns-resize;
               }
             }
-          }
-          .htmlcontent {
-            // background-color: red;
-            padding: 0;
-            overflow: auto; // custom 바꾸기
+            .tree-top-border {
+              top: 0;
+            }
+            .tree-bottom-border {
+              bottom: 0;
+            }
+            .tree-left-border,
+            .tree-right-border {
+              position: absolute;
+              top: 0;
+              z-index: 500;
+              width: 5px;
+              height: 100%;
+              &:hover {
+                cursor: ew-resize;
+              }
+            }
+            .tree-left-border {
+              left: 0;
+            }
+            .tree-right-border {
+              right: 0;
+            }
+            .tree-name-box {
+              background-color: #292931;
+              display: flex;
+              height: 2rem;
+              //  border: 1px solid black;
+              cursor: move;
+              flex-direction: row;
+              .tree-name {
+                left: 0;
+                height: 2rem;
+                cursor: pointer;
+                // background-color: #545e66;
+                top: 0;
+                width: 3.5rem;
 
-            width: 100%;
-            border-top: 1px solid #525252;
-            border-bottom: 1px solid #525252;
-            height: 22.8rem;
-          }
-          .filecontent {
-            overflow: auto;
-            width: 100%;
-            height: 22.8rem;
-            background-color: #292931;
+                display: flex;
+                // background-color: #4e4e5c;
+                // border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                border-top-left-radius: 0.3rem;
+                border-top-right-radius: 0.3rem;
+                padding-left: 0.15rem;
+                padding-right: 0.15rem;
+
+                .tree {
+                  text-align: center;
+                  padding: 0.1rem;
+                  padding-left: 0.4rem;
+                  padding-right: 0.3rem;
+                  color: #fff;
+                  width: 3.5rem;
+                  height: auto;
+                }
+              }
+            }
+            .htmlcontent {
+              padding: 0;
+              overflow: auto;
+              height: 22.8rem;
+              width: 100%;
+              // border-top: 1px solid #525252;
+              // border-bottom: 1px solid #525252;
+              // height: calc(100% - 2rem);
+            }
+            .filecontent {
+              overflow: auto;
+              width: 100%;
+              height: 22.8rem;
+              background-color: #292931;
+            }
           }
         }
       }
