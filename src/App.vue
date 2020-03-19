@@ -940,15 +940,19 @@ export default {
           }
         }
       }
-      for (i = 0; i < this.usedPair.length; i++) {
-        for (j = 0; j < this.cssTitles.length; j++) {
-          if (this.cssTitles[j].file_seq === this.usedPair[i].css_file_seq) {
-            style += this.cssTitles[j].contents
+      this.$nextTick(() => {
+        for (i = 0; i < this.usedPair.length; i++) {
+          for (j = 0; j < this.cssTitles.length; j++) {
+            if (this.cssTitles[j].file_seq === this.usedPair[i].css_file_seq) {
+              console.log(this.cssTitles[j].contents)
+              style += this.cssTitles[j].contents
+            }
           }
         }
-      }
-      $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
-        this.editor1.getValue() + '<style>' + style + '</style>'
+        $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
+          this.editor1.getValue() + '<style>' + style + '</style>'
+      })
+
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i] === this.isEditor1Load) {
           this.htmlTitles[i].contents = this.editor1.getValue()
@@ -1310,11 +1314,149 @@ export default {
     this.homeDocument = document.getElementById('dashboard')
     window.addEventListener('mouseup', e => {
       if (this.addTag) {
-        console.log(e.detail.target)
         this.viewTemplate = false
         this.addTag = false
         this.studioOn = false
-        this.$refs.home.addContent(this.selectedTag, e.detail.target)
+        let templateFile = false
+        let i
+        let temp_seq
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === 'ed-template.css') {
+            templateFile = true
+            temp_seq = this.cssTitles[i].file_seq
+            break
+          }
+        }
+        let pairExist = false
+        if (templateFile) {
+          let j
+          for (j = 0; j < this.stylePair.length; j++) {
+            if (
+              this.stylePair[j].html_file_seq === this.isEditor1Load.file_seq &&
+              this.stylePair[j].css_file_seq === temp_seq
+            ) {
+              pairExist = true
+              break
+            }
+          }
+          if (pairExist) {
+            this.cssTitles[i].contents += this.$store.getters.templateCSS
+          } else {
+            axios({
+              ...apiUrl.pair.create,
+              data: {
+                html_css_pairs: [
+                  {
+                    html_file_seq: this.isEditor1Load.file_seq,
+                    css_file_seq: this.cssTitles[i].file_seq
+                  }
+                ]
+              }
+            }).then(res => {
+              console.log(res.data)
+              if (res.data.responseCode === 'SUCCESS') {
+                this.stylePair.push({
+                  html: res.data.data[0].html_file_seq,
+                  css: res.data.data[0].css_file_seq
+                })
+                this.isEditor1Load.html_css_pair.push(res.data.data[0])
+                for (i = 0; i < this.htmlTitles.length; i++) {
+                  if (this.htmlTitles[i].text === this.isEditor1Load.text) {
+                    this.htmlTitles[i].html_css_pair.push(res.data.data[0])
+                    break
+                  }
+                }
+                this.usedPair = this.htmlTitles[i].html_css_pair
+                this.$refs.filecontent.setStylePair(this.stylePair)
+                this.$refs.filecontent.setFiles(
+                  this.htmlTitles,
+                  this.cssTitles,
+                  this.jsTitles
+                )
+                this.$refs.home.addContent(this.selectedTag, e.detail.target)
+              }
+            })
+            this.cssTitles[i].contents += this.$store.getters.templateCSS
+          }
+        } else {
+          let i
+          for (i = 0; i < this.folder_seq.length; i++) {
+            if (this.folder_seq[i].type === 'css') break
+          }
+          axios({
+            ...apiUrl.file.create,
+            data: {
+              files: [
+                {
+                  folder_seq: this.folder_seq[i].seq,
+                  file_name: 'ed-template',
+                  file_path: this.isProject.title + '/css/ed-template.css',
+                  file_type: 'css',
+                  contents: this.$store.getters.templateCSS
+                }
+              ]
+            }
+          }).then(res => {
+            console.log(res.data)
+            if (res.data.responseCode === 'SUCCESS') {
+              let newFile = res.data.data[0]
+              newFile.isEdited = false
+              newFile.text =
+                res.data.data[0].file_name + '.' + res.data.data[0].file_type
+              this.cssTitles.push(newFile)
+              axios({
+                ...apiUrl.pair.create,
+                data: {
+                  html_css_pairs: [
+                    {
+                      html_file_seq: this.isEditor1Load.file_seq,
+                      css_file_seq: res.data.data[0].file_seq
+                    }
+                  ]
+                }
+              }).then(res => {
+                console.log(res.data)
+                if (res.data.responseCode === 'SUCCESS') {
+                  let i
+                  let htmlPair = false
+                  for (i = 0; i < this.stylePair.length; i++) {
+                    if (
+                      this.stylePair[i].html === res.data.data[0].html_file_seq
+                    ) {
+                      htmlPair = true
+                      break
+                    }
+                  }
+                  if (htmlPair) {
+                    this.stylePair[i].css.push(res.data.data[0].css_file_seq)
+                  } else {
+                    this.stylePair.push({
+                      html: res.data.data[0].html_file_seq,
+                      css: res.data.data[0].css_file_seq
+                    })
+                  }
+                  this.isEditor1Load.html_css_pair.push(res.data.data[0])
+                  for (i = 0; i < this.htmlTitles.length; i++) {
+                    if (this.htmlTitles[i].text === this.isEditor1Load.text) {
+                      this.htmlTitles[i].html_css_pair.push(res.data.data[0])
+                      break
+                    }
+                  }
+
+                  this.usedPair = this.htmlTitles[i].html_css_pair
+                  console.log(this.usedPair)
+                  this.$refs.filecontent.setStylePair(this.stylePair)
+                  this.$refs.filecontent.setFiles(
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                  this.$refs.home.addContent(this.selectedTag, e.detail.target)
+                }
+              })
+            }
+          })
+        }
       }
     })
     document.addEventListener('mouseup', e => {

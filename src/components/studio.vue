@@ -279,7 +279,8 @@ export default {
         padding:5px 20px;
       }
       `
-        document.getElementsByTagName('head')[0].appendChild(oScript)
+        // document.getElementsByTagName('head')[0].appendChild(oScript)
+        this.$store.commit('setTemplateCSS', oScript.innerHTML)
         /// ///////////통신///////////////////////
         this.$emit('userSelectedTagComponent', e, this.addComponetUserPick)
       }

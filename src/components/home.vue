@@ -1725,6 +1725,14 @@ export default {
         position.className !== 'bottom-border'
       ) {
         position.appendChild(tag)
+        this.$emit(
+          'iframe-changed',
+          $('iframe')
+            .get(0)
+            .contentWindow.document.documentElement.innerHTML.split(
+              '<style>'
+            )[0] + '</body>'
+        )
       }
 
       var add = {
