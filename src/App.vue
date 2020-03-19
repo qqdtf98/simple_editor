@@ -75,6 +75,7 @@
           <div v-show="isProjectLoaded" class="main-menu">
             <home
               ref="home"
+              @iframe-changed="iframeChanged"
               @componentSelected="componentSelected"
               @stack-push="stackPush"
               @loadData="loadData"
@@ -230,42 +231,44 @@
         </div>
         <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
-            <!-- <div class="tree-top-border"></div>
-            <div class="tree-left-border"></div>
-            <div class="tree-right-border"></div>
-            <div class="tree-bottom-border"></div> -->
-            <!-- resize용 border -->
-            <div @mousedown="moveTree" class="tree-name-box">
-              <div
-                @mousedown.stop
-                @click="changeTab"
-                class="tree-name"
-                :key="tree.index"
-                v-for="tree in trees"
-              >
-                <div @mousedown.stop class="tree">
-                  {{ tree.text }}
+            <div class="tree-wrap">
+              <div @mousedown="resizeTree" class="tree-top-border"></div>
+              <div @mousedown="resizeTree" class="tree-left-border"></div>
+              <div @mousedown="resizeTree" class="tree-right-border"></div>
+              <div @mousedown="resizeTree" class="tree-bottom-border"></div>
+              <div @mousedown="moveTree" class="tree-name-box">
+                <div
+                  @mousedown.stop
+                  @click="changeTab"
+                  class="tree-name"
+                  :key="tree.index"
+                  v-for="tree in trees"
+                >
+                  <div @mousedown.stop class="tree">
+                    {{ tree.text }}
+                  </div>
                 </div>
               </div>
+              <overview
+                v-show="showhtml"
+                ref="overview"
+                @selectDomElement="selectDomElemented"
+                @inParentTreeOption="inParentTreeOption"
+                @domWithTree="domPushWithTree"
+                :getDocument="homeDocument"
+                class="htmlcontent"
+              />
+              <fileContent
+                @reset-titles="resetAllTitle"
+                @dbl-click="setSelectedFile"
+                @folder-click="folderClick"
+                @right-click="openFileContext"
+                v-show="!showhtml"
+                class="filecontent"
+                ref="filecontent"
+              />
             </div>
-            <overview
-              v-show="showhtml"
-              ref="overview"
-              @selectDomElement="selectDomElemented"
-              @inParentTreeOption="inParentTreeOption"
-              @domWithTree="domPushWithTree"
-              :getDocument="homeDocument"
-              class="htmlcontent"
-            />
-            <fileContent
-              @reset-titles="resetAllTitle"
-              @dbl-click="setSelectedFile"
-              @folder-click="folderClick"
-              @right-click="openFileContext"
-              v-show="!showhtml"
-              class="filecontent"
-              ref="filecontent"
-            />
+
             <div class="testYap" data-event="zzzzz"></div>
           </div>
         </div>
@@ -339,7 +342,7 @@
     </div>
     <div v-show="isContextMenu2" class="fileContext">
       <div @click="loadFile" class="open">Open</div>
-      <div class="copy">Copy</div>
+      <div @click="copyFile" class="copy">Copy</div>
       <div @click="renameFile" class="rename">Rename</div>
       <div @click="deletePopUp" class="delete">Delete</div>
     </div>
@@ -499,6 +502,16 @@ export default {
   name: 'App',
   data() {
     return {
+      treeElem: null,
+      treeTab: null,
+      fileContent: null,
+      htmlContent: null,
+      elemWidth: null,
+      initX: null,
+      initY: null,
+      elemLeft: null,
+      elemRight: null,
+      elemHeight: null,
       zzzzz: 3,
       isProjectLoaded: false,
       isUsed: false,
@@ -506,6 +519,7 @@ export default {
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
+      isResizeTree: false,
       cssLink: [],
       usedPair: null,
       stylePair: [],
@@ -527,8 +541,8 @@ export default {
         { text: 'Thin' },
         { text: 'Length' }
       ],
+      borderElem: null,
       monacoIndex: 0,
-
       code:
         '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
       // options: {
@@ -926,15 +940,19 @@ export default {
           }
         }
       }
-      for (i = 0; i < this.usedPair.length; i++) {
-        for (j = 0; j < this.cssTitles.length; j++) {
-          if (this.cssTitles[j].file_seq === this.usedPair[i].css_file_seq) {
-            style += this.cssTitles[j].contents
+      this.$nextTick(() => {
+        for (i = 0; i < this.usedPair.length; i++) {
+          for (j = 0; j < this.cssTitles.length; j++) {
+            if (this.cssTitles[j].file_seq === this.usedPair[i].css_file_seq) {
+              console.log(this.cssTitles[j].contents)
+              style += this.cssTitles[j].contents
+            }
           }
         }
-      }
-      $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
-        this.editor1.getValue() + '<style>' + style + '</style>'
+        $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
+          this.editor1.getValue() + '<style>' + style + '</style>'
+      })
+
       for (i = 0; i < this.htmlTitles.length; i++) {
         if (this.htmlTitles[i] === this.isEditor1Load) {
           this.htmlTitles[i].contents = this.editor1.getValue()
@@ -959,7 +977,7 @@ export default {
       if (this.isSetEditor2) {
         console.log('set')
         axios({
-          ...apiUrl.file.pair,
+          ...apiUrl.pair.get,
           params: {
             css_file_seq: this.isEditor2Load.file_seq
           }
@@ -1186,7 +1204,35 @@ export default {
         this.$refs.home.multiChoice(false)
       }
     })
-    document.addEventListener('mousemove', e => {
+    window.addEventListener('mousemove', e => {
+      if (this.isResizeTree) {
+        if (this.borderElem.className === 'tree-right-border') {
+          this.treeElem.style.width =
+            parseInt(this.elemWidth) + (e.clientX - this.initX) + 'px'
+          this.treeElem.style.left = this.elemLeft
+        } else if (this.borderElem.className === 'tree-left-border') {
+          this.treeElem.style.width =
+            parseInt(this.elemWidth) - (e.clientX - this.initX) + 'px'
+          this.treeElem.style.left =
+            parseInt(this.elemLeft) + (e.clientX - this.initX) + 'px'
+        } else if (this.borderElem.className === 'tree-top-border') {
+          this.treeElem.style.height =
+            parseInt(this.elemHeight) - (e.clientY - this.initY) * 2 + 'px'
+        } else if (this.borderElem.className === 'tree-bottom-border') {
+          this.treeElem.style.height =
+            parseInt(this.elemHeight) - (this.initY - e.clientY) + 'px'
+          this.fileContent.style.height =
+            parseInt(this.elemHeight) -
+            parseInt(getComputedStyle(this.treeTab).height) -
+            (this.initY - e.clientY) +
+            'px'
+          this.htmlContent.style.height =
+            parseInt(this.elemHeight) -
+            parseInt(getComputedStyle(this.treeTab).height) -
+            (this.initY - e.clientY) +
+            'px'
+        }
+      }
       if (this.moveLine) {
         let leftBox = document.querySelector('.left-box')
         let rightBox = document.querySelector('.right-box')
@@ -1246,49 +1292,182 @@ export default {
         copy.style.top = e.clientY + 10 + 'px'
       }
       if (this.treeMove) {
-        this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
-        this.moveTarget.style.height = '25rem'
-        // this.moveTarget.style.right= e.clientX - this.xInter + "px";
-        this.moveTarget.style.right =
-          window.innerWidth -
-          e.clientX -
-          (parseInt(getComputedStyle(this.moveTarget).width) - this.xInter) +
-          'px'
+        this.moveTarget.style.left = e.clientX - this.xInter + 'px'
         this.moveTarget.style.top = e.clientY - this.yInter + 'px'
         let rightBorder = document.querySelector('.right-panel-border')
-        if (parseInt(getComputedStyle(this.moveTarget).right) < 30) {
+        if (
+          e.clientX -
+            this.xInter +
+            parseInt(getComputedStyle(this.moveTarget).width) >
+          parseInt(getComputedStyle(rightBorder).left)
+        ) {
           rightBorder.style.opacity = '1'
           rightBorder.style.backgroundImage =
             'linear-gradient(to right, #00000000, #68869250)'
-          // rightBorder.style.backgroundColor = "#3a3a50"
-
           this.isSticklayout = true
         } else {
           rightBorder.style.opacity = '0'
-          // rightBorder.style.backgroundColor = "#292931";
           this.isSticklayout = false
         }
       }
     })
     this.homeDocument = document.getElementById('dashboard')
+    window.addEventListener('mouseup', e => {
+      if (this.addTag) {
+        this.viewTemplate = false
+        this.addTag = false
+        this.studioOn = false
+        let templateFile = false
+        let i
+        let temp_seq
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === 'ed-template.css') {
+            templateFile = true
+            temp_seq = this.cssTitles[i].file_seq
+            break
+          }
+        }
+        let pairExist = false
+        if (templateFile) {
+          let j
+          for (j = 0; j < this.stylePair.length; j++) {
+            if (
+              this.stylePair[j].html_file_seq === this.isEditor1Load.file_seq &&
+              this.stylePair[j].css_file_seq === temp_seq
+            ) {
+              pairExist = true
+              break
+            }
+          }
+          if (pairExist) {
+            this.cssTitles[i].contents += this.$store.getters.templateCSS
+          } else {
+            axios({
+              ...apiUrl.pair.create,
+              data: {
+                html_css_pairs: [
+                  {
+                    html_file_seq: this.isEditor1Load.file_seq,
+                    css_file_seq: this.cssTitles[i].file_seq
+                  }
+                ]
+              }
+            }).then(res => {
+              console.log(res.data)
+              if (res.data.responseCode === 'SUCCESS') {
+                this.stylePair.push({
+                  html: res.data.data[0].html_file_seq,
+                  css: res.data.data[0].css_file_seq
+                })
+                this.isEditor1Load.html_css_pair.push(res.data.data[0])
+                for (i = 0; i < this.htmlTitles.length; i++) {
+                  if (this.htmlTitles[i].text === this.isEditor1Load.text) {
+                    this.htmlTitles[i].html_css_pair.push(res.data.data[0])
+                    break
+                  }
+                }
+                this.usedPair = this.htmlTitles[i].html_css_pair
+                this.$refs.filecontent.setStylePair(this.stylePair)
+                this.$refs.filecontent.setFiles(
+                  this.htmlTitles,
+                  this.cssTitles,
+                  this.jsTitles
+                )
+                this.$refs.home.addContent(this.selectedTag, e.detail.target)
+              }
+            })
+            this.cssTitles[i].contents += this.$store.getters.templateCSS
+          }
+        } else {
+          let i
+          for (i = 0; i < this.folder_seq.length; i++) {
+            if (this.folder_seq[i].type === 'css') break
+          }
+          axios({
+            ...apiUrl.file.create,
+            data: {
+              files: [
+                {
+                  folder_seq: this.folder_seq[i].seq,
+                  file_name: 'ed-template',
+                  file_path: this.isProject.title + '/css/ed-template.css',
+                  file_type: 'css',
+                  contents: this.$store.getters.templateCSS
+                }
+              ]
+            }
+          }).then(res => {
+            console.log(res.data)
+            if (res.data.responseCode === 'SUCCESS') {
+              let newFile = res.data.data[0]
+              newFile.isEdited = false
+              newFile.text =
+                res.data.data[0].file_name + '.' + res.data.data[0].file_type
+              this.cssTitles.push(newFile)
+              axios({
+                ...apiUrl.pair.create,
+                data: {
+                  html_css_pairs: [
+                    {
+                      html_file_seq: this.isEditor1Load.file_seq,
+                      css_file_seq: res.data.data[0].file_seq
+                    }
+                  ]
+                }
+              }).then(res => {
+                console.log(res.data)
+                if (res.data.responseCode === 'SUCCESS') {
+                  let i
+                  let htmlPair = false
+                  for (i = 0; i < this.stylePair.length; i++) {
+                    if (
+                      this.stylePair[i].html === res.data.data[0].html_file_seq
+                    ) {
+                      htmlPair = true
+                      break
+                    }
+                  }
+                  if (htmlPair) {
+                    this.stylePair[i].css.push(res.data.data[0].css_file_seq)
+                  } else {
+                    this.stylePair.push({
+                      html: res.data.data[0].html_file_seq,
+                      css: res.data.data[0].css_file_seq
+                    })
+                  }
+                  this.isEditor1Load.html_css_pair.push(res.data.data[0])
+                  for (i = 0; i < this.htmlTitles.length; i++) {
+                    if (this.htmlTitles[i].text === this.isEditor1Load.text) {
+                      this.htmlTitles[i].html_css_pair.push(res.data.data[0])
+                      break
+                    }
+                  }
+
+                  this.usedPair = this.htmlTitles[i].html_css_pair
+                  console.log(this.usedPair)
+                  this.$refs.filecontent.setStylePair(this.stylePair)
+                  this.$refs.filecontent.setFiles(
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                  this.$refs.home.addContent(this.selectedTag, e.detail.target)
+                }
+              })
+            }
+          })
+        }
+      }
+    })
     document.addEventListener('mouseup', e => {
+      if (this.isResizeTree) {
+        this.isResizeTree = false
+      }
       this.resizeLoader = false
       this.viewTemplate = false
       this.moveLine = false
       let tar = e.target
-      if (this.addTag) {
-        while (1) {
-          if (tar.id === 'dashboard') {
-            this.addTag = false
-            this.$refs.home.addContent(this.selectedTag, e.target)
-            break
-          } else if (tar.id === 'app') {
-            break
-          } else {
-            tar = tar.parentElement
-          }
-        }
-      }
+
       if (this.isTitle) {
         this.isTitle = false
         if (this.select !== e.target && this.select !== null) {
@@ -1307,15 +1486,19 @@ export default {
         if (this.isSticklayout) {
           rightBorder.style.opacity = '0'
           this.moveTarget.style.width = '-webkit-calc(100% - 83.5%)'
-          this.moveTarget.style.right = '0'
           this.moveTarget.style.top = 'calc(30rem + 3.5%)'
           this.moveTarget.style.height = '25rem'
           rightTopPanel.style.height = '30rem'
           rightBottomPanel.style.height = '25rem'
+          this.htmlContent.style.height = '22.8rem'
+          this.fileContent.style.height = '22.8rem'
+          this.htmlContent.style.width = '16.5vw'
+          this.fileContent.style.width = '16.5vw'
           let rightPanel = document.querySelector('.right-panel')
           let centerPanel = document.querySelector('.center-panel')
           rightPanel.style.width = '16.5%'
           centerPanel.style.width = '80%'
+          this.moveTarget.style.left = '83.5%'
           this.$refs.layout.treeStick(0)
         } else {
           if (this.layoutSticky === false) {
@@ -1401,6 +1584,177 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    iframeChanged(change) {
+      this.editor1.setValue(change)
+    },
+    copyFile() {
+      if (this.selectedFile.textContent.trim().split('.')[1] === 'html') {
+        let i
+        for (i = 0; i < this.htmlTitles.length; i++) {
+          if (
+            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
+          ) {
+            break
+          }
+        }
+        let copyFileTitle =
+          this.selectedFile.textContent.trim().split('.')[0] + '_copy'
+        axios({
+          ...apiUrl.file.checkName,
+          params: {
+            folder_seq: this.htmlTitles[i].folder_seq,
+            file_type: this.htmlTitles[i].file_type,
+            file_name: copyFileTitle
+          }
+        }).then(res => {
+          console.log(res.data)
+          if (res.data.responseCode === 'SUCCESS') {
+            let data = {
+              folder_seq: this.htmlTitles[i].folder_seq,
+              file_name: copyFileTitle,
+              file_path:
+                this.htmlTitles[i].file_path.split(
+                  this.htmlTitles[i].file_name
+                )[0] +
+                copyFileTitle +
+                '.' +
+                this.htmlTitles[i].file_type,
+              file_type: this.htmlTitles[i].file_type,
+              contents: this.htmlTitles[i].contents
+            }
+            axios({
+              ...apiUrl.file.create,
+              data: {
+                files: [data]
+              }
+            }).then(res => {
+              console.log(res.data)
+              let copiedFile = res.data.data[0]
+              if (res.data.responseCode === 'SUCCESS') {
+                // htmltitles에 있는 pair정보 가지고 pair생성
+                let title
+                if (this.htmlTitles[i].html_css_pair.length > 0) {
+                  let data = []
+                  let j
+                  for (
+                    j = 0;
+                    j < this.htmlTitles[i].html_css_pair.length;
+                    j++
+                  ) {
+                    data.push({
+                      html_file_seq: copiedFile.file_seq,
+                      css_file_seq: this.htmlTitles[i].html_css_pair[j]
+                        .css_file_seq
+                    })
+                  }
+                  axios({
+                    ...apiUrl.pair.create,
+                    data: {
+                      html_css_pairs: data
+                    }
+                  }).then(res => {
+                    console.log(res.data)
+                    if (res.data.responseCode === 'SUCCESS') {
+                      title = copiedFile
+                      title.html_css_pair = res.data.data
+                      title.isEdited = false
+                      title.text =
+                        copiedFile.file_name + '.' + copiedFile.file_type
+                    }
+                  })
+                } else {
+                  title = copiedFile
+                  title.isEdited = false
+                  title.text = copiedFile.file_name + '.' + copiedFile.file_type
+                }
+                this.stylePair.push(res.data.data)
+                this.titles.push(title)
+                this.htmlTitles.push(title)
+                this.$refs.filecontent.setStylePair(this.stylePair)
+                this.$refs.filecontent.setFiles(
+                  this.htmlTitles,
+                  this.cssTitles,
+                  this.jsTitles
+                )
+                this.$refs.sitemap.loadSitemap(this.titles)
+              }
+            })
+          }
+        })
+      } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
+        console.log('cssss')
+        let i
+        for (i = 0; i < this.cssTitles.length; i++) {
+          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
+            break
+          }
+        }
+        let copyFileTitle =
+          this.selectedFile.textContent.trim().split('.')[0] + '_copy'
+        axios({
+          ...apiUrl.file.checkName,
+          params: {
+            folder_seq: this.cssTitles[i].folder_seq,
+            file_type: this.cssTitles[i].file_type,
+            file_name: copyFileTitle
+          }
+        }).then(res => {
+          console.log(res.data)
+          if (res.data.responseCode === 'SUCCESS') {
+            let data = {
+              folder_seq: this.cssTitles[i].folder_seq,
+              file_name: copyFileTitle,
+              file_path:
+                this.cssTitles[i].file_path.split(
+                  this.cssTitles[i].file_name
+                )[0] +
+                copyFileTitle +
+                '.' +
+                this.cssTitles[i].file_type,
+              file_type: this.cssTitles[i].file_type,
+              contents: this.cssTitles[i].contents
+            }
+            axios({
+              ...apiUrl.file.create,
+              data: {
+                files: [data]
+              }
+            }).then(res => {
+              console.log(res.data)
+
+              if (res.data.responseCode === 'SUCCESS') {
+                let copiedFile = res.data.data[0]
+                copiedFile.isEdited = false
+                copiedFile.text =
+                  res.data.data[0].file_name + '.' + res.data.data[0].file_type
+                this.cssTitles.push(copiedFile)
+                this.$nextTick(() => {
+                  this.$refs.filecontent.setFiles(
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                })
+              }
+            })
+          }
+        })
+      }
+    },
+    resizeTree(e) {
+      this.treeElem = document.querySelector('.tree-name-wrapper')
+      this.fileContent = document.querySelector('.filecontent')
+      this.htmlContent = document.querySelector('.htmlcontent')
+      this.treeTab = document.querySelector('.tree-name-box')
+      this.elemWidth = getComputedStyle(this.treeElem).width
+      this.elemHeight = getComputedStyle(this.treeElem).height
+      this.elemLeft = getComputedStyle(this.treeElem).left
+      this.elemRight = getComputedStyle(this.treeElem).right
+      this.initX = e.clientX
+      this.initY = e.clientY
+      this.borderElem = e.target
+      this.isResizeTree = true
+    },
     setSelectedFile(e) {
       this.selectedFile = e.target
       this.loadFile(e)
@@ -2256,17 +2610,19 @@ export default {
       }
     },
     moveTree(e) {
-      e.target.parentElement.style.position = 'fixed'
+      e.target.parentElement.parentElement.style.position = 'fixed'
       let initX = e.clientX
       let initY = e.clientY
-      let initLeft = parseInt(getComputedStyle(e.target.parentElement).left)
-      let initTop = parseInt(getComputedStyle(e.target.parentElement).top)
+      let initLeft = e.target.parentElement.parentElement.getBoundingClientRect()
+        .left
+      let initTop = parseInt(
+        getComputedStyle(e.target.parentElement.parentElement).top
+      )
       this.xInter = initX - initLeft
       this.yInter = initY - initTop
       this.treeMove = true
-      console.log(e.target)
-      this.moveTarget = e.target.parentElement
-      this.moveTarget.style.height = '25rem'
+      this.moveTarget = e.target.parentElement.parentElement
+      // this.moveTarget.style.height = '25rem'
     },
     layoutStick(payload) {
       console.log(payload)
@@ -2350,6 +2706,10 @@ export default {
       if (this.sitemapOn === true) {
         this.sitemapOn = false
       } else {
+        // let sitemap = document.querySelector('.sitemap')
+        // let studio = document.querySelector('.studio')
+        // sitemap.style.zIndex = 151;
+        // studio.style.zIndex = 150;
         this.sitemapOn = true
         this.studioOn = false
         this.uiDescription = false
@@ -2481,6 +2841,7 @@ export default {
         this.viewTemplate = false
       } else {
         this.studioOn = true
+        this.sitemapOn = false
       }
       if (this.codeOn === true) {
         this.codeOn = false
@@ -2610,7 +2971,6 @@ export default {
       }
     },
     userSelectedTagComponent(e, tagComponent) {
-      // this.$refs.home.addComponentTag = tagComponent
       this.addTag = true
       this.viewTemplate = true
       this.tagDescription = false
@@ -2974,65 +3334,103 @@ export default {
       .right-bottom-panel {
         background-color: #292931;
         width: 100%;
-        // height: 25rem;
         display: flex;
         flex-direction: column;
         .tree-name-wrapper {
-          width: 100%;
-          height: 100%;
+          width: 16.5vw;
+          height: 25rem;
           border: 1px solid #525252;
           z-index: 150;
-          .tree-name-box {
-            background-color: #292931;
-            display: flex;
-            //  border: 1px solid black;
-            cursor: move;
-            flex-direction: row;
-            .tree-name {
+          .tree-wrap {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            .tree-top-border,
+            .tree-bottom-border {
+              position: absolute;
+              width: 100%;
               left: 0;
-              height: 2rem;
-              cursor: pointer;
-              // background-color: #545e66;
-              top: 0;
-              width: 3.5rem;
-
-              display: flex;
-              // background-color: #4e4e5c;
-              // border: 1px solid black;
-              align-items: center;
-              justify-content: center;
-              flex-direction: row;
-              border-top-left-radius: 0.3rem;
-              border-top-right-radius: 0.3rem;
-              padding-left: 0.15rem;
-              padding-right: 0.15rem;
-
-              .tree {
-                text-align: center;
-                padding: 0.1rem;
-                padding-left: 0.4rem;
-                padding-right: 0.3rem;
-                color: #fff;
-                width: 3.5rem;
-                height: auto;
+              height: 5px;
+              z-index: 500;
+              &:hover {
+                cursor: ns-resize;
               }
             }
-          }
-          .htmlcontent {
-            // background-color: red;
-            padding: 0;
-            overflow: auto; // custom 바꾸기
+            .tree-top-border {
+              top: 0;
+            }
+            .tree-bottom-border {
+              bottom: 0;
+            }
+            .tree-left-border,
+            .tree-right-border {
+              position: absolute;
+              top: 0;
+              z-index: 500;
+              width: 5px;
+              height: 100%;
+              &:hover {
+                cursor: ew-resize;
+              }
+            }
+            .tree-left-border {
+              left: 0;
+            }
+            .tree-right-border {
+              right: 0;
+            }
+            .tree-name-box {
+              background-color: #292931;
+              display: flex;
+              height: 2rem;
+              //  border: 1px solid black;
+              cursor: move;
+              flex-direction: row;
+              .tree-name {
+                left: 0;
+                height: 2rem;
+                cursor: pointer;
+                // background-color: #545e66;
+                top: 0;
+                width: 3.5rem;
 
-            width: 100%;
-            border-top: 1px solid #525252;
-            border-bottom: 1px solid #525252;
-            height: 22.8rem;
-          }
-          .filecontent {
-            overflow: auto;
-            width: 100%;
-            height: 22.8rem;
-            background-color: #292931;
+                display: flex;
+                // background-color: #4e4e5c;
+                // border: 1px solid black;
+                align-items: center;
+                justify-content: center;
+                flex-direction: row;
+                border-top-left-radius: 0.3rem;
+                border-top-right-radius: 0.3rem;
+                padding-left: 0.15rem;
+                padding-right: 0.15rem;
+
+                .tree {
+                  text-align: center;
+                  padding: 0.1rem;
+                  padding-left: 0.4rem;
+                  padding-right: 0.3rem;
+                  color: #fff;
+                  width: 3.5rem;
+                  height: auto;
+                }
+              }
+            }
+            .htmlcontent {
+              padding: 0;
+              overflow: auto;
+              height: 22.8rem;
+              width: 100%;
+              // border-top: 1px solid #525252;
+              // border-bottom: 1px solid #525252;
+              // height: calc(100% - 2rem);
+            }
+            .filecontent {
+              overflow: auto;
+              width: 100%;
+              height: 22.8rem;
+              background-color: #292931;
+            }
           }
         }
       }
