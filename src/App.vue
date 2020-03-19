@@ -1308,6 +1308,15 @@ export default {
       }
     })
     this.homeDocument = document.getElementById('dashboard')
+    window.addEventListener('mouseup', e => {
+      if (this.addTag) {
+        console.log(e.detail.target)
+        this.viewTemplate = false
+        this.addTag = false
+        this.studioOn = false
+        this.$refs.home.addContent(this.selectedTag, e.detail.target)
+      }
+    })
     document.addEventListener('mouseup', e => {
       if (this.isResizeTree) {
         this.isResizeTree = false
@@ -1316,19 +1325,7 @@ export default {
       this.viewTemplate = false
       this.moveLine = false
       let tar = e.target
-      if (this.addTag) {
-        while (1) {
-          if (tar.id === 'dashboard') {
-            this.addTag = false
-            this.$refs.home.addContent(this.selectedTag, e.target)
-            break
-          } else if (tar.id === 'app') {
-            break
-          } else {
-            tar = tar.parentElement
-          }
-        }
-      }
+
       if (this.isTitle) {
         this.isTitle = false
         if (this.select !== e.target && this.select !== null) {
@@ -1584,7 +1581,6 @@ export default {
               console.log(res.data)
 
               if (res.data.responseCode === 'SUCCESS') {
-                console.log(res.data.data[0])
                 let copiedFile = res.data.data[0]
                 copiedFile.isEdited = false
                 copiedFile.text =
@@ -2568,6 +2564,10 @@ export default {
       if (this.sitemapOn === true) {
         this.sitemapOn = false
       } else {
+        // let sitemap = document.querySelector('.sitemap')
+        // let studio = document.querySelector('.studio')
+        // sitemap.style.zIndex = 151;
+        // studio.style.zIndex = 150;
         this.sitemapOn = true
         this.studioOn = false
         this.uiDescription = false
@@ -2699,6 +2699,7 @@ export default {
         this.viewTemplate = false
       } else {
         this.studioOn = true
+        this.sitemapOn = false
       }
       if (this.codeOn === true) {
         this.codeOn = false
@@ -2828,7 +2829,6 @@ export default {
       }
     },
     userSelectedTagComponent(e, tagComponent) {
-      // this.$refs.home.addComponentTag = tagComponent
       this.addTag = true
       this.viewTemplate = true
       this.tagDescription = false
