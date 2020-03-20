@@ -34,7 +34,7 @@
               v-for="title in openTitles"
             >
               <div @click="changePage" class="title">
-                {{ title.text }}
+                {{ title.file_name }}
               </div>
               <img
                 @click="closePage"
@@ -121,8 +121,7 @@
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span @click="testtt" class="studio-text">CodeReview</span>
-
-              <div class="manualatag">
+              <!-- <div class="manualatag">
                 mode
                 <switches
                   class="toggleSwitch modeSwitch"
@@ -130,7 +129,8 @@
                   color="info"
                   v-model="enabled"
                 />
-              </div>
+              </div> -->
+              <button @click="executeJS" class="jsExecute">js</button>
               <img
                 @click="closeCodeReview"
                 src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0wIDNDMCAxLjM0MzE1IDEuMzQzMTUgMCAzIDBINDdDNDguNjU2OSAwIDUwIDEuMzQzMTUgNTAgM1Y0N0M1MCA0OC42NTY5IDQ4LjY1NjkgNTAgNDcgNTBIM0MxLjM0MzE1IDUwIDAgNDguNjU2OSAwIDQ3VjI1VjNaIiBmaWxsPSIjOTI5MTkxIi8+DQo8cmVjdCB4PSIzNC42NjAyIiB5PSIzOS4wNjk3IiB3aWR0aD0iMzMuOTk4NyIgaGVpZ2h0PSI1Ljg4MjM1IiByeD0iMi45NDExOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTEzNSAzNC42NjAyIDM5LjA2OTcpIiBmaWxsPSJ3aGl0ZSIvPg0KPHJlY3QgeD0iMTAuNzU2IiB5PSIzNC44MjEyIiB3aWR0aD0iMzQiIGhlaWdodD0iNS44ODIzNSIgcng9IjIuOTQxMTgiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMC43NTYgMzQuODIxMikiIGZpbGw9IndoaXRlIi8+DQo8L3N2Zz4NCg=="
@@ -504,6 +504,7 @@ export default {
     return {
       treeElem: null,
       treeTab: null,
+      temp_seq: null,
       fileContent: null,
       htmlContent: null,
       elemWidth: null,
@@ -967,15 +968,14 @@ export default {
       this.$refs.overview.printHomeDocument()
     })
 
-    var oScript = document.createElement('style')
-    oScript.setAttribute('id', 'jumsimmuk')
-    oScript.setAttribute('lang', 'scss')
-    oScript.type = 'text/css'
-    document.getElementsByTagName('head')[0].appendChild(oScript)
+    // var oScript = document.createElement('style')
+    // oScript.setAttribute('id', 'jumsimmuk')
+    // oScript.setAttribute('lang', 'scss')
+    // oScript.type = 'text/css'
+    // document.getElementsByTagName('head')[0].appendChild(oScript)
 
     var myBinding2 = this.editor2.onDidChangeModelContent(e => {
       if (this.isSetEditor2) {
-        console.log('set')
         axios({
           ...apiUrl.pair.get,
           params: {
@@ -983,22 +983,18 @@ export default {
           }
         }).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
-            console.log(res.data)
             let i
             for (i = 0; i < res.data.data.length; i++) {
               if (
                 res.data.data[i].html_file_seq === this.isEditor1Load.file_seq
               ) {
-                console.log('111')
-                this.isUsed = true
+                this.isUsedCSS = true
               } else {
-                console.log('2222')
-                this.isUsed = false
+                this.isUsedCSS = false
               }
             }
           } else {
-            console.log('3333')
-            this.isUsed = false
+            this.isUsedCSS = false
           }
         })
         this.isSetEditor2 = false
@@ -1016,7 +1012,7 @@ export default {
           this.cssTitles,
           this.jsTitles
         )
-        if (this.isUsed) {
+        if (this.isUsedCSS) {
           let cssCode = ''
           for (
             i = 0;
@@ -1032,7 +1028,6 @@ export default {
                   .css[i]
             ).contents
           }
-          console.log(cssCode)
           $('iframe')
             .get(0)
             .contentWindow.document.getElementsByTagName(
@@ -2352,6 +2347,8 @@ export default {
           ) {
             this.leftTitles.delete(this.leftTitlesArr[i])
             this.leftTitlesArr.splice(i, 1)
+            this.openTitles.delete(this.openTitlesArr[i])
+            this.openTitlesArr.splice(i, 1)
             if (this.leftTitlesArr.length === 0) {
               this.isEditor1Load = null
               this.editor1.setValue('파일오픈')
@@ -2369,22 +2366,22 @@ export default {
         'css'
       ) {
         let i
-        for (i = 0; i < this.rightTitlesArr.length; i++) {
+        for (i = 0; i < this.centerTitlesArr.length; i++) {
           if (
-            this.rightTitlesArr[i].text ===
+            this.centerTitlesArr[i].text ===
             e.target.parentElement.children[0].textContent.trim()
           ) {
-            this.rightTitles.delete(this.rightTitlesArr[i])
-            this.rightTitlesArr.splice(i, 1)
-            if (this.rightTitlesArr.length === 0) {
+            this.centerTitles.delete(this.centerTitlesArr[i])
+            this.centerTitlesArr.splice(i, 1)
+            if (this.centerTitlesArr.length === 0) {
               this.isEditor2Load = null
               this.editor2.setValue('파일오픈')
-            } else if (i === this.rightTitlesArr.length) {
-              this.isEditor2Load = this.rightTitlesArr[i - 1]
-              this.editor2.setValue(this.rightTitlesArr[i - 1].contents)
+            } else if (i === this.centerTitlesArr.length) {
+              this.isEditor2Load = this.centerTitlesArr[i - 1]
+              this.editor2.setValue(this.centerTitlesArr[i - 1].contents)
             } else {
-              this.isEditor2Load = this.rightTitlesArr[i]
-              this.editor2.setValue(this.rightTitlesArr[i].contents)
+              this.isEditor2Load = this.centerTitlesArr[i]
+              this.editor2.setValue(this.centerTitlesArr[i].contents)
             }
           }
         }
@@ -2393,25 +2390,27 @@ export default {
     changeSourceTab(e) {
       if (e.target.textContent.trim().split('.')[1] === 'html') {
         let i
+        let fileName = document.querySelectorAll('.file-name')
         let titles = document.querySelectorAll('.left-title')
         for (i = 0; i < this.leftTitlesArr.length; i++) {
           if (this.leftTitlesArr[i].text === e.target.textContent.trim()) {
             this.isEditor1Load = this.leftTitlesArr[i]
             this.usedPair = this.leftTitlesArr[i].html_css_pair
-            console.log(this.leftTitlesArr)
             this.editor1.setValue(this.leftTitlesArr[i].contents)
+            fileName[i].style.backgroundColor = '#545e66'
             titles[i].style.backgroundColor = '#545e66'
           } else {
+            fileName[i].style.backgroundColor = '#2c3134'
             titles[i].style.backgroundColor = '#2c3134'
           }
         }
       } else if (e.target.textContent.trim().split('.')[1] === 'css') {
         let i
-        let titles = document.querySelectorAll('.right-title')
-        for (i = 0; i < this.rightTitlesArr.length; i++) {
-          if (this.rightTitlesArr[i].text === e.target.textContent.trim()) {
-            this.isEditor2Load = this.rightTitlesArr[i]
-            this.editor2.setValue(this.rightTitlesArr[i].contents)
+        let titles = document.querySelectorAll('.center-title')
+        for (i = 0; i < this.centerTitlesArr.length; i++) {
+          if (this.centerTitlesArr[i].text === e.target.textContent.trim()) {
+            this.isEditor2Load = this.centerTitlesArr[i]
+            this.editor2.setValue(this.centerTitlesArr[i].contents)
             titles[i].style.backgroundColor = '#545e66'
           } else {
             titles[i].style.backgroundColor = '#2c3134'
@@ -2633,16 +2632,18 @@ export default {
       }
     },
     clickSource(e) {
-      this.isData = true
-      // console.log(document.getElementById("newLoaderHtml").innerHTML)
-      if (e.target.getAttribute('name') == 'html') {
-        this.tabStep = 1
-        // this.chageContent()
-      } else if (e.target.getAttribute('name') == 'css') {
-        this.tabStep = 2
-      } else if (e.target.getAttribute('name') == 'js') {
-        this.tabStep = 3
+      if (this.isData) {
+        this.isData = false
+      } else {
+        this.isData = true
       }
+      // if (e.target.getAttribute('name') == 'html') {
+      //   this.tabStep = 1
+      // } else if (e.target.getAttribute('name') == 'css') {
+      //   this.tabStep = 2
+      // } else if (e.target.getAttribute('name') == 'js') {
+      //   this.tabStep = 3
+      // }
     },
     inputFile(e) {
       alert('저장되었습니다')
@@ -2719,55 +2720,42 @@ export default {
     },
     closePage(e) {
       let i
-      for (
-        i = 0;
-        i < e.target.parentElement.parentElement.children.length;
-        i++
-      ) {
+      for (i = 0; i < this.openTitlesArr.length; i++) {
         if (
-          e.target.parentElement.parentElement.children[i] ===
-          e.target.parentElement
+          this.openTitlesArr[i].file_name ===
+          e.target.parentElement.textContent.trim()
         ) {
-          console.log(i)
-          break
+          this.leftTitles.delete(this.leftTitlesArr[i])
+          this.leftTitlesArr.splice(i, 1)
+          this.openTitles.delete(this.openTitlesArr[i])
+          this.openTitlesArr.splice(i, 1)
+          if (this.openTitlesArr.length === 0) {
+            this.isEditor1Load = null
+            this.editor1.setValue('파일오픈')
+          } else if (i === this.openTitlesArr.length) {
+            this.isEditor1Load = this.openTitlesArr[i - 1]
+            this.editor1.setValue(this.openTitlesArr[i - 1].contents)
+          } else {
+            this.isEditor1Load = this.openTitlesArr[i]
+            this.editor1.setValue(this.openTitlesArr[i].contents)
+          }
         }
       }
-      this.titles.splice(i, 1)
-      let editorCompo = document.querySelector('.editor-component')
-      editorCompo.removeChild(editorCompo.children[i])
     },
     changePage(e) {
+      let fileName = document.querySelectorAll('.file-name')
+      let titles = document.querySelectorAll('.left-title')
       let i
-      let num
-      for (
-        i = 0;
-        i < e.target.parentElement.parentElement.children.length - 3;
-        i++
-      ) {
-        if (
-          e.target.parentElement.parentElement.children[i] ===
-          e.target.parentElement
-        ) {
-          num = i
-          e.target.parentElement.style.backgroundColor = '#545e66'
+      for (i = 0; i < this.openTitlesArr.length; i++) {
+        if (this.openTitlesArr[i].file_name === e.target.textContent.trim()) {
+          this.isEditor1Load = this.openTitlesArr[i]
+          this.usedPair = this.openTitlesArr[i].html_css_pair
+          this.editor1.setValue(this.openTitlesArr[i].contents)
+          fileName[i].style.backgroundColor = '#545e66'
+          titles[i].style.backgroundColor = '#545e66'
         } else {
-          e.target.parentElement.parentElement.children[
-            i
-          ].style.backgroundColor = '#2c3134'
-        }
-      }
-      let j
-      let editor = document.querySelectorAll('.board')
-      for (j = 0; j < editor.length; j++) {
-        if (j === num) {
-          editor[j].classList.remove('hidden')
-          console.log(editor[j].getAttribute('id'))
-          this.$refs.overview.setId(editor[j].getAttribute('id'))
-          this.generateCode(editor[j].getAttribute('id'))
-          editor[j].classList.add('display')
-        } else {
-          editor[j].classList.remove('display')
-          editor[j].classList.add('hidden')
+          fileName[i].style.backgroundColor = '#2c3134'
+          titles[i].style.backgroundColor = '#2c3134'
         }
       }
     },
@@ -2956,19 +2944,18 @@ export default {
     },
     stackPush(elem) {
       this.workStack.push(elem)
-      if (this.tabStep == 1) {
-        // document.querySelector('#preview').textContent = this.loadData[0]
-        this.message[0] = document.getElementById('newLoaderHtml').innerHTML
-        document.querySelector('#preview1').innerText = document.getElementById(
-          'newLoaderHtml'
-        ).innerHTML
-        console.log(document.getElementById('newLoaderHtml').innerHTML)
-        console.log(this.message[0])
-      } else if (this.tabStep == 2) {
-        document.querySelector('#preview2').innerHTML = this.message[1]
-      } else if (this.tabStep == 3) {
-        document.querySelector('#preview3').innerText = this.message[2]
-      }
+      // if (this.tabStep == 1) {
+      //   this.message[0] = document.getElementById('newLoaderHtml').innerHTML
+      //   document.querySelector('#preview1').innerText = document.getElementById(
+      //     'newLoaderHtml'
+      //   ).innerHTML
+      //   console.log(document.getElementById('newLoaderHtml').innerHTML)
+      //   console.log(this.message[0])
+      // } else if (this.tabStep == 2) {
+      //   document.querySelector('#preview2').innerHTML = this.message[1]
+      // } else if (this.tabStep == 3) {
+      //   document.querySelector('#preview3').innerText = this.message[2]
+      // }
     },
     userSelectedTagComponent(e, tagComponent) {
       this.addTag = true
@@ -3087,7 +3074,6 @@ export default {
       console.log(this.message)
       document.getElementById('newLoaderHtml').innerHTML
       if (this.tabStep == 1) {
-        // document.querySelector('#preview').textContent = this.loadData[0]
         this.test = document.getElementById('newLoaderHtml').innerHTML
         document.querySelector('#preview1').innerText = document.getElementById(
           'newLoaderHtml'
@@ -3099,7 +3085,6 @@ export default {
         console.log(document.querySelector('#preview3'))
         console.log(this.message[2])
         this.js = this.message[2]
-        // document.querySelector('#preview3').innerText = this.message[2]
       }
     },
     inputFile(e) {
