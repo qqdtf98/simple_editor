@@ -515,11 +515,12 @@ export default {
       elemHeight: null,
       zzzzz: 3,
       isProjectLoaded: false,
-      isUsed: false,
+      isUsedCSS: false,
       everySelectedElement: null,
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
+      isSetEditor3: false,
       isResizeTree: false,
       cssLink: [],
       usedPair: null,
@@ -535,6 +536,7 @@ export default {
       isPopUp3Active: false,
       isEditor1Load: null,
       isEditor2Load: null,
+      isEditor3Load: null,
       borderWidth: [
         { text: 'White' },
         { text: 'Black' },
@@ -554,7 +556,8 @@ export default {
       range: [0, 100],
       payload: '',
       dataPayload: '',
-      openTitles: [],
+      openTitles: null,
+      openTitlesArr: [],
       data: '',
       homeLayoutLocation: '',
       newTitle: null,
@@ -643,6 +646,7 @@ export default {
       overView: new Map(),
       editor1: '',
       editor2: '',
+      editor3: '',
       idSelected: 'board',
       vsMode: '',
       select: null,
@@ -657,8 +661,10 @@ export default {
       imgTitles: [],
       leftTitles: null,
       rightTitles: null,
+      centerTitles: null,
       leftTitlesArr: [],
-      rightTitlesArr: []
+      rightTitlesArr: [],
+      centerTitlesArr: []
     }
   },
   computed: {
@@ -905,10 +911,22 @@ export default {
     }
 
     this.editor2 = monaco.editor.create(
-      document.getElementById('rightContainer'),
+      document.getElementById('centerContainer'),
       {
         value: 'css 파일을 로드해주세요.',
         language: 'css',
+        theme: 'vs-dark',
+        height: 100,
+        accessibilityPageSize: 4,
+        lineDecorationsWidth: 10,
+        mouseWheelZoom: true
+      }
+    )
+    this.editor3 = monaco.editor.create(
+      document.getElementById('rightContainer'),
+      {
+        value: 'js 파일을 로드해주세요.',
+        language: 'javascript',
         theme: 'vs-dark',
         height: 100,
         accessibilityPageSize: 4,
@@ -1035,6 +1053,10 @@ export default {
             )[0].innerHTML = cssCode
         }
       }
+    })
+
+    var myBinding3 = this.editor3.onDidChangeModelContent(e => {
+      console.log(this.editor3.getValue())
     })
 
     this.isData = false
@@ -1579,6 +1601,22 @@ export default {
     this.manualScript = manual
   },
   methods: {
+    executeJS() {
+      var script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.innerHTML = this.editor3.getValue()
+      console.log(script)
+      $('iframe')
+        .get(0)
+        .contentWindow.document.documentElement.appendChild(script)
+      getelem
+      // $('iframe').get(
+      //   0
+      // ).contentWindow.document.documentElement.innerHTML += this.editor3.getValue()
+      // var iframe = document.getElementById('filecontainer')
+      // iframe.src = iframe.src
+      // $('iframe').attr('src',"static/html/test.html")
+    },
     iframeChanged(change) {
       this.editor1.setValue(change)
     },
@@ -1927,9 +1965,11 @@ export default {
             if (this.isServer) {
               this.usedPair = this.htmlTitles[i].html_css_pair
               this.leftTitles.add(this.htmlTitles[i])
+              this.openTitles.add(this.htmlTitles[i])
               this.isEditor1Load = this.htmlTitles[i]
               this.editor1.setValue(this.htmlTitles[i].contents)
               this.leftTitlesArr = Array.from(this.leftTitles)
+              this.openTitlesArr = Array.from(this.openTitles)
             }
             this.isData = true
             break
@@ -1951,8 +1991,8 @@ export default {
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
             console.log('select')
-            this.rightTitles.add(this.cssTitles[i])
-            this.rightTitlesArr = Array.from(this.rightTitles)
+            this.centerTitles.add(this.cssTitles[i])
+            this.centerTitlesArr = Array.from(this.centerTitles)
             this.isSetEditor2 = true
             this.isEditor2Load = this.cssTitles[i]
             this.editor2.setValue(this.cssTitles[i].contents)
@@ -1961,7 +2001,7 @@ export default {
           }
         }
         this.$nextTick(() => {
-          let titles = document.querySelectorAll('.right-title')
+          let titles = document.querySelectorAll('.center-title')
           let j
           for (j = 0; j < titles.length; j++) {
             if (titles[j].textContent.trim() === this.cssTitles[i].text) {
@@ -1972,6 +2012,29 @@ export default {
           }
         })
       } else if (this.selectedFile.textContent.trim().split('.')[1] === 'js') {
+        let i
+        for (i = 0; i < this.jsTitles.length; i++) {
+          if (this.jsTitles[i].text === this.selectedFile.textContent.trim()) {
+            this.rightTitles.add(this.jsTitles[i])
+            this.rightTitlesArr = Array.from(this.rightTitles)
+            this.isSetEditor3 = true
+            this.isEditor3Load = this.jsTitles[i]
+            this.editor3.setValue(this.jsTitles[i].contents)
+            this.isData = true
+            break
+          }
+        }
+        this.$nextTick(() => {
+          let titles = document.querySelectorAll('.right-title')
+          let j
+          for (j = 0; j < titles.length; j++) {
+            if (titles[j].textContent.trim() === this.jsTitles[i].text) {
+              titles[j].style.backgroundColor = '#545e66'
+            } else {
+              titles[j].style.backgroundColor = '#2c3134'
+            }
+          }
+        })
       }
     },
     openFileContext(e) {
@@ -2084,10 +2147,13 @@ export default {
       this.imgTitles = []
       this.titles = []
       this.projectTitles = []
-      this.openTitles = []
+      this.openTitles = new Set()
+      this.openTitlesArr = []
       this.leftTitles = new Set()
+      this.centerTitles = new Set()
       this.rightTitles = new Set()
       this.leftTitlesArr = []
+      this.centerTitlesArr = []
       this.rightTitlesArr = []
       var fs = require('fs')
       var file = require('file-system')
@@ -2152,11 +2218,14 @@ export default {
           this.imgTitles = []
           this.titles = []
           this.projectTitles = []
-          this.openTitles = []
+          this.openTitles = new Set()
+          this.openTitlesArr = []
           this.leftTitles = new Set()
+          this.centerTitles = new Set()
           this.rightTitles = new Set()
           this.leftTitlesArr = []
           this.rightTitlesArr = []
+          this.centerTitlesArr = []
           this.isEditor1Load = null
           this.isEditor2Load = null
           this.editor1.setValue('html 파일을 로드해주세요.')
@@ -2196,9 +2265,12 @@ export default {
           this.imgTitles = []
           this.titles = []
           this.projectTitles = []
-          this.openTitles = []
+          this.openTitles = new Set()
+          this.openTitlesArr = []
           this.leftTitles = new Set()
           this.rightTitles = new Set()
+          this.centerTitles = new Set()
+          this.centerTitlesArr = []
           this.leftTitlesArr = []
           this.rightTitlesArr = []
           this.isEditor1Load = null
@@ -2307,7 +2379,7 @@ export default {
       // this.currentRightTab = 0
       // this.currentLeftTab = 0
       // let leftTitle = document.querySelector('.left-title')
-      // let rightTitle = document.querySelector('.right-title')
+      // let rightTitle = document.querySelector('.center-title')
       // leftTitle.style.backgroundColor = '#3f3f3f'
       // rightTitle.style.backgroundColor = '#3f3f3f'
       // if (this.enabled) {
@@ -2481,7 +2553,7 @@ export default {
           break
         }
       }
-      this.openTitles.push(this.titles[i])
+      this.openTitles.add(this.titles[i])
       if (this.isServer) {
         this.usedPair = this.htmlTitles[i].html_css_pair
         this.editor1.setValue(this.htmlTitles[i].contents)
@@ -4000,6 +4072,11 @@ export default {
       position: absolute;
       left: 0.4rem;
     }
+    .jsExecute {
+      position: absolute;
+      right: 2rem;
+      width: 3rem;
+    }
 
     .manualatag {
       color: #fff;
@@ -4029,6 +4106,7 @@ export default {
       }
     }
     .left-box,
+    .center-box,
     .right-box {
       // border-left: 1.5px solid #86744fa6;
       height: 100%;
@@ -4039,6 +4117,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       .leftTitle,
+      .centerTitle,
       .rightTitle {
         position: absolute;
         top: 0;
@@ -4048,13 +4127,15 @@ export default {
         height: 2.5rem;
         width: 100%;
         cursor: pointer;
+        .center-title-scroll,
         .right-title-scroll,
         .left-title-scroll {
           height: 100%;
           display: flex;
           flex-direction: row;
           .left-title,
-          .right-title {
+          .right-title,
+          .center-title {
             // background-color: #3f3f3f;
             padding-right: 0.25rem;
             padding-left: 0.25rem;
@@ -4062,6 +4143,7 @@ export default {
             flex-direction: row;
             height: 1.7rem;
 
+            .center-title-text,
             .right-title-text,
             .left-title-text {
               margin-right: 0.3rem;
@@ -4077,7 +4159,8 @@ export default {
         }
       }
       .leftSource,
-      .rightSource {
+      .rightSource,
+      .centerSource {
         height: calc(100% - 2.5rem);
         width: 100%;
         position: absolute;
@@ -4126,6 +4209,15 @@ export default {
   }
 
   #leftContainer {
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+  }
+  #centerContainer {
     width: 100%;
     height: 100%;
     text-align: left;
