@@ -1336,27 +1336,30 @@ export default {
         this.studioOn = false
         let templateFile = false
         let i
-        let temp_seq
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === 'ed-template.css') {
             templateFile = true
-            temp_seq = this.cssTitles[i].file_seq
+            console.log(this.cssTitles[i].file_seq)
+            this.temp_seq = this.cssTitles[i].file_seq
             break
           }
         }
         let pairExist = false
         if (templateFile) {
           let j
+          let k
           for (j = 0; j < this.stylePair.length; j++) {
-            if (
-              this.stylePair[j].html_file_seq === this.isEditor1Load.file_seq &&
-              this.stylePair[j].css_file_seq === temp_seq
-            ) {
-              pairExist = true
-              break
+            if (this.stylePair[j].html === this.isEditor1Load.file_seq) {
+              for (k = 0; k < this.stylePair[j].css.length; k++) {
+                if (this.stylePair[j].css[k] === this.temp_seq) {
+                  pairExist = true
+                  break
+                }
+              }
             }
           }
           if (pairExist) {
+            this.$refs.home.addContent(this.selectedTag, e.detail.target)
             this.cssTitles[i].contents += this.$store.getters.templateCSS
           } else {
             axios({
