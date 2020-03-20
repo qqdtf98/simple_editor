@@ -174,7 +174,45 @@
                   </div>
                 </div>
               </div>
-              <div @mousedown="moveBorder" class="center-border"></div>
+              <div @mousedown="moveLeftBorder" class="left-border"></div>
+              <div class="center-box">
+                <div class="centerTitle">
+                  <vue-custom-scrollbar class="center-title-scroll">
+                    <div
+                      class="center-title"
+                      v-for="centerTitle in centerTitlesArr"
+                      :key="centerTitle.id"
+                    >
+                      <div @click="changeSourceTab" class="center-title-text">
+                        {{ centerTitle.text }}
+                      </div>
+
+                      <img
+                        @click="closeSource"
+                        class="close-icon"
+                        src="./assets/images/close.svg"
+                      />
+                    </div>
+                  </vue-custom-scrollbar>
+                </div>
+                <div class="centerSource" id="centerSource">
+                  <div
+                    class="tab-pane"
+                    id="pills-home"
+                    role="tabpanel"
+                    aria-labelledby="pills-home-tab"
+                  >
+                    <div class="showCode">
+                      <div
+                        id="centerContainer"
+                        ref="editor"
+                        @change="onCodeChange"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div @mousedown="moveRightBorder" class="right-border"></div>
               <div class="right-box">
                 <div class="rightTitle">
                   <vue-custom-scrollbar class="right-title-scroll">
@@ -525,6 +563,7 @@ export default {
       cssLink: [],
       usedPair: null,
       stylePair: [],
+      jsPair: [],
       secondPopUp: false,
       thirdPopUp: false,
       folder_seq: [],
@@ -630,6 +669,7 @@ export default {
       isFileTab: false,
       isEditTab: false,
       initialLeftWidth: null,
+      initialCenterWidth: null,
       initialRightWidth: null,
       isSaveTab: false,
       isSettingTab: false,
@@ -652,7 +692,8 @@ export default {
       select: null,
       currentRightTab: null,
       currentLeftTab: null,
-      moveLine: false,
+      moveLeftLine: false,
+      moveRightLine: false,
       initialBorder: 0,
       projectTitles: [],
       htmlTitles: [],
@@ -1250,21 +1291,41 @@ export default {
             'px'
         }
       }
-      if (this.moveLine) {
+      if (this.moveLeftLine) {
         let leftBox = document.querySelector('.left-box')
-        let rightBox = document.querySelector('.right-box')
-        let bord = document.querySelector('.center-border')
+        let centerBox = document.querySelector('.center-box')
+        let bord = document.querySelector('.left-border')
         if (
-          this.initialLeftWidth + (e.clientX - this.initialBorder) > 300 &&
-          this.initialRightWidth - (e.clientX - this.initialBorder) > 300
+          this.initialLeftWidth + (e.clientX - this.initialBorder) > 200 &&
+          this.initialCenterWidth - (e.clientX - this.initialBorder) > 200
         ) {
+          console.log('....')
           leftBox.style.width =
             this.initialLeftWidth + (e.clientX - this.initialBorder) + 'px'
+          centerBox.style.width =
+            this.initialCenterWidth - (e.clientX - this.initialBorder) + 'px'
+          // document.getElementById('monacoContainer').removeChildAll()
+          this.$nextTick(() => {
+            bord.style.left = parseInt(getComputedStyle(leftBox).right) + 'px'
+          })
+        }
+      }
+      if (this.moveRightLine) {
+        console.log('ieieiii')
+        let rightBox = document.querySelector('.right-box')
+        let centerBox = document.querySelector('.center-box')
+        let bord = document.querySelector('.right-border')
+        if (
+          this.initialCenterWidth + (e.clientX - this.initialBorder) > 200 &&
+          this.initialRightWidth - (e.clientX - this.initialBorder) > 200
+        ) {
+          centerBox.style.width =
+            this.initialCenterWidth + (e.clientX - this.initialBorder) + 'px'
           rightBox.style.width =
             this.initialRightWidth - (e.clientX - this.initialBorder) + 'px'
           // document.getElementById('monacoContainer').removeChildAll()
           this.$nextTick(() => {
-            bord.style.left = parseInt(getComputedStyle(leftBox).right) + 'px'
+            bord.style.let = parseInt(getComputedStyle(centerBox).right) + 'px'
           })
         }
       }
@@ -1485,7 +1546,8 @@ export default {
       }
       this.resizeLoader = false
       this.viewTemplate = false
-      this.moveLine = false
+      this.moveLeftLine = false
+      this.moveRightLine = false
       let tar = e.target
 
       if (this.isTitle) {
@@ -2086,6 +2148,7 @@ export default {
                 this.folder_seq.push(folder)
                 for (j = 0; j < res.data.data.folders[i].files.length; j++) {
                   let css_list = []
+                  let js_list = []
                   title = res.data.data.folders[i].files[j]
                   title.isEdited = false
                   title.text =
@@ -2113,6 +2176,26 @@ export default {
                       }
                       this.stylePair.push(pair)
                     }
+                    if (
+                      res.data.data.folders[i].files[j].html_js_pair.length > 0
+                    ) {
+                      for (
+                        k = 0;
+                        k <
+                        res.data.data.folders[i].files[j].html_js_pair.length;
+                        k++
+                      ) {
+                        js_list.push(
+                          res.data.data.folders[i].files[j].html_js_pair[k]
+                            .js_file_seq
+                        )
+                      }
+                      pair = {
+                        html: res.data.data.folders[i].files[j].file_seq,
+                        js: js_list
+                      }
+                      this.jsPair.push(pair)
+                    }
                     this.titles.push(title)
                     this.htmlTitles.push(title)
                   } else if (res.data.data.folders[i].folder_name === 'css') {
@@ -2124,6 +2207,7 @@ export default {
               }
               this.$refs.filecontent.setFolderSeq(this.folder_seq)
               this.$refs.filecontent.setStylePair(this.stylePair)
+              this.$refs.filecontent.setJSPair(this.jsPair)
               this.$refs.filecontent.setFiles(
                 this.htmlTitles,
                 this.cssTitles,
@@ -2501,13 +2585,25 @@ export default {
       this.editor1.setValue(this.code)
       document.getElementById(id).innerHTML = this.editor1.getValue()
     },
-    moveBorder(e) {
-      this.moveLine = true
-      this.initialBorder = e.target.getBoundingClientRect().left
+    moveLeftBorder(e) {
+      this.moveLeftLine = true
+      console.log(e.clientX)
+      console.log(e.target.getBoundingClientRect().left)
       let leftBox = document.querySelector('.left-box')
-      let rightBox = document.querySelector('.right-box')
+      let centerBox = document.querySelector('.center-box')
+      this.initialBorder = e.target.getBoundingClientRect().left
       this.initialLeftWidth = leftBox.getBoundingClientRect().width
+      this.initialCenterWidth = centerBox.getBoundingClientRect().width
+      console.log(this.initialLeftWidth)
+      console.log(this.initialCenterWidth)
+    },
+    moveRightBorder(e) {
+      this.moveRightLine = true
+      this.initialBorder = e.target.getBoundingClientRect().left
+      let rightBox = document.querySelector('.right-box')
+      let centerBox = document.querySelector('.center-box')
       this.initialRightWidth = rightBox.getBoundingClientRect().width
+      this.initialCenterWidth = centerBox.getBoundingClientRect().width
     },
     openCode() {
       this.isData = true
@@ -4100,7 +4196,15 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: row;
-    .center-border {
+    .left-border {
+      width: 0.4%;
+      height: 100%;
+      background-color: #866a4fbd;
+      &:hover {
+        cursor: ew-resize;
+      }
+    }
+    .right-border {
       width: 0.4%;
       height: 100%;
       background-color: #866a4fbd;

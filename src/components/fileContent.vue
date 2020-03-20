@@ -76,6 +76,7 @@ export default {
       isNewFileAdd: false,
       sameTitle: false,
       stylePair: null,
+      jsPair: null,
       targetIndex: null
     }
   },
@@ -85,6 +86,9 @@ export default {
     dblClick(e) {
       console.log(e.target)
       this.$emit('dbl-click', e)
+    },
+    setJSPair(pair) {
+      this.jsPair = pair
     },
     setStylePair(pair) {
       this.stylePair = pair
