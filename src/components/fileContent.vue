@@ -95,141 +95,100 @@ export default {
         e.target.textContent =
           e.target.textContent.split('.')[0].trim() + '.' + this.type
         let i
-        if (this.type === 'html') {
-          for (i = 0; i < this.htmlTitles.length; i++) {
-            if (
-              this.htmlTitles[i].file_name ===
-              e.target.textContent.split('.')[0].trim()
-            ) {
-              console.log(this.htmlTitles[i].file_name)
-              console.log(e.target.textContent.split('.')[0])
-              this.sameTitle = true
-            }
-          }
-        } else if (this.type === 'css') {
-          for (i = 0; i < this.cssTitles.length; i++) {
-            if (
-              this.cssTitles[i].file_name ===
-              e.target.textContent.split('.')[0].trim()
-            ) {
-              this.sameTitle = true
-            }
+        for (i = 0; i < this.folderSeq.length; i++) {
+          if (this.folderSeq[i].type === this.type) {
+            break
           }
         }
-        if (this.sameTitle) {
-          // 프론트에서 체크 - 중복 O
-          console.log('sameme')
-          e.target.classList.add('same-title')
-          e.target.textContent = this.beforeTitle
-          this.sameTitle = false
-          // if (this.type === 'html') {
-          //   this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
-          // } else if (this.type === 'css') {
-          //   this.cssTitles.splice(this.cssTitles.length - 1, 1)
-          // }
-          // this.$emit(
-          //   'reset-titles',
-          //   this.htmlTitles,
-          //   this.cssTitles,
-          //   this.jsTitles
-          // )
-        } else {
-          // 프론트에서 체크 - 중복 X
-          // 서버에 이름 중복검사 요청
-          let i
-          for (i = 0; i < this.folderSeq.length; i++) {
-            if (this.folderSeq[i].type === this.type) {
-              break
-            }
+        axios({
+          ...apiUrl.file.checkName,
+          params: {
+            folder_seq: this.folderSeq[i].seq,
+            file_type: this.type,
+            file_name: e.target.textContent.split('.')[0].trim()
           }
-          axios({
-            ...apiUrl.file.checkName,
-            params: {
-              folder_seq: this.folderSeq[i].seq,
-              file_type: this.type,
-              file_name: e.target.textContent.split('.')[0].trim()
-            }
-          }).then(res => {
-            if (res.data.responseCode === 'SUCCESS') {
-              console.log('succ')
-              // 서버에서 체크 - 중복 X
-              if (this.isNewFileAdd) {
-                // 새로운 파일 추가일때
-                let data
-                let i
-                for (i = 0; i < this.folderSeq.length; i++) {
-                  if (this.folderSeq[i].type === this.type) {
-                    break
-                  }
+        }).then(res => {
+          if (res.data.responseCode === 'SUCCESS') {
+            console.log('succ')
+            // 서버에서 체크 - 중복 X
+            if (this.isNewFileAdd) {
+              // 새로운 파일 추가일때
+              let data
+              let i
+              for (i = 0; i < this.folderSeq.length; i++) {
+                if (this.folderSeq[i].type === this.type) {
+                  break
                 }
-                data = {
-                  folder_seq: this.folderSeq[i].seq,
-                  file_name: e.target.textContent.split('.')[0].trim(),
-                  file_path:
-                    this.project +
-                    '/' +
-                    this.type +
-                    '/' +
-                    e.target.textContent.split('.')[0].trim() +
-                    '.' +
-                    this.type,
-                  file_type: this.type,
-                  contents: ''
+              }
+              data = {
+                folder_seq: this.folderSeq[i].seq,
+                file_name: e.target.textContent.split('.')[0].trim(),
+                file_path:
+                  this.project +
+                  '/' +
+                  this.type +
+                  '/' +
+                  e.target.textContent.split('.')[0].trim() +
+                  '.' +
+                  this.type,
+                file_type: this.type,
+                contents: ''
+              }
+              axios({
+                ...apiUrl.file.create,
+                data: {
+                  files: [data]
                 }
-                axios({
-                  ...apiUrl.file.create,
-                  data: {
-                    files: [data]
+              }).then(res => {
+                console.log(res)
+                if (res.data.responseCode === 'SUCCESS') {
+                  console.log('succeseee')
+                  if (res.data.data[0].file_type === 'html') {
+                    this.htmlTitles[this.htmlTitles.length - 1] =
+                      res.data.data[0]
+                    this.htmlTitles[this.htmlTitles.length - 1].text =
+                      e.target.textContent.split('.')[0].trim() + '.html'
+                    this.htmlTitles[this.htmlTitles.length - 1].isEdited = false
+                  } else if (res.data.data[0].file_type === 'css') {
+                    this.cssTitles[this.cssTitles.length - 1] = res.data.data[0]
+                    this.cssTitles[this.cssTitles.length - 1].text =
+                      e.target.textContent.split('.')[0] + '.css'
+                    this.cssTitles[this.cssTitles.length - 1].isEdited = false
+                  } else if (res.data.data[0].file_type === 'js') {
+                    this.jsTitles[this.jsTitles.length - 1] = res.data.data[0]
+                    this.jsTitles[this.jsTitles.length - 1].text =
+                      e.target.textContent.split('.')[0] + '.js'
+                    this.jsTitles[this.jsTitles.length - 1].isEdited = false
                   }
-                }).then(res => {
-                  console.log(res)
-                  if (res.data.responseCode === 'SUCCESS') {
-                    console.log('succeseee')
-                    if (res.data.data[0].file_type === 'html') {
-                      console.log(res.data.data[0])
-                      this.htmlTitles[this.htmlTitles.length - 1] =
-                        res.data.data[0]
-                      this.htmlTitles[this.htmlTitles.length - 1].text =
-                        e.target.textContent.split('.')[0].trim() + '.html'
-                      this.htmlTitles[
-                        this.htmlTitles.length - 1
-                      ].isEdited = false
-                    } else if (res.data.data[0].file_type === 'css') {
-                      this.cssTitles[this.cssTitles.length - 1] =
-                        res.data.data[0]
-                      this.cssTitles[this.cssTitles.length - 1].text =
-                        e.target.textContent.split('.')[0] + '.css'
-                      this.cssTitles[this.cssTitles.length - 1].isEdited = false
-                    }
-                    console.log(this.htmlTitles)
 
-                    this.$emit(
-                      'reset-titles',
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
-                    e.target.textContent =
-                      e.target.textContent.split('.')[0] + '.' + this.type
-                  } else {
-                    console.log('ffffs')
-                    if (res.data.data[0].file_type === 'html') {
-                      this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
-                    } else if (res.data.data[0].file_type === 'css') {
-                      this.cssTitles.splice(this.cssTitles.length - 1, 1)
-                    }
-                    this.$emit(
-                      'reset-titles',
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
+                  this.$emit(
+                    'reset-titles',
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                  e.target.textContent =
+                    e.target.textContent.split('.')[0] + '.' + this.type
+                } else {
+                  if (res.data.data[0].file_type === 'html') {
+                    this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
+                  } else if (res.data.data[0].file_type === 'css') {
+                    this.cssTitles.splice(this.cssTitles.length - 1, 1)
+                  } else if (res.data.data[0].file_type === 'js') {
+                    this.jsTitles.splice(this.jsTitles.length - 1, 1)
                   }
-                })
-                this.isNewFileAdd = false
-              } else {
-                // 기존 파일 수정일 때
-                console.log(this.contextTarget)
+                  this.$emit(
+                    'reset-titles',
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                }
+              })
+              this.isNewFileAdd = false
+            } else {
+              // 기존 파일 수정일 때
+              if (this.type === 'html') {
                 let html = document.querySelector('.html')
                 let i
                 for (i = 0; i < html.children.length; i++) {
@@ -241,7 +200,6 @@ export default {
                     break
                   }
                 }
-                console.log()
                 axios({
                   ...apiUrl.file.update,
                   data: {
@@ -266,11 +224,7 @@ export default {
                     e.target.textContent =
                       e.target.textContent.split('.')[0] + '.' + this.type
                   } else {
-                    if (res.data.data[0].file_type === 'html') {
-                      this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
-                    } else if (res.data.data[0].file_type === 'css') {
-                      this.cssTitles.splice(this.cssTitles.length - 1, 1)
-                    }
+                    this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
                   }
                 })
                 this.htmlTitles[i].text =
@@ -282,25 +236,98 @@ export default {
                   e.target.textContent.split('.')[0] +
                   '.' +
                   this.type
-                this.$emit(
-                  'reset-titles',
-                  this.htmlTitles,
-                  this.cssTitles,
-                  this.jsTitles
-                )
-              }
-              this.isContentEditable = false
-            } else {
-              console.log(res.data)
-              console.log('failll')
-              // 서버에서 체크 - 중복 O
-              e.target.classList.add('same-title')
-              e.target.textContent = this.beforeTitle
-              this.sameTitle = false
-              if (this.type === 'html') {
-                this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
               } else if (this.type === 'css') {
-                this.cssTitles.splice(this.cssTitles.length - 1, 1)
+                let css = document.querySelector('.css')
+                let i
+                for (i = 0; i < css.children.length; i++) {
+                  if (css.children[i] === this.contextTarget) break
+                }
+                let j
+                for (j = 0; j < this.folderSeq.length; j++) {
+                  if (this.folderSeq[j].type === this.type) {
+                    break
+                  }
+                }
+                axios({
+                  ...apiUrl.file.update,
+                  data: {
+                    files: [
+                      {
+                        folder_seq: this.folderSeq[j].seq,
+                        file_seq: this.cssTitles[i].file_seq,
+                        file_name: e.target.textContent.split('.')[0].trim(),
+                        file_path:
+                          this.cssTitles[i].file_path.split(
+                            this.cssTitles[i].text
+                          )[0] +
+                          e.target.textContent.split('.')[0].trim() +
+                          '.' +
+                          this.type
+                      }
+                    ]
+                  }
+                }).then(res => {
+                  console.log(res)
+                  if (res.data.responseCode === 'SUCCESS') {
+                    e.target.textContent =
+                      e.target.textContent.split('.')[0] + '.' + this.type
+                  } else {
+                    this.cssTitles.splice(this.cssTitles.length - 1, 1)
+                  }
+                })
+                this.cssTitles[i].text =
+                  e.target.textContent.split('.')[0] + '.css'
+                this.cssTitles[i].file_path =
+                  this.cssTitles[i].file_path.split(this.cssTitles[i].text)[0] +
+                  e.target.textContent.split('.')[0] +
+                  '.' +
+                  this.type
+              } else if (this.type === 'js') {
+                let js = document.querySelector('.js')
+                let i
+                for (i = 0; i < js.children.length; i++) {
+                  if (js.children[i] === this.contextTarget) break
+                }
+                let j
+                for (j = 0; j < this.folderSeq.length; j++) {
+                  if (this.folderSeq[j].type === this.type) {
+                    break
+                  }
+                }
+                axios({
+                  ...apiUrl.file.update,
+                  data: {
+                    files: [
+                      {
+                        folder_seq: this.folderSeq[j].seq,
+                        file_seq: this.jsTitles[i].file_seq,
+                        file_name: e.target.textContent.split('.')[0].trim(),
+                        file_path:
+                          this.jsTitles[i].file_path.split(
+                            this.jsTitles[i].text
+                          )[0] +
+                          e.target.textContent.split('.')[0].trim() +
+                          '.' +
+                          this.type
+                      }
+                    ]
+                  }
+                }).then(res => {
+                  console.log(res)
+                  if (res.data.responseCode === 'SUCCESS') {
+                    e.target.textContent =
+                      e.target.textContent.split('.')[0] + '.' + this.type
+                  } else {
+                    this.jsTitles.splice(this.jsTitles.length - 1, 1)
+                  }
+                })
+                this.jsTitles[i].text =
+                  e.target.textContent.split('.')[0] + '.js'
+                this.jsTitles[i].file_path =
+                  this.jsTitles[i].file_path.split(this.jsTitles[i].text)[0] +
+                  e.target.textContent.split('.')[0] +
+                  '.' +
+                  this.type
               }
               this.$emit(
                 'reset-titles',
@@ -309,8 +336,25 @@ export default {
                 this.jsTitles
               )
             }
-          })
-        }
+            this.isContentEditable = false
+          } else {
+            // 서버에서 체크 - 중복 O
+            e.target.classList.add('same-title')
+            e.target.textContent = this.beforeTitle
+            this.sameTitle = false
+            if (this.type === 'html') {
+              this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
+            } else if (this.type === 'css') {
+              this.cssTitles.splice(this.cssTitles.length - 1, 1)
+            }
+            this.$emit(
+              'reset-titles',
+              this.htmlTitles,
+              this.cssTitles,
+              this.jsTitles
+            )
+          }
+        })
       }
     },
     setFolderSeq(seq) {
@@ -401,10 +445,16 @@ export default {
         css.classList.add('active')
         this.isNewFileAdd = true
         this.focusInput(css.children[css.children.length - 1])
+      } else if (this.type === 'js') {
+        let js = document.querySelector('.js')
+        js.parentElement.children[0].classList.add('caret-down')
+        js.children[js.children.length - 1].classList.add('template')
+        js.classList.add('active')
+        this.isNewFileAdd = true
+        this.focusInput(js.children[js.children.length - 1])
       }
     },
     addFile(project, folder, type) {
-      console.log(folder)
       this.project = project
       let payload
       this.type = type
@@ -449,6 +499,25 @@ export default {
           this.newFileName()
         })
       } else if (type === 'js') {
+        payload = {
+          seq: '',
+          folder: '',
+          path: '',
+          name: '',
+          text: '',
+          code: '',
+          type: 'js'
+        }
+        this.jsTitles.push(payload)
+        this.$emit(
+          'reset-titles',
+          this.htmlTitles,
+          this.cssTitles,
+          this.jsTitles
+        )
+        this.$nextTick(() => {
+          this.newFileName()
+        })
       }
     },
     addJS() {
