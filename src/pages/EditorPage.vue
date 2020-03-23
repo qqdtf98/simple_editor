@@ -491,7 +491,9 @@
 
 <script>
 import apiUrl from '../modules/api-url'
-// import ProjectService from '../modules/project.service'
+import PairService from '../services/pair.service'
+import ProjectService from '../services/project.service'
+import FileService from '../services/file.service'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
@@ -1037,12 +1039,7 @@ export default {
 
     var myBinding2 = this.editor2.onDidChangeModelContent(e => {
       if (this.isSetEditor2) {
-        axios({
-          ...apiUrl.csspair.get,
-          params: {
-            css_file_seq: this.isEditor2Load.file_seq
-          }
-        }).then(res => {
+        PairService.getCSSPair(this.isEditor2Load.file_seq).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
             let i
             for (i = 0; i < res.data.data.length; i++) {
@@ -1100,12 +1097,7 @@ export default {
 
     var myBinding3 = this.editor3.onDidChangeModelContent(e => {
       if (this.isSetEditor3) {
-        axios({
-          ...apiUrl.jspair.get,
-          params: {
-            js_file_seq: this.isEditor3Load.file_seq
-          }
-        }).then(res => {
+        PairService.getJSPair(this.isEditor3Load.file_seq).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
             let i
             for (i = 0; i < res.data.data.length; i++) {
@@ -1201,34 +1193,20 @@ export default {
               $(val).css('border', '')
               $(val).css('border-radius', '')
             }
-            axios({
-              ...apiUrl.file.update,
-              data: {
-                files: [
-                  {
-                    file_seq: this.isEditor1Load.file_seq,
-                    folder_seq: this.isEditor1Load.folder_seq,
-                    file_name: this.isEditor1Load.file_name,
-                    file_path: this.isEditor1Load.file_path,
-                    file_type: this.isEditor1Load.file_type,
-                    contents:
-                      $('iframe')
-                        .get(0)
-                        .contentWindow.document.documentElement.innerHTML.split(
-                          '<style>'
-                        )[0] + '</body>'
-                  },
-                  {
-                    file_seq: this.isEditor2Load.file_seq,
-                    folder_seq: this.isEditor2Load.folder_seq,
-                    file_name: this.isEditor2Load.file_name,
-                    file_path: this.isEditor2Load.file_path,
-                    file_type: this.isEditor2Load.file_type,
-                    contents: this.editor2.getValue()
-                  }
-                ]
-              }
-            }).then(res => {
+            FileService.updateFile(
+              this.isEditor1Load,
+              $('iframe')
+                .get(0)
+                .contentWindow.document.documentElement.innerHTML.split(
+                  '<style>'
+                )[0] + '</body>'
+            ).then(res => {
+              console.log(res)
+            })
+            FileService.updateFile(
+              this.isEditor2Load,
+              this.editor2.getValue()
+            ).then(res => {
               console.log(res)
             })
           } else if (
@@ -1245,47 +1223,24 @@ export default {
               $('iframe').get(0).contentWindow.document.documentElement
                 .innerHTML
             )
-            axios({
-              ...apiUrl.file.update,
-              data: {
-                files: [
-                  {
-                    file_seq: this.isEditor1Load.file_seq,
-                    folder_seq: this.isEditor1Load.folder_seq,
-                    file_name: this.isEditor1Load.file_name,
-                    file_path: this.isEditor1Load.file_path,
-                    file_type: this.isEditor1Load.file_type,
-                    contents:
-                      $('iframe')
-                        .get(0)
-                        .contentWindow.document.documentElement.innerHTML.split(
-                          '<style>'
-                        )[0] + '</body>'
-                  }
-                ]
-              }
-            }).then(res => {
+            FileService.updateFile(
+              this.isEditor1Load,
+              $('iframe')
+                .get(0)
+                .contentWindow.document.documentElement.innerHTML.split(
+                  '<style>'
+                )[0] + '</body>'
+            ).then(res => {
               console.log(res)
             })
           } else if (
             this.isEditor1Load === null &&
             this.isEditor2Load !== null
           ) {
-            axios({
-              ...apiUrl.file.update,
-              data: {
-                files: [
-                  {
-                    file_seq: this.isEditor2Load.file_seq,
-                    folder_seq: this.isEditor2Load.folder_seq,
-                    file_name: this.isEditor2Load.file_name,
-                    file_path: this.isEditor2Load.file_path,
-                    file_type: this.isEditor2Load.file_type,
-                    contents: this.editor2.getValue()
-                  }
-                ]
-              }
-            }).then(res => {
+            FileService.updateFile(
+              this.isEditor2Load,
+              this.editor2.getValue()
+            ).then(res => {
               console.log(res)
             })
           }
@@ -1442,18 +1397,13 @@ export default {
             this.$refs.home.addContent(this.selectedTag, e.detail.target)
             this.cssTitles[i].contents += this.$store.getters.templateCSS
           } else {
-            axios({
-              ...apiUrl.csspair.create,
-              data: {
-                html_css_pairs: [
-                  {
-                    html_file_seq: this.isEditor1Load.file_seq,
-                    css_file_seq: this.cssTitles[i].file_seq
-                  }
-                ]
+            let data = [
+              {
+                html_file_seq: this.isEditor1Load.file_seq,
+                css_file_seq: this.cssTitles[i].file_seq
               }
-            }).then(res => {
-              console.log(res.data)
+            ]
+            PairService.createCSSPair(data).then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 this.stylePair.push({
                   html: res.data.data[0].html_file_seq,
@@ -1483,39 +1433,26 @@ export default {
           for (i = 0; i < this.folder_seq.length; i++) {
             if (this.folder_seq[i].type === 'css') break
           }
-          axios({
-            ...apiUrl.file.create,
-            data: {
-              files: [
-                {
-                  folder_seq: this.folder_seq[i].seq,
-                  file_name: 'ed-template',
-                  file_path: this.isProject.title + '/css/ed-template.css',
-                  file_type: 'css',
-                  contents: this.$store.getters.templateCSS
-                }
-              ]
-            }
-          }).then(res => {
-            console.log(res.data)
+          FileService.createTemplateFile(
+            this.folder_seq[i].seq,
+            'ed-template',
+            this.isProject.title + '/css/ed-template.css',
+            'css',
+            this.$store.getters.templateCSS
+          ).then(res => {
             if (res.data.responseCode === 'SUCCESS') {
               let newFile = res.data.data[0]
               newFile.isEdited = false
               newFile.text =
                 res.data.data[0].file_name + '.' + res.data.data[0].file_type
               this.cssTitles.push(newFile)
-              axios({
-                ...apiUrl.csspair.create,
-                data: {
-                  html_css_pairs: [
-                    {
-                      html_file_seq: this.isEditor1Load.file_seq,
-                      css_file_seq: res.data.data[0].file_seq
-                    }
-                  ]
+              let data = [
+                {
+                  html_file_seq: this.isEditor1Load.file_seq,
+                  css_file_seq: res.data.data[0].file_seq
                 }
-              }).then(res => {
-                console.log(res.data)
+              ]
+              PairService.createCSSPair(data).then(res => {
                 if (res.data.responseCode === 'SUCCESS') {
                   let i
                   let htmlPair = false
@@ -1733,15 +1670,11 @@ export default {
         }
         let copyFileTitle =
           this.selectedFile.textContent.trim().split('.')[0] + '_copy'
-        axios({
-          ...apiUrl.file.checkName,
-          params: {
-            folder_seq: this.htmlTitles[i].folder_seq,
-            file_type: this.htmlTitles[i].file_type,
-            file_name: copyFileTitle
-          }
-        }).then(res => {
-          console.log(res.data)
+        FileService.checkFileName(
+          this.htmlTitles[i].folder_seq,
+          this.htmlTitles[i].file_type,
+          copyFileTitle
+        ).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
             let data = {
               folder_seq: this.htmlTitles[i].folder_seq,
@@ -1756,13 +1689,7 @@ export default {
               file_type: this.htmlTitles[i].file_type,
               contents: this.htmlTitles[i].contents
             }
-            axios({
-              ...apiUrl.file.create,
-              data: {
-                files: [data]
-              }
-            }).then(res => {
-              console.log(res.data)
+            FileService.createFile(data).then(res => {
               let copiedFile = res.data.data[0]
               if (res.data.responseCode === 'SUCCESS') {
                 // htmltitles에 있는 pair정보 가지고 pair생성
@@ -1781,13 +1708,7 @@ export default {
                         .css_file_seq
                     })
                   }
-                  axios({
-                    ...apiUrl.csspair.create,
-                    data: {
-                      html_css_pairs: data
-                    }
-                  }).then(res => {
-                    console.log(res.data)
+                  PairService.createCSSPair(data).then(res => {
                     if (res.data.responseCode === 'SUCCESS') {
                       title = copiedFile
                       title.html_css_pair = res.data.data
@@ -1825,15 +1746,11 @@ export default {
         }
         let copyFileTitle =
           this.selectedFile.textContent.trim().split('.')[0] + '_copy'
-        axios({
-          ...apiUrl.file.checkName,
-          params: {
-            folder_seq: this.cssTitles[i].folder_seq,
-            file_type: this.cssTitles[i].file_type,
-            file_name: copyFileTitle
-          }
-        }).then(res => {
-          console.log(res.data)
+        FileService.checkFileName(
+          this.cssTitles[i].folder_seq,
+          this.cssTitles[i].file_type,
+          copyFileTitle
+        ).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
             let data = {
               folder_seq: this.cssTitles[i].folder_seq,
@@ -1848,14 +1765,7 @@ export default {
               file_type: this.cssTitles[i].file_type,
               contents: this.cssTitles[i].contents
             }
-            axios({
-              ...apiUrl.file.create,
-              data: {
-                files: [data]
-              }
-            }).then(res => {
-              console.log(res.data)
-
+            FileService.createFile(data).then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 let copiedFile = res.data.data[0]
                 copiedFile.isEdited = false
@@ -1918,14 +1828,8 @@ export default {
         }
       }
       console.log(changedFile)
-
-      axios({
-        ...apiUrl.file.update,
-        data: {
-          files: changedFile
-        }
-      }).then(res => {
-        console.log(res.data.message)
+      FileService.updateMultiFile(changedFile).then(res => {
+        console.log(res)
       })
     },
     addFile() {
@@ -1952,17 +1856,7 @@ export default {
             this.htmlTitles[i].text === this.selectedFile.textContent.trim()
           ) {
             this.deleteFileNum = i
-            axios({
-              ...apiUrl.file.delete,
-              data: {
-                files: [
-                  {
-                    file_seq: this.htmlTitles[i].file_seq
-                  }
-                ]
-              }
-            }).then(res => {
-              console.log(res)
+            FileService.deleteFile(this.htmlTitles[i].file_seq).then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 this.$nextTick(() => {
                   this.htmlTitles.splice(this.deleteFileNum, 1)
@@ -1987,17 +1881,7 @@ export default {
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
             this.deleteFileNum = i
-            axios({
-              ...apiUrl.file.delete,
-              data: {
-                files: [
-                  {
-                    file_seq: this.cssTitles[i].file_seq
-                  }
-                ]
-              }
-            }).then(res => {
-              console.log(res)
+            FileService.deleteFile(this.cssTitles[i].file_seq).then(res => {
               if (res.data.responseCode === 'SUCCESS') {
                 this.$nextTick(() => {
                   this.cssTitles.splice(this.deleteFileNum, 1)
@@ -2160,13 +2044,7 @@ export default {
         if (this.projectTitles[i].title === e.target.textContent.trim()) {
           // 해당 프로젝트의 파일 받아오기
           this.isProject = this.projectTitles[i]
-          axios({
-            ...apiUrl.project.get,
-            params: {
-              project_seq: this.projectTitles[i].seq
-            }
-          }).then(res => {
-            console.log(res)
+          ProjectService.getProjectData(this.projectTitles[i].seq).then(res => {
             if (res.data.responseCode === 'SUCCESS') {
               this.isProjectLoaded = true
               // this.folders = res.data.data.folders
@@ -2263,20 +2141,9 @@ export default {
       this.newTitle = e.target.value
     },
     onFolderSelected(e) {
-      this.htmlTitles = []
-      this.cssTitles = []
-      this.jsTitles = []
-      this.imgTitles = []
-      this.titles = []
-      this.projectTitles = []
-      this.openTitles = new Set()
-      this.openTitlesArr = []
-      this.leftTitles = new Set()
-      this.centerTitles = new Set()
-      this.rightTitles = new Set()
-      this.leftTitlesArr = []
-      this.centerTitlesArr = []
-      this.rightTitlesArr = []
+      this.resetList()
+      this.isEditor1Load = null
+      this.isEditor2Load = null
       var fs = require('fs')
       var file = require('file-system')
       console.log(file)
@@ -2325,31 +2192,10 @@ export default {
       this.firstPopUp = false
       this.secondPopUp = false
       this.thirdPopUp = true
-      axios({
-        ...apiUrl.project.list,
-        params: {
-          user_id: 'lsm'
-        }
-      }).then(res => {
-        console.log(res)
+      ProjectService.getProjectList().then(res => {
         if (res.data.responseCode === 'SUCCESS') {
           let i
-          this.htmlTitles = []
-          this.cssTitles = []
-          this.jsTitles = []
-          this.imgTitles = []
-          this.titles = []
-          this.projectTitles = []
-          this.openTitles = new Set()
-          this.openTitlesArr = []
-          this.leftTitles = new Set()
-          this.centerTitles = new Set()
-          this.rightTitles = new Set()
-          this.leftTitlesArr = []
-          this.rightTitlesArr = []
-          this.centerTitlesArr = []
-          this.isEditor1Load = null
-          this.isEditor2Load = null
+          this.resetList()
           this.editor1.setValue('html 파일을 로드해주세요.')
           this.editor2.setValue('css 파일을 로드해주세요.')
           $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
@@ -2364,39 +2210,30 @@ export default {
         }
       })
     },
+    resetList() {
+      this.htmlTitles = []
+      this.csstitles = []
+      this.jsTitles = []
+      this.imgTitles = []
+      this.titles = []
+      this.projectTitles = []
+      this.openTitles = new Set()
+      this.openTitlesArr = []
+      this.leftTitles = new Set()
+      this.centerTitles = new Set()
+      this.rightTitles = new Set()
+      this.leftTitlesArr = []
+      this.rightTitlesArr = []
+      this.centerTitlesArr = []
+    },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
-      axios({
-        ...apiUrl.project.create,
-        data: {
-          projects: [
-            {
-              user_seq: 2,
-              project_name: title.value
-            }
-          ]
-        }
-      }).then(res => {
+      ProjectService.createNewProject(title.value).then(res => {
         console.log(res)
         if (res.data.responseCode === 'SUCCESS') {
           console.log(res.data)
           // 프로젝트 seq 받아서 저장하기
-          this.htmlTitles = []
-          this.cssTitles = []
-          this.jsTitles = []
-          this.imgTitles = []
-          this.titles = []
-          this.projectTitles = []
-          this.openTitles = new Set()
-          this.openTitlesArr = []
-          this.leftTitles = new Set()
-          this.rightTitles = new Set()
-          this.centerTitles = new Set()
-          this.centerTitlesArr = []
-          this.leftTitlesArr = []
-          this.rightTitlesArr = []
-          this.isEditor1Load = null
-          this.isEditor2Load = null
+          this.resetList()
           this.editor1.setValue('html 파일을 로드해주세요.')
           this.editor2.setValue('css 파일을 로드해주세요.')
           $('iframe').get(0).contentWindow.document.documentElement.innerHTML =

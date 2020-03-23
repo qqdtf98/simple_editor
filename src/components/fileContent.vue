@@ -57,6 +57,7 @@
 
 <script>
 import vueCustomScrollbar from 'vue-custom-scrollbar'
+import FileService from '../services/file.service'
 import axios from 'axios'
 import apiUrl from '../modules/api-url'
 
@@ -100,14 +101,11 @@ export default {
             break
           }
         }
-        axios({
-          ...apiUrl.file.checkName,
-          params: {
-            folder_seq: this.folderSeq[i].seq,
-            file_type: this.type,
-            file_name: e.target.textContent.split('.')[0].trim()
-          }
-        }).then(res => {
+        FileService.checkFileName(
+          this.folderSeq[i].seq,
+          this.type,
+          e.target.textContent.split('.')[0].trim()
+        ).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
             console.log('succ')
             // 서버에서 체크 - 중복 X
@@ -134,13 +132,7 @@ export default {
                 file_type: this.type,
                 contents: ''
               }
-              axios({
-                ...apiUrl.file.create,
-                data: {
-                  files: [data]
-                }
-              }).then(res => {
-                console.log(res)
+              FileService.createFile(data).then(res => {
                 if (res.data.responseCode === 'SUCCESS') {
                   console.log('succeseee')
                   if (res.data.data[0].file_type === 'html') {
@@ -200,26 +192,12 @@ export default {
                     break
                   }
                 }
-                axios({
-                  ...apiUrl.file.update,
-                  data: {
-                    files: [
-                      {
-                        folder_seq: this.folderSeq[j].seq,
-                        file_seq: this.htmlTitles[i].file_seq,
-                        file_name: e.target.textContent.split('.')[0].trim(),
-                        file_path:
-                          this.htmlTitles[i].file_path.split(
-                            this.htmlTitles[i].text
-                          )[0] +
-                          e.target.textContent.split('.')[0].trim() +
-                          '.' +
-                          this.type
-                      }
-                    ]
-                  }
-                }).then(res => {
-                  console.log(res)
+                FileService.updateFileName(
+                  this.folderSeq[j],
+                  this.htmlTitles[i],
+                  e.target.textContent.split('.')[0].trim(),
+                  this.type
+                ).then(res => {
                   if (res.data.responseCode === 'SUCCESS') {
                     e.target.textContent =
                       e.target.textContent.split('.')[0] + '.' + this.type
@@ -248,26 +226,12 @@ export default {
                     break
                   }
                 }
-                axios({
-                  ...apiUrl.file.update,
-                  data: {
-                    files: [
-                      {
-                        folder_seq: this.folderSeq[j].seq,
-                        file_seq: this.cssTitles[i].file_seq,
-                        file_name: e.target.textContent.split('.')[0].trim(),
-                        file_path:
-                          this.cssTitles[i].file_path.split(
-                            this.cssTitles[i].text
-                          )[0] +
-                          e.target.textContent.split('.')[0].trim() +
-                          '.' +
-                          this.type
-                      }
-                    ]
-                  }
-                }).then(res => {
-                  console.log(res)
+                FileService.updateFileName(
+                  this.folderSeq[j].seq,
+                  this.cssTitles[i],
+                  e.target.textContent.split('.')[0].trim(),
+                  this.type
+                ).then(res => {
                   if (res.data.responseCode === 'SUCCESS') {
                     e.target.textContent =
                       e.target.textContent.split('.')[0] + '.' + this.type
@@ -294,26 +258,12 @@ export default {
                     break
                   }
                 }
-                axios({
-                  ...apiUrl.file.update,
-                  data: {
-                    files: [
-                      {
-                        folder_seq: this.folderSeq[j].seq,
-                        file_seq: this.jsTitles[i].file_seq,
-                        file_name: e.target.textContent.split('.')[0].trim(),
-                        file_path:
-                          this.jsTitles[i].file_path.split(
-                            this.jsTitles[i].text
-                          )[0] +
-                          e.target.textContent.split('.')[0].trim() +
-                          '.' +
-                          this.type
-                      }
-                    ]
-                  }
-                }).then(res => {
-                  console.log(res)
+                FileService.updateFileName(
+                  this.folderSeq[j].seq,
+                  this.jsTitles[i],
+                  e.target.textContent.split('.')[0].trim(),
+                  this.type
+                ).then(res => {
                   if (res.data.responseCode === 'SUCCESS') {
                     e.target.textContent =
                       e.target.textContent.split('.')[0] + '.' + this.type
