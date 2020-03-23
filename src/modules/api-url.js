@@ -16,10 +16,6 @@ export default {
     }
   },
   file: {
-    pair: {
-      method: 'get',
-      url: `${host}/file/selectHtmlCssPair`
-    },
     update: {
       method: 'post',
       url: `${host}/file/updateFile`
@@ -37,7 +33,7 @@ export default {
       url: `${host}/file/createFile`
     }
   },
-  pair: {
+  csspair: {
     create: {
       method: 'post',
       url: `${host}/file/createHtmlCssPair`
@@ -49,6 +45,20 @@ export default {
     delete: {
       method: 'post',
       url: `${host}/file/deleteHtmlCssPair`
+    }
+  },
+  jspair: {
+    create: {
+      method: 'post',
+      url: `${host}/file/createHtmlJsPair`
+    },
+    get: {
+      method: 'get',
+      url: `${host}/file/selectHtmlJsPair`
+    },
+    delete: {
+      method: 'post',
+      url: `${host}/file/deleteHtmlJsPair`
     }
   }
 }
