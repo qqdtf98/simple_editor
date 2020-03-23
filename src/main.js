@@ -3,6 +3,7 @@ import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'
 import VueHighlightJS from 'vue-highlight.js'
 import Vue from 'vue'
+import router from './router'
 import App from './App.vue'
 import { store } from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -28,5 +29,6 @@ Vue.config.productionTip = false
 // export const eventBus = new Vue()
 new Vue({
   render: h => h(App),
-  store
+  store,
+  router
 }).$mount('#app')

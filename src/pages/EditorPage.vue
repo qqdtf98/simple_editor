@@ -491,7 +491,7 @@
 
 <script>
 import apiUrl from '../modules/api-url'
-import ProjectService from '../modules/project.service'
+// import ProjectService from '../modules/project.service'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
@@ -2325,47 +2325,44 @@ export default {
       this.firstPopUp = false
       this.secondPopUp = false
       this.thirdPopUp = true
-      // console.log(this.$store.state.user.usedId)
-      console.log('eueui')
-      // console.log(ProjectService.getProjectList)
-      // axios({
-      //   ...apiUrl.project.list,
-      //   params: {
-      //     user_id: 'lsm'
-      //   }
-      // }).then(res => {
-      //   console.log(res)
-      //   if (res.data.responseCode === 'SUCCESS') {
-      //     let i
-      //     this.htmlTitles = []
-      //     this.cssTitles = []
-      //     this.jsTitles = []
-      //     this.imgTitles = []
-      //     this.titles = []
-      //     this.projectTitles = []
-      //     this.openTitles = new Set()
-      //     this.openTitlesArr = []
-      //     this.leftTitles = new Set()
-      //     this.centerTitles = new Set()
-      //     this.rightTitles = new Set()
-      //     this.leftTitlesArr = []
-      //     this.rightTitlesArr = []
-      //     this.centerTitlesArr = []
-      //     this.isEditor1Load = null
-      //     this.isEditor2Load = null
-      //     this.editor1.setValue('html 파일을 로드해주세요.')
-      //     this.editor2.setValue('css 파일을 로드해주세요.')
-      //     $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
-      //       '파일을 로드해주세요.'
-      //     for (i = 0; i < res.data.data.length; i++) {
-      //       let title = {
-      //         seq: res.data.data[i].project_seq,
-      //         title: res.data.data[i].project_name
-      //       }
-      //       this.projectTitles.push(title)
-      //     }
-      //   }
-      // })
+      axios({
+        ...apiUrl.project.list,
+        params: {
+          user_id: 'lsm'
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.data.responseCode === 'SUCCESS') {
+          let i
+          this.htmlTitles = []
+          this.cssTitles = []
+          this.jsTitles = []
+          this.imgTitles = []
+          this.titles = []
+          this.projectTitles = []
+          this.openTitles = new Set()
+          this.openTitlesArr = []
+          this.leftTitles = new Set()
+          this.centerTitles = new Set()
+          this.rightTitles = new Set()
+          this.leftTitlesArr = []
+          this.rightTitlesArr = []
+          this.centerTitlesArr = []
+          this.isEditor1Load = null
+          this.isEditor2Load = null
+          this.editor1.setValue('html 파일을 로드해주세요.')
+          this.editor2.setValue('css 파일을 로드해주세요.')
+          $('iframe').get(0).contentWindow.document.documentElement.innerHTML =
+            '파일을 로드해주세요.'
+          for (i = 0; i < res.data.data.length; i++) {
+            let title = {
+              seq: res.data.data[i].project_seq,
+              title: res.data.data[i].project_name
+            }
+            this.projectTitles.push(title)
+          }
+        }
+      })
     },
     createNewProject() {
       let title = document.querySelector('.new-project-name')
