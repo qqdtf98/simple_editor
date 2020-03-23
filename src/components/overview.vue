@@ -76,7 +76,11 @@ export default {
 
       // 클래스 네임. ID 값 넣는함수
       var newDIV2 = document.createElement('a')
-      if (typeof child.className != 'undefined')
+      if (
+        typeof child.className != 'undefined' &&
+        child.className != null &&
+        child.className != ''
+      )
         newDIV2.innerHTML = ' .' + child.className
       if (typeof $(child).attr('id') != 'undefined')
         newDIV2.innerHTML += '  #' + $(child).attr('id')
