@@ -2034,9 +2034,9 @@ export default {
       } else if (e.target.getAttribute('name') == 'js') {
         this.kindOfLoadDate = 3
       }
-      this.chageContent()
+      this.changeContent()
     },
-    chageContent() {
+    changeContent() {
       if (this.kindOfLoadDate == 1) {
         this.test = document.getElementById('newLoaderHtml').innerHTML
       } else if (this.kindOfLoadDate == 2) {
@@ -2120,18 +2120,15 @@ export default {
     mouseOver(e) {
       // console.log(e.target.tagName)
       if (e.target.tagName == 'SPAN') {
-        // this.$emit('manualSelet', e.target.tagName)
+        // this.$emit('manualSelect', e.target.tagName)
       } else {
-        // this.$emit('manualSelet', e.target.tagName)
+        // this.$emit('manualSelect', e.target.tagName)
       }
     },
     mouseOverFilter(e) {
       console.log(e.target.tagName)
-      
-      this.$emit('manualSelet', e)
-    },
-    onCodeChange(e) {
-      console.log(e)
+
+      this.$emit('manualSelect', e)
     }
   }
 }

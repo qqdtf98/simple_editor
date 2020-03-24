@@ -57,6 +57,7 @@
 
 <script>
 import vueCustomScrollbar from 'vue-custom-scrollbar'
+import FileModule from '../modules/file.module'
 import FileService from '../services/file.service'
 import axios from 'axios'
 import apiUrl from '../modules/api-url'
@@ -93,6 +94,7 @@ export default {
     setNewTitle(e) {
       e.preventDefault()
       if (e) {
+        this.$store.commit('setFolderSeq', this.folderSeq)
         e.target.textContent =
           e.target.textContent.split('.')[0].trim() + '.' + this.type
         let i
@@ -107,184 +109,17 @@ export default {
           e.target.textContent.split('.')[0].trim()
         ).then(res => {
           if (res.data.responseCode === 'SUCCESS') {
-            console.log('succ')
+            this.$store.commit('setHtmlTitles', this.htmlTitles)
+            this.$store.commit('setCssTitles', this.cssTitles)
+            this.$store.commit('setJsTitles', this.jsTitles)
+            this.$store.commit('setFolderSeq', this.folderSeq)
             // 서버에서 체크 - 중복 X
             if (this.isNewFileAdd) {
               // 새로운 파일 추가일때
-              let data
-              let i
-              for (i = 0; i < this.folderSeq.length; i++) {
-                if (this.folderSeq[i].type === this.type) {
-                  break
-                }
-              }
-              data = {
-                folder_seq: this.folderSeq[i].seq,
-                file_name: e.target.textContent.split('.')[0].trim(),
-                file_path:
-                  this.project +
-                  '/' +
-                  this.type +
-                  '/' +
-                  e.target.textContent.split('.')[0].trim() +
-                  '.' +
-                  this.type,
-                file_type: this.type,
-                contents: ''
-              }
-              FileService.createFile(data).then(res => {
-                if (res.data.responseCode === 'SUCCESS') {
-                  console.log('succeseee')
-                  if (res.data.data[0].file_type === 'html') {
-                    this.htmlTitles[this.htmlTitles.length - 1] =
-                      res.data.data[0]
-                    this.htmlTitles[this.htmlTitles.length - 1].text =
-                      e.target.textContent.split('.')[0].trim() + '.html'
-                    this.htmlTitles[this.htmlTitles.length - 1].isEdited = false
-                  } else if (res.data.data[0].file_type === 'css') {
-                    this.cssTitles[this.cssTitles.length - 1] = res.data.data[0]
-                    this.cssTitles[this.cssTitles.length - 1].text =
-                      e.target.textContent.split('.')[0] + '.css'
-                    this.cssTitles[this.cssTitles.length - 1].isEdited = false
-                  } else if (res.data.data[0].file_type === 'js') {
-                    this.jsTitles[this.jsTitles.length - 1] = res.data.data[0]
-                    this.jsTitles[this.jsTitles.length - 1].text =
-                      e.target.textContent.split('.')[0] + '.js'
-                    this.jsTitles[this.jsTitles.length - 1].isEdited = false
-                  }
-
-                  this.$emit(
-                    'reset-titles',
-                    this.htmlTitles,
-                    this.cssTitles,
-                    this.jsTitles
-                  )
-                  e.target.textContent =
-                    e.target.textContent.split('.')[0] + '.' + this.type
-                } else {
-                  if (res.data.data[0].file_type === 'html') {
-                    this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
-                  } else if (res.data.data[0].file_type === 'css') {
-                    this.cssTitles.splice(this.cssTitles.length - 1, 1)
-                  } else if (res.data.data[0].file_type === 'js') {
-                    this.jsTitles.splice(this.jsTitles.length - 1, 1)
-                  }
-                  this.$emit(
-                    'reset-titles',
-                    this.htmlTitles,
-                    this.cssTitles,
-                    this.jsTitles
-                  )
-                }
-              })
+              FileModule.setNewFileTitle(e, this.type, this.project)
               this.isNewFileAdd = false
             } else {
-              // 기존 파일 수정일 때
-              if (this.type === 'html') {
-                let html = document.querySelector('.html')
-                let i
-                for (i = 0; i < html.children.length; i++) {
-                  if (html.children[i] === this.contextTarget) break
-                }
-                let j
-                for (j = 0; j < this.folderSeq.length; j++) {
-                  if (this.folderSeq[j].type === this.type) {
-                    break
-                  }
-                }
-                FileService.updateFileName(
-                  this.folderSeq[j],
-                  this.htmlTitles[i],
-                  e.target.textContent.split('.')[0].trim(),
-                  this.type
-                ).then(res => {
-                  if (res.data.responseCode === 'SUCCESS') {
-                    e.target.textContent =
-                      e.target.textContent.split('.')[0] + '.' + this.type
-                  } else {
-                    this.htmlTitles.splice(this.htmlTitles.length - 1, 1)
-                  }
-                })
-                this.htmlTitles[i].text =
-                  e.target.textContent.split('.')[0] + '.html'
-                this.htmlTitles[i].file_path =
-                  this.htmlTitles[i].file_path.split(
-                    this.htmlTitles[i].text
-                  )[0] +
-                  e.target.textContent.split('.')[0] +
-                  '.' +
-                  this.type
-              } else if (this.type === 'css') {
-                let css = document.querySelector('.css')
-                let i
-                for (i = 0; i < css.children.length; i++) {
-                  if (css.children[i] === this.contextTarget) break
-                }
-                let j
-                for (j = 0; j < this.folderSeq.length; j++) {
-                  if (this.folderSeq[j].type === this.type) {
-                    break
-                  }
-                }
-                FileService.updateFileName(
-                  this.folderSeq[j].seq,
-                  this.cssTitles[i],
-                  e.target.textContent.split('.')[0].trim(),
-                  this.type
-                ).then(res => {
-                  if (res.data.responseCode === 'SUCCESS') {
-                    e.target.textContent =
-                      e.target.textContent.split('.')[0] + '.' + this.type
-                  } else {
-                    this.cssTitles.splice(this.cssTitles.length - 1, 1)
-                  }
-                })
-                this.cssTitles[i].text =
-                  e.target.textContent.split('.')[0] + '.css'
-                this.cssTitles[i].file_path =
-                  this.cssTitles[i].file_path.split(this.cssTitles[i].text)[0] +
-                  e.target.textContent.split('.')[0] +
-                  '.' +
-                  this.type
-              } else if (this.type === 'js') {
-                let js = document.querySelector('.js')
-                let i
-                for (i = 0; i < js.children.length; i++) {
-                  if (js.children[i] === this.contextTarget) break
-                }
-                let j
-                for (j = 0; j < this.folderSeq.length; j++) {
-                  if (this.folderSeq[j].type === this.type) {
-                    break
-                  }
-                }
-                FileService.updateFileName(
-                  this.folderSeq[j].seq,
-                  this.jsTitles[i],
-                  e.target.textContent.split('.')[0].trim(),
-                  this.type
-                ).then(res => {
-                  if (res.data.responseCode === 'SUCCESS') {
-                    e.target.textContent =
-                      e.target.textContent.split('.')[0] + '.' + this.type
-                  } else {
-                    this.jsTitles.splice(this.jsTitles.length - 1, 1)
-                  }
-                })
-                this.jsTitles[i].text =
-                  e.target.textContent.split('.')[0] + '.js'
-                this.jsTitles[i].file_path =
-                  this.jsTitles[i].file_path.split(this.jsTitles[i].text)[0] +
-                  e.target.textContent.split('.')[0] +
-                  '.' +
-                  this.type
-              }
-              this.$emit(
-                'reset-titles',
-                this.htmlTitles,
-                this.cssTitles,
-                this.jsTitles
-              )
+              FileModule.setFileTitle(e, this.type, this.contextTarget)
             }
             this.isContentEditable = false
           } else {
@@ -370,15 +205,17 @@ export default {
       }
       this.beforeTitle = target.textContent.trim()
       this.isContentEditable = true
-      this.$nextTick(() => {
-        const sel = window.getSelection()
-        sel.removeAllRanges()
-        const range = new Range()
-        range.setStart(target, 0)
-        range.setEnd(target, 0)
-        sel.addRange(range)
-        this.placeCaretAtEnd(target)
-      })
+      FileModule.focusInput(target)
+
+      // this.$nextTick(() => {
+      //   const sel = window.getSelection()
+      //   sel.removeAllRanges()
+      //   const range = new Range()
+      //   range.setStart(target, 0)
+      //   range.setEnd(target, 0)
+      //   sel.addRange(range)
+      //   this.placeCaretAtEnd(target)
+      // })
     },
     newFileName() {
       if (this.type === 'html') {

@@ -24,14 +24,6 @@
               height="100%"
               style="background-color: #fff;"
             ></iframe>
-            <!--
-            <div class="sample-component">
-              <img
-                src="../assets/images/plus.svg"
-                @click="addCode"
-                class="sample-add-btn"
-              />
-            </div> -->
           </div>
         </div>
       </vue-custom-scrollbar>
@@ -110,7 +102,6 @@
 <script>
 import Dashboard from '../sample/dashboard.vue'
 import Navi from '../sample/navi.vue'
-import HtmlLoader from './htmlLoader.vue'
 import spliter from '../sample/spliter.vue'
 import Context from '../components/Context'
 import ss from '../sample/ss'
@@ -120,7 +111,6 @@ export default {
   components: {
     Dashboard,
     Navi,
-    HtmlLoader,
     spliter,
     Context,
     ss,
@@ -240,8 +230,6 @@ export default {
       // })
     })
 
-    // let b = document.querySelector('.3')
-
     this.multiSelectedElement = new Set()
     this.everySelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
@@ -250,7 +238,6 @@ export default {
 
     let editor = document.querySelector('.editor-box')
 
-    // let b = document.getElementsByClassName('editor-component')
     this.borderTop = editor.getBoundingClientRect().top
     this.borderBottom =
       editor.getBoundingClientRect().height + editor.getBoundingClientRect().top
