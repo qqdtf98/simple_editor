@@ -1857,86 +1857,26 @@ export default {
           ProjectService.getProjectData(this.projectTitles[i].seq).then(res => {
             if (res.data.responseCode === 'SUCCESS') {
               this.isProjectLoaded = true
-              // this.folders = res.data.data.folders
-              let i
-              let folder
-              let j
-              let k
-              let title
-              let pair
-              for (i = 0; i < res.data.data.folders.length; i++) {
-                folder = {
-                  type: res.data.data.folders[i].folder_name,
-                  seq: res.data.data.folders[i].folder_seq
-                }
-                this.folder_seq.push(folder)
-                for (j = 0; j < res.data.data.folders[i].files.length; j++) {
-                  let css_list = []
-                  let js_list = []
-                  title = res.data.data.folders[i].files[j]
-                  title.isEdited = false
-                  title.text =
-                    res.data.data.folders[i].files[j].file_name +
-                    '.' +
-                    res.data.data.folders[i].files[j].file_type
-                  if (res.data.data.folders[i].folder_name === 'html') {
-                    if (
-                      res.data.data.folders[i].files[j].html_css_pair.length > 0
-                    ) {
-                      for (
-                        k = 0;
-                        k <
-                        res.data.data.folders[i].files[j].html_css_pair.length;
-                        k++
-                      ) {
-                        css_list.push(
-                          res.data.data.folders[i].files[j].html_css_pair[k]
-                            .css_file_seq
-                        )
-                      }
-                      pair = {
-                        html: res.data.data.folders[i].files[j].file_seq,
-                        css: css_list
-                      }
-                      this.stylePair.push(pair)
-                    }
-                    if (
-                      res.data.data.folders[i].files[j].html_js_pair.length > 0
-                    ) {
-                      for (
-                        k = 0;
-                        k <
-                        res.data.data.folders[i].files[j].html_js_pair.length;
-                        k++
-                      ) {
-                        js_list.push(
-                          res.data.data.folders[i].files[j].html_js_pair[k]
-                            .js_file_seq
-                        )
-                      }
-                      pair = {
-                        html: res.data.data.folders[i].files[j].file_seq,
-                        js: js_list
-                      }
-                      this.jsPair.push(pair)
-                    }
-                    this.titles.push(title)
-                    this.htmlTitles.push(title)
-                  } else if (res.data.data.folders[i].folder_name === 'css') {
-                    this.cssTitles.push(title)
-                  } else if (res.data.data.folders[i].folder_name === 'js') {
-                    this.jsTitles.push(title)
-                  }
-                }
-              }
-              this.$refs.filecontent.setFolderSeq(this.folder_seq)
-              this.$refs.filecontent.setStylePair(this.stylePair)
-              this.$refs.filecontent.setFiles(
-                this.htmlTitles,
-                this.cssTitles,
-                this.jsTitles
-              )
-              this.$refs.sitemap.loadSitemap(this.titles)
+              ProjectModule.setProjectData(res)
+              this.$nextTick(() => {
+                this.htmlTitles = this.$store.getters.htmlTitles
+                this.cssTitles = this.$store.getters.cssTitles
+                this.jsTitles = this.$store.getters.jsTitles
+                this.folder_seq = this.$store.getters.folderSeq
+                this.stylePair = this.$store.getters.stylePair
+                this.jsPair = this.$store.getters.jsPair
+                this.titles = this.$store.getters.titles
+                this.$nextTick(() => {
+                  this.$refs.filecontent.setFolderSeq(this.folder_seq)
+                  this.$refs.filecontent.setStylePair(this.stylePair)
+                  this.$refs.filecontent.setFiles(
+                    this.htmlTitles,
+                    this.cssTitles,
+                    this.jsTitles
+                  )
+                  this.$refs.sitemap.loadSitemap(this.titles)
+                })
+              })
             }
           })
           this.isPopUpActive = false
