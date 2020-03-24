@@ -24,14 +24,6 @@
               height="100%"
               style="background-color: #fff;"
             ></iframe>
-            <!--
-            <div class="sample-component">
-              <img
-                src="../assets/images/plus.svg"
-                @click="addCode"
-                class="sample-add-btn"
-              />
-            </div> -->
           </div>
         </div>
       </vue-custom-scrollbar>

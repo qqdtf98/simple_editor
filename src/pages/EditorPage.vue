@@ -354,7 +354,6 @@
     <div v-show="isTitle" class="title-copy"></div>
     <div v-show="isContextMenu" class="sitemapContext">
       <div @click="changePageSitemap" class="open">Open</div>
-      <div @click="copyPage" class="copy">Copy</div>
       <div @click="deleteTitle" class="delete">Delete</div>
     </div>
     <div v-show="isContextMenu2" class="fileContext">
@@ -1783,7 +1782,6 @@ export default {
         let i
         for (i = 0; i < this.cssTitles.length; i++) {
           if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
-            console.log('select')
             this.centerTitles.add(this.cssTitles[i])
             this.centerTitlesArr = Array.from(this.centerTitles)
             this.isSetEditor2 = true
@@ -1977,7 +1975,6 @@ export default {
     createNewProject() {
       let title = document.querySelector('.new-project-name')
       ProjectService.createNewProject(title.value).then(res => {
-        console.log(res)
         if (res.data.responseCode === 'SUCCESS') {
           console.log(res.data)
           // 프로젝트 seq 받아서 저장하기
@@ -1991,9 +1988,7 @@ export default {
               title: res.data.data[0].project_name,
               seq: res.data.data[0].project_seq
             }
-            console.log(project)
             this.isProject = project
-            console.log(this.isProject)
             let folder_seq = []
             let payload
             let i
@@ -2004,7 +1999,6 @@ export default {
               }
               folder_seq.push(payload)
             }
-            console.log(folder_seq)
             this.$refs.filecontent.setFolderSeq(folder_seq)
           })
         }
@@ -2216,40 +2210,6 @@ export default {
     openCode() {
       this.isData = true
     },
-    copyPage() {
-      console.log(this.selectedTitle)
-      let titles = document.querySelectorAll('.titles')
-      let i
-      for (i = 0; i < titles.length; i++) {
-        if (titles[i] === this.selectedTitle) {
-          break
-        }
-      }
-      let payload = {
-        text: `${this.titles[i].text}`,
-        code: this.titles[i].code
-      }
-      this.titles.push(payload)
-      let editor = document.querySelector('#board')
-      let newEditorBox = document.createElement('div')
-      newEditorBox.classList.add('board')
-      newEditorBox.classList.add('hidden')
-      newEditorBox.setAttribute('id', 'board' + this.editorNum)
-
-      editor.parentElement.appendChild(newEditorBox)
-
-      this.editorNum++
-
-      let files = document.querySelectorAll('.file-name')
-      for (i = 0; i < files.length; i++) {
-        if (i === 0) {
-          files[i].style.backgroundColor = '#545e66'
-        } else {
-          files[i].style.backgroundColor = '#2c3134'
-        }
-      }
-      this.$refs.sitemap.loadSitemap(this.titles)
-    },
     changePageSitemap(e) {
       let titles = document.querySelectorAll('.titles')
       let i
@@ -2459,10 +2419,6 @@ export default {
       this.resizeLoader = true
       this.initialY = event.clientY
       this.initialHeight = parseInt(getComputedStyle(loader).height)
-    },
-    lo(to) {
-      let loader = document.querySelector('.loadDataPanel')
-      loader.style.top = to
     },
     copyTitleFunc(payload) {
       this.isTitle = true
@@ -2719,14 +2675,8 @@ export default {
         })
       }
     },
-    // addElement (e) {
-    //   this.addTag = true
-    //   // console.log(e.target)
-    //   this.selectedTag = e.target
-    // },
     selectDomElemented(domElement) {
       this.$refs.home.selectOverview(domElement)
-      // this.dom = domElement
     },
     inParentTreeOption(dom) {
       this.$refs.layout.parentDom = dom
