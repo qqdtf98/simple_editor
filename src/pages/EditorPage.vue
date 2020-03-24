@@ -2618,119 +2618,21 @@ export default {
         }
         let rework = this.reworkStack.pop()
         let work = rework
-        if (rework.work === 'style') {
-          rework.elem.style[rework.style] = rework.afterValue
-        } else if (rework.work === 'move') {
-          rework.afterMovePosition.appendChild(rework.elem)
-        } else if (rework.work === 'remove') {
-          let parent = rework.position
-          parent.removeChild(rework.elem)
-        } else if (rework.work === 'add') {
-          rework.position.appendChild(rework.elem)
-        } else if (rework.work === 'copy') {
-          $(rework.elem).after(rework.copyElem)
-        } else if (rework.work === 'width') {
-          rework.elem.style.width = rework.afterSize
-        } else if (rework.work === 'height') {
-          rework.elem.style.height = rework.afterSize
-        } else if (rework.work === 'edit') {
-          rework.elem.textContent = rework.afterEdit
-        } else if (rework.work === 'widthChange') {
-          let i
-          let entries = rework.elems.entries()
-          let setIter = rework.elems[Symbol.iterator]()
-          for (i = 0; i < rework.elems.size; i++) {
-            let item = setIter.next().value
-            item.style.width = rework.afterWidth + 'px'
-          }
-        } else if (rework.work === 'heightChange') {
-          let i
-          let entries = rework.elems.entries()
-          let setIter = rework.elems[Symbol.iterator]()
-          for (i = 0; i < rework.elems.size; i++) {
-            let item = setIter.next().value
-            item.style.height = rework.afterHeight + 'px'
-          }
-        } else if (rework.work === 'multiDelete') {
-          let i
-          for (i = 0; i < rework.elem.length; i++) {
-            rework.elem[i].parentElement.removeChild(rework.elem[i])
-          }
-        }
+        UndoRedoModule.redoWork(rework)
         this.stackPush(work)
       }
     },
     undoWork() {
-      // console.log('aaa')
       let i
       if (this.workStack.length !== 0) {
-        // for (i = 0; i < this.workStack.length; i++) {
-        //   console.log(this.workStack[i])
-        // }
         let work = this.workStack.pop()
         let rework = work
         this.reworkStack.push(rework)
-        if (work.work === 'style') {
-          work.elem.style[work.style] = work.value
-        } else if (work.work === 'remove') {
-          console.log('remove')
-          let parent = work.position
-          $(work.elem).insertAfter(parent.children[work.nth - 1])
-        } else if (work.work === 'add') {
-          let parent = work.position
-          parent.removeChild(work.elem)
-        } else if (work.work === 'copy') {
-          work.position.removeChild(work.copyElem)
-        } else if (work.work === 'move') {
-          work.afterMovePosition.removeChild(work.elem)
-          work.position.appendChild(work.elem)
-        } else if (work.work === 'width') {
-          work.elem.style.width = work.beforeSize
-        } else if (work.work === 'height') {
-          work.elem.style.height = work.beforeSize
-        } else if (work.work === 'edit') {
-          work.elem.textContent = work.beforeEdit
-        } else if (work.work === 'widthChange') {
-          let i
-          let entries = work.elems.entries()
-          let setIter = work.elems[Symbol.iterator]()
-          for (i = 0; i < work.elems.size; i++) {
-            let item = setIter.next().value
-            item.style.width = work.beforeWidth[i] + 'px'
-          }
-        } else if (work.work === 'heightChange') {
-          let i
-          let entries = work.elems.entries()
-          let setIter = work.elems[Symbol.iterator]()
-          for (i = 0; i < work.elems.size; i++) {
-            let item = setIter.next().value
-            item.style.height = work.beforeHeight[i] + 'px'
-          }
-        } else if (work.work === 'multiDelete') {
-          let i
-          for (i = work.elem.length - 1; i >= 0; i--) {
-            work.afterParent[i].insertBefore(
-              work.elem[i],
-              work.afterParent[i].childNodes[work.nth[i]]
-            )
-          }
-        }
+        UndoRedoModule.undoWork(work)
       }
     },
     stackPush(elem) {
       this.workStack.push(elem)
-      // if (this.tabStep == 1) {
-      //   this.message[0] = document.getElementById('newLoaderHtml').innerHTML
-      //   document.querySelector('#preview1').innerText = document.getElementById(
-      //     'newLoaderHtml'
-      //   ).innerHTML
-      //   console.log(document.getElementById('newLoaderHtml').innerHTML)
-      //   console.log(this.message[0])
-      // } else if (this.tabStep == 2) {
-      //   document.querySelector('#preview2').innerHTML = this.message[1]
-      // } else if (this.tabStep == 3) {
-      //   document.querySelector('#preview3').innerText = this.message[2]
-      // }
     },
     userSelectedTagComponent(e, tagComponent) {
       this.addTag = true
@@ -2748,8 +2650,6 @@ export default {
     componentSelected(payload) {
       this.$refs.layout.isData = true
       this.payload = payload
-      // console.log(document.getElementsByClassName('dashboard')[0].getBoundingClientRect())
-      // console.log(document.getElementById('dashboard'))
       this.homeLayoutLocation = document
         .getElementById('dashboard')
         .getBoundingClientRect()
