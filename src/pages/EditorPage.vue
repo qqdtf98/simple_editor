@@ -165,11 +165,7 @@
                     aria-labelledby="pills-home-tab"
                   >
                     <div class="showCode">
-                      <div
-                        id="leftContainer"
-                        ref="editor"
-                        @change="onCodeChange"
-                      ></div>
+                      <div id="leftContainer" ref="editor"></div>
                     </div>
                   </div>
                 </div>
@@ -203,11 +199,7 @@
                     aria-labelledby="pills-home-tab"
                   >
                     <div class="showCode">
-                      <div
-                        id="centerContainer"
-                        ref="editor"
-                        @change="onCodeChange"
-                      ></div>
+                      <div id="centerContainer" ref="editor"></div>
                     </div>
                   </div>
                 </div>
@@ -240,11 +232,7 @@
                     aria-labelledby="pills-home-tab"
                   >
                     <div class="showCode">
-                      <div
-                        id="rightContainer"
-                        ref="editor"
-                        @change="onCodeChange"
-                      ></div>
+                      <div id="rightContainer" ref="editor"></div>
                     </div>
                   </div>
                 </div>
@@ -262,7 +250,7 @@
             ref="layout"
             @userSelectedWidth="userSelectedWidth"
             @stick="layoutStick"
-            @manualSelet="manualSelet"
+            @manualSelect="manualSelect"
             class="layout"
           />
         </div>
@@ -311,14 +299,6 @@
         </div>
       </div>
     </div>
-    <!-- <CodeLoader
-      @setFile="setFile"
-      :loaderData="message"
-      ref="codeloader"
-      v-show="codeOn"
-      class="code-loader"
-    ></CodeLoader> -->
-
     <studio
       v-show="studioOn"
       @desc-close="tagNotSelected"
@@ -494,11 +474,11 @@ import apiUrl from '../modules/api-url'
 import PairService from '../services/pair.service'
 import ProjectService from '../services/project.service'
 import FileService from '../services/file.service'
+import FileModule from '../modules/file.module'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
 import 'vue-component-ruler/dist/ruler.min.css'
-import htmlLoader from '../components/htmlLoader'
 import home from '../components/home'
 import layout from '../components/layout'
 import studio from '../components/studio'
@@ -519,7 +499,6 @@ import vueCustomScrollbar from 'vue-custom-scrollbar'
 
 export default {
   components: {
-    htmlLoader,
     home,
     layout,
     studio,
@@ -589,11 +568,7 @@ export default {
       borderElem: null,
       monacoIndex: 0,
       code:
-        '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted" @codeChange="onCodeChange"></MonacoEditor>',
-      // options: {
-      //   selectOnLineNumbers: true
-      // },
-      // code: 'const noop = () => {}',
+        '<MonacoEditor language="typescript" :code="code" :editorOptions="options" @mounted="onMounted"></MonacoEditor>',
       css: '',
       range: [0, 100],
       payload: '',
@@ -1031,12 +1006,6 @@ export default {
       this.$refs.overview.printHomeDocument()
     })
 
-    // var oScript = document.createElement('style')
-    // oScript.setAttribute('id', 'jumsimmuk')
-    // oScript.setAttribute('lang', 'scss')
-    // oScript.type = 'text/css'
-    // document.getElementsByTagName('head')[0].appendChild(oScript)
-
     var myBinding2 = this.editor2.onDidChangeModelContent(e => {
       if (this.isSetEditor2) {
         PairService.getCSSPair(this.isEditor2Load.file_seq).then(res => {
@@ -1148,7 +1117,6 @@ export default {
       }
     })
     document.addEventListener('mouseover', e => {
-      // console.log(e.target.classList[1])
       let mouseoverTab = false
       if (
         e.target.classList[1] === 'menu-tab' ||
@@ -1648,142 +1616,24 @@ export default {
       $('iframe')
         .get(0)
         .contentWindow.document.documentElement.appendChild(script)
-      // $('iframe').get(
-      //   0
-      // ).contentWindow.document.documentElement.innerHTML += this.editor3.getValue()
-      // var iframe = document.getElementById('filecontainer')
-      // iframe.src = iframe.src
-      // $('iframe').attr('src',"static/html/test.html")
     },
     iframeChanged(change) {
       this.editor1.setValue(change)
     },
     copyFile() {
-      if (this.selectedFile.textContent.trim().split('.')[1] === 'html') {
-        let i
-        for (i = 0; i < this.htmlTitles.length; i++) {
-          if (
-            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
-          ) {
-            break
-          }
-        }
-        let copyFileTitle =
-          this.selectedFile.textContent.trim().split('.')[0] + '_copy'
-        FileService.checkFileName(
-          this.htmlTitles[i].folder_seq,
-          this.htmlTitles[i].file_type,
-          copyFileTitle
-        ).then(res => {
-          if (res.data.responseCode === 'SUCCESS') {
-            let data = {
-              folder_seq: this.htmlTitles[i].folder_seq,
-              file_name: copyFileTitle,
-              file_path:
-                this.htmlTitles[i].file_path.split(
-                  this.htmlTitles[i].file_name
-                )[0] +
-                copyFileTitle +
-                '.' +
-                this.htmlTitles[i].file_type,
-              file_type: this.htmlTitles[i].file_type,
-              contents: this.htmlTitles[i].contents
-            }
-            FileService.createFile(data).then(res => {
-              let copiedFile = res.data.data[0]
-              if (res.data.responseCode === 'SUCCESS') {
-                // htmltitles에 있는 pair정보 가지고 pair생성
-                let title
-                if (this.htmlTitles[i].html_css_pair.length > 0) {
-                  let data = []
-                  let j
-                  for (
-                    j = 0;
-                    j < this.htmlTitles[i].html_css_pair.length;
-                    j++
-                  ) {
-                    data.push({
-                      html_file_seq: copiedFile.file_seq,
-                      css_file_seq: this.htmlTitles[i].html_css_pair[j]
-                        .css_file_seq
-                    })
-                  }
-                  PairService.createCSSPair(data).then(res => {
-                    if (res.data.responseCode === 'SUCCESS') {
-                      title = copiedFile
-                      title.html_css_pair = res.data.data
-                      title.isEdited = false
-                      title.text =
-                        copiedFile.file_name + '.' + copiedFile.file_type
-                    }
-                  })
-                } else {
-                  title = copiedFile
-                  title.isEdited = false
-                  title.text = copiedFile.file_name + '.' + copiedFile.file_type
-                }
-                this.stylePair.push(res.data.data)
-                this.titles.push(title)
-                this.htmlTitles.push(title)
-                this.$refs.filecontent.setStylePair(this.stylePair)
-                this.$refs.filecontent.setFiles(
-                  this.htmlTitles,
-                  this.cssTitles,
-                  this.jsTitles
-                )
-                this.$refs.sitemap.loadSitemap(this.titles)
-              }
-            })
-          }
-        })
-      } else if (this.selectedFile.textContent.trim().split('.')[1] === 'css') {
-        console.log('cssss')
-        let i
-        for (i = 0; i < this.cssTitles.length; i++) {
-          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
-            break
-          }
-        }
-        let copyFileTitle =
-          this.selectedFile.textContent.trim().split('.')[0] + '_copy'
-        FileService.checkFileName(
-          this.cssTitles[i].folder_seq,
-          this.cssTitles[i].file_type,
-          copyFileTitle
-        ).then(res => {
-          if (res.data.responseCode === 'SUCCESS') {
-            let data = {
-              folder_seq: this.cssTitles[i].folder_seq,
-              file_name: copyFileTitle,
-              file_path:
-                this.cssTitles[i].file_path.split(
-                  this.cssTitles[i].file_name
-                )[0] +
-                copyFileTitle +
-                '.' +
-                this.cssTitles[i].file_type,
-              file_type: this.cssTitles[i].file_type,
-              contents: this.cssTitles[i].contents
-            }
-            FileService.createFile(data).then(res => {
-              if (res.data.responseCode === 'SUCCESS') {
-                let copiedFile = res.data.data[0]
-                copiedFile.isEdited = false
-                copiedFile.text =
-                  res.data.data[0].file_name + '.' + res.data.data[0].file_type
-                this.cssTitles.push(copiedFile)
-                this.$nextTick(() => {
-                  this.$refs.filecontent.setFiles(
-                    this.htmlTitles,
-                    this.cssTitles,
-                    this.jsTitles
-                  )
-                })
-              }
-            })
-          }
-        })
-      }
+      this.$store.commit('setSelectedFile', this.selectedFile)
+      this.$store.commit('setHtmlTitles', this.htmlTitles)
+      this.$store.commit('setCssTitles', this.cssTitles)
+      this.$store.commit('setJsTitles', this.jsTitles)
+      this.$store.commit('setStylePair', this.stylePair)
+      this.$store.commit('setTitles', this.titles)
+      FileModule.copyFile()
+      let html = document.querySelector('html')
+      html.children[html.children.length - 1].classList.add('template')
+      let css = document.querySelector('css')
+      css.children[css.children.length - 1].classList.add('template')
+      let js = document.querySelector('js')
+      js.children[js.children.length - 1].classList.add('template')
     },
     resizeTree(e) {
       this.treeElem = document.querySelector('.tree-name-wrapper')
@@ -1847,57 +1697,17 @@ export default {
         text.textContent = `${this.selectedFile.textContent.trim()}를 삭제하시겠습니까?`
       })
     },
-    deleteFile() {
+    async deleteFile() {
       this.isPopUp3Active = false
-      let i
-      if (this.selectedFile.textContent.split('.')[1].trim() === 'html') {
-        for (i = 0; i < this.htmlTitles.length; i++) {
-          if (
-            this.htmlTitles[i].text === this.selectedFile.textContent.trim()
-          ) {
-            this.deleteFileNum = i
-            FileService.deleteFile(this.htmlTitles[i].file_seq).then(res => {
-              if (res.data.responseCode === 'SUCCESS') {
-                this.$nextTick(() => {
-                  this.htmlTitles.splice(this.deleteFileNum, 1)
-                  this.titles.splice(this.deleteFileNum, 1)
-                  this.$nextTick(() => {
-                    this.$refs.filecontent.setFiles(
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
-
-                    this.$refs.sitemap.loadSitemap(this.titles)
-                  })
-                })
-
-                console.log(res.data.message)
-              }
-            })
-          }
-        }
-      } else if (this.selectedFile.textContent.split('.')[1].trim() === 'css') {
-        for (i = 0; i < this.cssTitles.length; i++) {
-          if (this.cssTitles[i].text === this.selectedFile.textContent.trim()) {
-            this.deleteFileNum = i
-            FileService.deleteFile(this.cssTitles[i].file_seq).then(res => {
-              if (res.data.responseCode === 'SUCCESS') {
-                this.$nextTick(() => {
-                  this.cssTitles.splice(this.deleteFileNum, 1)
-                  this.$nextTick(() => {
-                    this.$refs.filecontent.setFiles(
-                      this.htmlTitles,
-                      this.cssTitles,
-                      this.jsTitles
-                    )
-                  })
-                })
-              }
-            })
-          }
-        }
-      }
+      this.$store.commit('setSelectedFile', this.selectedFile)
+      this.$store.commit('setHtmlTitles', this.htmlTitles)
+      this.$store.commit('setCssTitles', this.cssTitles)
+      this.$store.commit('setJsTitles', this.jsTitles)
+      this.$store.commit('setTitles', this.titles)
+      await FileModule.deleteFile()
+      this.$nextTick(() => {
+        console.log(this.$store.getters.htmlTitles)
+      })
     },
     folderClick(e) {
       this.selectedFolder = e.target
@@ -2668,13 +2478,6 @@ export default {
       } else {
         this.isData = true
       }
-      // if (e.target.getAttribute('name') == 'html') {
-      //   this.tabStep = 1
-      // } else if (e.target.getAttribute('name') == 'css') {
-      //   this.tabStep = 2
-      // } else if (e.target.getAttribute('name') == 'js') {
-      //   this.tabStep = 3
-      // }
     },
     inputFile(e) {
       alert('저장되었습니다')
@@ -2695,7 +2498,7 @@ export default {
     },
     setFile(file) {
       // console.log(file)
-      this.chageContent()
+      this.changeContent()
       this.isData = true
       if (file == 'html') {
         this.tabStep = 1
@@ -2738,10 +2541,6 @@ export default {
       if (this.sitemapOn === true) {
         this.sitemapOn = false
       } else {
-        // let sitemap = document.querySelector('.sitemap')
-        // let studio = document.querySelector('.studio')
-        // sitemap.style.zIndex = 151;
-        // studio.style.zIndex = 150;
         this.sitemapOn = true
         this.studioOn = false
         this.uiDescription = false
@@ -3106,7 +2905,7 @@ export default {
     loadData(data) {
       this.message = data
     },
-    chageContent() {
+    changeContent() {
       console.log(this.message)
       document.getElementById('newLoaderHtml').innerHTML
       if (this.tabStep == 1) {
@@ -3140,23 +2939,9 @@ export default {
         }
       }
     },
-    clickSoure(e) {
-      this.isData = true
-      console.log('s')
-      // console.log(document.getElementById("newLoaderHtml").innerHTML)
-      if (e.target.getAttribute('name') == 'html') {
-        this.tabStep = 1
-        // this.chageContent()
-        console.log('s')
-      } else if (e.target.getAttribute('name') == 'css') {
-        this.tabStep = 2
-      } else if (e.target.getAttribute('name') == 'js') {
-        this.tabStep = 3
-      }
-    },
     setFile(file) {
       // console.log(file)
-      this.chageContent()
+      this.changeContent()
       this.isData = true
       if (file == 'html') {
         this.tabStep = 1
@@ -3169,11 +2954,7 @@ export default {
     rulerChange(e) {
       console.log(e)
     },
-    onCodeChange(e) {
-      console.log(e)
-      // console.log(e.target.value)
-    },
-    manualSelet(payload) {
+    manualSelect(payload) {
       if (payload.target.tagName == 'A') {
         this.tagDescription = true
         this.uiDescription = false
@@ -3312,29 +3093,7 @@ export default {
     .right-panel {
       width: 16.5%;
       background-color: #292931;
-
-      // background-color: #2c3134;
       height: 100%;
-      // display: flex;
-      // flex-direction: column;
-      // align-items: center;
-      // .layout-btn {
-      //   margin-top: 1rem;
-      //   width: 1rem;
-      //   cursor: pointer;
-      // }
-      // .code-btn {
-      //   margin-top: 1.3rem;
-      //   width: 1rem;
-      //   z-index: 100;
-      //   cursor: pointer;
-      // }
-      // .comment-btn {
-      //   margin-top: 1.3rem;
-      //   width: 1rem;
-      //   z-index: 100;
-      //   cursor: pointer;
-      // }
       .right-top-panel {
         background-color: #292931;
         width: 100%;
@@ -3400,20 +3159,16 @@ export default {
               background-color: #292931;
               display: flex;
               height: 2rem;
-              //  border: 1px solid black;
               cursor: move;
               flex-direction: row;
               .tree-name {
                 left: 0;
                 height: 2rem;
                 cursor: pointer;
-                // background-color: #545e66;
                 top: 0;
                 width: 3.5rem;
 
                 display: flex;
-                // background-color: #4e4e5c;
-                // border: 1px solid black;
                 align-items: center;
                 justify-content: center;
                 flex-direction: row;
@@ -3438,9 +3193,6 @@ export default {
               overflow: auto;
               height: 22.8rem;
               width: 100%;
-              // border-top: 1px solid #525252;
-              // border-bottom: 1px solid #525252;
-              // height: calc(100% - 2rem);
             }
             .filecontent {
               overflow: auto;
@@ -3465,7 +3217,6 @@ export default {
           .file-name {
             left: 0;
             cursor: pointer;
-            // background-color: #545e66;
             top: 0;
             display: flex;
             flex-direction: row;
@@ -3523,7 +3274,6 @@ export default {
         align-items: center;
         justify-content: center;
         width: 100%;
-        // border: 1px solid blue;
         .main-menu {
           width: 1200px;
           bottom: 0;
@@ -3534,10 +3284,8 @@ export default {
           .home {
             width: 100%;
             height: 100%;
-            // border: 3px solid #545e66;
             display: flex;
             align-items: center;
-            // overflow: auto;
             justify-content: center;
           }
           .hidden {
