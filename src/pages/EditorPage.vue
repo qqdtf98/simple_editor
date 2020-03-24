@@ -470,11 +470,14 @@
 </template>
 
 <script>
+import user from '../store/user.js'
 import apiUrl from '../modules/api-url'
 import PairService from '../services/pair.service'
 import ProjectService from '../services/project.service'
 import FileService from '../services/file.service'
 import FileModule from '../modules/file.module'
+import ProjectModule from '../modules/project.module'
+import UndoRedoModule from '../modules/undo.redo.module'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
@@ -1155,26 +1158,25 @@ export default {
           const iterator1 = this.everySelectedElement[Symbol.iterator]()
           // 파일 업데이트
           if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
+            let changedFile = []
             let i
             for (i = 0; i < this.everySelectedElement.size; i++) {
               let val = iterator1.next().value
               $(val).css('border', '')
               $(val).css('border-radius', '')
             }
-            FileService.updateFile(
-              this.isEditor1Load,
+            let payload = this.isEditor1Load
+            payload.contents =
               $('iframe')
                 .get(0)
                 .contentWindow.document.documentElement.innerHTML.split(
                   '<style>'
                 )[0] + '</body>'
-            ).then(res => {
-              console.log(res)
-            })
-            FileService.updateFile(
-              this.isEditor2Load,
-              this.editor2.getValue()
-            ).then(res => {
+            changedFile.push(payload)
+            payload = this.isEditor2Load
+            payload.contents = this.editor2.getValue()
+            changedFile.push(payload)
+            FileService.updateMultiFile(changedFile).then(res => {
               console.log(res)
             })
           } else if (
@@ -1187,10 +1189,6 @@ export default {
               $(val).css('border', '')
               $(val).css('border-radius', '')
             }
-            console.log(
-              $('iframe').get(0).contentWindow.document.documentElement
-                .innerHTML
-            )
             FileService.updateFile(
               this.isEditor1Load,
               $('iframe')

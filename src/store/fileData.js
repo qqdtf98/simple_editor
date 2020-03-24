@@ -6,7 +6,8 @@ const fileData = {
     jsTitles: [],
     titles: [],
     folderSeq: [],
-    stylePair: []
+    stylePair: [],
+    jsPair: []
   },
   getters: {
     selectedFile: function(state) {
@@ -29,6 +30,9 @@ const fileData = {
     },
     stylePair: function(state) {
       return state.stylePair
+    },
+    jsPair: function(state) {
+      return state.jsPair
     }
   },
   mutations: {
@@ -52,6 +56,9 @@ const fileData = {
     },
     setStylePair(state, pair) {
       state.stylePair = pair
+    },
+    setJsPair(state, js) {
+      state.jsPair = js
     }
   }
 }
