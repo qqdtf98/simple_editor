@@ -1137,11 +1137,29 @@ export default {
     document.addEventListener('mousedown', e => {
       this.select = e.target
     })
+
+    // Control key detection for multi selection
     document.addEventListener('keydown', e => {
       if (e.which === 17) {
         this.isCtrl = true
         this.$refs.home.multiChoice(true)
       }
+
+      let keyupEvent
+      document.addEventListener(
+        'keyup',
+        (keyupEvent = e => {
+          if (e.which === 17) {
+            this.isCtrl = false
+            this.$refs.home.multiChoice(false)
+          }
+
+          document.removeEventListener('keyup', keyupEvent)
+        })
+      )
+    })
+
+    document.addEventListener('keydown', e => {
       if (e.which === 16) {
         this.isShift = true
       }
@@ -1215,10 +1233,6 @@ export default {
     document.addEventListener('keyup', e => {
       if (e.which === 16) {
         this.isShift = false
-      }
-      if (e.which === 17) {
-        this.isCtrl = false
-        this.$refs.home.multiChoice(false)
       }
     })
     window.addEventListener('mousemove', e => {
