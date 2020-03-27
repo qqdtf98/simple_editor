@@ -80,7 +80,6 @@
               @stack-push="stackPush"
               @loadData="loadData"
               @open-code="openCode"
-              @every-select="setEverySelectedElement"
               class="home"
             ></home>
             <div v-show="isCommentOn" class="comment-board">
@@ -538,7 +537,6 @@ export default {
       isProjectLoaded: false,
       isUsedCSS: false,
       isUsedJS: false,
-      everySelectedElement: null,
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
@@ -700,7 +698,6 @@ export default {
   watch: {},
   mounted() {
     this.currentRightTab = 0
-    this.everySelectedElement = new Set()
     this.currentLeftTab = 0
     if (this.enabled) {
       this.vsMode = 'vs-dark'
@@ -1172,16 +1169,9 @@ export default {
       if (e.which === 83 && this.isCtrl) {
         e.preventDefault()
         if (this.isData) {
-          const iterator1 = this.everySelectedElement[Symbol.iterator]()
           // 파일 업데이트
           if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
             let changedFile = []
-            let i
-            for (i = 0; i < this.everySelectedElement.size; i++) {
-              let val = iterator1.next().value
-              $(val).css('border', '')
-              $(val).css('border-radius', '')
-            }
             let payload = this.isEditor1Load
             payload.contents =
               $('iframe')
@@ -1200,12 +1190,6 @@ export default {
             this.isEditor1Load !== null &&
             this.isEditor2Load === null
           ) {
-            let i
-            for (i = 0; i < this.everySelectedElement.size; i++) {
-              let val = iterator1.next().value
-              $(val).css('border', '')
-              $(val).css('border-radius', '')
-            }
             FileService.updateFile(
               this.isEditor1Load,
               $('iframe')
@@ -1663,9 +1647,6 @@ export default {
     setSelectedFile(e) {
       this.selectedFile = e.target
       this.loadFile(e)
-    },
-    setEverySelectedElement(select) {
-      this.everySelectedElement = select
     },
     resetAllTitle(html, css, js) {
       this.htmlTitles = html
@@ -2626,8 +2607,8 @@ export default {
       console.log(payload)
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       for (let item of payload) {
-        console.log(item)
-        console.log(this.dataPayload)
+        // console.log(item)
+        // console.log(this.dataPayload)
         this.dataPayload = item
       }
       console.log(this.dataPayload)

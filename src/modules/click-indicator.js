@@ -1,8 +1,16 @@
+import { install } from 'vuex'
+
+/**
+ * iframe 내의 element 클릭 시 indicator를 표시해주는 기능을 하는 클래스.
+ * 클릭된 element 당 하나의 instance를 생성함.
+ * 생성된 instance들은 set에 저장되어 있음.
+ */
 export default class ClickIndicator {
   /**
-   *
+   * ClickIndicator 클래스의 constructor.
+   * 클래스 내의 변수 초기화 및 함수 호출
    * @param {HTMLElement} target
-   * @param {boolean} isMulti
+   * @param {boolean} isMulti 여러 개 클릭
    */
   constructor(target, isMulti = false) {
     this.target = target
@@ -11,18 +19,38 @@ export default class ClickIndicator {
     this.right = null
     this.top = null
     this.bottom = null
-    this.createBorder()
-    this.setBorderPosition()
+
     if (isMulti) {
-      ClickIndicator.instances.add(this)
+      let selected = true
+      ClickIndicator.instances.forEach(instance => {
+        if (instance.target === target) {
+          console.log('already exists', target)
+          selected = false
+          instance.removeBorder()
+          ClickIndicator.instances.delete(instance)
+        }
+      })
+      console.log('selected', selected)
+      if (selected) {
+        this.createBorder()
+        this.setBorderPosition()
+        ClickIndicator.instances.add(this)
+      }
     } else {
       ClickIndicator.instances.forEach(instance => {
         instance.removeBorder()
       })
       ClickIndicator.instances.clear()
       ClickIndicator.instances.add(this)
+
+      this.createBorder()
+      this.setBorderPosition()
     }
   }
+
+  /**
+   * element를 둘러싸는 indicator를 생성함.
+   */
   createBorder() {
     this.box = document.querySelector('.click-indicator-box')
     this.right = document.createElement('div')
@@ -38,12 +66,20 @@ export default class ClickIndicator {
     this.box.appendChild(this.top)
     this.box.appendChild(this.left)
   }
+
+  /**
+   * 선택 해제 시 해당 element의 indicator 제거
+   */
   removeBorder() {
     this.box.removeChild(this.top)
     this.box.removeChild(this.right)
     this.box.removeChild(this.bottom)
     this.box.removeChild(this.left)
   }
+
+  /**
+   * iframe 위치와 element의 위치를 사용하여 border의 position과 length 계산
+   */
   setBorderPosition() {
     let board = document.querySelector('.board')
 
@@ -109,7 +145,6 @@ export default class ClickIndicator {
         this.target.getBoundingClientRect().width +
         this.target.getBoundingClientRect().left +
         'px'
-      // 1
     } else if (!leftOver && topOver && !rightOver && !bottomOver) {
       // top 벗어날 때
       this.left.style.display = 'block'
@@ -150,7 +185,6 @@ export default class ClickIndicator {
         2 +
         'px'
       this.bottom.style.width = this.target.getBoundingClientRect().width + 'px'
-      // 2
     } else if (!leftOver && topOver && rightOver && !bottomOver) {
       // right, top 벗어날 때
       this.right.style.display = 'none'
@@ -182,7 +216,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().right) -
         board.getBoundingClientRect().left +
         'px'
-      // 3
     } else if (!leftOver && !topOver && rightOver && !bottomOver) {
       // right 벗어날 때
       this.left.style.display = 'block'
@@ -231,7 +264,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().right) -
         board.getBoundingClientRect().left +
         'px'
-      // 4
     } else if (!leftOver && !topOver && rightOver && bottomOver) {
       // right, bottom 벗어날 때
       this.left.style.display = 'block'
@@ -269,7 +301,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().right) -
         board.getBoundingClientRect().left +
         'px'
-      // 5
     } else if (!leftOver && !topOver && !rightOver && bottomOver) {
       // bottom 벗어날 때
       this.left.style.display = 'block'
@@ -320,7 +351,6 @@ export default class ClickIndicator {
         'px'
       this.top.style.width =
         this.target.getBoundingClientRect().width + 2 + 'px'
-      // 6
     } else if (leftOver && !topOver && !rightOver && bottomOver) {
       // left, bottom 벗어날 때
       this.left.style.display = 'none'
@@ -357,7 +387,6 @@ export default class ClickIndicator {
         board.getBoundingClientRect().left +
         2 +
         'px'
-      // 7
     } else if (leftOver && !topOver && !rightOver && !bottomOver) {
       // left, bottom 벗어날 때
       this.left.style.display = 'none'
@@ -402,7 +431,6 @@ export default class ClickIndicator {
           this.target.getBoundingClientRect().left) +
         board.getBoundingClientRect().left +
         'px'
-      // 8
     } else if (leftOver && !topOver && rightOver && !bottomOver) {
       // left, right 벗어날 때
       this.left.style.display = 'none'
@@ -439,7 +467,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().right) -
         4 +
         'px'
-      // 9
     } else if (!leftOver && topOver && !rightOver && bottomOver) {
       // top, bottom 벗어날 때
       this.left.style.display = 'block'
@@ -475,7 +502,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().bottom) -
         4 +
         'px'
-      // 10
     } else if (leftOver && topOver && !rightOver && bottomOver) {
       // left, top, bottom 벗어날 때
       this.left.style.display = 'none'
@@ -497,7 +523,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().bottom) -
         4 +
         'px'
-      // 11
     } else if (leftOver && topOver && rightOver && !bottomOver) {
       // left, top, right 벗어날 때
       this.left.style.display = 'none'
@@ -519,7 +544,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().right) -
         4 +
         'px'
-      // 12
     } else if (!leftOver && topOver && rightOver && bottomOver) {
       // right, top, bottom 벗어날 때
       this.left.style.display = 'block'
@@ -540,7 +564,6 @@ export default class ClickIndicator {
           board.getBoundingClientRect().bottom) -
         4 +
         'px'
-      // 13
     } else if (leftOver && !topOver && rightOver && bottomOver) {
       // right, top, bottom 벗어날 때
       this.left.style.display = 'none'
@@ -561,14 +584,12 @@ export default class ClickIndicator {
           board.getBoundingClientRect().right) -
         4 +
         'px'
-      // 14
     } else if (leftOver && topOver && rightOver && bottomOver) {
       // 사방 벗어날 때
       this.left.style.display = 'none'
       this.right.style.display = 'none'
       this.top.style.display = 'none'
       this.bottom.style.display = 'none'
-      // 15
     } else {
       this.left.style.display = 'block'
       this.top.style.display = 'block'
@@ -583,7 +604,6 @@ export default class ClickIndicator {
         board.getBoundingClientRect().top +
         'px'
       this.top.style.width = this.target.getBoundingClientRect().width + 'px'
-      // this.bottom.style.display = 'none'?
       this.left.style.left =
         this.target.getBoundingClientRect().left +
         board.getBoundingClientRect().left +

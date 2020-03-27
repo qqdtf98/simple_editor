@@ -125,7 +125,6 @@ export default {
     return {
       sample: 'aaaaaaaaaaaaaaaff',
       selectedElement: null,
-      everySelectedElement: null,
       borderstyle: null,
       onelementSelected: false,
       target: '',
@@ -166,13 +165,7 @@ export default {
       size: null,
       targetText: null,
       editElem: null,
-      multiSelect: null,
       isCtrl: false,
-      multiSelectedElement: null,
-      multiSelectedBorder: [],
-      multiSelectedBorderRadius: [],
-      multiSelectIndex: 1,
-      multiElementParent: [],
       isShift: false,
       setSize: null
     }
@@ -235,8 +228,6 @@ export default {
       // })
     })
 
-    this.multiSelectedElement = new Set()
-    this.everySelectedElement = new Set()
     document.addEventListener('contextmenu', e => {
       e.preventDefault()
     })
@@ -490,6 +481,7 @@ export default {
     multiChoice(mode) {
       this.multiSelect = mode
     },
+    // TODO no more in use
     closeMode(payload) {
       this.mouseRightClick = false
       this.$emit('comment', this.clickedElement)
@@ -533,10 +525,10 @@ export default {
         }
       }
     },
+    /**
+     * element 클릭 시 indicator 생성하는 함수
+     */
     onmouseClick(e) {
-      this.everySelectedElement.add(e.target)
-      this.$emit('every-select', this.everySelectedElement)
-      let board = document.querySelector('.board')
       if (this.multiSelect) {
         let indicator = new ClickIndicator(e.target, true)
         this.$nextTick(() => {
@@ -545,11 +537,14 @@ export default {
             true,
             ClickIndicator.instances,
             this.multiElementParent
-            //parent 저장해서 보내주기
+            // TODO parent 저장해서 보내주기
           )
         })
       } else {
         let indicator = new ClickIndicator(e.target)
+        ClickIndicator.instances.forEach(instance => {
+          console.log(instance.target)
+        })
         this.$refs.context.multiState(false, null)
         this.mouseRightClick = false
         if (this.clickedElement === null) {
@@ -645,8 +640,6 @@ export default {
         this.$emit('stack-push', style)
         data.payload.style[data.style] = data.value
       }
-      $(data.payload).css('border', '')
-      $(data.payload).css('border-radius', '')
       this.$emit(
         'iframe-changed',
         $('iframe')
@@ -742,9 +735,6 @@ export default {
     },
     isContentNotEditable(e) {
       e.preventDefault()
-      console.log('abc')
-      console.log(this.editElem)
-      console.log('bcd')
       var edit = {
         work: 'edit',
         elem: this.editElem,
@@ -926,6 +916,7 @@ export default {
     selectOverview(payload) {
       SelectorModule.activateSelector(payload)
     },
+    // TODO fix moveElement func
     moveElement(e) {
       this.clickedElement.style.filter = 'blur(0.8px)'
       this.isContentMovable = true
@@ -1010,40 +1001,6 @@ export default {
         $(elem[i]).after(copyElem)
         this.$emit('stack-push', copy)
       }
-
-      // this.$nextTick(() => {
-      //   // console.log(this.clickedElement.parentElement.children)
-      //   this.clickedElement.parentElement.appendChild(newparent);
-      //   newparent.appendChild(elem[0]);
-      //   newparent.appendChild(copyElem);
-      //   // if (getComputedStyle(elem).position === 'absolute') {
-      //   this.$nextTick(() => {
-      //     // console.log(parseInt(getComputedStyle(elem).))
-      //     // newparent.style.width = parseInt(getComputedStyle(elem[0]).width) * 2 + 'px'
-      //     newparent.style.height =
-      //       parseInt(getComputedStyle(elem[0]).height) + "px";
-      //     if (getComputedStyle(elem[0]).right !== 0) {
-      //       // console.log('right')
-      //       copyElem.style.left =
-      //         parseInt(getComputedStyle(elem[0]).left) -
-      //         parseInt(getComputedStyle(elem[0]).width) +
-      //         "px";
-      //       copyElem.style.border = this.clickedBorder;
-      //       copyElem.style.borderRadius = this.clickedBorderRadius;
-      //     } else {
-      //       // console.log('left')
-      //       copyElem.style.left =
-      //         parseInt(getComputedStyle(elem[0]).left) +
-      //         parseInt(getComputedStyle(elem[0]).width) +
-      //         "px";
-      //       copyElem.style.border = this.clickedBorder;
-      //       copyElem.style.borderRadius = this.clickedBorderRadius;
-      //     }
-
-      //     // console.log(getComputedStyle(copyElem).right)
-      //   });
-      //   // }
-      // });
     },
     splitBorder(e) {
       this.borderClicked = true
