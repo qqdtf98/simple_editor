@@ -36,6 +36,7 @@
       <div v-show="onelementSelected" class="top-border"></div>
       <div v-show="onelementSelected" class="left-border"></div>
     </div>
+    <div class="click-indicator-box"></div>
     <img
       @mousedown="moveElement"
       style="cursor:pointer"
@@ -102,6 +103,9 @@
 <script>
 import Dashboard from '../sample/dashboard.vue'
 import SelectorModule from '../modules/selector.module'
+import Boundary from '../modules/boundary'
+import ElemIcon from '../modules/elem-icon'
+import ClickIndicator from '../modules/click-indicator'
 import Navi from '../sample/navi.vue'
 import spliter from '../sample/spliter.vue'
 import Context from '../components/Context'
@@ -524,7 +528,7 @@ export default {
           ) {
             this.selectedElement = e.target
             this.movePosition = e
-            SelectorModule.activateSelector(e.target)
+            SelectorModule.activateSelector(e.target, 'move')
           }
         }
       }
@@ -534,78 +538,18 @@ export default {
       this.$emit('every-select', this.everySelectedElement)
       let board = document.querySelector('.board')
       if (this.multiSelect) {
-        console.log('multi')
-        if (this.multiSelectedElement.size === 0) {
-          this.$nextTick(() => {
-            this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
-              e.target
-            ).border
-            this.multiSelectedBorderRadius[
-              this.multiSelectIndex
-            ] = getComputedStyle(e.target).borderRadius
-            this.multiSelectIndex++
-            e.target.style.border = '3px dashed #f75c51'
-            e.target.style.borderRadius = getComputedStyle(
-              e.target
-            ).borderRadius
-            // this.multiSelectedElement.add(this.clickedElement)
-            // this.multiElementParent.push(this.clickedElement.parentElement)
-            // this.setSize = this.multiSelectedElement.size
-            this.multiSelectedElement.add(e.target)
-            if (this.setSize !== this.multiSelectedElement.size) {
-              this.multiElementParent.push(e.target.parentElement)
-            }
-            this.setSize = this.multiSelectedElement.size
-
-            this.$emit('componentSelected', this.multiSelectedElement)
-            // this.multiElementParent.push(this.clickedElement.parentElement)
-            // this.multiElementParent.pus(e.target)
-            this.$refs.context.multiState(
-              true,
-              this.multiSelectedElement,
-              this.multiElementParent
-            )
-            // console.log(this.multiSelectedElement)
-          })
-        } else {
-          this.multiSelectedBorder[this.multiSelectIndex] = getComputedStyle(
-            e.target
-          ).border
-          this.multiSelectedBorderRadius[
-            this.multiSelectIndex
-          ] = getComputedStyle(e.target).borderRadius
-          this.multiSelectIndex++
-          e.target.style.border = '3px dashed #f75c51'
-          e.target.style.borderRadius = getComputedStyle(e.target).borderRadius
-          this.multiSelectedElement.add(e.target)
-          if (this.setSize !== this.multiSelectedElement.size) {
-            this.multiElementParent.push(e.target.parentElement)
-          }
-          this.setSize = this.multiSelectedElement.size
-          this.$emit('componentSelected', this.multiSelectedElement)
-
+        let indicator = new ClickIndicator(e.target, true)
+        this.$nextTick(() => {
+          this.$emit('componentSelected', ClickIndicator.instances)
           this.$refs.context.multiState(
             true,
-            this.multiSelectedElement,
+            ClickIndicator.instances,
             this.multiElementParent
+            //parent 저장해서 보내주기
           )
-          // console.log(this.multiSelectedElement)
-        }
-        // console.log(this.multiElementParent)
+        })
       } else {
-        let i
-        let entries = this.multiSelectedElement.entries()
-        let setIter = this.multiSelectedElement[Symbol.iterator]()
-        for (i = 0; i < this.multiSelectedElement.size; i++) {
-          let item = setIter.next().value
-          item.style.border = this.multiSelectedBorder[i]
-          item.style.borderRadius = this.multiSelectedBorderRadius[i]
-        }
-        this.multiSelectedElement.clear()
-        this.multiSelectedBorder = []
-        this.multiSelectedBorderRadius = []
-        this.multiSelectIndex = 1
-
+        let indicator = new ClickIndicator(e.target)
         this.$refs.context.multiState(false, null)
         this.mouseRightClick = false
         if (this.clickedElement === null) {
@@ -618,85 +562,16 @@ export default {
             e.target.className !== 'editor-box' &&
             e.target.className !== 'scroll-area'
           ) {
-            this.multiSelectedElement = new Set()
-            this.multiSelectedElement.add(e.target)
-            if (this.setSize !== this.multiSelectedElement.size) {
-              this.multiElementParent.push(e.target.parentElement)
-            }
-            this.setSize = this.multiSelectedElement.size
-            this.$emit('componentSelected', this.multiSelectedElement)
+            this.$emit('componentSelected', ClickIndicator.instances)
 
             this.clickedElement = e.target
-
-            this.clickedBorder = getComputedStyle(e.target).border
-            this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-            e.target.style.border = '3px dashed #f75c51'
-            e.target.style.borderRadius = getComputedStyle(
-              e.target
-            ).borderRadius
-
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
 
             this.$nextTick(() => {
-              // eslint-disable-next-line camelcase
-              let left_line = document.querySelector('.boundary-line-left')
-              // eslint-disable-next-line camelcase
-              let right_line = document.querySelector('.boundary-line-right')
-              // eslint-disable-next-line camelcase
-              let top_line = document.querySelector('.boundary-line-top')
-              // eslint-disable-next-line camelcase
-              let bottom_line = document.querySelector('.boundary-line-bottom')
-              this.elem = e.target.getBoundingClientRect()
-
-              this.$nextTick(() => {
-                bottom_line.style.left =
-                  this.elem.left + board.getBoundingClientRect().left + 'px'
-                bottom_line.style.top =
-                  this.elem.top +
-                  this.elem.height +
-                  board.getBoundingClientRect().top -
-                  1 +
-                  'px'
-                bottom_line.style.width = this.elem.width + 'px'
-                top_line.style.left =
-                  this.elem.left + board.getBoundingClientRect().left + 'px'
-                top_line.style.top =
-                  this.elem.top + board.getBoundingClientRect().top + 1 + 'px'
-                top_line.style.width = this.elem.width + 'px'
-                left_line.style.left =
-                  this.elem.left + board.getBoundingClientRect().left + 'px'
-                left_line.style.top =
-                  this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
-                left_line.style.height = this.elem.height + 'px'
-                right_line.style.left =
-                  this.elem.left +
-                  this.elem.width +
-                  board.getBoundingClientRect().left -
-                  2 +
-                  'px'
-                right_line.style.top =
-                  this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
-                right_line.style.height = this.elem.height + 'px'
-              })
-            })
-
-            this.$nextTick(() => {
-              let move = document.querySelector('.move-icon')
-              move.style.left = this.elem.left + 'px'
-              move.style.top =
-                this.elem.top - move.getBoundingClientRect().height + 'px'
-              let deleteIcon = document.querySelector('.delete-icon')
-              deleteIcon.style.left =
-                this.elem.left + move.getBoundingClientRect().width * 2 + 'px'
-              deleteIcon.style.top =
-                this.elem.top - deleteIcon.getBoundingClientRect().height + 'px'
-              let copyIcon = document.querySelector('.copy-icon')
-              copyIcon.style.left =
-                this.elem.left + move.getBoundingClientRect().width + 'px'
-              copyIcon.style.left =
-                this.elem.top - copyIcon.getBoundingClientRect().height + 'px'
+              Boundary.setBoundaryPosition(e)
+              ElemIcon.setIconPosition(e.target.getBoundingClientRect())
             })
           }
         } else if (this.clickedElement !== e.target) {
@@ -709,105 +584,17 @@ export default {
             e.target.className !== 'editor-box' &&
             e.target.className !== 'scroll-area'
           ) {
-            this.multiSelectedElement.add(e.target)
-            if (this.setSize !== this.multiSelectedElement.size) {
-              this.multiElementParent.push(e.target.parentElement)
-            }
-            this.setSize = this.multiSelectedElement.size
+            this.$emit('componentSelected', ClickIndicator.instances)
 
-            this.$emit('componentSelected', this.multiSelectedElement)
-            this.isContentClicked = true
-            this.isContentRemovable = true
-            this.isContentCopied = true
-
-            this.clickedElement.style.border = this.clickedBorder
-            this.clickedElement.style.borderRadius = this.clickedBorderRadius
             this.clickedElement = e.target
-            this.clickedBorder = getComputedStyle(e.target).border
-            this.clickedBorderRadius = getComputedStyle(e.target).borderRadius
-            e.target.style.border = '3px dashed #f75c51'
-            e.target.style.borderRadius = getComputedStyle(
-              e.target
-            ).borderRadius
-
-            // eslint-disable-next-line camelcase
-            let left_line = document.querySelector('.boundary-line-left')
-            // eslint-disable-next-line camelcase
-            let right_line = document.querySelector('.boundary-line-right')
-            // eslint-disable-next-line camelcase
-            let top_line = document.querySelector('.boundary-line-top')
-            // eslint-disable-next-line camelcase
-            let bottom_line = document.querySelector('.boundary-line-bottom')
-            // eslint-disable-next-line camelcase
-
-            this.elem = e.target.getBoundingClientRect()
-            bottom_line.style.left =
-              this.elem.left + board.getBoundingClientRect().left + 'px'
-            bottom_line.style.top =
-              this.elem.top +
-              this.elem.height +
-              board.getBoundingClientRect().top -
-              1 +
-              'px'
-            bottom_line.style.width = this.elem.width + 'px'
-            top_line.style.left =
-              this.elem.left + board.getBoundingClientRect().left + 'px'
-            top_line.style.top =
-              this.elem.top + board.getBoundingClientRect().top + 'px'
-            top_line.style.width = this.elem.width + 'px'
-            left_line.style.left =
-              this.elem.left + board.getBoundingClientRect().left + 'px'
-            left_line.style.top =
-              this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
-            left_line.style.height = this.elem.height + 'px'
-            right_line.style.left =
-              this.elem.left +
-              this.elem.width +
-              board.getBoundingClientRect().left -
-              2 +
-              'px'
-            right_line.style.top =
-              this.elem.top + board.getBoundingClientRect().top + 2 + 'px'
-            right_line.style.height = this.elem.height + 'px'
 
             this.isContentClicked = true
             this.isContentRemovable = true
             this.isContentCopied = true
 
             this.$nextTick(() => {
-              this.elem = e.target.getBoundingClientRect()
-              let moveIcon = document.querySelector('.move-icon')
-              moveIcon.style.left =
-                this.elem.left + board.getBoundingClientRect().left + 'px'
-              moveIcon.style.top =
-                this.elem.top +
-                board.getBoundingClientRect().top -
-                moveIcon.getBoundingClientRect().height +
-                'px'
-
-              let deleteIcon = document.querySelector('.delete-icon')
-              deleteIcon.style.left =
-                this.elem.left +
-                board.getBoundingClientRect().left +
-                parseInt(getComputedStyle(moveIcon).width) * 2 +
-                'px'
-              deleteIcon.style.top =
-                this.elem.top +
-                board.getBoundingClientRect().top -
-                deleteIcon.getBoundingClientRect().height +
-                'px'
-
-              let copyIcon = document.querySelector('.copy-icon')
-              copyIcon.style.left =
-                this.elem.left +
-                board.getBoundingClientRect().left +
-                parseInt(getComputedStyle(moveIcon).widht) +
-                'px'
-              copyIcon.style.top =
-                this.elem.top +
-                board.getBoundingClientRect().top -
-                deleteIcon.getBoundingClientRect().height +
-                'px'
+              Boundary.setBoundaryPosition(e)
+              ElemIcon.setIconPosition(e.target.getBoundingClientRect())
             })
           }
         } else {
@@ -820,19 +607,12 @@ export default {
             e.target.className !== 'editor-box' &&
             e.target.className !== 'scroll-area'
           ) {
-            this.multiSelectedElement.add(e.target)
-            if (this.setSize !== this.multiSelectedElement.size) {
-              this.multiElementParent.push(e.target.parentElement)
-            }
-            this.setSize = this.multiSelectedElement.size
-            this.$emit('componentSelected', this.multiSelectedElement)
+            this.$emit('componentSelected', ClickIndicator.instances)
           }
         }
         if (this.mode) {
-          // console.log(getComputedStyle(this.clickedElement).flexWrap)
           this.clickedElement.style.display = 'flex'
           this.clickedElement.style.flexWrap = 'wrap'
-          // console.log(getComputedStyle(this.clickedElement).flexWrap)
         }
       }
     },
@@ -1017,10 +797,10 @@ export default {
           let moveHeight = getComputedStyle(move).height
           let deleteIcon = document.querySelector('.delete-icon')
           let copyIcon = document.querySelector('.copy-icon')
-          let left_line = document.querySelector('.boundary-line-left')
-          let right_line = document.querySelector('.boundary-line-right')
-          let top_line = document.querySelector('.boundary-line-top')
-          let bottom_line = document.querySelector('.boundary-line-bottom')
+          let leftLine = document.querySelector('.boundary-line-left')
+          let rightLine = document.querySelector('.boundary-line-right')
+          let topLine = document.querySelector('.boundary-line-top')
+          let bottomLine = document.querySelector('.boundary-line-bottom')
           // move.style.left =
           //   this.clickedElement.getBoundingClientRect().left + 'px'
           let moveTop =
@@ -1047,19 +827,19 @@ export default {
               moveTop + board.getBoundingClientRect().top + 'px'
             copyIcon.style.top =
               moveTop + board.getBoundingClientRect().top + 'px'
-            left_line.style.top =
+            leftLine.style.top =
               this.clickedElement.getBoundingClientRect().top +
               board.getBoundingClientRect().top +
               'px'
-            right_line.style.top =
+            rightLine.style.top =
               this.clickedElement.getBoundingClientRect().top +
               board.getBoundingClientRect().top +
               'px'
-            top_line.style.top =
+            topLine.style.top =
               this.clickedElement.getBoundingClientRect().top +
               board.getBoundingClientRect().top +
               'px'
-            bottom_line.style.top =
+            bottomLine.style.top =
               this.clickedElement.getBoundingClientRect().top +
               this.clickedElement.getBoundingClientRect().height +
               board.getBoundingClientRect().top +
@@ -1465,10 +1245,6 @@ export default {
       border-radius: 0.4rem;
       font-size: 0.8rem;
     }
-    .compo-border {
-      position: fixed;
-      z-index: -1;
-    }
     .bottom-border,
     .top-border {
       width: 100%;
@@ -1484,6 +1260,24 @@ export default {
       width: 3px;
       position: fixed;
       background-color: #27e460;
+    }
+  }
+  .click-indicator-box {
+    display: flex;
+    flex-direction: column;
+    .click-bottom-border,
+    .click-top-border {
+      width: 100%;
+      height: 3px;
+      position: fixed;
+      background-color: #f75c51;
+    }
+    .click-right-border,
+    .click-left-border {
+      height: 100%;
+      width: 3px;
+      position: fixed;
+      background-color: #f75c51;
     }
   }
   .move-icon {
