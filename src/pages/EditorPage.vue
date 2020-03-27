@@ -80,7 +80,6 @@
               @stack-push="stackPush"
               @loadData="loadData"
               @open-code="openCode"
-              @every-select="setEverySelectedElement"
               class="home"
             ></home>
             <div v-show="isCommentOn" class="comment-board">
@@ -257,7 +256,6 @@
         <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
             <div class="tree-wrap">
-              <div @mousedown="resizeTree" class="tree-top-border"></div>
               <div @mousedown="resizeTree" class="tree-left-border"></div>
               <div @mousedown="resizeTree" class="tree-right-border"></div>
               <div @mousedown="resizeTree" class="tree-bottom-border"></div>
@@ -538,7 +536,6 @@ export default {
       isProjectLoaded: false,
       isUsedCSS: false,
       isUsedJS: false,
-      everySelectedElement: null,
       firstPopUp: true,
       projectFileList: [],
       isSetEditor2: false,
@@ -700,7 +697,6 @@ export default {
   watch: {},
   mounted() {
     this.currentRightTab = 0
-    this.everySelectedElement = new Set()
     this.currentLeftTab = 0
     if (this.enabled) {
       this.vsMode = 'vs-dark'
@@ -1137,11 +1133,29 @@ export default {
     document.addEventListener('mousedown', e => {
       this.select = e.target
     })
+
+    // Control key detection for multi selection
     document.addEventListener('keydown', e => {
       if (e.which === 17) {
         this.isCtrl = true
         this.$refs.home.multiChoice(true)
       }
+
+      let keyupEvent
+      document.addEventListener(
+        'keyup',
+        (keyupEvent = e => {
+          if (e.which === 17) {
+            this.isCtrl = false
+            this.$refs.home.multiChoice(false)
+          }
+
+          document.removeEventListener('keyup', keyupEvent)
+        })
+      )
+    })
+
+    document.addEventListener('keydown', e => {
       if (e.which === 16) {
         this.isShift = true
       }
@@ -1154,16 +1168,9 @@ export default {
       if (e.which === 83 && this.isCtrl) {
         e.preventDefault()
         if (this.isData) {
-          const iterator1 = this.everySelectedElement[Symbol.iterator]()
           // 파일 업데이트
           if (this.isEditor1Load !== null && this.isEditor2Load !== null) {
             let changedFile = []
-            let i
-            for (i = 0; i < this.everySelectedElement.size; i++) {
-              let val = iterator1.next().value
-              $(val).css('border', '')
-              $(val).css('border-radius', '')
-            }
             let payload = this.isEditor1Load
             payload.contents =
               $('iframe')
@@ -1182,12 +1189,6 @@ export default {
             this.isEditor1Load !== null &&
             this.isEditor2Load === null
           ) {
-            let i
-            for (i = 0; i < this.everySelectedElement.size; i++) {
-              let val = iterator1.next().value
-              $(val).css('border', '')
-              $(val).css('border-radius', '')
-            }
             FileService.updateFile(
               this.isEditor1Load,
               $('iframe')
@@ -1216,10 +1217,6 @@ export default {
       if (e.which === 16) {
         this.isShift = false
       }
-      if (e.which === 17) {
-        this.isCtrl = false
-        this.$refs.home.multiChoice(false)
-      }
     })
     window.addEventListener('mousemove', e => {
       if (this.isResizeTree) {
@@ -1232,9 +1229,6 @@ export default {
             parseInt(this.elemWidth) - (e.clientX - this.initX) + 'px'
           this.treeElem.style.left =
             parseInt(this.elemLeft) + (e.clientX - this.initX) + 'px'
-        } else if (this.borderElem.className === 'tree-top-border') {
-          this.treeElem.style.height =
-            parseInt(this.elemHeight) - (e.clientY - this.initY) * 2 + 'px'
         } else if (this.borderElem.className === 'tree-bottom-border') {
           this.treeElem.style.height =
             parseInt(this.elemHeight) - (this.initY - e.clientY) + 'px'
@@ -1649,9 +1643,6 @@ export default {
     setSelectedFile(e) {
       this.selectedFile = e.target
       this.loadFile(e)
-    },
-    setEverySelectedElement(select) {
-      this.everySelectedElement = select
     },
     resetAllTitle(html, css, js) {
       this.htmlTitles = html
@@ -2612,8 +2603,8 @@ export default {
       console.log(payload)
       this.$refs.layout.getData(payload, this.homeLayoutLocation)
       for (let item of payload) {
-        console.log(item)
-        console.log(this.dataPayload)
+        // console.log(item)
+        // console.log(this.dataPayload)
         this.dataPayload = item
       }
       console.log(this.dataPayload)
@@ -2909,7 +2900,6 @@ export default {
             width: 100%;
             height: 100%;
             position: relative;
-            .tree-top-border,
             .tree-bottom-border {
               position: absolute;
               width: 100%;
@@ -2919,9 +2909,6 @@ export default {
               &:hover {
                 cursor: ns-resize;
               }
-            }
-            .tree-top-border {
-              top: 0;
             }
             .tree-bottom-border {
               bottom: 0;

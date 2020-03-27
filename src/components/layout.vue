@@ -1066,6 +1066,7 @@ import 'vue-range-slider/dist/vue-range-slider.css'
 import vueCustomScrollbar from 'vue-custom-scrollbar'
 // import MonacoEditor from 'vue-m-monaco-editor'
 import MonacoEditor from 'monaco-editor-vue'
+import ClickIndicator from '../modules/click-indicator'
 
 export default {
   name: 'App',
@@ -1375,10 +1376,10 @@ export default {
         this.isData = true
       }
       this.payload.clear()
-      for (let item of payload) {
-        this.payload.add(item)
+      payload.forEach(instance => {
+        this.payload.add(instance.target)
 
-        var margin = getComputedStyle(item)
+        var margin = getComputedStyle(instance.target)
           .margin.replace(/px/gi, '')
           .split(' ')
         if (margin.length !== 1) {
@@ -1391,7 +1392,7 @@ export default {
           }
         }
         // padding데이터 넣기
-        var padding = getComputedStyle(item)
+        var padding = getComputedStyle(instance.target)
           .padding.replace(/px/gi, '')
           .split(' ')
         if (padding.length !== 1) {
@@ -1405,33 +1406,32 @@ export default {
         }
         //사용자가 사용하는 화면에 맞춘 좌표
         this.componentSorce.x = Math.floor(
-          item.getBoundingClientRect().x - homeLayoutLocation.x
+          instance.target.getBoundingClientRect().x - homeLayoutLocation.x
         )
         this.componentSorce.y = Math.floor(
-          item.getBoundingClientRect().y - homeLayoutLocation.y
+          instance.target.getBoundingClientRect().y - homeLayoutLocation.y
         )
         this.componentSorce.width = Math.floor(
-          item.getBoundingClientRect().width
+          instance.target.getBoundingClientRect().width
         )
 
         this.componentSorce.height = Math.floor(
-          item.getBoundingClientRect().height
+          instance.target.getBoundingClientRect().height
         )
-        this.componentSorce.margin = getComputedStyle(item).margin
-        this.componentSorce.padding = getComputedStyle(item).padding
+        this.componentSorce.margin = getComputedStyle(instance.target).margin
+        this.componentSorce.padding = getComputedStyle(instance.target).padding
         this.componentSorce.backgroundColor = getComputedStyle(
-          item
+          instance.target
         ).backgroundColor
         this.backgroundColor.backgroundColor = getComputedStyle(
-          item
+          instance.target
         ).backgroundColor
-        this.fontColor.backgroundColor = getComputedStyle(item).color
-        this.componentSorce.fontSize = getComputedStyle(item).fontSize.replace(
-          'px',
-          ''
-        )
-        this.opacityValue = getComputedStyle(item).opacity
-      }
+        this.fontColor.backgroundColor = getComputedStyle(instance.target).color
+        this.componentSorce.fontSize = getComputedStyle(
+          instance.target
+        ).fontSize.replace('px', '')
+        this.opacityValue = getComputedStyle(instance.target).opacity
+      })
     },
     colorBackgroundpicker() {
       if (this.isBackgroundPicker == true) this.isBackgroundPicker = false
