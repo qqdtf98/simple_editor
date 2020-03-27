@@ -256,7 +256,6 @@
         <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
             <div class="tree-wrap">
-              <div @mousedown="resizeTree" class="tree-top-border"></div>
               <div @mousedown="resizeTree" class="tree-left-border"></div>
               <div @mousedown="resizeTree" class="tree-right-border"></div>
               <div @mousedown="resizeTree" class="tree-bottom-border"></div>
@@ -1230,9 +1229,6 @@ export default {
             parseInt(this.elemWidth) - (e.clientX - this.initX) + 'px'
           this.treeElem.style.left =
             parseInt(this.elemLeft) + (e.clientX - this.initX) + 'px'
-        } else if (this.borderElem.className === 'tree-top-border') {
-          this.treeElem.style.height =
-            parseInt(this.elemHeight) - (e.clientY - this.initY) * 2 + 'px'
         } else if (this.borderElem.className === 'tree-bottom-border') {
           this.treeElem.style.height =
             parseInt(this.elemHeight) - (this.initY - e.clientY) + 'px'
@@ -2904,7 +2900,6 @@ export default {
             width: 100%;
             height: 100%;
             position: relative;
-            .tree-top-border,
             .tree-bottom-border {
               position: absolute;
               width: 100%;
@@ -2914,9 +2909,6 @@ export default {
               &:hover {
                 cursor: ns-resize;
               }
-            }
-            .tree-top-border {
-              top: 0;
             }
             .tree-bottom-border {
               bottom: 0;

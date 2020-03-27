@@ -7,7 +7,6 @@ class Boundary {
     let elem = e.target.getBoundingClientRect()
 
     process.nextTick(() => {
-      console.log(bottomLine)
       bottomLine.style.left =
         elem.left + board.getBoundingClientRect().left + 'px'
       bottomLine.style.top =

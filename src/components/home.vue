@@ -62,28 +62,28 @@
       v-if="isContentClicked"
       data-pos="top"
       style="cursor:ns-resize"
-      @mousedown="mousedownMode"
+      @mousedown="elementResize"
       class="boundary-line-top"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="left"
       style="cursor:ew-resize"
-      @mousedown="mousedownMode"
+      @mousedown="elementResize"
       class="boundary-line-left"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="right"
       style="cursor:ew-resize"
-      @mousedown="mousedownMode"
+      @mousedown="elementResize"
       class="boundary-line-right"
     ></div>
     <div
       v-if="isContentClicked"
       data-pos="bottom"
       style="cursor:ns-resize"
-      @mousedown="mousedownMode"
+      @mousedown="elementResize"
       class="boundary-line-bottom"
     ></div>
     <Context
@@ -123,6 +123,11 @@ export default {
   },
   data() {
     return {
+      elemWidth: null,
+      elemHeight: null,
+      elemLeft: null,
+      initialX: 0,
+      initialY: 0,
       sample: 'aaaaaaaaaaaaaaaff',
       selectedElement: null,
       borderstyle: null,
@@ -144,7 +149,6 @@ export default {
       initialscale: '',
       isContentRemovable: false,
       add: false,
-      isContentResizable: false,
       isContentMovable: false,
       mouseElem: null,
       movePosition: null,
@@ -241,156 +245,31 @@ export default {
     this.borderRight =
       editor.getBoundingClientRect().left + editor.getBoundingClientRect().width
 
-    window.addEventListener('mousemove', event => {
-      if (this.isContentResizable) {
-        if (this.resizedirection === 'right') {
-          if (event.detail.pageX < this.initialposition) {
-            const size =
-              (this.initialwidth -
-                (this.initialposition - event.detail.pageX) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          } else if (event.detail.pageX > this.initialposition) {
-            const size =
-              (this.initialwidth +
-                (event.detail.pageX - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          }
-        } else if (this.resizedirection === 'left') {
-          if (event.detail.pageX < this.initialposition) {
-            const size =
-              (this.initialwidth +
-                (this.initialposition - event.detail.pageX) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          } else if (event.detail.pageX > this.initialposition) {
-            const size =
-              (this.initialwidth -
-                (event.detail.pageX - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).width)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          }
-        } else if (this.resizedirection === 'top') {
-          if (event.detail.pageY < this.initialposition) {
-            const size =
-              (this.initialheight +
-                (this.initialposition - event.detail.pageY) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          } else if (event.detail.pageY > this.initialposition) {
-            const size =
-              (this.initialheight -
-                (event.detail.pageY - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          }
-        } else if (this.resizedirection === 'bottom') {
-          if (event.detail.pageY < this.initialposition) {
-            const size =
-              (this.initialheight -
-                (this.initialposition - event.detail.pageY) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          } else if (event.detail.pageY > this.initialposition) {
-            const size =
-              (this.initialheight +
-                (event.detail.pageY - this.initialposition) * 2) /
-              parseInt(getComputedStyle(this.clickedElement).height)
-            this.clickedElement.style.transform = `scale(${size})`
-            this.size = size
-          }
-        }
-      }
-      if (this.isContentMovable) {
-        let borderElem
-        if (this.mouseElem === null) {
-          if (
-            event.detail.target.className === 'left-border' ||
-            event.detail.target.className === 'right-border' ||
-            event.detail.target.className === 'top-border' ||
-            event.detail.target.className === 'bottom-border'
-          ) {
-            borderElem = document.querySelector(
-              '.' + event.detail.target.className
-            )
-            borderElem.style.backgroundColor = '#0fdc28'
-            this.mouseElem = borderElem
-          }
-        } else {
-          if (this.mouseElem !== event.detail.target) {
-            this.mouseElem.style.backgroundColor = '#3e8ce4'
-            if (
-              event.detail.target.className === 'left-border' ||
-              event.detail.target.className === 'right-border' ||
-              event.detail.target.className === 'top-border' ||
-              event.detail.target.className === 'bottom-border'
-            ) {
-              borderElem = document.querySelector(
-                '.' + event.detail.target.className
-              )
-              borderElem.style.backgroundColor = '#0fdc28'
-              this.mouseElem = borderElem
-            }
-          }
-        }
-      }
-
-      if (this.clickedElement !== null) {
-        let board = document.querySelector('.board')
-        let move = document.querySelector('.move-icon')
-        move.style.left =
-          this.clickedElement.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          'px'
-        move.style.top =
-          this.clickedElement.getBoundingClientRect().top +
-          board.getBoundingClientRect().top -
-          move.getBoundingClientRect().height +
-          'px'
-        let deleteIcon = document.querySelector('.delete-icon')
-        deleteIcon.style.left =
-          this.clickedElement.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          parseInt(getComputedStyle(move).width) * 2 +
-          'px'
-        deleteIcon.style.top =
-          this.clickedElement.getBoundingClientRect().top +
-          board.getBoundingClientRect().top -
-          deleteIcon.getBoundingClientRect().height +
-          'px'
-        let copyIcon = document.querySelector('.copy-icon')
-        copyIcon.style.left =
-          this.clickedElement.getBoundingClientRect().left +
-          board.getBoundingClientRect().left +
-          parseInt(getComputedStyle(move).width) +
-          'px'
-        copyIcon.style.top =
-          this.clickedElement.getBoundingClientRect().top +
-          board.getBoundingClientRect().top -
-          deleteIcon.getBoundingClientRect().height +
-          'px'
-      }
-    })
     window.addEventListener('mouseup', e => {
-      // this.clickedElement.style.filter = 'blur(0)'
-      if (this.isContentResizable) {
-        var style = {
-          work: 'style',
-          elem: this.clickedElement,
-          style: 'transform',
-          afterValue: `scale(${this.size})`,
-          value: `scale(${this.initialscale})`
+      if (this.borderClicked) {
+        if (
+          this.borderElem.className === 'boundary-line-right' ||
+          this.borderElem.className === 'boundary-line-left'
+        ) {
+          var resize = {
+            work: 'width',
+            elem: this.clickedElement,
+            beforeSize: this.elemWidth,
+            afterSize: getComputedStyle(this.clickedElement).width
+          }
+        } else if (
+          this.borderElem.className === 'boundary-line-top' ||
+          this.borderElem.className === 'boundary-line-bottom'
+        ) {
+          var resize = {
+            work: 'height',
+            elem: this.clickedElement,
+            beforeSize: this.elemHeight,
+            afterSize: getComputedStyle(this.clickedElement).height
+          }
         }
-        this.$emit('stack-push', style)
-        this.isContentResizable = false
+        this.$emit('stack-push', resize)
+        this.borderClicked = false
       }
       this.resizedirection = null
       if (this.isContentMovable) {
@@ -744,38 +623,6 @@ export default {
       this.$emit('stack-push', edit)
       this.isContentEditable = false
     },
-    mouseDownBoundary(e) {
-      this.$nextTick(() => {
-        if (!this.isContentMovable) {
-          this.isContentResizable = true
-          this.directionData = e.target.getAttribute('data-pos')
-          if (this.directionData === 'left') {
-            this.initialposition = this.clickedElement.getBoundingClientRect().left
-            this.resizedirection = 'left'
-          } else if (this.directionData === 'top') {
-            this.initialposition = this.clickedElement.getBoundingClientRect().top
-            this.resizedirection = 'top'
-          } else if (this.directionData === 'bottom') {
-            this.initialposition = this.clickedElement.getBoundingClientRect().bottom
-            this.resizedirection = 'bottom'
-          } else if (this.directionData === 'right') {
-            this.initialposition = this.clickedElement.getBoundingClientRect().right
-            this.resizedirection = 'right'
-          }
-
-          this.initialwidth = this.clickedElement.getBoundingClientRect().width
-          this.initialheight = this.clickedElement.getBoundingClientRect().height
-          const scale = this.clickedElement.style.transform
-          const regExp = /[+-]?\d+(?:\.\d+)?/g
-          const regExpResult = regExp.exec(scale)
-          let scaleVal = 1
-          if (regExpResult) {
-            scaleVal = Number(regExpResult[0])
-          }
-          this.initialscale = scaleVal
-        }
-      })
-    },
     handleScroll(e) {
       if (this.selectedElement != null) {
         this.onelementSelected = false
@@ -924,6 +771,7 @@ export default {
     windowResized() {
       this.onmouseMove(this.movePosition)
     },
+    // TODO fix duplicateElement func
     duplicateElement() {
       let classValue = ''
       let i
@@ -1002,70 +850,14 @@ export default {
         this.$emit('stack-push', copy)
       }
     },
-    splitBorder(e) {
-      this.borderClicked = true
-
-      let elemWidth = getComputedStyle(this.clickedElement).width
-      let elemHeight = getComputedStyle(this.clickedElement).height
-      let elemLeft = getComputedStyle(this.clickedElement).left
-      let initialX = e.clientX
-      let initialY = e.clientY
+    elementResize(e) {
+      this.elemWidth = getComputedStyle(this.clickedElement).width
+      this.elemHeight = getComputedStyle(this.clickedElement).height
+      this.elemLeft = getComputedStyle(this.clickedElement).left
+      this.initialX = e.clientX
+      this.initialY = e.clientY
       this.borderElem = e.target
-
-      let edit = document.querySelector('.editor')
-
-      edit.addEventListener('mousemove', event => {
-        if (this.borderClicked) {
-          if (this.borderElem.className === 'boundary-line-right') {
-            this.clickedElement.style.width =
-              parseInt(elemWidth) - (initialX - event.clientX) * 2 + 'px'
-          } else if (this.borderElem.className === 'boundary-line-left') {
-            this.clickedElement.style.width =
-              parseInt(elemWidth) - (event.clientX - initialX) * 2 + 'px'
-          } else if (this.borderElem.className === 'boundary-line-top') {
-            this.clickedElement.style.height =
-              parseInt(elemHeight) - (event.clientY - initialY) * 2 + 'px'
-          } else if (this.borderElem.className === 'boundary-line-bottom') {
-            this.clickedElement.style.height =
-              parseInt(elemHeight) - (initialY - event.clientY) * 2 + 'px'
-          }
-        }
-      })
-      edit.addEventListener('mouseup', () => {
-        if (
-          this.borderElem.className === 'boundary-line-right' ||
-          this.borderElem.className === 'boundary-line-left'
-        ) {
-          var resize = {
-            work: 'width',
-            elem: this.clickedElement,
-            beforeSize: elemWidth,
-            afterSize: getComputedStyle(this.clickedElement).width
-          }
-        } else if (
-          this.borderElem.className === 'boundary-line-top' ||
-          this.borderElem.className === 'boundary-line-bottom'
-        ) {
-          var resize = {
-            work: 'height',
-            elem: this.clickedElement,
-            beforeSize: elemHeight,
-            afterSize: getComputedStyle(this.clickedElement).height
-          }
-        }
-        this.$emit('stack-push', resize)
-        this.borderClicked = false
-      })
-    },
-    mousedownMode(e) {
-      if (this.mode) {
-        this.splitBorder(e)
-      } else {
-        this.mouseDownBoundary(e)
-      }
-    },
-    modeSelect(mode) {
-      this.mode = mode
+      this.borderClicked = true
     },
     onmouserightClick(e) {
       if (e.button === 2) {
