@@ -12,6 +12,10 @@
 </template>
 
 <script>
+import ClickIndicator from '../modules/click-indicator'
+import { Work } from '../modules/undoredo'
+import HandleMultiFunc from '../modules/handle-multi-func'
+
 export default {
   data() {
     return {
@@ -19,54 +23,34 @@ export default {
       mouseElemStyle: null,
       mouseElemValue: null,
       state: false,
-      multiSelectedElement: null,
       multiWidth: [],
       totalWidth: 0,
       multiHeight: [],
-      totalHeight: 0,
-      multiElementParent: [],
-      multiElementCurrentParent: [],
-      notDeletedParent: [],
-      notDeletedCurrentParent: [],
-      notDeletedElem: [],
-      notDeletedNth: []
+      totalHeight: 0
     }
   },
-  mounted() {
-    this.multiSelectedElement = new Set()
-  },
+  mounted() {},
   methods: {
     uploadImage() {
       this.$emit('upload-image')
     },
-    multiState(state, elem, parent) {
+    multiState(state) {
       this.state = state
-      this.multiSelectedElement = elem
-      this.multiElementParent = parent
     },
     calcAverageWidth() {
       if (this.state) {
-        let i
-        let entries = this.multiSelectedElement.entries()
-        let setIter = this.multiSelectedElement[Symbol.iterator]()
-        for (i = 0; i < this.multiSelectedElement.size; i++) {
-          let item = setIter.next().value
-          this.multiWidth[i] = item.getBoundingClientRect().width
-          this.totalWidth += item.getBoundingClientRect().width
-        }
-        let avgWidth = this.totalWidth / this.multiSelectedElement.size
-        setIter = this.multiSelectedElement[Symbol.iterator]()
-        for (i = 0; i < this.multiSelectedElement.size; i++) {
-          let item = setIter.next().value
-          item.style.width = avgWidth + 'px'
-        }
-        var widthChange = {
-          work: 'widthChange',
-          beforeWidth: this.multiWidth,
-          elems: this.multiSelectedElement,
-          afterWidth: avgWidth
-        }
-        this.$emit('close', widthChange)
+        HandleMultiFunc.calcAverageWidth()
+        this.$nextTick(() => {
+          this.$emit('close')
+          this.$emit(
+            'iframe-changed',
+            $('iframe')
+              .get(0)
+              .contentWindow.document.documentElement.innerHTML.split(
+                '<style>'
+              )[0] + '</body>'
+          )
+        })
       }
     },
     calcAverageHeight() {
@@ -96,36 +80,18 @@ export default {
     },
     multiDelete() {
       if (this.state) {
-        let i
-        let entries = this.multiSelectedElement.entries()
-        let setIter = this.multiSelectedElement[Symbol.iterator]()
-        for (i = 0; i < this.multiSelectedElement.size; i++) {
-          let item = setIter.next().value
-          this.multiElementCurrentParent.push(item.parentElement)
-          if (!this.multiSelectedElement.has(item.parentElement)) {
-            this.notDeletedElem.push(item)
-            this.notDeletedCurrentParent.push(item.parentElement)
-            this.notDeletedParent.push(this.multiElementParent[i])
-            let j
-            for (j = 0; j < item.parentElement.children.length; j++) {
-              if (item.parentElement.children[j] === item) {
-                break
-              }
-            }
-            this.notDeletedNth.push(j)
-            item.parentElement.removeChild(item)
-          } else {
-            console.log('has')
-          }
-        }
-        var multiDelete = {
-          work: 'multiDelete',
-          beforeParent: this.notDeletedParent,
-          afterParent: this.notDeletedCurrentParent,
-          elem: this.notDeletedElem,
-          nth: this.notDeletedNth
-        }
-        this.$emit('close', multiDelete)
+        HandleMultiFunc.multiDelete()
+        this.$nextTick(() => {
+          this.$emit('close')
+          this.$emit(
+            'iframe-changed',
+            $('iframe')
+              .get(0)
+              .contentWindow.document.documentElement.innerHTML.split(
+                '<style>'
+              )[0] + '</body>'
+          )
+        })
       } else {
         console.log('다중선택아님')
         this.$emit('close', null)
