@@ -475,7 +475,6 @@ import ProjectService from '../services/project.service'
 import FileService from '../services/file.service'
 import FileModule from '../modules/file.module'
 import ProjectModule from '../modules/project.module'
-import UndoRedoModule from '../modules/undo.redo.module'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
@@ -2563,16 +2562,14 @@ export default {
       }
     },
     redoWork() {
-      console.log('redo')
       let i
-      if (this.reworkStack.length !== 0) {
-        for (i = 0; i < this.reworkStack.length; i++) {
-          console.log(this.reworkStack[i])
-        }
-        let rework = this.reworkStack.pop()
+      let reworkStack = this.$store.state.undoredoStack.reworkStack
+      if (reworkStack.length !== 0) {
+        let rework = reworkStack.pop()
         let work = rework
-        UndoRedoModule.redoWork(rework)
-        this.stackPush(work)
+        this.$store.dispatch('workStackPush', work)
+        rework.redoFunc(this.editor1)
+        this.$store.commit('setReworkStack', reworkStack)
       }
     },
     undoWork() {

@@ -6,5 +6,7 @@ export class Work {
   undoFunc(editor1) {
     editor1.setValue(this.htmlSrc.split('<style>')[0] + '</body>')
   }
-  redoFunc() {}
+  redoFunc(editor1) {
+    editor1.setValue(this.afterHtmlSrc.split('<style>')[0] + '</body>')
+  }
 }
