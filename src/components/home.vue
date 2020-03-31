@@ -87,6 +87,7 @@
       class="boundary-line-bottom"
     ></div>
     <Context
+      @iframe-changed="iframeChanged"
       @close="closeMode"
       @upload-image="uploadImage"
       ref="context"
@@ -101,6 +102,8 @@
 </template>
 
 <script>
+import HandleElement from '../modules/handle-element'
+import { Work } from '../modules/undoredo'
 import Dashboard from '../sample/dashboard.vue'
 import SelectorModule from '../modules/selector.module'
 import Boundary from '../modules/boundary'
@@ -223,6 +226,7 @@ export default {
           this.isShift = false
         }
         if (e.which === 17) {
+          console.log('frame ctrl')
           this.isCtrl = false
           homeDoc.multiChoice(false)
         }
@@ -246,28 +250,29 @@ export default {
       editor.getBoundingClientRect().left + editor.getBoundingClientRect().width
 
     window.addEventListener('mouseup', e => {
+      // TODO resizeelement 기능 수정
       if (this.borderClicked) {
-        if (
-          this.borderElem.className === 'boundary-line-right' ||
-          this.borderElem.className === 'boundary-line-left'
-        ) {
-          var resize = {
-            work: 'width',
-            elem: this.clickedElement,
-            beforeSize: this.elemWidth,
-            afterSize: getComputedStyle(this.clickedElement).width
-          }
-        } else if (
-          this.borderElem.className === 'boundary-line-top' ||
-          this.borderElem.className === 'boundary-line-bottom'
-        ) {
-          var resize = {
-            work: 'height',
-            elem: this.clickedElement,
-            beforeSize: this.elemHeight,
-            afterSize: getComputedStyle(this.clickedElement).height
-          }
-        }
+        // if (
+        //   this.borderElem.className === 'boundary-line-right' ||
+        //   this.borderElem.className === 'boundary-line-left'
+        // ) {
+        //   var resize = {
+        //     work: 'width',
+        //     elem: this.clickedElement,
+        //     beforeSize: this.elemWidth,
+        //     afterSize: getComputedStyle(this.clickedElement).width
+        //   }
+        // } else if (
+        //   this.borderElem.className === 'boundary-line-top' ||
+        //   this.borderElem.className === 'boundary-line-bottom'
+        // ) {
+        //   var resize = {
+        //     work: 'height',
+        //     elem: this.clickedElement,
+        //     beforeSize: this.elemHeight,
+        //     afterSize: getComputedStyle(this.clickedElement).height
+        //   }
+        // }
         this.$emit('stack-push', resize)
         this.borderClicked = false
       }
@@ -343,6 +348,16 @@ export default {
     })
   },
   methods: {
+    iframeChanged(change) {
+      this.$emit(
+        'iframe-changed',
+        $('iframe')
+          .get(0)
+          .contentWindow.document.documentElement.innerHTML.split(
+            '<style>'
+          )[0] + '</body>'
+      )
+    },
     uploadImage() {
       let input = document.querySelector('#getfile')
       let uploadImg = input.cloneNode(true)
@@ -360,14 +375,11 @@ export default {
     multiChoice(mode) {
       this.multiSelect = mode
     },
-    // TODO no more in use
     closeMode(payload) {
       this.mouseRightClick = false
-      this.$emit('comment', this.clickedElement)
       if (payload !== null) {
         this.$emit('stack-push', payload)
       }
-      //연결안되어있음
     },
     onmouseMove(e) {
       let board = document.querySelector('.board')
@@ -412,19 +424,14 @@ export default {
         let indicator = new ClickIndicator(e.target, true)
         this.$nextTick(() => {
           this.$emit('componentSelected', ClickIndicator.instances)
-          this.$refs.context.multiState(
-            true,
-            ClickIndicator.instances,
-            this.multiElementParent
-            // TODO parent 저장해서 보내주기
-          )
+          this.$refs.context.multiState(true)
         })
       } else {
         let indicator = new ClickIndicator(e.target)
         ClickIndicator.instances.forEach(instance => {
           console.log(instance.target)
         })
-        this.$refs.context.multiState(false, null)
+        this.$refs.context.multiState(false)
         this.mouseRightClick = false
         if (this.clickedElement === null) {
           if (
@@ -491,34 +498,16 @@ export default {
       }
     },
     styleChanged(data) {
-      if (data.payload.className === '') {
-        console.log('없')
-        var style = {
-          work: 'style',
-          elem: this.clickedElement,
-          style: data.style,
-          afterValue: data.value,
-          value: getComputedStyle(data.payload)[data.style]
-        }
-        this.$emit('stack-push', style)
+      let htmlSrc = $('iframe').get(0).contentWindow.document.documentElement
+        .innerHTML
 
-        this.value = data.value
+      data.payload.style[data.style] = data.value
+      let afterHtmlSrc = $('iframe').get(0).contentWindow.document
+        .documentElement.innerHTML
 
-        data.payload.style[data.style] = this.value
-      } else {
-        this.style = data.style
-        this.value = data.value
+      let newWork = new Work(htmlSrc, afterHtmlSrc)
+      this.$store.dispatch('workStackPush', newWork)
 
-        var style = {
-          work: 'style',
-          elem: data.payload,
-          style: this.style,
-          afterValue: this.value,
-          value: getComputedStyle(data.payload)[this.style]
-        }
-        this.$emit('stack-push', style)
-        data.payload.style[data.style] = data.value
-      }
       this.$emit(
         'iframe-changed',
         $('iframe')
@@ -709,24 +698,20 @@ export default {
       }
     },
     removeContent() {
-      let i
-      let nChild
-      for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
-        if (
-          this.clickedElement.parentElement.children[i] === this.clickedElement
-        ) {
-          nChild = i
-          break
-        }
-      }
-      var remove = {
-        work: 'remove',
-        position: this.clickedElement.parentNode,
-        elem: this.clickedElement,
-        nth: nChild
-      }
-      this.clickedElement.parentNode.removeChild(this.clickedElement)
-      this.$emit('stack-push', remove)
+      this.classIndex = HandleElement.removeElement(
+        this.clickedElement,
+        this.classIndex
+      )
+      this.$nextTick(() => {
+        this.$emit(
+          'iframe-changed',
+          $('iframe')
+            .get(0)
+            .contentWindow.document.documentElement.innerHTML.split(
+              '<style>'
+            )[0] + '</body>'
+        )
+      })
     },
     addContent(tag, position) {
       // console.log(tag)
@@ -763,92 +748,28 @@ export default {
     selectOverview(payload) {
       SelectorModule.activateSelector(payload)
     },
-    // TODO fix moveElement func
     moveElement(e) {
-      this.clickedElement.style.filter = 'blur(0.8px)'
-      this.isContentMovable = true
+      e.preventDefault()
+      HandleElement.moveElement(this.clickedElement)
     },
     windowResized() {
       this.onmouseMove(this.movePosition)
     },
-    // TODO fix duplicateElement func
     duplicateElement() {
-      let classValue = ''
-      let i
-      // console.log(this.clickedElement.classList.length)
-      for (i = 0; i < this.clickedElement.classList.length; i++) {
-        if (i === this.clickedElement.classList.length - 1) {
-          classValue += '.' + this.clickedElement.classList[i]
-        } else {
-          classValue += '.' + this.clickedElement.classList[i] + ' '
-        }
-      }
-      // console.log(classValue)
-      let nChild
-      for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
-        if (
-          this.clickedElement.parentElement.children[i] === this.clickedElement
-        ) {
-          nChild = i
-          break
-        }
-      }
-      if (this.clickedElement.className === '') {
-        console.log('없음')
-        let copyElem = this.clickedElement.cloneNode(true)
-        console.log(copyElem)
-        let randomClass =
-          this.clickedElement.parentElement.classList.value.replace(/ /gi, '') +
-          this.clickedElement.classList.value.replace(/ /gi, '') +
-          this.classIndex
-        copyElem.classList.add(randomClass)
-        this.classIndex++
-        var copy = {
-          work: 'copy',
-          position: this.clickedElement.parentElement,
-          elem: this.clickedElement,
-          copyElem: copyElem,
-          nth: nChild
-        }
-        // console.log(copy);
-        $(this.clickedElement).after(copyElem)
-        this.$emit('stack-push', copy)
-      } else {
-        let elem = document.getElementsByClassName(
-          this.clickedElement.classList.value
+      this.classIndex = HandleElement.duplicateElement(
+        this.clickedElement,
+        this.classIndex
+      )
+      this.$nextTick(() => {
+        this.$emit(
+          'iframe-changed',
+          $('iframe')
+            .get(0)
+            .contentWindow.document.documentElement.innerHTML.split(
+              '<style>'
+            )[0] + '</body>'
         )
-        // console.log(elem)
-        for (i = 0; i < elem.length; i++) {
-          if (elem[i] === this.clickedElement) {
-            console.log(i)
-            break
-          }
-        }
-
-        console.log(elem[i])
-
-        let copyElem = elem[i].cloneNode(true)
-
-        let randomClass =
-          elem[i].parentElement.classList.value.replace(/ /gi, '') +
-          elem[i].classList.value.replace(/ /gi, '') +
-          this.classIndex
-        copyElem.classList.add(randomClass)
-        this.classIndex++
-        // console.log(this.clickedElement.parentElement.children);
-
-        // var newparent = document.createElement("div");
-        var copy = {
-          work: 'copy',
-          position: this.clickedElement.parentElement,
-          elem: elem[i],
-          copyElem: copyElem,
-          nth: nChild
-        }
-        // console.log(copy);
-        $(elem[i]).after(copyElem)
-        this.$emit('stack-push', copy)
-      }
+      })
     },
     elementResize(e) {
       this.elemWidth = getComputedStyle(this.clickedElement).width

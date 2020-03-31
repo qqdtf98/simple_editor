@@ -469,12 +469,12 @@
 <script>
 import user from '../store/user.js'
 import apiUrl from '../modules/api-url'
+import { Work } from '../modules/undoredo'
 import PairService from '../services/pair.service'
 import ProjectService from '../services/project.service'
 import FileService from '../services/file.service'
 import FileModule from '../modules/file.module'
 import ProjectModule from '../modules/project.module'
-import UndoRedoModule from '../modules/undo.redo.module'
 import Vue from 'vue'
 import axios from 'axios'
 import Ruler from 'vue-component-ruler'
@@ -981,7 +981,6 @@ export default {
         for (i = 0; i < this.usedPair.length; i++) {
           for (j = 0; j < this.cssTitles.length; j++) {
             if (this.cssTitles[j].file_seq === this.usedPair[i].css_file_seq) {
-              console.log(this.cssTitles[j].contents)
               style += this.cssTitles[j].contents
             }
           }
@@ -1159,10 +1158,14 @@ export default {
       if (e.which === 16) {
         this.isShift = true
       }
+      if (e.which === 17) {
+        this.isCtrl = true
+      }
       if (e.which === 90 && this.isCtrl && !this.isShift) {
         this.undoWork()
       }
       if (e.which === 90 && this.isCtrl && this.isShift) {
+        console.log('eieiei')
         this.redoWork()
       }
       if (e.which === 83 && this.isCtrl) {
@@ -1216,6 +1219,9 @@ export default {
     document.addEventListener('keyup', e => {
       if (e.which === 16) {
         this.isShift = false
+      }
+      if (e.which === 17) {
+        this.isCtrl = false
       }
     })
     window.addEventListener('mousemove', e => {
@@ -2557,23 +2563,23 @@ export default {
     },
     redoWork() {
       let i
-      if (this.reworkStack.length !== 0) {
-        for (i = 0; i < this.reworkStack.length; i++) {
-          console.log(this.reworkStack[i])
-        }
-        let rework = this.reworkStack.pop()
+      let reworkStack = this.$store.state.undoredoStack.reworkStack
+      if (reworkStack.length !== 0) {
+        let rework = reworkStack.pop()
         let work = rework
-        UndoRedoModule.redoWork(rework)
-        this.stackPush(work)
+        this.$store.dispatch('workStackPush', work)
+        rework.redoFunc(this.editor1)
+        this.$store.commit('setReworkStack', reworkStack)
       }
     },
     undoWork() {
-      let i
-      if (this.workStack.length !== 0) {
-        let work = this.workStack.pop()
+      let workStack = this.$store.state.undoredoStack.workStack
+      if (workStack.length !== 0) {
+        let work = workStack.pop()
         let rework = work
-        this.reworkStack.push(rework)
-        UndoRedoModule.undoWork(work)
+        this.$store.dispatch('reworkStackPush', rework)
+        work.undoFunc(this.editor1)
+        this.$store.commit('setWorkStack', workStack)
       }
     },
     stackPush(elem) {
