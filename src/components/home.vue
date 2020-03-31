@@ -190,14 +190,14 @@ export default {
         )
         homeDoc.onmouseMove(e)
       })
-      iframe.get(0).contentDocument.addEventListener('mouseup', e => {
-        window.dispatchEvent(
-          new CustomEvent('mouseup', {
-            detail: e
-          })
-        )
-        homeDoc.onmouserightClick(e)
-      })
+      // iframe.get(0).contentDocument.addEventListener('mouseup', e => {
+      //   window.dispatchEvent(
+      //     new CustomEvent('mouseup', {
+      //       detail: e
+      //     })
+      //   )
+      //   homeDoc.onmouserightClick(e)
+      // })
       iframe.get(0).contentDocument.addEventListener('scroll', e => {
         homeDoc.handleScroll(e)
       })
@@ -246,102 +246,103 @@ export default {
     this.borderRight =
       editor.getBoundingClientRect().left + editor.getBoundingClientRect().width
 
-    window.addEventListener('mouseup', e => {
-      if (this.borderClicked) {
-        if (
-          this.borderElem.className === 'boundary-line-right' ||
-          this.borderElem.className === 'boundary-line-left'
-        ) {
-          var resize = {
-            work: 'width',
-            elem: this.clickedElement,
-            beforeSize: this.elemWidth,
-            afterSize: getComputedStyle(this.clickedElement).width
-          }
-        } else if (
-          this.borderElem.className === 'boundary-line-top' ||
-          this.borderElem.className === 'boundary-line-bottom'
-        ) {
-          var resize = {
-            work: 'height',
-            elem: this.clickedElement,
-            beforeSize: this.elemHeight,
-            afterSize: getComputedStyle(this.clickedElement).height
-          }
-        }
-        this.$emit('stack-push', resize)
-        this.borderClicked = false
-      }
-      this.resizedirection = null
-      if (this.isContentMovable) {
-        this.clickedElement.style.filter = 'blur(0)'
-        if (this.mouseElem !== null) {
-          this.mouseElem.style.backgroundColor = '#3e8ce4'
-          if (this.clickedElement.className === '') {
-            console.log('없음')
-            var move = {
-              work: 'move',
-              position: this.clickedElement.parentElement,
-              elem: this.clickedElement,
-              afterMovePosition: this.movePosition.target
-            }
-            this.$emit('stack-push', move)
-            this.movePosition.target.appendChild(this.clickedElement)
-          } else {
-            let addComponent = document.getElementsByClassName(
-              this.clickedElement.classList.value
-            )
-            let i
-            for (i = 0; i < addComponent.length; i++) {
-              if (addComponent[i] === this.clickedElement) {
-                break
-              }
-            }
-            var move = {
-              work: 'move',
-              position: this.clickedElement.parentElement,
-              elem: this.clickedElement,
-              afterMovePosition: this.movePosition.target
-            }
-            this.$emit('stack-push', move)
-            this.movePosition.target.appendChild(addComponent[i])
+    // window.addEventListener('mouseup', e => {
+    //   if (this.borderClicked) {
+    //     if (
+    //       this.borderElem.className === 'boundary-line-right' ||
+    //       this.borderElem.className === 'boundary-line-left'
+    //     ) {
+    //       var resize = {
+    //         work: 'width',
+    //         elem: this.clickedElement,
+    //         beforeSize: this.elemWidth,
+    //         afterSize: getComputedStyle(this.clickedElement).width
+    //       }
+    //     } else if (
+    //       this.borderElem.className === 'boundary-line-top' ||
+    //       this.borderElem.className === 'boundary-line-bottom'
+    //     ) {
+    //       var resize = {
+    //         work: 'height',
+    //         elem: this.clickedElement,
+    //         beforeSize: this.elemHeight,
+    //         afterSize: getComputedStyle(this.clickedElement).height
+    //       }
+    //     }
+    //     this.$emit('stack-push', resize)
+    //     this.borderClicked = false
+    //   }
+    //   this.resizedirection = null
+    //   if (this.isContentMovable) {
 
-            this.$nextTick(() => {
-              // tag가 추가할 element. 자식이 된다.
-              // console.log(position)
-              // position이 추가할 위치에 있는 element. 부모가 된다.
-              // this.movePosition.parentElement
+    //     this.clickedElement.style.filter = 'blur(0)'
+    //     if (this.mouseElem !== null) {
+    //       this.mouseElem.style.backgroundColor = '#3e8ce4'
+    //       if (this.clickedElement.className === '') {
+    //         console.log('없음')
+    //         var move = {
+    //           work: 'move',
+    //           position: this.clickedElement.parentElement,
+    //           elem: this.clickedElement,
+    //           afterMovePosition: this.movePosition.target
+    //         }
+    //         this.$emit('stack-push', move)
+    //         this.movePosition.target.appendChild(this.clickedElement)
+    //       } else {
+    //         let addComponent = document.getElementsByClassName(
+    //           this.clickedElement.classList.value
+    //         )
+    //         let i
+    //         for (i = 0; i < addComponent.length; i++) {
+    //           if (addComponent[i] === this.clickedElement) {
+    //             break
+    //           }
+    //         }
+    //         var move = {
+    //           work: 'move',
+    //           position: this.clickedElement.parentElement,
+    //           elem: this.clickedElement,
+    //           afterMovePosition: this.movePosition.target
+    //         }
+    //         this.$emit('stack-push', move)
+    //         this.movePosition.target.appendChild(addComponent[i])
 
-              if (
-                e.detail.target.className === 'left-border' ||
-                e.detail.target.className === 'right-border' ||
-                e.detail.target.className === 'top-border' ||
-                e.detail.target.className === 'bottom-border'
-              ) {
-                // let pos = e.target.className.split('-')[0]
-                let addComponent = document.getElementsByClassName(
-                  this.clickedElement.classList.value
-                )
-                let i
-                for (i = 0; i < addComponent.length; i++) {
-                  if (addComponent[i] === this.clickedElement) {
-                    console.log(i)
-                    break
-                  }
-                }
-                this.movePosition.target.parentElement.appendChild(
-                  addComponent[i]
-                )
-              }
-            })
-          }
-        }
-      }
+    //         this.$nextTick(() => {
+    //           // tag가 추가할 element. 자식이 된다.
+    //           // console.log(position)
+    //           // position이 추가할 위치에 있는 element. 부모가 된다.
+    //           // this.movePosition.parentElement
 
-      this.isContentMovable = false
+    //           if (
+    //             e.detail.target.className === 'left-border' ||
+    //             e.detail.target.className === 'right-border' ||
+    //             e.detail.target.className === 'top-border' ||
+    //             e.detail.target.className === 'bottom-border'
+    //           ) {
+    //             // let pos = e.target.className.split('-')[0]
+    //             let addComponent = document.getElementsByClassName(
+    //               this.clickedElement.classList.value
+    //             )
+    //             let i
+    //             for (i = 0; i < addComponent.length; i++) {
+    //               if (addComponent[i] === this.clickedElement) {
+    //                 console.log(i)
+    //                 break
+    //               }
+    //             }
+    //             this.movePosition.target.parentElement.appendChild(
+    //               addComponent[i]
+    //             )
+    //           }
+    //         })
+    //       }
+    //     }
+    //   }
 
-      this.$emit('elementresize', this.clickedElement)
-    })
+    //   this.isContentMovable = false
+
+    //   this.$emit('elementresize', this.clickedElement)
+    // })
   },
   methods: {
     uploadImage() {
@@ -750,15 +751,13 @@ export default {
     selectOverview(payload) {
       SelectorModule.activateSelector(payload)
     },
-    // TODO fix moveElement func
     moveElement(e) {
-      this.clickedElement.style.filter = 'blur(0.8px)'
-      this.isContentMovable = true
+      e.preventDefault()
+      HandleElement.moveElement(this.clickedElement)
     },
     windowResized() {
       this.onmouseMove(this.movePosition)
     },
-    // TODO fix duplicateElement func
     duplicateElement() {
       this.classIndex = HandleElement.duplicateElement(
         this.clickedElement,

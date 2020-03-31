@@ -94,6 +94,45 @@ class HandleElement {
     }
     return index
   }
+  moveElement(moveElem) {
+    moveElem.style.filter = 'blur(0.8px)'
+    let iframeMouseUp
+    let windowMouseUp
+    $('iframe')
+      .get(0)
+      .contentDocument.addEventListener(
+        'mouseup',
+        (iframeMouseUp = e => {
+          window.dispatchEvent(
+            new CustomEvent('mouseup', {
+              detail: e
+            })
+          )
+        })
+      )
+    window.addEventListener(
+      'mouseup',
+      (windowMouseUp = e => {
+        moveElem.style.filter = 'blur(0)'
+        if (moveElem !== e.detail.target) {
+          let move = {
+            work: 'move',
+            position: moveElem.parentElement,
+            elem: moveElem,
+            afterMovePosition: e.detail.target
+          }
+          // TODO stack push
+          // this.$emit('stack-push', move)
+          e.detail.target.parentElement.insertBefore(moveElem, e.detail.target)
+
+          $('iframe')
+            .get(0)
+            .contentDocument.removeEventListener('mouseup', iframeMouseUp)
+          window.removeEventListener('mouseup', windowMouseUp)
+        }
+      })
+    )
+  }
 }
 
 export default new HandleElement()
