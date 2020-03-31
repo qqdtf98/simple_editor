@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import HandleElement from '../modules/handle-element'
 import Dashboard from '../sample/dashboard.vue'
 import SelectorModule from '../modules/selector.module'
 import Boundary from '../modules/boundary'
@@ -709,24 +710,10 @@ export default {
       }
     },
     removeContent() {
-      let i
-      let nChild
-      for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
-        if (
-          this.clickedElement.parentElement.children[i] === this.clickedElement
-        ) {
-          nChild = i
-          break
-        }
-      }
-      var remove = {
-        work: 'remove',
-        position: this.clickedElement.parentNode,
-        elem: this.clickedElement,
-        nth: nChild
-      }
-      this.clickedElement.parentNode.removeChild(this.clickedElement)
-      this.$emit('stack-push', remove)
+      this.classIndex = HandleElement.removeElement(
+        this.clickedElement,
+        this.classIndex
+      )
     },
     addContent(tag, position) {
       // console.log(tag)
@@ -773,82 +760,10 @@ export default {
     },
     // TODO fix duplicateElement func
     duplicateElement() {
-      let classValue = ''
-      let i
-      // console.log(this.clickedElement.classList.length)
-      for (i = 0; i < this.clickedElement.classList.length; i++) {
-        if (i === this.clickedElement.classList.length - 1) {
-          classValue += '.' + this.clickedElement.classList[i]
-        } else {
-          classValue += '.' + this.clickedElement.classList[i] + ' '
-        }
-      }
-      // console.log(classValue)
-      let nChild
-      for (i = 0; i < this.clickedElement.parentElement.children.length; i++) {
-        if (
-          this.clickedElement.parentElement.children[i] === this.clickedElement
-        ) {
-          nChild = i
-          break
-        }
-      }
-      if (this.clickedElement.className === '') {
-        console.log('없음')
-        let copyElem = this.clickedElement.cloneNode(true)
-        console.log(copyElem)
-        let randomClass =
-          this.clickedElement.parentElement.classList.value.replace(/ /gi, '') +
-          this.clickedElement.classList.value.replace(/ /gi, '') +
-          this.classIndex
-        copyElem.classList.add(randomClass)
-        this.classIndex++
-        var copy = {
-          work: 'copy',
-          position: this.clickedElement.parentElement,
-          elem: this.clickedElement,
-          copyElem: copyElem,
-          nth: nChild
-        }
-        // console.log(copy);
-        $(this.clickedElement).after(copyElem)
-        this.$emit('stack-push', copy)
-      } else {
-        let elem = document.getElementsByClassName(
-          this.clickedElement.classList.value
-        )
-        // console.log(elem)
-        for (i = 0; i < elem.length; i++) {
-          if (elem[i] === this.clickedElement) {
-            console.log(i)
-            break
-          }
-        }
-
-        console.log(elem[i])
-
-        let copyElem = elem[i].cloneNode(true)
-
-        let randomClass =
-          elem[i].parentElement.classList.value.replace(/ /gi, '') +
-          elem[i].classList.value.replace(/ /gi, '') +
-          this.classIndex
-        copyElem.classList.add(randomClass)
-        this.classIndex++
-        // console.log(this.clickedElement.parentElement.children);
-
-        // var newparent = document.createElement("div");
-        var copy = {
-          work: 'copy',
-          position: this.clickedElement.parentElement,
-          elem: elem[i],
-          copyElem: copyElem,
-          nth: nChild
-        }
-        // console.log(copy);
-        $(elem[i]).after(copyElem)
-        this.$emit('stack-push', copy)
-      }
+      this.classIndex = HandleElement.duplicateElement(
+        this.clickedElement,
+        this.classIndex
+      )
     },
     elementResize(e) {
       this.elemWidth = getComputedStyle(this.clickedElement).width
