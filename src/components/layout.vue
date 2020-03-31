@@ -1569,7 +1569,7 @@ export default {
     backgroundBtn(e) {
       for (let payload of this.payload) {
         this.submitSorce.payload = payload
-        this.submitSorce.style = 'background'
+        this.submitSorce.style = 'backgroundColor'
         this.submitSorce.value = e.target.name
         this.submitSorce.change = 1
         if (e.target.name == 'none') {

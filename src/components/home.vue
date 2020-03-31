@@ -102,6 +102,7 @@
 
 <script>
 import HandleElement from '../modules/handle-element'
+import { Work } from '../modules/undoredo'
 import Dashboard from '../sample/dashboard.vue'
 import SelectorModule from '../modules/selector.module'
 import Boundary from '../modules/boundary'
@@ -493,34 +494,16 @@ export default {
       }
     },
     styleChanged(data) {
-      if (data.payload.className === '') {
-        console.log('없')
-        var style = {
-          work: 'style',
-          elem: this.clickedElement,
-          style: data.style,
-          afterValue: data.value,
-          value: getComputedStyle(data.payload)[data.style]
-        }
-        this.$emit('stack-push', style)
+      let htmlSrc = $('iframe').get(0).contentWindow.document.documentElement
+        .innerHTML
 
-        this.value = data.value
+      data.payload.style[data.style] = data.value
+      let afterHtmlSrc = $('iframe').get(0).contentWindow.document
+        .documentElement.innerHTML
 
-        data.payload.style[data.style] = this.value
-      } else {
-        this.style = data.style
-        this.value = data.value
+      let newWork = new Work(htmlSrc, afterHtmlSrc)
+      this.$store.dispatch('workStackPush', newWork)
 
-        var style = {
-          work: 'style',
-          elem: data.payload,
-          style: this.style,
-          afterValue: this.value,
-          value: getComputedStyle(data.payload)[this.style]
-        }
-        this.$emit('stack-push', style)
-        data.payload.style[data.style] = data.value
-      }
       this.$emit(
         'iframe-changed',
         $('iframe')

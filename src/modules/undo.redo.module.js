@@ -1,6 +1,7 @@
 class UndoRedoModule {
   undoWork(work) {
     if (work.work === 'style') {
+      console.log(work)
       work.elem.style[work.style] = work.value
     } else if (work.work === 'remove') {
       let parent = work.position
