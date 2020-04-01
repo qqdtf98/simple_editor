@@ -152,7 +152,6 @@ export default {
       initialscale: '',
       isContentRemovable: false,
       add: false,
-      isContentMovable: false,
       mouseElem: null,
       movePosition: null,
       addComponentTag: null,
@@ -273,76 +272,10 @@ export default {
         //     afterSize: getComputedStyle(this.clickedElement).height
         //   }
         // }
-        this.$emit('stack-push', resize)
+        this.$emit('stack-push')
         this.borderClicked = false
       }
       this.resizedirection = null
-      if (this.isContentMovable) {
-        this.clickedElement.style.filter = 'blur(0)'
-        if (this.mouseElem !== null) {
-          this.mouseElem.style.backgroundColor = '#3e8ce4'
-          if (this.clickedElement.className === '') {
-            console.log('없음')
-            var move = {
-              work: 'move',
-              position: this.clickedElement.parentElement,
-              elem: this.clickedElement,
-              afterMovePosition: this.movePosition.target
-            }
-            this.$emit('stack-push', move)
-            this.movePosition.target.appendChild(this.clickedElement)
-          } else {
-            let addComponent = document.getElementsByClassName(
-              this.clickedElement.classList.value
-            )
-            let i
-            for (i = 0; i < addComponent.length; i++) {
-              if (addComponent[i] === this.clickedElement) {
-                break
-              }
-            }
-            var move = {
-              work: 'move',
-              position: this.clickedElement.parentElement,
-              elem: this.clickedElement,
-              afterMovePosition: this.movePosition.target
-            }
-            this.$emit('stack-push', move)
-            this.movePosition.target.appendChild(addComponent[i])
-
-            this.$nextTick(() => {
-              // tag가 추가할 element. 자식이 된다.
-              // console.log(position)
-              // position이 추가할 위치에 있는 element. 부모가 된다.
-              // this.movePosition.parentElement
-
-              if (
-                e.detail.target.className === 'left-border' ||
-                e.detail.target.className === 'right-border' ||
-                e.detail.target.className === 'top-border' ||
-                e.detail.target.className === 'bottom-border'
-              ) {
-                // let pos = e.target.className.split('-')[0]
-                let addComponent = document.getElementsByClassName(
-                  this.clickedElement.classList.value
-                )
-                let i
-                for (i = 0; i < addComponent.length; i++) {
-                  if (addComponent[i] === this.clickedElement) {
-                    console.log(i)
-                    break
-                  }
-                }
-                this.movePosition.target.parentElement.appendChild(
-                  addComponent[i]
-                )
-              }
-            })
-          }
-        }
-      }
-
-      this.isContentMovable = false
 
       this.$emit('elementresize', this.clickedElement)
     })
@@ -516,33 +449,6 @@ export default {
             '<style>'
           )[0] + '</body>'
       )
-    },
-    borderStyleChanged(data) {
-      // console.log(data)
-      this.target = data.payload.classList
-      this.style = data.style
-      this.value = data.value
-      // console.log(this.clickedBorder)
-      if (this.clickedBorder === '0px none rgb(44, 62, 80)') {
-        this.clickedBorder = '1px solid rgb(0, 0, 0)'
-        // console.log("click")
-      }
-      let prevBorder = this.clickedBorder.split(' ')
-      let element = document.getElementsByClassName(this.target)[0]
-      // console.log(element)
-      // console.log(this.style)
-      this.value =
-        prevBorder[0] +
-        ' ' +
-        data.value +
-        ' ' +
-        prevBorder[2] +
-        ' ' +
-        prevBorder[3] +
-        ' ' +
-        prevBorder[4]
-      element.style[this.style] = this.value
-      this.clickedBorder = this.value
     },
     focusInput(e) {
       if (
