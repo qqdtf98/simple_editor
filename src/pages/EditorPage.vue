@@ -71,9 +71,8 @@
             id="getfile"
             ref="fileInput"
           />
-          <LayoutCopy class="layout-copy" />
           <div v-show="isProjectLoaded" class="main-menu">
-            <!-- <home
+            <home
               ref="home"
               @iframe-changed="iframeChanged"
               @componentSelected="componentSelected"
@@ -81,7 +80,7 @@
               @loadData="loadData"
               @open-code="openCode"
               class="home"
-            ></home> -->
+            ></home>
             <div v-show="isCommentOn" class="comment-board">
               <div class="add-comment">
                 <textarea class="comment-input" placeholder="comment" />
@@ -105,7 +104,7 @@
               </div>
             </div>
           </div>
-          <!-- <div v-show="!isProjectLoaded" class="empty-iframe">
+          <div v-show="!isProjectLoaded" class="empty-iframe">
             <div class="sample-component">
               <img
                 src="../assets/images/plus.svg"
@@ -113,10 +112,10 @@
                 class="sample-add-btn"
               />
             </div>
-          </div> -->
+          </div>
         </div>
         <div class="row bottom-panel">
-          <div v-show="!isData" class="loadDataPanel">
+          <div v-show="isData" class="loadDataPanel">
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span @click="testtt" class="studio-text">CodeReview</span>
@@ -253,7 +252,7 @@
             class="layout"
           />
         </div>
-        <div v-show="!isProjectLoaded" class="right-bottom-panel">
+        <div v-show="isProjectLoaded" class="right-bottom-panel">
           <div class="tree-name-wrapper">
             <div class="tree-wrap">
               <div @mousedown="resizeTree" class="tree-left-border"></div>

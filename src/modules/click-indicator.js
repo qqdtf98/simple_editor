@@ -42,6 +42,7 @@ export default class ClickIndicator {
       })
       ClickIndicator.instances.clear()
       ClickIndicator.instances.add(this)
+      console.log(this.target)
 
       this.createBorder()
       this.setBorderPosition()
