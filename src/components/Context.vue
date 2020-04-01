@@ -55,27 +55,18 @@ export default {
     },
     calcAverageHeight() {
       if (this.state) {
-        let i
-        let entries = this.multiSelectedElement.entries()
-        let setIter = this.multiSelectedElement[Symbol.iterator]()
-        for (i = 0; i < this.multiSelectedElement.size; i++) {
-          let item = setIter.next().value
-          this.multiHeight[i] = item.getBoundingClientRect().height
-          this.totalHeight += item.getBoundingClientRect().height
-        }
-        let avgHeight = this.totalHeight / this.multiSelectedElement.size
-        setIter = this.multiSelectedElement[Symbol.iterator]()
-        for (i = 0; i < this.multiSelectedElement.size; i++) {
-          let item = setIter.next().value
-          item.style.height = avgHeight + 'px'
-        }
-        var heightChange = {
-          work: 'heightChange',
-          beforeHeight: this.multiHeight,
-          elems: this.multiSelectedElement,
-          afterHeight: avgHeight
-        }
-        this.$emit('close', heightChange)
+        HandleMultiFunc.calcAverageHeight()
+        this.$nextTick(() => {
+          this.$emit('close')
+          this.$emit(
+            'iframe-changed',
+            $('iframe')
+              .get(0)
+              .contentWindow.document.documentElement.innerHTML.split(
+                '<style>'
+              )[0] + '</body>'
+          )
+        })
       }
     },
     multiDelete() {
