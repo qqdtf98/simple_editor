@@ -19,7 +19,7 @@
         <ul class="" id="pills-tab" role="tablist" @click="chageTab">
           <li class="">
             <a
-              class="nav-link layout-tab"
+              class="nav-link layout-tab-list"
               v-bind:class="{ active: tabStep === 1 }"
               id="pills-home-tab"
               data-toggle="pill"
@@ -32,7 +32,7 @@
           </li>
           <li class="">
             <a
-              class="nav-link layout-tab"
+              class="nav-link layout-tab-list"
               v-bind:class="{ active: tabStep === 2 }"
               id="pills-profile-tab"
               data-toggle="pill"
@@ -410,7 +410,7 @@
                       name="left"
                       property="text-align"
                       class="left AlignBtn"
-                      src="../assets/images/left-align.svg"
+                      src="../assets/images/right-align.svg"
                     />
                     <img
                       @mousedown.stop
@@ -1923,31 +1923,6 @@ export default {
         this.treeSticky = false
       }
     },
-    submitChangeBorder(e) {
-      // console.log("dasd")
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'border'
-      this.submitSorce.value = 'solid'
-      // console.log(this.submitSorce)
-      this.submitSorce.change = 1
-      this.$emit('userSelectBorder', this.submitSorce)
-    },
-    submitChangeBorderWidth(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'border'
-      this.submitSorce.value = e
-      // console.log(this.submitSorce)
-      this.submitSorce.change = 1
-      this.$emit('userSelectBorder', this.submitSorce)
-    },
-    submitChangeBorderStyle(e) {
-      this.submitSorce.payload = this.payload
-      this.submitSorce.style = 'border'
-      this.submitSorce.value = e
-      this.submitSorce.change = 1
-      // console.log(this.submitSorce)
-      this.$emit('userSelectBorder', this.submitSorce)
-    },
     // submitChangeFloat(e) {
     //   if (e.target.getAttribute('name') == null) {
     //     if (e.target.parentElement.getAttribute('name') === 'left') {
@@ -2428,7 +2403,7 @@ b {
   }
   .right {
     width: 40px !important;
-    transform: rotate(180deg);
+    // transform: rotate(180deg);
   }
   .linkA {
     font-size: 25px;
@@ -2579,7 +2554,7 @@ b {
     -webkit-transform: rotate(360deg);
   }
 }
-.layout-tab {
+.layout-tab-list {
   padding: 0;
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
