@@ -1,52 +1,120 @@
 <template>
   <div id="options-layout">
     <div class="margin-wrapper">
-      <div class="margin-left">0</div>
-      <div class="margin-right">0</div>
-      <div class="margin-top">0</div>
-      <div class="margin-bottom">0</div>
+      <div class="margin-left">
+        {{ $store.state.styleData.styleData.marginLeft }}}
+      </div>
+      <div class="margin-right">
+        {{ $store.state.styleData.styleData.marginRight }}
+      </div>
+      <div class="margin-top">
+        {{ $store.state.styleData.styleData.marginTop }}
+      </div>
+      <div class="margin-bottom">
+        {{ $store.state.styleData.styleData.marginBottom }}
+      </div>
       <div class="padding-wrapper">
-        <div class="padding-left">0</div>
-        <div class="padding-right">0</div>
-        <div class="padding-top">0</div>
-        <div class="padding-bottom">0</div>
+        <div class="padding-left">
+          {{ $store.state.styleData.styleData.paddingLeft }}
+        </div>
+        <div class="padding-right">
+          {{ $store.state.styleData.styleData.paddingRight }}
+        </div>
+        <div class="padding-top">
+          {{ $store.state.styleData.styleData.paddingTop }}
+        </div>
+        <div class="padding-bottom">
+          {{ $store.state.styleData.styleData.paddingBottom }}
+        </div>
         <div class="empty-box"></div>
       </div>
     </div>
     <div class="dimension-wrapper">
       <div class="position-wrapper">
         <div class="x-position">X</div>
-        <div class="x-position-value">123</div>
+        <div class="x-position-value">
+          {{ $store.state.styleData.target.getBoundingClientRect().x }}
+        </div>
         <div class="y-position">Y</div>
-        <div class="y-position-value">123</div>
+        <div class="y-position-value">
+          {{ $store.state.styleData.target.getBoundingClientRect().y }}
+        </div>
       </div>
       <div class="size-wrapper">
         <div class="width-text">W</div>
-        <div class="width-value">123</div>
+        <div class="width-value">
+          {{ $store.state.styleData.target.getBoundingClientRect().width }}
+        </div>
         <div class="height-text">H</div>
-        <div class="height-value">123</div>
+        <div class="height-value">
+          {{ $store.state.styleData.target.getBoundingClientRect().height }}
+        </div>
       </div>
     </div>
     <div class="input-wrapper">
       <div class="width-box">
         <div class="width-input">Width</div>
-        <input class="width-input-value" />
+        <input
+          class="width-input-value"
+          name="width"
+          :placeholder="
+            $store.state.styleData.target.getBoundingClientRect().width
+          "
+          @keyup.enter="submitNewStyle"
+        />
       </div>
       <div class="height-box">
         <div class="height-input">Height</div>
-        <input class="height-input-value" />
+        <input
+          class="height-input-value"
+          name="height"
+          :placeholder="
+            $store.state.styleData.target.getBoundingClientRect().height
+          "
+          @keyup.enter="submitNewStyle"
+        />
       </div>
       <div class="margin-box">
         <div class="margin-input">Margin</div>
-        <input class="margin-input-value" />
+        <input
+          class="margin-input-value"
+          name="margin"
+          :placeholder="$store.state.styleData.styleData.margin"
+          @keyup.enter="submitNewStyle"
+        />
       </div>
       <div class="padding-box">
         <div class="padding-input">Padding</div>
-        <input class="padding-input-value" />
+        <input
+          class="padding-input-value"
+          name="padding"
+          :placeholder="$store.state.styleData.styleData.padding"
+          @keyup.enter="submitNewStyle"
+        />
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import ClickIndicator from '../../../modules/click-indicator'
+
+export default {
+  methods: {
+    submitNewStyle(e) {
+      let changedData
+      ClickIndicator.instances.forEach(instance => {
+        changedData = {
+          payload: instance.target,
+          style: e.target.name,
+          value: e.target.value
+        }
+      })
+      this.$store.commit('setChangedData', changedData)
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 #options-layout {
