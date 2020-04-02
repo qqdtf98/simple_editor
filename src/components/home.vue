@@ -124,6 +124,7 @@ export default {
     ss,
     vueCustomScrollbar
   },
+  computed: {},
   data() {
     return {
       elemWidth: null,
@@ -431,6 +432,7 @@ export default {
       }
     },
     styleChanged(data) {
+      console.log('??')
       let htmlSrc = $('iframe').get(0).contentWindow.document.documentElement
         .innerHTML
 

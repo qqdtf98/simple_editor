@@ -1,9 +1,11 @@
 import { install } from 'vuex'
+import { store } from '../store'
 
 /**
  * iframe 내의 element 클릭 시 indicator를 표시해주는 기능을 하는 클래스.
  * 클릭된 element 당 하나의 instance를 생성함.
  * 생성된 instance들은 set에 저장되어 있음.
+ * 단일 선택의 경우 해당 element의 style 값을 store에 저장함.
  */
 export default class ClickIndicator {
   /**
@@ -30,7 +32,6 @@ export default class ClickIndicator {
           ClickIndicator.instances.delete(instance)
         }
       })
-      console.log('selected', selected)
       if (selected) {
         this.createBorder()
         this.setBorderPosition()
@@ -42,7 +43,8 @@ export default class ClickIndicator {
       })
       ClickIndicator.instances.clear()
       ClickIndicator.instances.add(this)
-      console.log(this.target)
+      store.commit('setStyleData', getComputedStyle(this.target))
+      store.commit('setTarget', this.target)
 
       this.createBorder()
       this.setBorderPosition()

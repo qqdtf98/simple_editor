@@ -119,15 +119,6 @@
             <div @mousedown="loaderResize" class="loader-bord"></div>
             <div class="studio-text-box">
               <span @click="testtt" class="studio-text">CodeReview</span>
-              <!-- <div class="manualatag">
-                mode
-                <switches
-                  class="toggleSwitch modeSwitch"
-                  theme="bootstrap"
-                  color="info"
-                  v-model="enabled"
-                />
-              </div> -->
               <button @click="executeJS" class="jsExecute">js</button>
               <img
                 @click="closeCodeReview"
@@ -246,7 +237,6 @@
         <div class="right-top-panel">
           <layout
             ref="layout"
-            @userSelectedWidth="userSelectedWidth"
             @stick="layoutStick"
             @manualSelect="manualSelect"
             class="layout"
@@ -2066,7 +2056,7 @@ export default {
       //   this.submitSorce.style = 'background-image'
       //   this.submitSorce.value = submit
       //   this.submitSorce.change = 1
-      //   // this.$emit('userSelectedWidth', this.submitSorce)
+      //   // this.$emit('userSelect', this.submitSorce)
       // }
     },
     testtt(e) {
@@ -2622,11 +2612,6 @@ export default {
       this.$refs.overview.domSelection(this.dataPayload)
       this.$refs.layout.isData = true
       // this.$refs.layout.makeTreeParent(this.payload)
-    },
-    userSelectedWidth(data) {
-      console.log(data)
-      this.data = data
-      this.$refs.home.styleChanged(this.data)
     },
     tagSelected(payload) {
       if (!this.viewTemplate) {
@@ -3198,7 +3183,7 @@ export default {
   }
   .right-panel-border {
     position: fixed;
-    width: 56px;
+    width: 40px;
     height: 94%;
     right: 0;
     bottom: 0;
