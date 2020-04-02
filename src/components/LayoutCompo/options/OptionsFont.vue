@@ -41,25 +41,110 @@
       </div>
       <div class="font-size-wrapper">
         <div class="font-size-text">Font Size</div>
-        <input class="font-size-input" />
+        <input
+          name="fontSize"
+          class="font-size-input"
+          @keyup.enter="submitFontSize"
+          :placeholder="$store.state.styleData.styleData.fontSize"
+        />
       </div>
     </div>
     <div class="font-color-wrapper">
       <div class="font-color-text">Font color</div>
       <div class="font-color-list">
-        <button class="color-none" />
+        <button name="fontColor" @click="submitFontColor" class="color-none" />
         <button
+          @click="submitFontColor"
           v-for="i in 14"
           id="color-button"
           :key="`color-picker-${i}`"
           class="color-choose"
+          name="fontColor"
           :class="'color' + i"
         />
-        <button class="chrome-picker" />
+        <button @click="activateChromePicker" class="chrome-picker" />
       </div>
     </div>
+    <chrome-color
+      class="chrome"
+      v-show="isChromePicker"
+      :value="font.fontColor"
+      v-model="font.fontColor"
+      @input="fontColorChanged"
+    ></chrome-color>
   </div>
 </template>
+
+<script>
+import ClickIndicator from '../../../modules/click-indicator'
+import { Chrome } from 'vue-color'
+
+export default {
+  components: {
+    ChromeColor: VueColor.Chrome
+  },
+  data() {
+    return {
+      isChromePicker: false,
+      font: {
+        fontColor: '#fff'
+      }
+    }
+  },
+  methods: {
+    activateChromePicker() {
+      if (this.isChromePicker) {
+        this.isChromePicker = false
+      } else {
+        this.isChromePicker = true
+      }
+    },
+    submitFontSize(e) {
+      let changedData
+      ClickIndicator.instances.forEach(instance => {
+        changedData = {
+          payload: instance.target,
+          style: e.target.name,
+          value: e.target.value
+        }
+      })
+      this.$store.commit('setChangedData', changedData)
+    },
+    fontColorChanged(color) {
+      let changedData
+      ClickIndicator.instances.forEach(instance => {
+        changedData = {
+          payload: instance.target,
+          style: 'fontColor',
+          value: color.hex
+        }
+      })
+      this.$store.commit('setChangedData', changedData)
+    },
+    submitFontColor() {
+      let changedData
+      if (e.target.className === 'color-none') {
+        ClickIndicator.instances.forEach(instance => {
+          changedData = {
+            payload: instance.target,
+            style: e.target.name,
+            value: 'transparent'
+          }
+        })
+      } else {
+        ClickIndicator.instances.forEach(instance => {
+          changedData = {
+            payload: instance.target,
+            style: e.target.name,
+            value: getComputedStyle(e.target).backgroundColor
+          }
+        })
+      }
+      this.$store.commit('setChangedData', changedData)
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 @import '../../../assets/scss/globalstyle';
