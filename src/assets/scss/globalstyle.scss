@@ -2,63 +2,80 @@
   background-color: white;
   position: relative;
   opacity: 0.8;
-  border: 3px dotted #808080;
+  border: 3px dotted #808080 !important;
 }
 .chrome-picker {
   background-image: conic-gradient(#ff4141, #ffff51, #55fc55, #5555ff, #ff5959);
 }
 .color1 {
-  background-image: linear-gradient(to bottom, #e6696e, #e67a7d);
+  background-color: #e6696e;
+  // background-image: linear-gradient(to bottom, #e6696e, #e67a7d);
 }
 
 .color2 {
-  background-image: linear-gradient(to bottom, #e8765c, #e78470);
+  background-color: #e8765c;
 }
 
 .color3 {
-  background-image: linear-gradient(to bottom, #dd8042, #dc8d5e);
+  background-color: #dd8042;
 }
 
 .color4 {
-  background-image: linear-gradient(to bottom, #d69d2f, #cd8e27);
+  background-color: #d69d2f;
 }
 
 .color5 {
-  background-image: linear-gradient(to bottom, #6ca64e, #5f9943);
+  background-color: #6ca64e;
 }
 
 .color6 {
-  background-image: linear-gradient(to bottom, #5ba68f, #4b977f);
+  background-color: #5ba68f;
 }
 
 .color7 {
-  background-image: linear-gradient(to bottom, #629eb1, #5490a3);
+  background-color: #629eb1;
 }
 
 .color8 {
-  background-image: linear-gradient(to bottom, #6c92c3, #5f84b9);
+  background-color: #6c92c3;
 }
 
 .color9 {
-  background-image: linear-gradient(to bottom, #737ec4, #656fb9);
+  background-color: #737ec4;
 }
 
 .color10 {
-  background-image: linear-gradient(to bottom, #9177c0, #8268b4);
+  background-color: #9177c0;
 }
 
 .color11 {
-  background-image: linear-gradient(to bottom, #dd7190, #d76784);
+  background-color: #dd7190;
 }
 
 .color12 {
-  background-image: linear-gradient(to bottom, #87919d, #7a8490);
+  background-color: #87919d;
 }
 
 .color13 {
-  background-image: linear-gradient(to bottom, #8d928e, #7e8480);
+  background-color: #8d928e;
 }
 
 .color14 {
-  background-image: linear-gradient(to bottom, #9c908b, #8f817d);
+  background-color: #9c908b;
+}
+
+input::-webkit-input-placeholder {
+  text-align: right;
+}
+input::-moz-placeholder {
+  text-align: right;
+}
+input:-ms-input-placeholder {
+  text-align: right;
+}
+input:-moz-placeholder {
+  text-align: right;
+}
+input::placeholder {
+  text-align: right;
 }
