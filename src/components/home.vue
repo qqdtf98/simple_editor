@@ -94,10 +94,6 @@
       class="context"
       v-show="mouseRightClick"
     />
-
-    <!-- <div id="add">
-      <div class="add-1">aaaaa</div>
-    </!-->
   </div>
 </template>
 
@@ -124,7 +120,29 @@ export default {
     ss,
     vueCustomScrollbar
   },
-  computed: {},
+  watch: {
+    '$store.state.styleData.changedData'(newVal, oldVal) {
+      console.log('??')
+      let htmlSrc = $('iframe').get(0).contentWindow.document.documentElement
+        .innerHTML
+      console.log(newVal)
+      newVal.payload.style[newVal.style] = newVal.value
+      let afterHtmlSrc = $('iframe').get(0).contentWindow.document
+        .documentElement.innerHTML
+
+      let newWork = new Work(htmlSrc, afterHtmlSrc)
+      this.$store.dispatch('workStackPush', newWork)
+
+      // this.$emit(
+      //   'iframe-changed',
+      //   $('iframe')
+      //     .get(0)
+      //     .contentWindow.document.documentElement.innerHTML.split(
+      //       '<style>'
+      //     )[0] + '</body>'
+      // )
+    }
+  },
   data() {
     return {
       elemWidth: null,

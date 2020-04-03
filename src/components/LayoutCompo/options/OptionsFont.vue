@@ -37,7 +37,15 @@
     <div class="font-attribute-wrapper">
       <div class="font-family-wrapper">
         <div class="font-family-text">Font Family</div>
-        <div class="font-family-select">select</div>
+        <select id="font-family-select">
+          <option value="none">NONE</option>
+          <option value="geogia">Geogia</option>
+          <option value="serif">Serif</option>
+          <option value="sans-serif">Sans-serif</option>
+          <option value="monospace">Monospace</option>
+          <option value="cursive">Cursive</option>
+          <option value="fantasy">Fantasy</option>
+        </select>
       </div>
       <div class="font-size-wrapper">
         <div class="font-size-text">Font Size</div>
@@ -52,14 +60,14 @@
     <div class="font-color-wrapper">
       <div class="font-color-text">Font color</div>
       <div class="font-color-list">
-        <button name="fontColor" @click="submitFontColor" class="color-none" />
+        <button name="color" @click="submitFontColor" class="color-none" />
         <button
           @click="submitFontColor"
           v-for="i in 14"
           id="color-button"
           :key="`color-picker-${i}`"
           class="color-choose"
-          name="fontColor"
+          name="color"
           :class="'color' + i"
         />
         <button @click="activateChromePicker" class="chrome-picker" />
@@ -121,7 +129,7 @@ export default {
       })
       this.$store.commit('setChangedData', changedData)
     },
-    submitFontColor() {
+    submitFontColor(e) {
       let changedData
       if (e.target.className === 'color-none') {
         ClickIndicator.instances.forEach(instance => {
@@ -140,6 +148,7 @@ export default {
           }
         })
       }
+      console.log(changedData)
       this.$store.commit('setChangedData', changedData)
     }
   }
@@ -202,7 +211,7 @@ export default {
     }
   }
   .font-attribute-wrapper {
-    width: 80%;
+    width: 85%;
     .font-family-wrapper {
       height: 2rem;
       display: flex;
@@ -219,9 +228,14 @@ export default {
         text-align: center;
         left: 0;
       }
-      .font-family-select {
+      #font-family-select {
         position: absolute;
         right: 0;
+        width: 4.5rem;
+        background-color: #707070;
+        font-size: 0.8rem;
+        border: none;
+        padding: 0.1rem;
       }
     }
     .font-size-wrapper {
@@ -243,7 +257,7 @@ export default {
       .font-size-input {
         position: absolute;
         right: 0;
-        width: 40%;
+        width: 4rem;
         background: none;
         border: none;
         border-bottom: 1px solid #768ea7;

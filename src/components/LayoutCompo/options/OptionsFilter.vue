@@ -178,13 +178,7 @@ export default {
           vModel: '',
           onInput: () => {}
         }
-      ],
-      submitSource: {
-        payload: '',
-        style: '',
-        value: '',
-        change: ''
-      }
+      ]
     }
   }
 }

@@ -60,7 +60,7 @@
           :placeholder="
             $store.state.styleData.target.getBoundingClientRect().width
           "
-          @keyup.enter="submitNewStyle"
+          @keydown.enter="submitNewStyle"
         />
       </div>
       <div class="height-box">
@@ -71,7 +71,7 @@
           :placeholder="
             $store.state.styleData.target.getBoundingClientRect().height
           "
-          @keyup.enter="submitNewStyle"
+          @keydown.enter="submitNewStyle"
         />
       </div>
       <div class="margin-box">
@@ -80,7 +80,7 @@
           class="margin-input-value"
           name="margin"
           :placeholder="$store.state.styleData.styleData.margin"
-          @keyup.enter="submitNewStyle"
+          @keydown.enter="submitNewStyle"
         />
       </div>
       <div class="padding-box">
@@ -89,7 +89,7 @@
           class="padding-input-value"
           name="padding"
           :placeholder="$store.state.styleData.styleData.padding"
-          @keyup.enter="submitNewStyle"
+          @keydown.enter="submitNewStyle"
         />
       </div>
     </div>
@@ -107,7 +107,7 @@ export default {
         changedData = {
           payload: instance.target,
           style: e.target.name,
-          value: e.target.value
+          value: e.target.value + 'px'
         }
       })
       this.$store.commit('setChangedData', changedData)
