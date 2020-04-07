@@ -37,29 +37,123 @@
     <div class="font-attribute-wrapper">
       <div class="font-family-wrapper">
         <div class="font-family-text">Font Family</div>
-        <div class="font-family-select">select</div>
+        <select id="font-family-select">
+          <option value="none">NONE</option>
+          <option value="geogia">Geogia</option>
+          <option value="serif">Serif</option>
+          <option value="sans-serif">Sans-serif</option>
+          <option value="monospace">Monospace</option>
+          <option value="cursive">Cursive</option>
+          <option value="fantasy">Fantasy</option>
+        </select>
       </div>
       <div class="font-size-wrapper">
         <div class="font-size-text">Font Size</div>
-        <input class="font-size-input" />
+        <input
+          name="fontSize"
+          class="font-size-input"
+          @keyup.enter="submitFontSize"
+          :placeholder="$store.state.styleData.styleData.fontSize"
+        />
       </div>
     </div>
     <div class="font-color-wrapper">
       <div class="font-color-text">Font color</div>
       <div class="font-color-list">
-        <button class="color-none" />
+        <button name="color" @click="submitFontColor" class="color-none" />
         <button
+          @click="submitFontColor"
           v-for="i in 14"
           id="color-button"
           :key="`color-picker-${i}`"
           class="color-choose"
+          name="color"
           :class="'color' + i"
         />
-        <button class="chrome-picker" />
+        <button @click="activateChromePicker" class="chrome-picker" />
       </div>
     </div>
+    <chrome-color
+      class="chrome"
+      v-show="isChromePicker"
+      :value="font.fontColor"
+      v-model="font.fontColor"
+      @input="fontColorChanged"
+    ></chrome-color>
   </div>
 </template>
+
+<script>
+import ClickIndicator from '../../../modules/click-indicator'
+import { Chrome } from 'vue-color'
+
+export default {
+  components: {
+    ChromeColor: VueColor.Chrome
+  },
+  data() {
+    return {
+      isChromePicker: false,
+      font: {
+        fontColor: '#fff'
+      }
+    }
+  },
+  methods: {
+    activateChromePicker() {
+      if (this.isChromePicker) {
+        this.isChromePicker = false
+      } else {
+        this.isChromePicker = true
+      }
+    },
+    submitFontSize(e) {
+      let changedData
+      ClickIndicator.instances.forEach(instance => {
+        changedData = {
+          payload: instance.target,
+          style: e.target.name,
+          value: e.target.value
+        }
+      })
+      this.$store.commit('setChangedData', changedData)
+    },
+    fontColorChanged(color) {
+      let changedData
+      ClickIndicator.instances.forEach(instance => {
+        changedData = {
+          payload: instance.target,
+          style: 'fontColor',
+          value: color.hex
+        }
+      })
+      this.$store.commit('setChangedData', changedData)
+    },
+    submitFontColor(e) {
+      let changedData
+      if (e.target.className === 'color-none') {
+        ClickIndicator.instances.forEach(instance => {
+          changedData = {
+            payload: instance.target,
+            style: e.target.name,
+            value: 'transparent'
+          }
+        })
+      } else {
+        ClickIndicator.instances.forEach(instance => {
+          changedData = {
+            payload: instance.target,
+            style: e.target.name,
+            value: getComputedStyle(e.target).backgroundColor
+          }
+        })
+      }
+      console.log(changedData)
+      this.$store.commit('setChangedData', changedData)
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 @import '../../../assets/scss/globalstyle';
@@ -117,7 +211,7 @@
     }
   }
   .font-attribute-wrapper {
-    width: 80%;
+    width: 85%;
     .font-family-wrapper {
       height: 2rem;
       display: flex;
@@ -134,9 +228,14 @@
         text-align: center;
         left: 0;
       }
-      .font-family-select {
+      #font-family-select {
         position: absolute;
         right: 0;
+        width: 4.5rem;
+        background-color: #707070;
+        font-size: 0.8rem;
+        border: none;
+        padding: 0.1rem;
       }
     }
     .font-size-wrapper {
@@ -158,7 +257,7 @@
       .font-size-input {
         position: absolute;
         right: 0;
-        width: 40%;
+        width: 4rem;
         background: none;
         border: none;
         border-bottom: 1px solid #768ea7;

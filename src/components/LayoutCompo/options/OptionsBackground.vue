@@ -1,18 +1,40 @@
 <template>
   <div id="options-background">
     <div class="bg-color-wrapper">
-      <div class="bg-color-text">Background Color</div>
+      <div class="bg-color-box">
+        <div class="bg-color-text">Background Color</div>
+        <div
+          class="bg-color-before"
+          :style="
+            `background-color: ${$store.state.styleData.styleData.backgroundColor};`
+          "
+        ></div>
+      </div>
+
       <div class="bg-color-list">
-        <button class="color-none" />
+        <button
+          name="backgroundColor"
+          @click="submitNewStyle"
+          class="color-none"
+        />
         <button
           v-for="i in 14"
           id="color-button"
           :key="`color-picker-${i}`"
+          name="backgroundColor"
           class="color-choose"
+          @click="submitNewStyle"
           :class="'color' + i"
         />
-        <button class="chrome-picker" />
+        <button @click="activateChromePicker" class="chrome-picker" />
       </div>
+      <chrome-color
+        class="chrome"
+        v-show="isChromePicker"
+        :value="background.backgroundColor"
+        v-model="background.backgroundColor"
+        @input="backgroundColorChanged"
+      ></chrome-color>
     </div>
     <div class="bg-img-wrapper">
       <div class="bg-img-text">Background Image</div>
@@ -21,8 +43,67 @@
   </div>
 </template>
 
+<script>
+import ClickIndicator from '../../../modules/click-indicator'
+import { Chrome } from 'vue-color'
+
+export default {
+  components: { ChromeColor: VueColor.Chrome },
+  data() {
+    return {
+      isChromePicker: false,
+      background: {
+        backgroundColor: '#fff'
+      }
+    }
+  },
+  methods: {
+    backgroundColorChanged(color) {
+      let changedData
+      ClickIndicator.instances.forEach(instance => {
+        changedData = {
+          payload: instance.target,
+          style: 'backgroundColor',
+          value: color.hex
+        }
+      })
+      this.$store.commit('setChangedData', changedData)
+    },
+    activateChromePicker() {
+      if (this.isChromePicker) {
+        this.isChromePicker = false
+      } else {
+        this.isChromePicker = true
+      }
+    },
+    submitNewStyle(e) {
+      let changedData
+      if (e.target.className === 'color-none') {
+        ClickIndicator.instances.forEach(instance => {
+          changedData = {
+            payload: instance.target,
+            style: e.target.name,
+            value: 'transparent'
+          }
+        })
+      } else {
+        ClickIndicator.instances.forEach(instance => {
+          changedData = {
+            payload: instance.target,
+            style: e.target.name,
+            value: getComputedStyle(e.target).backgroundColor
+          }
+        })
+      }
+      this.$store.commit('setChangedData', changedData)
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 @import '../../../assets/scss/globalstyle';
+
 #options-background {
   display: flex;
   margin-top: 0.3rem;
@@ -33,11 +114,25 @@
   width: 100%;
   .bg-color-wrapper {
     width: 80%;
-    .bg-color-text {
-      margin-top: 0.4rem;
-      margin-bottom: 0.4rem;
-      color: #868686;
+    .bg-color-box {
+      display: flex;
+      margin-top: 0.3rem;
+      margin-bottom: 0.3rem;
+      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+      .bg-color-text {
+        margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
+        color: #868686;
+      }
+      .bg-color-before {
+        width: 3.5rem;
+        border-radius: 0.3rem;
+        height: 2rem;
+      }
     }
+
     .bg-color-list {
       margin-top: 0.4rem;
       margin-bottom: 0.4rem;
